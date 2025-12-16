@@ -1,15 +1,14 @@
 "use client";
+
 import React, { useState, useEffect } from 'react';
 import styles from './PitchDeck.module.css';
-
-// Ensure you have an image at this path in your public folder, or import it
-// import beetsImage from '/images/beets.jpg'; 
 
 const PitchDeck = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const totalSlides = 12;
 
-    const changeSlide = (direction) => {
+    // FIX 1: Added ": number" to tell TypeScript this is a number
+    const changeSlide = (direction: number) => {
         let newSlide = currentSlide + direction;
         if (newSlide >= totalSlides) { newSlide = 0; }
         else if (newSlide < 0) { newSlide = totalSlides - 1; }
@@ -17,7 +16,8 @@ const PitchDeck = () => {
     };
 
     useEffect(() => {
-        const handleKeyDown = (e) => {
+        // FIX 2: Added ": KeyboardEvent" to tell TypeScript this is a key event
+        const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowRight' || e.key === ' ') {
                 changeSlide(1);
             } else if (e.key === 'ArrowLeft') {
@@ -30,7 +30,7 @@ const PitchDeck = () => {
     }, [currentSlide]);
 
     // Helper to determine active slide class
-    const getSlideClass = (index) => {
+    const getSlideClass = (index: number) => {
         return `${styles.slide} ${index === currentSlide ? styles.active : ''}`;
     };
 
@@ -86,7 +86,7 @@ const PitchDeck = () => {
                 <div className={getSlideClass(2)}>
                     <div className={styles.contentGrid}>
                         <div className={styles.cardBox} style={{ background: '#fcfcfc' }}>
-                            <div style={{ fontSize: '3rem', marginBottom: '20px' }}>🕸️</div>
+                            <div style={{ fontSize: '3rem', marginBottom: '20px' }}></div>
                             <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>The Problem</div>
                             <p>Booking "Live" is Logistics, not E-commerce.</p>
                             <p>Brands want a "Friday 8PM Takeover," but current infrastructure treats live talent like file delivery. There are no guardrails for execution.</p>
