@@ -16,9 +16,12 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-200 px-6 py-4 z-50 flex justify-between items-center">
       
       {/* 1. LOGO */}
-      <Link href="/" className="font-bold text-xl tracking-tighter">
-        ON CUE
-      </Link>
+      <div>
+        <Link href="/" className="font-bold text-xl tracking-tighter">
+          ON CUE
+        </Link>
+        <p className="text-xs text-gray-800">In Development</p>
+      </div>
 
       {/* 2. CENTER LINKS (Context Aware) */}
       <div className="hidden md:flex items-center gap-1 bg-white border border-gray-200 p-1 rounded-full shadow-sm">
@@ -32,6 +35,7 @@ export default function Navbar() {
                 </>
             ) : (
                 <>
+                    <Link href="/"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/')}`}>Marketplace</button></Link>
                     <Link href="/dashboard"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/dashboard')}`}>Dashboard</button></Link>
                     <Link href="/studio"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/studio')}`}>Studio</button></Link>
                 </>

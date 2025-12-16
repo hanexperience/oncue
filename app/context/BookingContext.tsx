@@ -68,10 +68,28 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   };
 
   // --- B. EFFECT ---
-  useEffect(() => {
-    fetchBookings();
+const refreshUserRole = async () => {
+    if (!user) return;
     
-    // Subscribe to Realtime Messages
+    const { data } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (data?.role) {
+      // If database says "creator", switch the app mode to "creator"
+      setUserRole(data.role as 'brand' | 'creator');
+    }
+  };
+
+  // 2. UPDATE THE EFFECT to run this check on load
+  useEffect(() => {
+    if (user) {
+      refreshUserRole(); 
+      fetchBookings();   
+    }
+    
     const channel = supabase
       .channel('realtime_messages')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
@@ -82,8 +100,8 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, userRole]);
-
+  }, [user]); 
+  
   // --- C. ACTIONS ---
   const ensureProfileExists = async () => {
     if (!user) return;
