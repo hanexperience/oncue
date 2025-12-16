@@ -65,7 +65,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
       }));
       setBookings(formatted);
     }
-  }; // <--- THIS BRACE WAS MISSING
+  };
 
   // --- B. EFFECT ---
   useEffect(() => {

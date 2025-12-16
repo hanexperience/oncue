@@ -110,10 +110,10 @@ export default function AgencyPage() {
            <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 font-bold text-sm uppercase flex gap-2">
              <Bell size={16} /> Contract Requests ({bookings.length})
            </div>
-           {bookings.map((booking) => (
+        {bookings.map((booking) => (
              <div key={booking.id} className="p-4 border-b border-gray-100 flex justify-between">
                 <div>
-                  <div className="font-bold">{booking.name}</div>
+                  <div className="font-bold">{booking.project_name}</div> // ✅ CHANGED TO project_name
                   <div className="text-xs text-gray-500">{booking.status}</div>
                 </div>
                 <button className="bg-black text-white px-3 py-1 rounded text-xs">Manage</button>
