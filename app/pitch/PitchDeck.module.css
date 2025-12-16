@@ -1,0 +1,184 @@
+/* PitchDeck.module.css */
+
+/* --- THEME VARIABLES --- */
+/* Note: We scope these to the container so they don't leak */
+.container {
+    --bg-color: #ffffff;
+    --text-main: #1a1a1a;
+    --text-muted: #555555;
+    --accent-pink: #f0d5d5;
+    --accent-gold: #cfaa6c;
+    --accent-blue: #eef4f8;
+    --success-green: #4caf50;
+    --error-red: #ff5f56;
+    
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Inter', sans-serif;
+
+    width: 100vw; 
+    height: 100vh;
+    font-family: var(--font-sans);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow: hidden; 
+    position: relative;
+}
+
+/* --- ATMOSPHERE --- */
+.atmosphere {
+    position: fixed; top: 50%; left: 50%;
+    width: 140vw; height: 140vh;
+    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(240,213,213,0.15) 40%, rgba(255,255,255,0) 70%);
+    transform: translate(-50%, -50%);
+    z-index: 0; pointer-events: none;
+}
+
+/* --- LAYOUT --- */
+.presentationContainer { width: 100%; height: 100%; position: relative; z-index: 1; }
+
+.slide {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    padding: 60px 5%;
+    opacity: 0; transition: opacity 0.6s ease-in-out; 
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    pointer-events: none; z-index: 1; visibility: hidden;
+}
+
+.slide.active { opacity: 1; pointer-events: all; z-index: 10; visibility: visible; }
+
+.contentGrid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4vw;
+    width: 100%; max-width: 1300px; margin: 0 auto;
+    align-items: center;
+}
+
+.fullCenter {
+    text-align: center; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    width: 100%; max-width: 900px; margin: auto;
+}
+
+/* --- TYPOGRAPHY --- */
+.container h1 {
+    font-family: var(--font-serif); font-size: clamp(2.5rem, 4.5vw, 4.5rem); 
+    font-weight: 400; margin: 0 0 20px 0;
+    line-height: 1.1; color: var(--text-main); letter-spacing: -1px;
+}
+
+.container h2 {
+    font-family: var(--font-serif); font-size: clamp(1.8rem, 3vw, 2.8rem);
+    color: var(--text-main); margin-top: 0; margin-bottom: 1rem;
+    font-weight: 400; letter-spacing: -0.5px; line-height: 1.2;
+}
+
+.container h3 {
+    font-family: var(--font-sans); font-size: 0.75rem;
+    color: var(--text-muted); margin-bottom: 1rem;
+    text-transform: uppercase; letter-spacing: 2px; font-weight: 600;
+}
+
+.container p { 
+    font-size: clamp(0.9rem, 1vw, 1.1rem); line-height: 1.6; 
+    color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 300; 
+}
+
+.container strong { color: var(--text-main); font-weight: 600; }
+
+/* --- COMPONENTS --- */
+.cardBox {
+    background: #fff; border: 1px solid #eee; padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03); border-radius: 8px;
+    height: 100%; display: flex; flex-direction: column; justify-content: center;
+}
+
+/* METRIC BARS */
+.metricContainer { display: flex; flex-direction: column; gap: 20px; width: 100%; margin-top: 30px; }
+.metricRow { display: flex; align-items: center; gap: 15px; }
+.metricLabel { width: 120px; font-size: 0.9rem; font-weight: 600; text-align: right; }
+.barBg { flex: 1; background: #eee; height: 40px; border-radius: 4px; overflow: hidden; position: relative; }
+.barFill { height: 100%; background: var(--text-main); display: flex; align-items: center; padding-left: 10px; color: white; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+.barSmall { width: 5%; background: #ccc; color: #555; overflow: visible; }
+.barSmall span { margin-left: 5px; color: #1a1a1a; }
+.barLarge { width: 85%; background: var(--accent-gold); }
+
+/* VENN DIAGRAM */
+.vennContainer { position: relative; width: 100%; height: 350px; display: flex; justify-content: center; align-items: center; }
+.circle { 
+    width: 220px; height: 220px; border-radius: 50%; position: absolute; 
+    display: flex; justify-content: center; align-items: center; text-align: center;
+    font-size: 0.9rem; padding: 20px; font-weight: 600;
+    mix-blend-mode: multiply;
+}
+.circle1 { background: #e0f0ff; top: 20px; left: 10%; color: #004488; }
+.circle2 { background: #ffe0e0; top: 20px; right: 10%; color: #880000; }
+.circleCenter { 
+    width: 240px; height: 240px; background: rgba(207, 170, 108, 0.9); 
+    z-index: 10; border-radius: 50%; top: 80px; box-shadow: 0 10px 30px rgba(207, 170, 108, 0.3);
+    color: white; display: flex; flex-direction: column; justify-content: center; align-items: center;
+}
+
+/* MARKETPLACE MOCKUP */
+.marketplaceUi {
+    background: #fff; border: 1px solid #e0e0e0; border-radius: 12px;
+    overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+    font-size: 12px; width: 100%; aspect-ratio: 16/10;
+    display: flex; flex-direction: column;
+}
+.mpHeader { padding: 15px; border-bottom: 1px solid #eee; display: flex; gap: 15px; background: #fafafa; }
+.mpSearch { background: #eee; height: 10px; width: 150px; border-radius: 5px; }
+.mpGrid { display: grid; grid-template-columns: 1fr 1fr; padding: 15px; gap: 15px; background: #fff; flex: 1; }
+.mpCard { border: 1px solid #eee; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+.mpAvatar { width: 30px; height: 30px; background: #ddd; border-radius: 50%; }
+.mpBtn { margin-top: auto; background: var(--text-main); color: white; padding: 5px; text-align: center; border-radius: 4px; font-weight: bold; }
+.reliabilityBadge { position: absolute; top: 10px; right: 10px; background: #eef8f0; color: #2e7d32; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; }
+
+/* PROMPTER MOCKUP */
+.devicePair { display: flex; align-items: flex-end; justify-content: center; gap: 20px; height: 350px; position: relative; }
+.phone { 
+    width: 100px; height: 200px; background: #111; border-radius: 12px; 
+    border: 4px solid #333; position: relative; overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+.phoneScreen { width: 100%; height: 100%; background: #555; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.6rem; text-align: center;}
+.ipad {
+    width: 260px; height: 320px; background: #fff; border-radius: 16px;
+    border: 8px solid #333; position: relative; overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column;
+}
+.ipadHeader { background: #1a1a1a; color: white; padding: 10px; font-size: 0.7rem; font-weight: bold; display: flex; justify-content: space-between; }
+.ipadBody { padding: 15px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.teleprompter { font-size: 1.1rem; line-height: 1.4; color: #1a1a1a; font-family: var(--font-serif); }
+.commandMsg { background: #ffe0e0; color: #d32f2f; padding: 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-top: auto; border: 1px solid #ffcdd2; }
+
+/* PRICING */
+.pricingGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; width: 100%; margin-top: 30px; }
+.priceCol { border: 1px solid #eee; padding: 25px; border-radius: 8px; text-align: left; background: #fff; position: relative; }
+.priceCol.featured { border-color: var(--accent-gold); background: #fffbf5; }
+.priceTitle { font-weight: bold; margin-bottom: 10px; font-size: 1.1rem; }
+.pricePercent { font-size: 2.5rem; font-family: var(--font-serif); color: var(--text-main); margin-bottom: 15px; display: block; }
+
+/* CONTROLS */
+.controlsContainer {
+    position: fixed; bottom: 30px; right: 40px;
+    display: flex; gap: 20px; z-index: 100; align-items: center;
+    background: rgba(255,255,255,0.9); 
+    padding: 10px 20px; border-radius: 30px;
+    backdrop-filter: blur(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+.controlsContainer button {
+    background: transparent; color: var(--text-main); border: none;
+    cursor: pointer; font-family: var(--font-sans);
+    font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+}
+.controlsContainer button:hover { opacity: 0.5; }
+
+/* MEDIA QUERIES */
+@media (max-width: 900px) {
+    .slide { padding-top: 40px; display: block; overflow-y: auto; }
+    .contentGrid { display: flex; flex-direction: column-reverse; gap: 40px; padding-bottom: 80px; }
+    .vennContainer { height: 300px; }
+    .circle { width: 150px; height: 150px; font-size: 0.8rem; }
+    .circleCenter { width: 160px; height: 160px; top: 60px; }
+    .pricingGrid { grid-template-columns: 1fr; }
+    .controlsContainer { right: 50%; transform: translateX(50%); bottom: 20px; width: max-content; }
+}
