@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import styles from './PitchDeck.module.css';
+import styles from '../PitchDeck.module.css';
 
 const PitchDeck = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
