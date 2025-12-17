@@ -1,125 +1,111 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { ShieldCheck, Calendar, LayoutTemplate, BarChart3, CheckCircle } from "lucide-react";
-import Navbar from "../components/Navbar";
-import { useBooking } from "../context/BookingContext";
+import { supabase } from "../lib/supabaseClient";
+import { useUser } from "@clerk/nextjs";
+import { Clock, Calendar, Video, CheckCircle, AlertCircle, ChevronRight } from "lucide-react";
+import { formatLocalTime } from "../lib/dateUtils";
+
 
 export default function DashboardPage() {
-  const { bookings, updateStatus } = useBooking();
+  const { user } = useUser();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  return (
-    <div className="min-h-screen bg-gray-50 text-black font-sans">
-      <Navbar />
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user) return;
+      const { data } = await supabase
+        .from('bookings')
+        .select(`*, brand:brand_id (name, avatar_url)`)
+        .eq('creator_id', user.id)
+        .order('created_at', { ascending: false });
+      if (data) setOrders(data);
+      setLoading(false);
+    };
+    fetchData();
+  }, [user]);
 
-      <div className="p-4 md:p-8 max-w-5xl mx-auto pb-20">
-        {/* Header Profile */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
-          <div className="flex items-center gap-6">
-            <div className="relative">
-               <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop" className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg" alt="Profile" />
-               <div className="absolute bottom-0 right-0 bg-black text-white text-xs px-2 py-1 rounded-full border-2 border-white font-bold flex items-center gap-1">
-                 <ShieldCheck size={12} /> PRO
-               </div>
-            </div>
-            <div>
-              <h2 className="text-2xl md:text-3xl font-serif">Sarah Jenkins</h2>
-              <p className="text-gray-500 text-sm md:text-base">Fashion & Lifestyle • Level 4 Creator</p>
-              <div className="flex flex-wrap gap-2 md:gap-4 mt-2 text-sm font-medium">
-                 <span className="text-green-600 bg-green-50 px-2 py-1 rounded">98% Reliability</span>
-                 <span className="text-indigo-600 bg-indigo-50 px-2 py-1 rounded">14m Avg Retention</span>
-              </div>
-            </div>
-          </div>
-        </header>
+  const handleStatus = async (id: number, newStatus: string) => {
+     setOrders(prev => prev.map(o => o.id === id ? {...o, status: newStatus} : o));
+     await supabase.from('bookings').update({ status: newStatus }).eq('id', id);
+  };
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* LEFT COL: BOOKINGS */}
-          <div className="lg:col-span-2 space-y-6">
-            <h3 className="font-bold text-lg flex items-center gap-2"><Calendar size={18} /> Booking Requests</h3>
-            
-            {bookings.length === 0 && (
-              <div className="p-8 text-center text-gray-500 bg-white rounded-xl border border-dashed border-gray-300">
-                No active bookings. Check back later!
-              </div>
-            )}
+  if (loading) return <div className="p-10 text-center">Loading...</div>;
+return (
+    <div className="space-y-8 animate-in fade-in">
+      
+      {/* 1. NEXT UP (The "Hero" Card) */}
+      {orders.filter(o => o.status === 'APPROVED').map(order => (
+        <div key={order.id} className="bg-black text-white p-8 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+           <div className="relative z-10">
+              <div className="flex items-center gap-2 text-red-500 font-bold uppercase tracking-widest text-xs mb-2">
+                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span> Upcoming Stream
+              </div>
+              <h2 className="text-3xl font-serif font-bold mb-2">{order.project_name}</h2>
+              
+              {/* --- UPDATE 1: HERO CARD TIME --- */}
+              <div className="flex items-center gap-4 text-gray-400 text-sm">
+                {/* Replaced the separate Date/Time lines with the unified Helper */}
+                <span className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-white">
+                    <Clock size={14}/> {formatLocalTime(order.scheduled_at)}
+                </span>
+              </div>
+              {/* -------------------------------- */}
 
-            {bookings.map((booking) => (
-              <div key={booking.id} className={`bg-white border rounded-xl p-6 shadow-sm transition-all ${booking.status === 'PENDING' ? 'border-blue-500 ring-1 ring-blue-500/20' : 'border-gray-200'}`}>
-                <div className="flex justify-between items-start mb-2">
-                   <div>
-                     {booking.status === 'PENDING' && (
-                       <span className="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-2 inline-block animate-pulse">Action Required</span>
-                     )}
-                     {booking.status === 'APPROVED' && (
-                       <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-2 inline-block">Upcoming</span>
-                     )}
-                     <h4 className="text-xl font-bold">{booking.project_name}</h4>
-                     <p className="text-gray-500 text-sm">{booking.date_text}</p>
-                   </div>
-                   <div className="text-right">
-                     <div className="font-mono font-bold text-lg">{booking.price}</div>
-                     <div className="text-xs text-gray-400">Fixed Fee</div>
-                   </div>
-                </div>
+           </div>
 
-                {/* Action Buttons */}
-                {booking.status === 'PENDING' ? (
-                  <div className="flex gap-3 mt-6">
-                    <button 
-                      onClick={() => updateStatus(booking.id, 'APPROVED')}
-                      className="flex-1 bg-black text-white py-3 rounded-lg font-bold hover:scale-[1.02] transition"
-                    >
-                      Accept Job
-                    </button>
-                    <button 
-                      onClick={() => updateStatus(booking.id, 'DECLINED')}
-                      className="px-6 py-3 border border-gray-200 rounded-lg font-bold text-gray-500 hover:bg-gray-50"
-                    >
-                      Decline
-                    </button>
-                  </div>
-                ) : (
-                  <div className="mt-6">
-                    <Link href="/studio">
-                      <button className="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition flex items-center justify-center gap-2">
-                        <LayoutTemplate size={18} /> Enter Studio
-                      </button>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+           <div className="relative z-10 flex flex-col gap-3 w-full md:w-auto">
+              {!order.stream_link ? (
+                <Link href={`/studio/${order.id}`}>
+                   <button className="w-full bg-white text-black px-6 py-3 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition">
+                     <AlertCircle size={18} className="text-orange-500"/> Add Stream Link
+                   </button>
+                </Link>
+              ) : (
+                <Link href={`/studio/${order.id}`}>
+                   <button className="w-full bg-red-600 text-white px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-red-900/20">
+                     Enter Studio <ChevronRight size={18} />
+                   </button>
+                </Link>
+              )}
+           </div>
 
-          {/* RIGHT COL: STATS */}
-          <div className="space-y-6">
-            <h3 className="font-bold text-lg flex items-center gap-2"><BarChart3 size={18} /> Performance Score</h3>
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
-              <div className="text-center mb-6">
-                <div className="inline-block p-4 rounded-full border-4 border-green-500 text-3xl font-bold font-mono text-green-600 mb-2">9.4</div>
-                <div className="text-sm font-bold text-gray-800">Excellent Standing</div>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-xs font-bold mb-1">
-                    <span>Punctuality</span><span className="text-green-600">100%</span>
-                  </div>
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-green-500 w-full"></div></div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-xs font-bold mb-1">
-                    <span>Brief Adherence</span><span className="text-green-600">92%</span>
-                  </div>
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-green-500 w-[92%]"></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
+           <div className="absolute top-0 right-0 w-64 h-64 bg-gray-800 rounded-full blur-3xl opacity-30 translate-x-1/3 -translate-y-1/3"></div>
+        </div>
+      ))}
 
-        </div>
-      </div>
-    </div>
-  );
+      {/* 2. PENDING REQUESTS */}
+      <div>
+        <h3 className="font-bold text-lg mb-4">Requests</h3>
+        {orders.filter(o => o.status === 'PENDING').length === 0 && <div className="text-gray-400 text-sm">No pending requests.</div>}
+        
+        <div className="grid gap-4">
+          {orders.filter(o => o.status === 'PENDING').map(order => (
+            <div key={order.id} className="bg-white p-6 rounded-2xl border border-gray-200 flex justify-between items-center">
+               <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center font-bold">{order.brand?.name[0]}</div>
+                  <div>
+                    <div className="font-bold">{order.project_name}</div>
+                    <div className="text-sm text-gray-500">{order.brand?.name} • {order.price}</div>
+                    
+                    {/* --- UPDATE 2: PENDING CARD TIME --- */}
+                    <div className="text-xs text-blue-600 font-medium mt-1">
+                       Requested: {formatLocalTime(order.scheduled_at)}
+                    </div>
+                    {/* ----------------------------------- */}
+
+                  </div>
+               </div>
+               <div className="flex gap-2">
+                 <button onClick={() => handleStatus(order.id, 'DECLINED')} className="px-4 py-2 text-red-600 text-sm font-bold hover:bg-red-50 rounded-lg">Decline</button>
+                 <button onClick={() => handleStatus(order.id, 'APPROVED')} className="px-6 py-2 bg-black text-white text-sm font-bold rounded-lg hover:bg-gray-800">Accept</button>
+               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  );
 }

@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, HelpCircle, Users, LayoutTemplate, BarChart3, Zap } from "lucide-react";
+import { Search, HelpCircle, UserCircle, Users, LayoutTemplate, BarChart3, Zap } from "lucide-react";
 import { UserButton, SignedIn, SignedOut, SignUpButton, SignInButton } from "@clerk/nextjs";
 import { useBooking } from "../context/BookingContext";
 
@@ -32,6 +32,8 @@ export default function Navbar() {
                     <Link href="/"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/')}`}>Marketplace</button></Link>
                     <Link href="/agency"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/agency')}`}>Agency</button></Link>
                     <Link href="/analytics"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/analytics')}`}>Data</button></Link>
+                    <Link href="/pricing"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/pricing')}`}>Pricing</button></Link>
+
                 </>
             ) : (
                 <>
@@ -53,7 +55,22 @@ export default function Navbar() {
       {/* 3. RIGHT SIDE ACTIONS */}
       <div className="flex items-center gap-4">
         <SignedIn>
-          <UserButton afterSignOutUrl="/" />
+          <UserButton afterSignOutUrl="/">
+            <UserButton.MenuItems>
+                {/* 1. Add Custom 'Manage Profile' Link */}
+                <UserButton.Action 
+                label="Manage Profile" 
+                labelIcon={<UserCircle size={14} />}
+                onClick={() => window.location.href = '/dashboard/profile'} 
+                />
+                
+                {/* 2. Add 'Manage Account' (Standard Clerk) */}
+                <UserButton.Action label="manageAccount" />
+                
+                {/* 3. Add 'Sign Out' (Standard Clerk) */}
+                <UserButton.Action label="signOut" />
+            </UserButton.MenuItems>
+            </UserButton>
         </SignedIn>
 
         <SignedOut>

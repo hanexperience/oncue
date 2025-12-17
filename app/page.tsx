@@ -1,14 +1,35 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, MapPin, Zap, ShieldCheck } from "lucide-react";
+import { Search, Zap, PlayCircle, ShieldCheck } from "lucide-react";
 import Navbar from "./components/Navbar";
-import { INFLUENCERS } from "./lib/data";
+import { supabase } from "./lib/supabaseClient"; 
 
 export default function HomePage() {
+  const [influencers, setInfluencers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // --- FETCH REAL DATA ---
+  useEffect(() => {
+    const fetchTalent = async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('is_featured', true) // <--- ONLY SHOW FEATURED
+        .eq('role', 'creator');
+
+      if (data) {
+        setInfluencers(data);
+      }
+      setLoading(false);
+    };
+
+    fetchTalent();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white text-black font-sans selection:bg-red-100">
+    <div className="min-h-screen bg-gray-50 text-black font-sans selection:bg-black selection:text-white">
       <Navbar />
 
       {/* 1. HERO SECTION (Small & Punchy) */}
@@ -48,52 +69,67 @@ export default function HomePage() {
       </div>
 
       {/* 2. THE MARKETPLACE GRID */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="flex justify-between items-end mb-8">
-          <h2 className="text-2xl font-bold">Featured Talent</h2>
-          <div className="text-sm text-gray-500 cursor-pointer hover:text-black underline">View All Categories</div>
+<div className="max-w-7xl mx-auto px-4 py-20">
+        <div className="flex justify-between items-end mb-10">
+          <div>
+            <h2 className="text-3xl font-serif font-bold mb-2">Featured Talent</h2>
+            <p className="text-gray-500">Highest retention rates this week.</p>
+          </div>
+          <Link href="/marketplace">
+            <button className="text-sm font-bold border-b-2 border-black pb-1 hover:text-gray-600 hover:border-gray-600 transition">View All Categories</button>
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {INFLUENCERS.map((inf) => (
-             <Link href={`/marketplace/${inf.id}`} key={inf.id} className="group">
-               <motion.div 
-                 whileHover={{ y: -5 }}
-                 className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
-               >
-                 {/* Image */}
-                 <div className="relative h-64 bg-gray-200">
-                   <img src={inf.image} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                   <div className="absolute top-3 right-3 bg-white/90 backdrop-blur text-black text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1">
-                     <Zap size={10} className="text-yellow-500 fill-yellow-500" /> 
-                     {inf.category}
-                   </div>
-                 </div>
+        {loading ? (
+          <div className="text-center py-20 text-gray-400">Loading Talent...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {influencers.map((inf) => (
+              <Link href={`/marketplace/${inf.id}`} key={inf.id} className="group block h-full">
+                <motion.div 
+                  whileHover={{ y: -8 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 h-full border border-gray-100 flex flex-col"
+                >
+                  {/* Image Card */}
+                  <div className="relative h-72 bg-gray-200 overflow-hidden">
+                    <img 
+                        // Fallback to avatar if card_image is missing
+                        src={inf.card_image_url || inf.avatar_url} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" 
+                        alt={inf.name}
+                    />
+                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-black text-[10px] font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm">
+                      <Zap size={10} className="text-yellow-500 fill-yellow-500" /> 
+                      {inf.category}
+                    </div>
+                  </div>
 
-                 {/* Info */}
-                 <div className="p-5">
-                   <div className="flex justify-between items-start mb-2">
-                     <h3 className="font-bold text-lg">{inf.name}</h3>
-                     <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">{inf.price}</span>
-                   </div>
-                   <p className="text-xs text-gray-500 mb-4 line-clamp-2">{inf.handle} • Melbourne, AU</p>
-                   
-                   {/* Metrics */}
-                   <div className="grid grid-cols-2 gap-2 text-xs">
-                     <div className="bg-gray-50 p-2 rounded text-center">
-                       <div className="text-gray-400 text-[10px] uppercase">Retention</div>
-                       <div className="font-bold text-indigo-600">{inf.retention}</div>
-                     </div>
-                     <div className="bg-gray-50 p-2 rounded text-center">
-                        <div className="text-gray-400 text-[10px] uppercase">Reliability</div>
-                        <div className="font-bold text-green-600">{inf.reliability}</div>
-                     </div>
-                   </div>
-                 </div>
-               </motion.div>
-             </Link>
-          ))}
-        </div>
+                  {/* Info Section */}
+                  <div className="p-6 flex-1 flex flex-col">
+                    <div className="flex justify-between items-start mb-1">
+                      <h3 className="font-bold text-lg leading-tight group-hover:text-red-600 transition-colors">{inf.name}</h3>
+                      <span className="text-sm font-mono font-bold bg-gray-50 px-2 py-1 rounded border border-gray-100">{inf.price_rate}</span>
+                    </div>
+                    <p className="text-xs text-gray-400 mb-6">{inf.handle} • {inf.location || "Global"}</p>
+                    
+                    {/* Stats Row */}
+                    <div className="mt-auto grid grid-cols-2 gap-3">
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 text-center group-hover:bg-indigo-50 group-hover:border-indigo-100 transition-colors">
+                        <div className="text-[9px] text-gray-400 uppercase tracking-wider font-bold mb-1">Avg Retention</div>
+                        <div className="font-mono font-bold text-indigo-600 text-sm">{inf.retention_rate}</div>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 text-center group-hover:bg-green-50 group-hover:border-green-100 transition-colors">
+                          <div className="text-[9px] text-gray-400 uppercase tracking-wider font-bold mb-1">Reliability</div>
+                          <div className="font-mono font-bold text-green-600 text-sm">{inf.reliability_score}</div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

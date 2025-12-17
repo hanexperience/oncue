@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '../lib/supabaseClient'; 
 import { useUser } from "@clerk/nextjs";
+import { createDateFromLocalInput } from '../lib/dateUtils';
 
 // 1. Define Types
 type Booking = {
@@ -10,19 +11,28 @@ type Booking = {
   status: 'PENDING' | 'APPROVED' | 'DECLINED' | 'LIVE' | 'COMPLETED';
   price: string;
   date_text: string;
-  creator?: { name: string; handle: string; avatar_url: string }; 
+  scheduled_at?: string; // New field
+  stream_link?: string;  // New field
+  checked_in_at?: string; // New field
+  creator?: { name: string; handle: string; avatar_url: string };
+  brand?: { name: string; avatar_url: string }; 
 };
 
 type BookingContextType = {
   bookings: Booking[];
   balance: number;
   prompterMessage: string;
-  addBooking: (creatorId: string, price: string, name: string) => Promise<void>;
+  userRole: 'brand' | 'creator'; 
+  
+  // Actions
+  setUserRole: (role: 'brand' | 'creator') => void;
+  addBooking: (creatorId: string, price: string, name: string, date: string) => Promise<void>;
   updateStatus: (id: number, status: string) => Promise<void>;
   sendPrompterMessage: (msg: string) => Promise<void>;
-  userRole: 'brand' | 'creator'; 
-  setUserRole: (role: 'brand' | 'creator') => void;
-  toggleRole: () => void; 
+  
+  // NEW ACTIONS (These were missing from export)
+  submitStreamLink: (bookingId: number, link: string) => Promise<void>;
+  checkInCreator: (bookingId: number) => Promise<void>;
 };
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined);
@@ -34,62 +44,43 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   const [balance, setBalance] = useState(14250);
   const [userRole, setUserRole] = useState<'brand' | 'creator'>('brand');
 
-  // --- A. FETCH DATA ---
+  // --- 1. SETUP & FETCH ---
+  
+  const refreshUserRole = async () => {
+    if (!user) return;
+    const { data } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+    if (data?.role) {
+      setUserRole(data.role as 'brand' | 'creator');
+    }
+  };
+
   const fetchBookings = async () => {
     if (!user) return; 
 
     let query = supabase
       .from('bookings')
-      .select(`*, creator:creator_id (name, handle, avatar_url)`)
+      .select(`*, creator:creator_id (name, handle, avatar_url), brand:brand_id (name, avatar_url)`)
       .order('created_at', { ascending: false });
 
-    // FILTER LOGIC
+    // Filter based on who is logged in
     if (userRole === 'brand') {
-      // Brand sees bookings they created
       query = query.eq('brand_id', user.id);
-    } 
-    // (Optional: Add logic here if you want Creators to only see their own bookings)
+    } else {
+      query = query.eq('creator_id', user.id);
+    }
 
-    // EXECUTE QUERY (Runs for both roles)
     const { data, error } = await query;
-
     if (error) console.error('Error fetching bookings:', error);
-    if (data) {
-      const formatted = data.map((b: any) => ({
-        id: b.id,
-        project_name: b.project_name,
-        status: b.status,
-        price: b.price,
-        date_text: b.date_text,
-        creator: b.creator
-      }));
-      setBookings(formatted);
-    }
+    if (data) setBookings(data);
   };
 
-  // --- B. EFFECT ---
-const refreshUserRole = async () => {
-    if (!user) return;
-    
-    const { data } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (data?.role) {
-      // If database says "creator", switch the app mode to "creator"
-      setUserRole(data.role as 'brand' | 'creator');
-    }
-  };
-
-  // 2. UPDATE THE EFFECT to run this check on load
   useEffect(() => {
     if (user) {
-      refreshUserRole(); 
-      fetchBookings();   
+      refreshUserRole();
+      fetchBookings();
     }
     
+    // Realtime Listener
     const channel = supabase
       .channel('realtime_messages')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
@@ -100,9 +91,10 @@ const refreshUserRole = async () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user]); 
-  
-  // --- C. ACTIONS ---
+  }, [user, userRole]);
+
+  // --- 2. ACTIONS ---
+
   const ensureProfileExists = async () => {
     if (!user) return;
     const { data } = await supabase.from('profiles').select('id').eq('id', user.id).maybeSingle();
@@ -110,63 +102,62 @@ const refreshUserRole = async () => {
     if (!data) {
       await supabase.from('profiles').insert({
         id: user.id,
-        name: user.fullName || "New Brand",
+        name: user.fullName || "New User",
         email: user.primaryEmailAddress?.emailAddress,
-        role: 'brand',
+        role: userRole,
         avatar_url: user.imageUrl
       });
     }
   };
 
-  const addBooking = async (creatorId: string, price: string, creatorName: string) => {
-    if (!user) {
-        alert("Please sign in.");
-        return;
-    }
+const addBooking = async (creatorId: string, price: string, creatorName: string, dateString: string) => {
+    if (!user) { alert("Please sign in."); return; }
+    
+    // --- TIMEZONE FIX ---
+    // 1. Force the string to be treated as YOUR local time
+    const localDate = createDateFromLocalInput(dateString);
+    
+    // 2. Convert that exact moment to UTC for the database
+    const utcDate = localDate.toISOString();
+    
+    // Debugging Log (Check your browser console when you click book!)
+    console.log("Booking Debug:", {
+       input: dateString,
+       interpretedAsLocal: localDate.toString(),
+       sendingToDB: utcDate
+    });
+    // --------------------
 
     await ensureProfileExists();
+    const tempId = Date.now();
     
     // Optimistic Update
-    const tempId = Date.now();
-    const newBooking = {
+    setBookings(prev => [{
       id: tempId,
-      project_name: "New Campaign Request",
-      status: 'PENDING' as const,
-      price: price,
-      date_text: "Requested Just Now",
+      project_name: "New Campaign",
+      status: 'PENDING',
+      price,
+      date_text: "Just Now",
+      scheduled_at: utcDate, // Save the corrected UTC
       creator: { name: creatorName, handle: "...", avatar_url: "..." }
-    };
-    setBookings(prev => [newBooking, ...prev]);
+    } as Booking, ...prev]);
 
-    // Database Insert
     const { error } = await supabase.from('bookings').insert({
-      brand_id: user.id, // <--- FIXED: Uses Real User ID
-      creator_id: creatorId, // <--- FIXED: Uses the passed creatorId
+      brand_id: user.id,
+      creator_id: creatorId,
       project_name: "New Campaign Request",
       price: price,
       status: 'PENDING',
-      date_text: "Requested Just Now"
+      scheduled_at: utcDate // Save the corrected UTC
     });
 
-    if (error) {
-      console.error("Booking failed:", error);
-    } else {
-      fetchBookings(); 
-    }
+    if (error) console.error("Booking failed:", error);
+    else fetchBookings(); 
   };
 
   const updateStatus = async (id: number, status: string) => {
     setBookings(prev => prev.map(b => b.id === id ? { ...b, status: status as any } : b));
-
-    const { error } = await supabase
-      .from('bookings')
-      .update({ status: status })
-      .eq('id', id);
-
-    if (error) {
-      console.error("Error updating status:", error);
-      fetchBookings(); 
-    }
+    await supabase.from('bookings').update({ status: status }).eq('id', id);
   };
 
   const sendPrompterMessage = async (msg: string) => {
@@ -174,14 +165,36 @@ const refreshUserRole = async () => {
     await supabase.from('messages').insert({ content: msg });
   };
 
-  const toggleRole = () => {
-    setUserRole(prev => prev === 'brand' ? 'creator' : 'brand');
+  // --- NEW FUNCTIONS (The Missing Piece) ---
+
+  const submitStreamLink = async (bookingId: number, link: string) => {
+    // Optimistic
+    setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, stream_link: link } : b));
+    // DB
+    const { error } = await supabase.from('bookings').update({ stream_link: link }).eq('id', bookingId);
+    if(error) alert("Error saving link: " + error.message);
+  };
+
+  const checkInCreator = async (bookingId: number) => {
+    // Optimistic
+    setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, checked_in_at: new Date().toISOString() } : b));
+    // DB
+    await supabase.from('bookings').update({ checked_in_at: new Date().toISOString() }).eq('id', bookingId);
   };
 
   return (
     <BookingContext.Provider value={{ 
-      bookings, balance, prompterMessage, addBooking, updateStatus, sendPrompterMessage, 
-      userRole, setUserRole, toggleRole 
+      bookings, 
+      balance, 
+      prompterMessage, 
+      userRole,
+      setUserRole,
+      addBooking, 
+      updateStatus, 
+      sendPrompterMessage,
+      // --- EXPORTING THE NEW FUNCTIONS HERE ---
+      submitStreamLink, 
+      checkInCreator
     }}>
       {children}
     </BookingContext.Provider>

@@ -1,127 +1,161 @@
 "use client";
-import React, { useState } from "react";
-import { Bell, MessageSquare, Zap, Send } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { supabase } from "../lib/supabaseClient";
+import { useUser } from "@clerk/nextjs";
+import { Bell, Calendar, ChevronRight, PlayCircle, Clock, CheckCircle2, XCircle } from "lucide-react";
 import Navbar from "../components/Navbar";
-import { AGENCY_ROSTER } from "../lib/data";
-import { useBooking } from "../context/BookingContext";
+import { formatLocalTime } from "../lib/dateUtils";
 
-export default function AgencyPage() {
-  const { bookings, balance, sendPrompterMessage } = useBooking();
-  const [inputMessage, setInputMessage] = useState("");
+export default function BrandDashboard() {
+  const { user } = useUser();
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const { userRole } = useBooking();
+  // Fetch Brand's Bookings
+  useEffect(() => {
+    const fetchBookings = async () => {
+      if (!user) return;
+      
+      const { data } = await supabase
+        .from('bookings')
+        .select(`*, creator:creator_id (name, handle, avatar_url)`)
+        .eq('brand_id', user.id)
+        .order('created_at', { ascending: false });
 
-    if (userRole === 'creator') {
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-            <h2 className="text-2xl font-bold mb-2">Access Denied</h2>
-            <p className="text-gray-500 mb-4">Creators cannot access the Agency Portal.</p>
-            <button className="text-blue-600 underline" onClick={() => window.history.back()}>Go Back</button>
-        </div>
-        </div>
-    );
-    }
+      if (data) setBookings(data);
+      setLoading(false);
+    };
+    fetchBookings();
+  }, [user]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputMessage.trim()) return;
-    sendPrompterMessage(inputMessage); // Send to Context
-    setInputMessage(""); // Clear input
-    alert("Message sent to Teleprompter!");
-  };
+  // Group bookings for clean UI
+  const liveBookings = bookings.filter(b => b.status === 'LIVE');
+  const activeBookings = bookings.filter(b => b.status === 'APPROVED' || b.status === 'PENDING');
+  const pastBookings = bookings.filter(b => b.status === 'COMPLETED' || b.status === 'DECLINED');
 
-  
+  if (loading) return <div className="p-20 text-center animate-pulse">Loading Campaigns...</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 text-black font-sans">
       <Navbar />
-
-      <div className="p-4 md:p-8 max-w-7xl mx-auto pb-20">
+      
+      <main className="max-w-6xl mx-auto px-6 pt-28 pb-20">
         
-        {/* --- NEW: LIVE DIRECTOR CONSOLE --- */}
-        <div className="bg-black text-white rounded-xl p-6 mb-8 shadow-2xl border border-gray-800">
-          <div className="flex items-center gap-2 mb-4 text-red-500 font-bold uppercase tracking-widest text-xs animate-pulse">
-            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-            Live Command Center
-          </div>
-          
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex-1">
-              <h3 className="text-xl font-serif mb-2">Real-Time Direction</h3>
-              <p className="text-gray-400 text-sm mb-4">Send instructions directly to the talent's teleprompter screen.</p>
-              
-              <form onSubmit={handleSendMessage} className="flex gap-2">
-                <input 
-                  type="text" 
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  placeholder="Ex: Show the product close up..." 
-                  className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white transition-colors"
-                />
-                <button type="submit" className="bg-white text-black font-bold px-6 py-3 rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
-                  <Send size={16} /> Send
-                </button>
-              </form>
-
-              <div className="flex gap-2 mt-3">
-                <button onClick={() => sendPrompterMessage("WRAP IT UP!")} className="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded border border-gray-600">"Wrap it up"</button>
-                <button onClick={() => sendPrompterMessage("Mention the 20% Discount!")} className="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded border border-gray-600">"Mention Discount"</button>
-                <button onClick={() => sendPrompterMessage("Check the audio.")} className="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded border border-gray-600">"Check Audio"</button>
-              </div>
-            </div>
-
-            <div className="w-full md:w-1/3 bg-gray-900 rounded-lg p-4 border border-gray-800 flex flex-col justify-center items-center text-center opacity-50">
-              <Zap size={32} className="text-yellow-500 mb-2" />
-              <div className="text-xs font-bold text-gray-500">Connected to:</div>
-              <div className="font-bold text-white">Sarah Jenkins (Studio)</div>
-            </div>
-          </div>
-        </div>
-        {/* --- END CONSOLE --- */}
-
-        <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+        <div className="flex justify-between items-end mb-10">
           <div>
-            <h2 className="text-2xl md:text-3xl font-serif mb-2">Roster Management</h2>
-            <p className="text-sm md:text-base text-gray-500">Monitor your talent, approve briefs, and track commissions.</p>
+            <h1 className="text-4xl font-serif font-bold mb-2">Campaign Manager</h1>
+            <p className="text-gray-500">Track contracts and direct live streams.</p>
           </div>
-          {/* Balance Block */}
-          <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
-            <div>
-              <div className="text-xs text-gray-500 uppercase tracking-widest">Pending Payouts</div>
-              <div className="text-2xl font-mono font-bold">${balance.toLocaleString()}</div>
+          <Link href="/marketplace">
+            <button className="bg-black text-white px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition">
+              + New Campaign
+            </button>
+          </Link>
+        </div>
+
+        {/* 1. LIVE NOW SECTION (Highlighted) */}
+        {liveBookings.length > 0 && (
+          <div className="mb-12">
+            <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-red-600 mb-4 animate-pulse">
+              <span className="w-2 h-2 bg-red-600 rounded-full"></span> Live Now
+            </h2>
+            <div className="grid gap-6">
+              {liveBookings.map(booking => (
+                <Link href={`/agency/live/${booking.id}`} key={booking.id}>
+                  <div className="bg-black text-white p-8 rounded-2xl border border-gray-800 shadow-2xl hover:scale-[1.01] transition-transform cursor-pointer flex justify-between items-center group">
+                    <div className="flex items-center gap-6">
+                      <div className="relative">
+                        <img src={booking.creator?.avatar_url} className="w-16 h-16 rounded-full border-2 border-red-500" />
+                        <div className="absolute -bottom-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">LIVE</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold mb-1">{booking.project_name}</div>
+                        <div className="text-gray-400 text-sm">Hosted by {booking.creator?.name}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right mr-4 hidden md:block">
+                         <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Duration</div>
+                         <div className="font-mono text-red-400">00:14:32</div>
+                      </div>
+                      <button className="bg-white text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        Enter Director Console <ChevronRight size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
-        </header>
+        )}
 
-        {/* Existing Roster Grid... (Keep your existing code here) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {AGENCY_ROSTER.map((talent, i) => (
-             /* Keep existing card code */
-             <div key={i} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm relative overflow-hidden">
-                <div className="font-bold text-sm mb-1">{talent.name}</div>
-                <div className="text-xs text-gray-500">{talent.status}</div>
-             </div>
-          ))}
-        </div>
+        {/* 2. UPCOMING / PENDING */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          
+          <div className="lg:col-span-2">
+            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+              <Calendar size={20} /> Active Campaigns
+            </h2>
+            
+            {activeBookings.length === 0 ? (
+               <div className="bg-white p-10 rounded-2xl border border-dashed border-gray-300 text-center text-gray-400">
+                  No active campaigns. Book talent in the Marketplace.
+               </div>
+            ) : (
+               <div className="space-y-4">
+                {activeBookings.map(booking => (
+                   <div key={booking.id} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
+                      <div className="flex items-center gap-4 w-full">
+                        <img src={booking.creator?.avatar_url} className="w-12 h-12 rounded-full bg-gray-100" />
+                        <div>
+                          <div className="font-bold text-lg">{booking.project_name}</div>
+                          
+                          {/* SHOW SCHEDULED TIME */}
+                          <div className="text-sm text-gray-500 flex items-center gap-2">
+                             <Calendar size={14} className="text-gray-400"/>
+                            <span className="font-medium text-black">
+                                {formatLocalTime(booking.scheduled_at)}
+                                </span>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Status Badge */}
+                      <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide whitespace-nowrap
+                        ${booking.status === 'PENDING' ? 'bg-yellow-50 text-yellow-700' : 'bg-blue-50 text-blue-700'}
+                      `}>
+                        {booking.status === 'PENDING' ? 'Waiting for Acceptance' : 'Scheduled'}
+                      </div>
+                      
+                      {booking.status === 'APPROVED' && (
+                         <Link href={`/agency/live/${booking.id}`}>
+                           <button className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-bold hover:bg-black whitespace-nowrap">
+                             Prep Console
+                           </button>
+                         </Link>
+                      )}
+                   </div>
+                 ))}
+               </div>
+            )}
+          </div>
 
-        {/* Existing Bookings List */}
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-           <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 font-bold text-sm uppercase flex gap-2">
-             <Bell size={16} /> Contract Requests ({bookings.length})
-           </div>
-        {bookings.map((booking) => (
-             <div key={booking.id} className="p-4 border-b border-gray-100 flex justify-between">
-                <div>
-                  <div className="font-bold">{booking.project_name}</div> // ✅ CHANGED TO project_name
-                  <div className="text-xs text-gray-500">{booking.status}</div>
+          {/* 3. PAST HISTORY */}
+          <div>
+            <h2 className="text-xl font-bold mb-6 text-gray-400">History</h2>
+            <div className="space-y-4 opacity-60">
+              {pastBookings.map(booking => (
+                <div key={booking.id} className="bg-gray-100 p-4 rounded-xl flex justify-between items-center">
+                   <div className="text-sm font-bold">{booking.project_name}</div>
+                   <div className="text-xs font-bold uppercase">{booking.status}</div>
                 </div>
-                <button className="bg-black text-white px-3 py-1 rounded text-xs">Manage</button>
-             </div>
-           ))}
+              ))}
+            </div>
+          </div>
+
         </div>
 
-      </div>
+      </main>
     </div>
   );
 }

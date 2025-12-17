@@ -6,6 +6,7 @@ import { supabase } from "../../lib/supabaseClient";
 import Navbar from "../../components/Navbar";
 import { useBooking } from "../../context/BookingContext";
 import { useUser, useClerk } from "@clerk/nextjs";
+import { getUserTimeZone } from "../../lib/dateUtils";
 
 export default function CreatorProfilePage() {
   const { id } = useParams();
@@ -14,6 +15,7 @@ export default function CreatorProfilePage() {
   const { user } = useUser();
   const { openSignIn } = useClerk();
   const router = useRouter();
+  const [scheduleDate, setScheduleDate] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -27,15 +29,24 @@ export default function CreatorProfilePage() {
     if (id) fetchProfile();
   }, [id]);
 
-  const handleBook = () => {
+const handleBook = () => {
     if (!user) {
       openSignIn();
       return;
     }
-    addBooking(String(id), profile.price_rate, profile.name);
+    if (!scheduleDate) {
+      alert("Please select a date and time for the stream.");
+      return;
+    }
+    
+    // CLEANER: Just pass the raw value. 
+    // The updated BookingContext will automatically convert this to UTC.
+    addBooking(String(id), profile.price_rate, profile.name, scheduleDate);
+    
     alert("Request Sent!");
     router.push('/agency');
   };
+
 
   if (!profile) return (
     <div className="min-h-screen flex items-center justify-center bg-white">
@@ -151,13 +162,27 @@ export default function CreatorProfilePage() {
                 </div>
               </div>
 
-              <div className="space-y-4 mb-8">
-                 <div className="p-4 border border-gray-200 rounded-xl flex justify-between items-center cursor-pointer hover:border-black transition">
-                    <div className="text-sm font-bold text-gray-500">Date</div>
-                    <div className="text-sm font-bold">Select Date</div>
-                 </div>
-                 <div className="p-4 border border-gray-200 rounded-xl flex justify-between items-center cursor-pointer hover:border-black transition">
-                    <div className="text-sm font-bold text-gray-500">Duration</div>
+            <div className="space-y-4 mb-8">
+             {/* DATE PICKER */}
+             <div className="p-4 border border-gray-200 rounded-xl hover:border-black transition bg-gray-50">
+                <div className="flex justify-between mb-2">
+                   <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">Stream Time</div>
+                   {/* SHOW USER THEIR TIMEZONE */}
+                   <div className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                      My Time: {getUserTimeZone()}
+                   </div>
+                </div>
+                <input 
+                  type="datetime-local"
+                  value={scheduleDate}
+                  onChange={(e) => setScheduleDate(e.target.value)}
+                  className="w-full bg-transparent font-bold outline-none text-sm"
+                />
+             </div>
+
+                 {/* 2. DURATION (Static for now) */}
+                 <div className="p-4 border border-gray-200 rounded-xl flex justify-between items-center cursor-not-allowed opacity-60">
+                    <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">Duration</div>
                     <div className="text-sm font-bold">1 Hour</div>
                  </div>
               </div>
