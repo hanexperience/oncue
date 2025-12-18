@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react"; // Added Suspense import
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { supabase } from "../lib/supabaseClient";
@@ -9,10 +9,11 @@ import {
 } from "lucide-react";
 import { useBooking } from "../context/BookingContext";
 
-export default function OnboardingPage() {
+// 1. Rename your main component to 'OnboardingContent'
+function OnboardingContent() {
   const { user } = useUser();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(); // This was the cause of the error
   const roleParam = searchParams.get('role');
   const { setUserRole } = useBooking();
   const [role, setRole] = useState<'brand' | 'creator' | null>(null);
@@ -77,10 +78,7 @@ export default function OnboardingPage() {
         alert("Error: " + error.message);
         setLoading(false);
         } else {
-        // --- FORCE THE ROLE SWITCH HERE ---
         setUserRole(role); 
-
-        // Then Redirect
         if (role === 'brand') router.push('/marketplace');
         else router.push('/dashboard');
         }
@@ -100,7 +98,6 @@ export default function OnboardingPage() {
                     <h2 className="text-5xl font-serif font-medium mb-6 leading-tight">Welcome to the <br/>Live Economy.</h2>
                     <p className="text-gray-400 text-lg">The operating system for professional live commerce.</p>
                 </div>
-                {/* Background Gradient Blob */}
                 <div className="absolute top-[-20%] right-[-20%] w-[500px] h-[500px] bg-blue-900/40 rounded-full blur-[100px]"></div>
              </div>
 
@@ -136,7 +133,6 @@ export default function OnboardingPage() {
            {/* Steps */}
            <div className="space-y-6">
              {role === 'brand' ? (
-               // Brand Steps (Just one)
                <div className="flex gap-4 items-center opacity-100 translate-x-2">
                  <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 border-white bg-white text-black">
                    1
@@ -147,7 +143,6 @@ export default function OnboardingPage() {
                  </div>
                </div>
              ) : (
-               // Creator Steps (The original list)
                [
                  { n: 1, label: "Identity", desc: "Social presence verification." },
                  { n: 2, label: "Tech Check", desc: "Studio & speed audit." },
@@ -348,13 +343,18 @@ export default function OnboardingPage() {
                     </div>
                 </div>
             )}
-            
-            {/* BRAND FORM (Included inside structure for consistency if needed) */}
-            {/* You can re-add the brand form here if role === 'brand' logic needs to be inside the layout, 
-                but I handled it separately at the top for simplicity. */}
 
         </div>
       </div>
     </div>
+  );
+}
+
+// 2. Export the Wrapper with Suspense
+export default function OnboardingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>}>
+      <OnboardingContent />
+    </Suspense>
   );
 }
