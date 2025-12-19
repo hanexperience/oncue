@@ -5,24 +5,26 @@ import { MapPin, Loader2, X } from "lucide-react";
 interface LocationSearchProps {
   onSelect: (address: string) => void;
   defaultValue?: string;
+  className?: string; // ✅ Added this to fix the TypeScript error
 }
 
-export default function LocationSearch({ onSelect, defaultValue = "" }: LocationSearchProps) {
+export default function LocationSearch({ 
+  onSelect, 
+  defaultValue = "", 
+  className = "" // ✅ Destructured here
+}: LocationSearchProps) {
   const [query, setQuery] = useState(defaultValue);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   
-  // Ref to handle debouncing (preventing too many API calls)
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Search Function (OpenStreetMap / Nominatim)
   const searchLocation = async (text: string) => {
     if (!text || text.length < 3) return;
     
     setIsLoading(true);
     try {
-      // Free API endpoint
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(text)}&featuretype=city&limit=5&addressdetails=1`
       );
@@ -36,36 +38,33 @@ export default function LocationSearch({ onSelect, defaultValue = "" }: Location
     }
   };
 
-  // Handle Input Change with Debounce
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setQuery(val);
     
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     
-    // Wait 500ms after user stops typing before calling API (Polite to free servers)
     debounceTimer.current = setTimeout(() => {
         searchLocation(val);
     }, 500);
   };
 
   const handleSelect = (item: any) => {
-    // Format: "Melbourne, Victoria, Australia"
     const city = item.address.city || item.address.town || item.address.village || "";
     const state = item.address.state || "";
     const country = item.address.country || "";
     
-    // Clean string builder
     const formatted = [city, state, country].filter(Boolean).join(", ");
     
     setQuery(formatted);
     setSuggestions([]);
     setIsOpen(false);
-    onSelect(formatted); // Send back to parent
+    onSelect(formatted);
   };
 
 return (
-  <div className="relative w-full">
+  /* ✅ Applied className to the container so 'w-full' works from the parent */
+  <div className={`relative ${className}`}>
     <div className="relative">
       <MapPin className="absolute left-4 top-4 text-gray-500" />
         <input
@@ -76,14 +75,12 @@ return (
         className="w-full pl-12 pr-10 py-4 rounded-xl border-2 border-gray-100 focus:border-black outline-none text-lg text-gray-900 placeholder:text-gray-400 transition-all"
         />
       
-      {/* Loading Spinner */}
       {isLoading && (
          <div className="absolute right-4 top-4">
            <Loader2 className="animate-spin text-gray-400" />
          </div>
       )}
       
-      {/* Clear Button */}
       {!isLoading && query && (
          <button onClick={() => { setQuery(""); onSelect(""); }} className="absolute right-4 top-4 text-gray-400 hover:text-black">
            <X size={20}/>
@@ -91,7 +88,6 @@ return (
       )}
     </div>
 
-    {/* Dropdown Results */}
     {isOpen && suggestions.length > 0 && (
       <ul className="absolute z-50 w-full bg-white mt-2 rounded-xl border border-gray-100 shadow-xl max-h-60 overflow-y-auto">
         {suggestions.map((item, idx) => (
@@ -102,8 +98,8 @@ return (
           >
             <div className="bg-gray-100 p-2 rounded-full"><MapPin size={14} className="text-gray-500"/></div>
             <div className="flex flex-col">
-               <span className="font-bold text-black">{item.display_name.split(',')[0]}</span>
-               <span className="text-gray-400 text-xs">{item.display_name}</span>
+                <span className="font-bold text-black">{item.display_name.split(',')[0]}</span>
+                <span className="text-gray-400 text-xs">{item.display_name}</span>
             </div>
           </li>
         ))}

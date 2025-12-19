@@ -302,7 +302,7 @@ function OnboardingContent() {
            <div><h2 className="text-3xl font-bold text-gray-900">Where are you based?</h2><p className="text-gray-500 mt-2">Brands often search for creators in specific cities.</p></div>
            <div className="space-y-2">
                <label className="text-xs font-bold uppercase text-gray-500 tracking-wide">City</label>
-               <LocationSearch onSelect={(location: string) => setCreatorData({...creatorData, location_city: location})} className="w-full"/>
+               <LocationSearch onSelect={(location: string) => setCreatorData({...creatorData, location_city: location})} />
            </div>
            <div className="pt-8">
                <button onClick={nextStep} disabled={!creatorData.location_city} className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition-transform disabled:opacity-50">Continue</button>
