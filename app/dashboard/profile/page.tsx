@@ -202,7 +202,7 @@ export default function EditProfilePage() {
             <h1 className="font-bold text-lg hidden md:block">Edit Profile</h1>
          </div>
          <div className="flex gap-3">
-             <Link href={`/creator/${formData.handle || user.id}`} target="_blank">
+             <Link href={`/creator/${formData.handle || user?.id}`} target="_blank">
                 <button className="px-4 py-2 text-sm font-bold border border-gray-200 rounded-full hover:bg-gray-100 flex items-center gap-2 transition-colors">
                    <Eye size={16}/> <span className="hidden md:inline">View Public</span>
                 </button>

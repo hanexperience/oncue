@@ -20,7 +20,7 @@ export default function Navbar() {
         <Link href="/" className="font-bold text-xl tracking-tighter">
           ON CUE
         </Link>
-        <p className="text-xs text-gray-800">In Development</p>
+        <p className="text-xs text-gray-800">BETA</p>
       </div>
 
       {/* 2. CENTER LINKS (Context Aware) */}
