@@ -7,7 +7,6 @@ const PitchDeck = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const totalSlides = 12;
 
-    // FIX 1: Added ": number" to tell TypeScript this is a number
     const changeSlide = (direction: number) => {
         let newSlide = currentSlide + direction;
         if (newSlide >= totalSlides) { newSlide = 0; }
@@ -16,7 +15,6 @@ const PitchDeck = () => {
     };
 
     useEffect(() => {
-        // FIX 2: Added ": KeyboardEvent" to tell TypeScript this is a key event
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowRight' || e.key === ' ') {
                 changeSlide(1);
@@ -29,7 +27,6 @@ const PitchDeck = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [currentSlide]);
 
-    // Helper to determine active slide class
     const getSlideClass = (index: number) => {
         return `${styles.slide} ${index === currentSlide ? styles.active : ''}`;
     };
@@ -245,30 +242,63 @@ const PitchDeck = () => {
                     </div>
                 </div>
 
-                {/* SLIDE 8: BUSINESS MODEL */}
+                {/* SLIDE 8: BUSINESS MODEL (UPDATED) */}
                 <div className={getSlideClass(7)}>
                     <div className={styles.fullCenter}>
                         <h3>// The Business Model</h3>
-                        <h2>Monetizing Reliability.</h2>
-                        <div className={styles.pricingGrid}>
-                            <div className={styles.priceCol}>
-                                <div className={styles.priceTitle}>Marketplace Fee</div>
-                                <span className={styles.pricePercent}>20%</span>
-                                <p style={{ fontSize: '0.9rem' }}>Standard commission on the total booking value (Talent Fee).</p>
-                                <div style={{ fontSize: '0.8rem', color: '#888', marginTop: 'auto' }}>Transactional</div>
+                        <h2>The Incentive Ecosystem</h2>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', width: '100%', marginTop: '30px' }}>
+                            
+                            {/* LEFT: BRAND SIDE */}
+                            <div style={{ background: '#fcfcfc', padding: '25px', borderRadius: '12px', border: '1px solid #eee', textAlign: 'left' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+                                    <div style={{ background: 'black', color: 'white', padding: '5px 10px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>BRAND PAYS</div>
+                                    <div style={{ fontSize: '0.9rem', color: '#666' }}>For Control & Safety</div>
+                                </div>
+                                <div className={styles.pricingRow}>
+                                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>20%</div>
+                                    <div style={{ fontSize: '0.9rem' }}><strong>Marketplace Fee</strong><br/><span style={{color:'#888', fontSize:'0.8rem'}}>On total booking volume.</span></div>
+                                </div>
+                                <div className={styles.pricingRow} style={{ marginTop: '15px' }}>
+                                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>$99<span style={{fontSize:'0.8rem'}}>/mo</span></div>
+                                    <div style={{ fontSize: '0.9rem' }}><strong>SaaS Subscription</strong><br/><span style={{color:'#888', fontSize:'0.8rem'}}>For AI monitoring & "Run of Show" tools.</span></div>
+                                </div>
+                                <div className={styles.pricingRow} style={{ marginTop: '15px' }}>
+                                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Hold</div>
+                                    <div style={{ fontSize: '0.9rem' }}><strong>Escrow Float</strong><br/><span style={{color:'#888', fontSize:'0.8rem'}}>Performance funds held until AI verification.</span></div>
+                                </div>
                             </div>
-                            <div className={`${styles.priceCol} ${styles.featured}`}>
-                                <div className={styles.priceTitle}>Performance Hold</div>
-                                <span className={styles.pricePercent}>10%</span>
-                                <p style={{ fontSize: '0.9rem' }}>Escrow funds released only when AI verifies brief adherence. We take a float interest.</p>
-                                <div style={{ fontSize: '0.8rem', color: '#888', marginTop: 'auto' }}>Fintech Float</div>
+
+                            {/* RIGHT: CREATOR SIDE */}
+                            <div style={{ background: '#222', color: 'white', padding: '25px', borderRadius: '12px', textAlign: 'left', position: 'relative', overflow: 'hidden' }}>
+                                <div style={{ position: 'absolute', top: 0, right: 0, width: '100px', height: '100px', background: 'var(--accent-gold)', opacity: 0.1, borderRadius: '0 0 0 100%' }}></div>
+                                
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', borderBottom: '1px solid #444', paddingBottom: '10px' }}>
+                                    <div style={{ background: 'var(--accent-gold)', color: 'black', padding: '5px 10px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>CREATOR EARNS</div>
+                                    <div style={{ fontSize: '0.9rem', color: '#aaa' }}>Performance-Based Pay</div>
+                                </div>
+
+                                <div style={{ marginBottom: '15px' }}>
+                                    <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: '#888', fontWeight: 'bold', marginBottom: '5px' }}>A. The Base</div>
+                                    <div style={{ fontSize: '1rem' }}><strong>"Show Up" Fee</strong></div>
+                                    <div style={{ fontSize: '0.8rem', color: '#aaa' }}>Guaranteed pay for punctuality & brief adherence.</div>
+                                </div>
+
+                                <div style={{ marginBottom: '15px' }}>
+                                    <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--accent-gold)', fontWeight: 'bold', marginBottom: '5px' }}>B. The Bonus</div>
+                                    <div style={{ fontSize: '1rem' }}><strong>Variable Impact Pay</strong></div>
+                                    <div style={{ fontSize: '0.8rem', color: '#aaa', marginTop: '5px' }}>
+                                        • <strong>CPEM:</strong> Cost Per Engagement Minute<br/>
+                                        • <strong>Interaction:</strong> Bonus per comment/share<br/>
+                                        • <strong>Peak Unlock:</strong> Bonus for hitting 5k+ viewers
+                                    </div>
+                                </div>
+                                <div style={{ fontSize: '0.7rem', fontStyle: 'italic', opacity: 0.6, marginTop: '20px' }}>
+                                    *Incentivizes retention over passive views.
+                                </div>
                             </div>
-                            <div className={styles.priceCol}>
-                                <div className={styles.priceTitle}>SaaS Premium</div>
-                                <span className={styles.pricePercent}>$99<span style={{ fontSize: '1rem' }}>/mo</span></span>
-                                <p style={{ fontSize: '0.9rem' }}>Brand Subscription for advanced "The Prompter" features (Live Chat, AI Analysis).</p>
-                                <div style={{ fontSize: '0.8rem', color: '#888', marginTop: 'auto' }}>Recurring Revenue</div>
-                            </div>
+
                         </div>
                     </div>
                 </div>

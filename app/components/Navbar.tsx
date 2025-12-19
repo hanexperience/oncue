@@ -33,13 +33,14 @@ export default function Navbar() {
                     <Link href="/agency"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/agency')}`}>Agency</button></Link>
                     <Link href="/analytics"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/analytics')}`}>Data</button></Link>
                     <Link href="/pricing"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/pricing')}`}>Pricing</button></Link>
-
                 </>
             ) : (
                 <>
                     <Link href="/"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/')}`}>Marketplace</button></Link>
                     <Link href="/dashboard"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/dashboard')}`}>Dashboard</button></Link>
                     <Link href="/studio"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/studio')}`}>Studio</button></Link>
+                    <Link href="/pricing"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/pricing')}`}>Pricing</button></Link>
+
                 </>
             )}
         </SignedIn>
@@ -47,7 +48,10 @@ export default function Navbar() {
         <SignedOut>
             {/* If Logged Out: Show Marketing Links */}
             <Link href="/"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/')}`}>Search Talent</button></Link>
-            <Link href="/how-it-works"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/how-it-works')}`}>How it Works</button></Link>
+            
+            {/* LINK TO BRAND LANDING PAGE */}
+            <Link href="/brands"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/brands')}`}>For Brands</button></Link>
+            
             <Link href="/pricing"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/pricing')}`}>Pricing</button></Link>
         </SignedOut>
       </div>
@@ -57,17 +61,12 @@ export default function Navbar() {
         <SignedIn>
           <UserButton afterSignOutUrl="/">
             <UserButton.MenuItems>
-                {/* 1. Add Custom 'Manage Profile' Link */}
                 <UserButton.Action 
                 label="Manage Profile" 
                 labelIcon={<UserCircle size={14} />}
                 onClick={() => window.location.href = '/dashboard/profile'} 
                 />
-                
-                {/* 2. Add 'Manage Account' (Standard Clerk) */}
                 <UserButton.Action label="manageAccount" />
-                
-                {/* 3. Add 'Sign Out' (Standard Clerk) */}
                 <UserButton.Action label="signOut" />
             </UserButton.MenuItems>
             </UserButton>
@@ -80,17 +79,17 @@ export default function Navbar() {
           
           <div className="h-4 w-[1px] bg-gray-300"></div>
 
-          {/* JOIN AS CREATOR (Redirects to Onboarding with Role=Creator) */}
-          <SignUpButton mode="modal" forceRedirectUrl="/onboarding?role=creator">
+          {/* CREATOR LINK */}
+          <Link href="/creators">
             <button className="text-sm font-bold text-gray-600 hover:text-black">Join as Creator</button>
-          </SignUpButton>
+          </Link>
 
-          {/* JOIN AS BRAND (Redirects to Onboarding with Role=Brand) */}
-          <SignUpButton mode="modal" forceRedirectUrl="/onboarding?role=brand">
+          {/* BRAND LINK (Now points to /brands sales page first) */}
+          <Link href="/brands">
             <button className="bg-black text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition shadow-lg">
               Join as Brand
             </button>
-          </SignUpButton>
+          </Link>
         </SignedOut>
       </div>
     </nav>
