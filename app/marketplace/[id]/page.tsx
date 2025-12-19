@@ -170,14 +170,13 @@ useEffect(() => {
 
     const finalPrice = getCurrentPrice();
 
-    addBooking({
-      creatorId: profile.id,
-      creatorName: profile.name || profile.handle,
-      serviceType: `${selectedPackage} on ${selectedPlatform}`,
-      date: selectedDate,
-      price: finalPrice
-    });
-
+    addBooking(
+    profile.id,                         // creatorId
+    finalPrice.toString(),              // price (Context expects a string)
+    profile.name || profile.handle,      // name
+    selectedDate                        // date (The raw string from your input)
+    );
+        
     router.push("/checkout");
   };
 
