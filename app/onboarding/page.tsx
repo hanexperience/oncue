@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useUser, useAuth } from "@clerk/nextjs"; 
 import { createClient } from "@supabase/supabase-js"; 
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js"; // NEW IMPORTS
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js"; 
 import { 
   Mic, Smartphone, Wifi, Camera, 
   ArrowRight, Check, CheckCircle2, DollarSign, User, Loader2, 
@@ -48,8 +48,7 @@ const PACKAGE_TEMPLATES = [
   { id: "stream", title: "Sponsored Stream (1 Hr)", description: "Fully branded hour.", multiplier: 2.0, icon: Wifi }
 ];
 
-// --- SUB-COMPONENT: CARD FORM ---
-// We need this because 'useStripe' must be used inside <Elements> context
+// --- SUB-COMPONENT: CARD FORM (Future Use) ---
 function CardVerificationForm({ onVerified }: { onVerified: () => void }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -67,7 +66,6 @@ function CardVerificationForm({ onVerified }: { onVerified: () => void }) {
     setError("");
 
     try {
-      // 1. Get Client Secret from Supabase Edge Function
       const token = await getToken({ template: 'supabase' });
       const supabaseAuth = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -81,7 +79,6 @@ function CardVerificationForm({ onVerified }: { onVerified: () => void }) {
 
       if (fnError || !data?.clientSecret) throw new Error(fnError?.message || "Failed to init verification");
 
-      // 2. Confirm Card Setup with Stripe
       const result = await stripe.confirmCardSetup(data.clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement)!,
@@ -95,7 +92,6 @@ function CardVerificationForm({ onVerified }: { onVerified: () => void }) {
       if (result.error) {
         setError(result.error.message || "Verification failed");
       } else {
-        // Success!
         onVerified();
       }
     } catch (err: any) {
@@ -241,7 +237,7 @@ function OnboardingContent() {
       };
 
       if (role === 'brand') {
-         // Brand Logic
+         // Brand Logic (Invite Only)
       } else {
         let avatarUrl = finalData.profileImage ? await uploadFileAuth(finalData.profileImage) : null;
         
@@ -278,7 +274,8 @@ function OnboardingContent() {
             pricing_packages: { packages: finalData.packages, rates: finalData.rates },
             phone: finalData.phone_number ? `${finalData.phone_country_code}${finalData.phone_number}` : null,
             
-            verified: identityStatus === 'verified',
+            // Note: Since we skipped verification, this is false for now, but they can still launch.
+            verified: false, 
             onboarding_status: 'complete'
         }]);
 
@@ -367,7 +364,7 @@ function OnboardingContent() {
           </div>
       );
 
-      // Step 4: Portfolio (Fixed: Video Thumbnails)
+      // Step 4: Portfolio
       case 4: return (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
              <div><h2 className="text-3xl font-bold text-gray-900">Portfolio</h2><p className="text-gray-500 mt-2">Upload your best work (Max 50MB for video).</p></div>
@@ -392,7 +389,7 @@ function OnboardingContent() {
           </div>
       );
 
-      // Step 5: Pricing
+      // Step 5: Pricing (FINAL STEP WITH SUBMIT)
       case 5: return (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div><h2 className="text-3xl font-bold text-gray-900">Monetization</h2><p className="text-gray-500 mt-2">Set your baseline. We'll handle the rest.</p></div>
@@ -427,11 +424,25 @@ function OnboardingContent() {
             )}
             <div className="pt-8 flex justify-between items-center">
               <button onClick={prevStep} className="text-gray-500 font-bold text-sm hover:text-black uppercase tracking-widest">Back</button>
-              <button onClick={() => { setCreatorData({...creatorData, packages: selectedPackages.map(p=>p.title), rates: selectedPackages.reduce((acc,p)=>({...acc,[p.title]:p.price}),{})}); nextStep(); }} disabled={selectedPackages.length === 0} className="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-800 disabled:opacity-50 transition-transform">Continue</button>
+              
+              {/* FINAL SUBMIT BUTTON */}
+              <button 
+                onClick={() => { 
+                    const pkgData = { packages: selectedPackages.map(p => p.title), rates: selectedPackages.reduce((acc, p) => ({ ...acc, [p.title]: p.price }), {}) }; 
+                    setCreatorData({ ...creatorData, ...pkgData }); 
+                    handleFinalSubmit(pkgData); 
+                }} 
+                disabled={selectedPackages.length === 0 || loading} 
+                className="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-800 disabled:opacity-50 transition-transform flex items-center gap-2"
+              >
+                 {loading ? <Loader2 className="animate-spin" /> : "Finish & Launch"}
+              </button>
             </div>
           </div>
       );
 
+      // --- COMMENTED OUT STEPS (Kept for future reference) ---
+      /*
       // Step 6: Contact Info (OPTIONAL / SKIP)
       case 6: return (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -496,12 +507,12 @@ function OnboardingContent() {
              </div>
           </Elements>
       );
+      */
 
       default: return null;
     }
   };
 
-  // ... (Keep Main Layout Logic Unchanged) ...
   if (!role) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
@@ -531,7 +542,23 @@ function OnboardingContent() {
   return (
     <div className="flex h-screen w-full bg-gray-50">
       <div className="hidden lg:flex w-1/3 bg-black text-white p-12 flex-col justify-between relative overflow-hidden">
-        <div className="relative z-10"><h1 className="text-3xl font-bold mb-2 tracking-tight">Setup Profile</h1><p className="text-gray-400 text-sm">Complete these steps to start accepting bookings.</p><div className="space-y-6 mt-12">{['Location', 'Details', 'Socials', 'Identity', 'Portfolio', 'Pricing', 'Contact', 'Verify'].map((label, idx) => (<div key={label} className={`flex items-center gap-4 transition-all duration-500 ${idx === step ? 'opacity-100 translate-x-2' : 'opacity-30'}`}><div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-2 ${idx <= step ? 'bg-white text-black border-white' : 'border-gray-700 text-gray-500'}`}>{idx + 1}</div><span className="font-bold text-lg tracking-wide">{label}</span></div>))}</div></div>
+        <div className="relative z-10">
+            <h1 className="text-3xl font-bold mb-2 tracking-tight">Setup Profile</h1>
+            <p className="text-gray-400 text-sm">Complete these steps to start accepting bookings.</p>
+            <div className="space-y-6 mt-12">
+                {/* COMMENTED OUT ORIGINAL ARRAY FOR REFERENCE */}
+                {/* {['Location', 'Details', 'Socials', 'Identity', 'Portfolio', 'Pricing', 'Contact', 'Verify'].map((label, idx) => ( */}
+                
+                {['Location', 'Details', 'Socials', 'Identity', 'Portfolio', 'Pricing'].map((label, idx) => (
+                    <div key={label} className={`flex items-center gap-4 transition-all duration-500 ${idx === step ? 'opacity-100 translate-x-2' : 'opacity-30'}`}>
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-2 ${idx <= step ? 'bg-white text-black border-white' : 'border-gray-700 text-gray-500'}`}>
+                            {idx + 1}
+                        </div>
+                        <span className="font-bold text-lg tracking-wide">{label}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
       </div>
       <div className="flex-1 overflow-y-auto"><div className="min-h-full flex items-center justify-center p-8 lg:p-16"><div className="max-w-xl w-full">{role === 'creator' ? renderCreatorStep() : <div className="text-center font-bold">Brand Flow Under Construction</div>}</div></div></div>

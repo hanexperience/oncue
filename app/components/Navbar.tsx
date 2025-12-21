@@ -15,7 +15,7 @@ export default function Navbar() {
     pathname === path ? "text-black bg-gray-100" : "text-gray-500 hover:text-black";
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-200 px-6 py-3 z-50 flex justify-between items-center">
+    <nav className="fixed top-0 left-0 right-0 bg-white/0 backdrop-blur-md border-b border-gray-200 px-6 py-3 z-50 flex justify-between items-center">
       
       {/* 1. LOGO SECTION */}
       <div className="flex items-center">
