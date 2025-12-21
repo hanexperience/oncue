@@ -78,20 +78,20 @@ export default function BrandLandingPage() {
       <div className="py-10 border-b border-gray-100 bg-gray-50/50">
         <div className="max-w-7xl mx-auto px-6 text-center">
              <p className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase mb-8">
-                {view === 'brand' ? 'Trusted by exclusive partners on' : 'Integrates with your stack'}
+                {view === 'brand' ? 'Platforms supported' : 'Integrates with your stack'}
              </p>
              <div className="flex flex-wrap justify-center items-center gap-8 md:gap-24 opacity-40 grayscale transition-all hover:grayscale-0 hover:opacity-100">
                   <span className="text-2xl md:text-3xl font-bold tracking-tighter cursor-default">
-                    TikTok <span className="font-light">Shop</span>
+                    TikTok <span className="font-light">Live</span>
                   </span>
                   <span className="text-2xl md:text-3xl font-bold tracking-tighter cursor-default">
-                    Instagram <span className="font-light">Checkout</span>
+                    Instagram <span className="font-light">Live</span>
                   </span>
                   <span className="text-2xl md:text-3xl font-bold tracking-tighter cursor-default">
-                    Shopify
+                    Twitch
                   </span>
                   <span className="text-2xl md:text-3xl font-bold tracking-tighter cursor-default">
-                    YouTube <span className="font-light">Shopping</span>
+                    YouTube <span className="font-light">Live</span>
                   </span>
              </div>
         </div>
