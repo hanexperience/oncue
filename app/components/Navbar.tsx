@@ -46,7 +46,7 @@ export default function Navbar() {
                 </>
             ) : (
                 <>
-                    <Link href="/"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/')}`}>Marketplace</button></Link>
+                    {/* <Link href="/"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/')}`}>Marketplace</button></Link>*/}
                     <Link href="/dashboard"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/dashboard')}`}>Dashboard</button></Link>
                     <Link href="/studio"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/studio')}`}>Studio</button></Link>
                     <Link href="/pricing"><button className={`px-4 py-2 rounded-full text-sm font-medium transition ${isActive('/pricing')}`}>Pricing</button></Link>
