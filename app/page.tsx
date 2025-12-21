@@ -103,9 +103,9 @@ export default function HomePage() {
 
                {/* CURRENT: ACTION BUTTONS */}
                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <Link href="/onboarding?role=brand">
+                  <Link href="/brands">
                     <button className="w-full sm:w-auto bg-white text-black px-8 py-4 rounded-full font-bold text-sm hover:scale-105 transition-transform">
-                      Hire Talent
+                      Join as Brand
                     </button>
                   </Link>
                   <Link href="/onboarding?role=creator">
