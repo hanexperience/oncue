@@ -213,13 +213,16 @@ function OnboardingContent() {
   };
 
   // --- FINAL SUBMIT ---
-  const handleFinalSubmit = async (dataOverride?: any) => {
+// ... inside your OnboardingContent component
+
+const handleFinalSubmit = async (dataOverride?: any) => {
     setLoading(true);
     try {
       if (!user) throw new Error("No user found");
 
-      const token = await getToken({ template: 'supabase' });
-      const supabaseAuth = createClient(
+      // 1. Initial Token for Uploads
+      let token = await getToken({ template: 'supabase' });
+      let supabaseAuth = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         { global: { headers: { Authorization: `Bearer ${token}` } } }
@@ -227,6 +230,7 @@ function OnboardingContent() {
 
       const finalData = { ...creatorData, ...dataOverride };
 
+      // Helper to upload using the current client
       const uploadFileAuth = async (file: File) => {
         const fileExt = file.name.split('.').pop();
         const fileName = `${user.id}/${Date.now()}-${Math.floor(Math.random() * 10000)}.${fileExt}`;
@@ -236,9 +240,11 @@ function OnboardingContent() {
         return data.publicUrl;
       };
 
+      // --- BRAND VS CREATOR LOGIC ---
       if (role === 'brand') {
          // Brand Logic (Invite Only)
       } else {
+        // 2. Perform Uploads (This takes time!)
         let avatarUrl = finalData.profileImage ? await uploadFileAuth(finalData.profileImage) : null;
         
         const coverUrls = [];
@@ -251,7 +257,18 @@ function OnboardingContent() {
             ? Object.values(finalData.socials as any).reduce((acc: number, curr: any) => acc + (parseInt(curr.followers) || 0), 0)
             : 0;
 
-        const { error } = await supabaseAuth.from('profiles').insert([{ 
+        // 3. FIX: REFRESH TOKEN BEFORE DB INSERT
+        // Because uploads might have taken a long time, the original token might be expired.
+        // We fetch a new one and create a fresh client for the final save.
+        const freshToken = await getToken({ template: 'supabase' });
+        const freshSupabaseAuth = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          { global: { headers: { Authorization: `Bearer ${freshToken}` } } }
+        );
+
+        // 4. Insert using the FRESH client
+        const { error } = await freshSupabaseAuth.from('profiles').insert([{ 
             id: user.id, 
             email: user.primaryEmailAddress?.emailAddress,
             name: user.fullName,
@@ -274,7 +291,6 @@ function OnboardingContent() {
             pricing_packages: { packages: finalData.packages, rates: finalData.rates },
             phone: finalData.phone_number ? `${finalData.phone_country_code}${finalData.phone_number}` : null,
             
-            // Note: Since we skipped verification, this is false for now, but they can still launch.
             verified: false, 
             onboarding_status: 'complete'
         }]);
@@ -290,7 +306,7 @@ function OnboardingContent() {
       setLoading(false);
     }
   };
-
+  
   const renderCreatorStep = () => {
     switch(step) {
       // Step 0: Location
