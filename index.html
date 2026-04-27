@@ -523,7 +523,29 @@
   .contact-info h4{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin:0 0 8px}
   .contact-info a, .contact-info p{font-family:"Archivo Narrow";font-weight:700;font-size:22px;letter-spacing:.005em}
   .contact-info .small{font-size:15px!important;opacity:.75}
+  select {
+    background-color: #111; /* Matches a dark theme */
+    color: #fff;            /* White text for the selected value */
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+    appearance: none;       /* Removes default browser styling */
+  }
 
+  /* Style the dropdown options specifically */
+  select option {
+    background-color: #1a1a1a; /* Dark background for the list */
+    color: #ffffff;            /* High-contrast white text */
+    padding: 10px;
+  }
+
+  /* Ensure the placeholder (first option) is visible but distinct */
+  select option[value=""] {
+    color: #888;
+  }
+
+  
   /* Footer */
   footer{background:var(--ink);color:var(--bone);border-top:1px solid var(--line-on-dark);padding:32px 0}
   .foot{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
