@@ -908,9 +908,9 @@
       <span style="width:42px;height:2px;background:var(--hi);display:inline-block"></span>
       <span class="mono" style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;">05 / Start a project</span>
     </div>
-    <h2>Tell us what&#x27;s<br/><span class="hi">in the way.</span></h2>
+    <h2>Tell us what's<br/><span class="hi">in the way.</span></h2>
     <div class="contact-grid">
-      <form onsubmit="event.preventDefault();alert(&#x27;Thanks &#x2014; we&#x27;ll be in touch within one working day.&#x27;);this.reset();" aria-label="Contact form">
+      <form id="contact-form" action="https://formspree.io/f/xaqazbvk" method="POST" aria-label="Contact form">
         <div class="field row2">
           <div class="field"><label for="name">Your name</label><input id="name" name="name" type="text" required placeholder="e.g. Jane Smith" autocomplete="name"/></div>
           <div class="field"><label for="co">Company</label><input id="co" name="company" type="text" placeholder="Smith Electrical" autocomplete="organization"/></div>
@@ -923,7 +923,7 @@
           <div class="field">
             <label for="industry">Industry</label>
             <select id="industry" name="industry">
-              <option value="">Select industry&#x2026;</option>
+              <option value="">Select industry…</option>
               <option>Plumbing / Gas Fitting</option>
               <option>Electrical</option>
               <option>Building / Construction</option>
@@ -940,8 +940,8 @@
             <label for="budget">Budget</label>
             <select id="budget" name="budget">
               <option>Under $7k</option>
-              <option>$7k &#x2013; $20k</option>
-              <option>$20k &#x2013; $60k</option>
+              <option>$7k – $20k</option>
+              <option>$20k – $60k</option>
               <option>$60k +</option>
               <option>Not sure yet</option>
             </select>
@@ -949,10 +949,13 @@
         </div>
         <div class="field">
           <label for="help">What do you need help with?</label>
-          <textarea id="help" name="message" required placeholder="A new website, a rebrand, more Melbourne leads, a chatbot, a video &#x2014; tell us the headline and we&#x27;ll figure the rest out on a call."></textarea>
+          <textarea id="help" name="message" required placeholder="A new website, a rebrand, more Melbourne leads, a chatbot, a video — tell us the headline and we'll figure the rest out on a call."></textarea>
         </div>
-        <button type="submit" class="submit">Send it over &#x2192;</button>
+        <button type="submit" id="submit-button" class="submit">Send it over →</button>
+        
+        <div id="form-status" style="margin-top: 25px; font-family: 'JetBrains Mono', monospace; font-size: 14px; display: none; line-height: 1.6;"></div>
       </form>
+
       <div class="contact-info">
         <div class="block">
           <h4>Phone</h4>
@@ -968,11 +971,11 @@
         </div>
         <div class="block">
           <h4>Hours</h4>
-          <p>Mon&#x2013;Fri &#xB7; 9:00&#x2013;17:30 AEST</p>
+          <p>Mon–Fri · 9:00–18:00 AEST</p>
         </div>
         <div class="block">
           <h4>Good fits</h4>
-          <p class="small">Melbourne trades &#xB7; operators &#xB7; dealers &#xB7; manufacturers &#xB7; field services &#xB7; SMBs ready to grow.</p>
+          <p class="small">Melbourne trades · operators · dealers · manufacturers · field services · SMBs ready to grow.</p>
         </div>
         <div class="block">
           <h4>Not a fit (yet)</h4>
@@ -998,6 +1001,58 @@
   document.querySelectorAll('.nav a').forEach(a => {
     a.addEventListener('click', () => document.getElementById('topbar').classList.remove('open'));
   });
+
+  const form = document.getElementById("contact-form");
+const status = document.getElementById("form-status");
+const submitBtn = document.getElementById("submit-button");
+
+async function handleSubmit(event) {
+  event.preventDefault();
+  const data = new FormData(event.target);
+  
+  // Update UI to show sending state
+  submitBtn.disabled = true;
+  submitBtn.innerText = "Sending...";
+
+  fetch(event.target.action, {
+    method: form.method,
+    body: data,
+    headers: {
+      'Accept': 'application/json'
+    }
+  }).then(response => {
+    if (response.ok) {
+      // Success
+      status.style.display = "block";
+      status.style.color = "var(--hi)";
+      status.innerHTML = "✓ Thanks! We'll be in touch within one working day.";
+      form.reset();
+      submitBtn.style.display = "none"; // Hide button after success
+    } else {
+      // Server error
+      response.json().then(data => {
+        if (Object.hasOwn(data, 'errors')) {
+          status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+        } else {
+          status.innerHTML = "Oops! There was a problem submitting your form.";
+        }
+      })
+    }
+  }).catch(error => {
+    // Network error
+    status.style.display = "block";
+    status.style.color = "var(--rust)";
+    status.innerHTML = "Oops! There was a connection problem.";
+  }).finally(() => {
+    submitBtn.disabled = false;
+    if (status.innerHTML.includes("Oops")) {
+       submitBtn.innerText = "Try Again →";
+    }
+  });
+}
+
+form.addEventListener("submit", handleSubmit);
 </script>
+
 </body>
 </html>
