@@ -365,7 +365,70 @@
       margin-top: 3px;
     }
 
-    @media print {
+    /* ── SETUP BREAKDOWN ── */
+    .setup-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .breakdown-block {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+
+    .breakdown-block h3 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .breakdown-block h3 .block-num {
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      color: var(--white);
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .breakdown-block ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .breakdown-block ul li {
+      font-size: 12px;
+      color: var(--mid);
+      padding: 4px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      line-height: 1.55;
+    }
+
+    .breakdown-block ul li::before {
+      content: '·';
+      color: var(--accent2);
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+      line-height: 1.2;
+    }
+
+        @media print {
       body { padding: 24px; background: white; }
       .package.featured { border-color: #8a6f52; }
     }
@@ -439,6 +502,50 @@
       <div class="setup-price">$1,500</div>
       <div class="setup-once">One-time fee</div>
     </div>
+  </div>
+
+  <!-- SETUP BREAKDOWN -->
+  <div class="setup-breakdown">
+
+    <div class="breakdown-block">
+      <h3><span class="block-num">1</span> Strategy</h3>
+      <ul>
+        <li>Research what your competitors are doing — so we know what works and where the gaps are</li>
+        <li>Map out the website layout: where everything goes and how people move through it</li>
+        <li>Make sure the site loads fast and actually works across all devices</li>
+        <li>Set clear performance goals — what results you want to see and how we'll measure them</li>
+      </ul>
+    </div>
+
+    <div class="breakdown-block">
+      <h3><span class="block-num">2</span> Brand Identity</h3>
+      <ul>
+        <li>Define your colours, fonts, and overall visual style</li>
+        <li>Create a set of brand guidelines so your website, print, and socials all match</li>
+        <li>Establish your brand voice — how you talk to people, your personality and tone</li>
+        <li>Ensure you look and sound consistent everywhere people encounter you</li>
+      </ul>
+    </div>
+
+    <div class="breakdown-block">
+      <h3><span class="block-num">3</span> Search &amp; Visibility</h3>
+      <ul>
+        <li>Identify what words people type into Google when they need someone like you</li>
+        <li>Make sure Google can find your site and show it to the right people (SEO)</li>
+        <li>Identify gaps in your current visibility that could be bringing in more customers</li>
+      </ul>
+    </div>
+
+    <div class="breakdown-block">
+      <h3><span class="block-num">4</span> Messaging</h3>
+      <ul>
+        <li>Review everything you've already written on your site</li>
+        <li>Make it crystal clear why someone should hire you — not someone else</li>
+        <li>Plan what goes on each page so the journey makes sense</li>
+        <li>Keep your tone consistent so you sound like yourself everywhere</li>
+      </ul>
+    </div>
+
   </div>
 
   <!-- PACKAGES -->
