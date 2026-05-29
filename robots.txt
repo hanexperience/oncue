@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oncue.site/sitemap.xml
