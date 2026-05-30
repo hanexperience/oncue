@@ -109,6 +109,7 @@
       const p = new URLSearchParams(location.search);
       const s = p.get('script');
       if (s) setScript(decodeURIComponent(s));
+      window.POST_ID = p.get('post') || '';
     })();
     function setScript(t){ $('prompter-target').textContent = t; $('script-input').value = t; }
     function openPanel(){ $('panel').classList.add('show'); }
@@ -184,7 +185,8 @@
     async function uploadVideo(){
       if(!finalBlob) return;
       btnUp.disabled=true; statusEl.textContent='Uploading…';
-      const path=`uploads/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${finalExt}`;
+      const tag = window.POST_ID ? `post-${window.POST_ID}-` : '';
+      const path=`uploads/${tag}${Date.now()}-${Math.random().toString(36).slice(2,8)}.${finalExt}`;
       try{
         const res=await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`,{
           method:'POST',
