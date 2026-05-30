@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompter Recorder</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --ink: #0A0A0A;
+      --bone: #F2EDE2;
+      --hi: #E5FF3D;
+      --rust: #E5542A;
+      --rule: #2A2A2A;
+    }
+
+    body {
+      background: var(--ink);
+      color: var(--bone);
+      font-family: system-ui, -apple-system, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── RECORDER CONTAINER ── */
+    .viewport {
+      flex: 1;
+      position: relative;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Mirror the camera preview so it feels natural to the speaker */
+      transform: scaleX(-1); 
+    }
+
+    /* ── TELEPROMPTER OVERLAY ── */
+    /* Positioned at the top center to keep eyes locked near the camera lens */
+    .prompter-box {
+      position: absolute;
+      top: 24px;
+      width: 90%;
+      max-width: 600px;
+      background: rgba(10, 10, 10, 0.85);
+      border: 1px solid var(--rule);
+      padding: 20px;
+      text-align: center;
+      max-height: 200px;
+      overflow-y: auto;
+      backdrop-filter: blur(8px);
+    }
+
+    .prompter-text {
+      font-size: 20px;
+      line-height: 1.5;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* ── ACTION BAR ── */
+    .controls {
+      height: 80px;
+      border-top: 1px solid var(--rule);
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 10;
+    }
+
+    .btn {
+      background: var(--bone);
+      color: var(--ink);
+      border: none;
+      padding: 12px 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-record { background: var(--rust); color: #fff; }
+    .btn-record.recording { background: #fff; color: var(--ink); animation: pulse 1.5s infinite; }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+    <video id="preview" autoplay muted playsinline></video>
+
+    <div class="prompter-box">
+      <p class="prompter-text" id="prompter-target">
+        Welcome to the recording script. Keep your eyes looking right here at this text layer while you speak. This ensures your eyeline rests perfectly inline with your device's camera lens.
+      </p>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="btn-camera" onclick="initCamera()">Enable Camera</button>
+    <button class="btn btn-record" id="btn-record" onclick="toggleRecording()" disabled>Start Recording</button>
+    <button class="btn" id="btn-upload" onclick="uploadVideo()" disabled>Upload to Drive</button>
+    <span id="status" style="font-family: monospace; font-size: 11px; color: var(--hi);"></span>
+  </div>
+
+  <script>
+    let stream = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let finalizedVideoBlob = null;
+
+    const videoEl = document.getElementById('preview');
+    const btnCamera = document.getElementById('btn-camera');
+    const btnRecord = document.getElementById('btn-record');
+    const btnUpload = document.getElementById('btn-upload');
+    const statusEl = document.getElementById('status');
+
+    // 1. Request access to local hardware streams
+    async function initCamera() {
+      try {
+        statusEl.textContent = "Connecting hardware...";
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 1280, height: 720, facingMode: "user" },
+          audio: true
+        });
+        
+        videoEl.srcObject = stream;
+        btnCamera.disabled = true;
+        btnRecord.disabled = false;
+        statusEl.textContent = "Ready";
+      } catch (err) {
+        console.error("Camera access denied:", err);
+        statusEl.textContent = "Error: Camera access required.";
+      }
+    }
+
+    // 2. Handle standard recording loop
+    function toggleRecording() {
+      if (!mediaRecorder || mediaRecorder.state === "inactive") {
+        startRecording();
+      } else {
+        stopRecording();
+      }
+    }
+
+    function startRecording() {
+    recordedChunks = [];
+    finalizedVideoBlob = null;
+    btnUpload.disabled = true;
+
+    // 1. Detect device compatibility dynamically
+    let selectedMimeType = 'video/webm'; // Default fallback
+
+    if (MediaRecorder.isTypeSupported('video/mp4')) {
+        // iPhones and newer Androids/Safari love this
+        selectedMimeType = 'video/mp4'; 
+    } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
+        // High-quality Android Chrome fallback
+        selectedMimeType = 'video/webm;codecs=vp9';
+    }
+
+    mediaRecorder = new MediaRecorder(stream, { mimeType: selectedMimeType });
+
+    mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+        recordedChunks.push(e.data);
+        }
+    };
+
+    // 2. Wrap fragments using the device's specific container format
+    mediaRecorder.onstop = () => {
+        finalizedVideoBlob = new Blob(recordedChunks, { type: selectedMimeType });
+        btnUpload.disabled = false;
+        
+        // Determine extension for filename string
+        const ext = selectedMimeType.includes('mp4') ? 'mp4' : 'webm';
+        statusEl.textContent = `Recording ready (${ext}).`;
+    };
+
+    mediaRecorder.start();
+    btnRecord.textContent = "Stop Recording";
+    btnRecord.classList.add('recording');
+    statusEl.textContent = "Recording...";
+    }
+
+    function stopRecording() {
+      mediaRecorder.stop();
+      btnRecord.textContent = "Start Recording";
+      btnRecord.classList.remove('recording');
+    }
+
+    // 3. Forward the finalized data payload to your webhook bridge
+    async function uploadVideo() {
+      if (!finalizedVideoBlob) return;
+
+      statusEl.textContent = "Uploading to cloud...";
+      btnUpload.disabled = true;
+
+      // Bundle file inside standard multipart form data
+      const formData = new FormData();
+      formData.append('video', finalizedVideoBlob, `selfie-${Date.now()}.webm`);
+
+      try {
+        // Swap URL out with your live n8n webhook / Supabase Edge function link
+        const targetEndpoint = 'https://YOUR_AUTOMATION_WEBHOOK_URL_HERE';
+        
+        const response = await fetch(targetEndpoint, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          statusEl.textContent = "Successfully saved to Drive!";
+        } else {
+          throw new Error(`Server returned status: ${response.status}`);
+        }
+      } catch (err) {
+        console.error("Upload process crashed:", err);
+        statusEl.textContent = "Upload failed. Try again.";
+        btnUpload.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
