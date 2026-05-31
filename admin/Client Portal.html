@@ -776,6 +776,18 @@
       t1 += '<div class="decision-text">' + esc(d.body) + '</div></div>';
     });
     t1 += '</div></div></div>';
+    // deliverables ready to view
+    var readyDeliverables = (data.deliverables || []).filter(function (d) { return d.link; });
+    if (readyDeliverables.length) {
+      t1 += '<div class="sec"><div class="card"><div class="card-label">Deliverables Ready to View<span class="card-count">' + readyDeliverables.length + ' available</span></div>';
+      readyDeliverables.forEach(function (d) {
+        t1 += '<div class="deliverable"><div class="deliverable-icon">' + esc(d.icon) + '</div>';
+        t1 += '<div class="deliverable-name">' + esc(d.name) + '</div>';
+        t1 += '<a class="deliverable-link" href="' + esc(d.link) + '" target="_blank" rel="noopener">View →</a>';
+        t1 += '</div>';
+      });
+      t1 += '</div></div>';
+    }
     t1 += '<div class="sec" id="sec-approvals"><div class="card"><div class="card-label">Posts Awaiting Your Approval';
     if (needApproval.length) t1 += '<span class="card-count">' + needApproval.length + ' to review</span>';
     t1 += '</div>';
@@ -1084,9 +1096,9 @@
         { id: 'p6',  date: iso(13), channel: 'Reel · IG',    title: 'Cosplay contest announcement', content_url: '#', status: 'approval', in_pipeline: true },
         { id: 'p7',  date: iso(17), channel: 'Static · IG',  title: 'Meet the panel hosts', content_url: '#', status: 'approval', in_pipeline: true },
         { id: 'p8',  date: iso(18), channel: 'Blog',         title: 'First-timer’s guide to CrownCon', content_url: '', status: 'draft', in_pipeline: false },
-        { id: 'p9',  date: iso(20), channel: 'Story · IG',   title: 'Early-bird tickets — 48hr flash', content_url: '', status: 'scheduled', in_pipeline: true },
-        { id: 'p10', date: iso(24), channel: 'Static · IG',  title: 'Vendor spotlight series — #1', content_url: '', status: 'draft', in_pipeline: false },
-        { id: 'p11', date: iso(26), channel: 'Reel · IG',    title: 'Venue walkthrough teaser', content_url: '', status: 'draft', in_pipeline: false },
+        { id: 'p9',  date: iso(20), channel: 'Story \xb7 IG',   title: 'Early-bird tickets — 48hr flash', content_url: '', status: 'scheduled', in_pipeline: true },
+        { id: 'p10', date: iso(24), channel: 'Static \xb7 IG',  title: 'Vendor spotlight series — #1', content_url: '', status: 'draft', in_pipeline: false },
+        { id: 'p11', date: iso(26), channel: 'Reel \xb7 IG',    title: 'Venue walkthrough teaser', content_url: '', status: 'draft', in_pipeline: false },
         { id: 'p12', date: iso(28), channel: 'GBP',          title: 'Weekly update: parking & access', content_url: '', status: 'scheduled', in_pipeline: true }
       ]
     });
