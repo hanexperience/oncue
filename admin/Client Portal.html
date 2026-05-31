@@ -516,9 +516,49 @@
       padding: 80px 0; text-align: center;
     }
 
+    /* ─────────────────────────────  TABS  ───────────────────────────── */
+    .tab-bar {
+      border-bottom: 1px solid var(--line);
+      padding: 0 32px;
+      display: flex; align-items: flex-end; gap: 0;
+      background: rgba(243,237,225,.86);
+      backdrop-filter: blur(10px);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.1px;
+      color: var(--muted); background: none; border: none;
+      border-bottom: 2px solid transparent;
+      padding: 14px 18px 12px; cursor: pointer;
+      white-space: nowrap; flex-shrink: 0;
+      transition: color .15s, border-color .15s;
+      display: flex; align-items: center; gap: 7px;
+      position: relative; top: 1px;
+    }
+    .tab-btn:hover { color: var(--ink-soft); }
+    .tab-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+    .tab-badge {
+      background: var(--rust); color: #fff;
+      font-family: 'Archivo Narrow', sans-serif; font-weight: 800;
+      font-size: 10px; letter-spacing: 0;
+      min-width: 18px; height: 18px; border-radius: 999px;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0 5px;
+    }
+
+    /* tab panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
     @media (max-width: 760px) {
       .topbar { padding: 0 18px; }
-      .portal-main { padding: 32px 18px 64px; }
+      .tab-bar { padding: 0 10px; }
+      .tab-btn { padding: 12px 13px 10px; font-size: 10px; }
+      .portal-main { padding: 28px 18px 64px; }
       .hero-body { flex-direction: column; gap: 16px; }
       .badge-stack { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
       .phases { grid-auto-flow: row; grid-auto-columns: auto; }
@@ -556,6 +596,14 @@
       <span class="topbar-client" id="tb-client">Client Portal</span>
       <button class="topbar-logout" onclick="logout()">Log out</button>
     </div>
+  </div>
+  <div class="tab-bar" id="tab-bar" style="display:none;">
+    <button class="tab-btn active" data-tab="actions" onclick="switchTab('actions',this)">
+      Action Items<span class="tab-badge" id="tab-badge-actions" style="display:none"></span>
+    </button>
+    <button class="tab-btn" data-tab="project" onclick="switchTab('project',this)">Project</button>
+    <button class="tab-btn" data-tab="calendar" onclick="switchTab('calendar',this)">Calendar</button>
+    <button class="tab-btn" data-tab="recap" onclick="switchTab('recap',this)">Recap</button>
   </div>
   <div class="portal-main" id="portal-main">
     <div class="portal-loading">Loading…</div>
@@ -665,172 +713,191 @@
     window.scrollTo({ top: y, behavior: 'smooth' });
   }
 
+  // ── Tab switching ──
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    var panel = document.getElementById('tab-' + id);
+    if (panel) panel.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
   // ── Render ──
   function render(data) {
-    const c = data.client || {};
+    var c = data.client || {};
     document.getElementById('tb-client').textContent = c.name + (c.contact_name ? ' · ' + c.contact_name : '');
 
-    const posts = data.posts || [];
-    const pipe = posts.filter(function (p) { return p.in_pipeline || p.status === 'approval' || p.status === 'scheduled'; });
-    const needApproval = pipe.filter(function (p) { return p.status === 'approval'; });
+    var posts = data.posts || [];
+    var pipe = posts.filter(function (p) { return p.in_pipeline || p.status === 'approval' || p.status === 'scheduled'; });
+    var needApproval = pipe.filter(function (p) { return p.status === 'approval'; });
 
-    let h = '';
-
-    // ── Project header ──
-    h += '<div class="kicker">Active Project</div>';
-    h += '<h1 class="display">' + esc(c.project_title) + '</h1>';
-    h += '<p class="lede">' + esc(c.project_started) + '</p>';
-
-    // attention banner
+    // update tab badge
+    var badge = document.getElementById('tab-badge-actions');
     if (needApproval.length) {
-      h += '<div class="alert" onclick="scrollToEl(\'sec-approvals\')">';
-      h += '<div class="alert-dot">' + needApproval.length + '</div>';
-      h += '<div class="alert-text"><strong>' + needApproval.length + ' post' + (needApproval.length > 1 ? 's' : '') + ' need' + (needApproval.length > 1 ? '' : 's') + ' your approval.</strong> Review and lock them in below.</div>';
-      h += '<div class="alert-go">Review →</div></div>';
+      badge.textContent = needApproval.length;
+      badge.style.display = 'inline-flex';
+    } else {
+      badge.style.display = 'none';
     }
 
-    // hero card
-    h += '<div class="hero"><div class="hero-body"><div class="hero-left">';
-    h += '<h2>' + esc(c.name) + '</h2><p>' + esc(c.project_subtitle) + '</p></div>';
-    h += '<div class="badge-stack">';
-    if (c.status_badge)   h += '<span class="pill live">' + esc(c.status_badge) + '</span>';
-    if (c.setup_badge)    h += '<span class="pill">' + esc(c.setup_badge) + '</span>';
-    if (c.retainer_badge) h += '<span class="pill">' + esc(c.retainer_badge) + '</span>';
-    h += '</div></div>';
-    h += '<div class="hero-foot">';
-    h += '<span>Last updated by OnCue: <strong>' + esc(c.last_updated) + '</strong></span>';
-    h += '<span>Project manager: <strong>' + esc(c.pm_name) + '</strong></span>';
-    h += '</div></div>';
+    // show tab bar
+    document.getElementById('tab-bar').style.display = 'flex';
 
-    // ── Package + quotas ──
-    h += '<div class="sec"><div class="package"><div class="package-left">';
-    h += '<div class="package-eyebrow">Current Package</div>';
-    h += '<div class="package-name">' + esc(c.package_name);
-    if (c.package_sub) h += '<small>' + esc(c.package_sub) + '</small>';
-    h += '</div></div><div class="quota-grid">';
-    (data.quotas || []).forEach(function (q) {
-      const pct = q.total > 0 ? Math.round(q.used / q.total * 100) : 0;
-      h += '<div class="quota-item"><div class="quota-count"><span class="used">' + q.used + '</span><span class="of">/' + q.total + '</span></div>';
-      h += '<div class="quota-label">' + esc(q.label) + '</div>';
-      h += '<div class="quota-bar' + (pct >= 100 ? ' full' : '') + '"><span style="width:' + Math.min(pct, 100) + '%"></span></div></div>';
-    });
-    h += '</div></div></div>';
+    // ── Shared project header ──
+    var header = '';
+    header += '<div class="kicker">Active Project</div>';
+    header += '<h1 class="display">' + esc(c.project_title) + '</h1>';
+    header += '<p class="lede">' + esc(c.project_started) + '</p>';
 
-    // ── Phases ──
-    h += '<div class="sec"><div class="sec-head"><div class="sec-title">Project Phases</div></div>';
-    h += '<div class="phases">';
-    (data.phases || []).forEach(function (p) {
-      const cls = p.status === 'done' ? 'is-done' : (p.status === 'active' ? 'is-active' : '');
-      const label = p.status === 'done' ? 'Complete' : (p.status === 'active' ? 'In Progress' : 'Upcoming');
-      h += '<div class="phase ' + cls + '"><div class="phase-num">' + esc(p.num) + '</div>';
-      h += '<div class="phase-name">' + esc(p.name) + '</div>';
-      h += '<span class="phase-status ' + esc(p.status) + '">' + label + '</span></div>';
-    });
-    h += '</div></div>';
-
-    // ── Next steps + Decisions ──
-    h += '<div class="sec"><div class="two-col">';
-    h += '<div class="card"><div class="card-label">Next Steps</div>';
-    h += '<div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>OnCue</div>';
-    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>' + esc(c.contact_name || 'You') + '</div></div>';
-    h += '<ul class="steps">';
+    // ── TAB 1: Action Items ──
+    var t1 = '';
+    if (needApproval.length) {
+      t1 += '<div class="alert" style="margin-top:0;margin-bottom:26px;">';
+      t1 += '<div class="alert-dot">' + needApproval.length + '</div>';
+      t1 += '<div class="alert-text"><strong>' + needApproval.length + ' post' + (needApproval.length > 1 ? 's' : '') + ' need' + (needApproval.length > 1 ? '' : 's') + ' your approval.</strong> Review and lock them in below.</div>';
+      t1 += '<div class="alert-go">↓ Below</div></div>';
+    }
+    t1 += '<div class="sec" style="margin-top:0;"><div class="two-col">';
+    t1 += '<div class="card"><div class="card-label">Next Steps</div>';
+    t1 += '<div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>OnCue</div>';
+    t1 += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>' + esc(c.contact_name || 'You') + '</div></div>';
+    t1 += '<ul class="steps">';
     (data.next_steps || []).forEach(function (s) {
-      const ownerLabel = s.owner === 'oncue' ? 'OnCue' : (s.owner === 'client' ? esc(c.contact_name || 'You') : 'Waiting');
-      h += '<li class="step"><div class="step-dot ' + esc(s.owner) + '"></div>';
-      h += '<div class="step-text">' + esc(s.body) + '</div>';
-      h += '<div class="step-owner ' + esc(s.owner) + '">' + ownerLabel + '</div></li>';
+      var ownerLabel = s.owner === 'oncue' ? 'OnCue' : (s.owner === 'client' ? esc(c.contact_name || 'You') : 'Waiting');
+      t1 += '<li class="step"><div class="step-dot ' + esc(s.owner) + '"></div>';
+      t1 += '<div class="step-text">' + esc(s.body) + '</div>';
+      t1 += '<div class="step-owner ' + esc(s.owner) + '">' + ownerLabel + '</div></li>';
     });
-    h += '</ul></div>';
-
-    h += '<div class="card"><div class="card-label">Decisions Log</div>';
+    t1 += '</ul></div>';
+    t1 += '<div class="card"><div class="card-label">Decisions Log</div>';
     (data.decisions || []).forEach(function (d) {
-      h += '<div class="decision"><div class="decision-date">' + esc(d.date) + '</div>';
-      h += '<div class="decision-text">' + esc(d.body) + '</div></div>';
+      t1 += '<div class="decision"><div class="decision-date">' + esc(d.date) + '</div>';
+      t1 += '<div class="decision-text">' + esc(d.body) + '</div></div>';
     });
-    h += '</div></div></div>';
-
-    // ── Deliverables ──
-    h += '<div class="sec"><div class="sec-head"><div class="sec-title">Deliverables</div></div>';
-    h += '<div class="card">';
-    (data.deliverables || []).forEach(function (d) {
-      h += '<div class="deliverable"><div class="deliverable-icon">' + esc(d.icon) + '</div>';
-      h += '<div class="deliverable-name">' + esc(d.name) + '</div>';
-      if (d.link) h += '<a class="deliverable-link" href="' + esc(d.link) + '" target="_blank" rel="noopener">View →</a>';
-      else h += '<span class="deliverable-status">' + esc(d.status) + '</span>';
-      h += '</div>';
-    });
-    h += '</div></div>';
-
-    // ── Content calendar ──
-    h += '<hr class="divider"/>';
-    h += '<div class="sec-head"><div><div class="kicker">Content Calendar</div>';
-    h += '<div class="sec-title" style="font-size:26px;">What\u2019s going out &amp; when</div></div></div>';
-    h += '<p class="sec-note" style="margin-bottom:22px;max-width:62ch;">Every planned post this month, the channel it runs on, and where it sits in the approval pipeline. Click a post to view the creative.</p>';
-    h += '<div class="cal-toolbar"><div class="cal-month">' + esc(c.cal_label) + '</div><div class="cal-legend">';
-    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--muted-2)"></div>Drafting</div>';
-    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>Needs Approval</div>';
-    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>Scheduled</div>';
-    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Published</div>';
-    h += '</div></div>';
-    h += buildCalendar(c.cal_year, c.cal_month, posts);
-
-    // ── Content mix ──
-    const mixOrder = ['Static Posts', 'Reels', 'Stories', 'Blog', 'GBP Posts'];
-    const mix = { 'Static Posts': 0, 'Reels': 0, 'Stories': 0, 'Blog': 0, 'GBP Posts': 0 };
-    posts.forEach(function (p) { mix[mixCategory(p.channel)]++; });
-    h += '<div class="sec"><div class="sec-head"><div class="sec-title" style="font-size:18px;">This month\u2019s content mix</div></div>';
-    h += '<div class="mix-grid">';
-    mixOrder.forEach(function (k) {
-      h += '<div class="mix-item"><div class="mix-count">' + mix[k] + '</div><div class="mix-label">' + k + '</div></div>';
-    });
-    h += '<div class="mix-item total"><div class="mix-count">' + posts.length + '</div><div class="mix-label">Total Planned</div></div>';
-    h += '</div></div>';
-
-    // ── Approval pipeline ──
-    h += '<div class="sec" id="sec-approvals"><div class="card"><div class="card-label">Posts Awaiting Your Approval';
-    if (needApproval.length) h += '<span class="card-count">' + needApproval.length + ' to review</span>';
-    h += '</div>';
+    t1 += '</div></div></div>';
+    t1 += '<div class="sec" id="sec-approvals"><div class="card"><div class="card-label">Posts Awaiting Your Approval';
+    if (needApproval.length) t1 += '<span class="card-count">' + needApproval.length + ' to review</span>';
+    t1 += '</div>';
+    if (pipe.length === 0) {
+      t1 += '<p style="font-size:13.5px;color:var(--muted);padding:12px 0;">No posts in the pipeline right now.</p>';
+    }
     pipe.forEach(function (p) {
-      const stageLabel = p.status === 'approval' ? 'Needs Approval' : (p.status === 'scheduled' ? 'Scheduled' : (p.status === 'published' ? 'Published' : 'Drafting'));
-      h += '<div class="pipe-row" data-post="' + esc(p.id) + '">';
-      h += '<div class="pipe-date">' + fmtPipeDate(p.date) + '</div>';
-      h += '<div class="pipe-type">' + esc(p.channel) + '</div>';
-      h += '<div class="pipe-title">' + esc(p.title) + '</div>';
-      h += '<span class="pipe-stage s-' + esc(p.status) + '">' + stageLabel + '</span>';
-      h += '<div class="pipe-actions">';
-      if (p.script) h += '<a class="pipe-btn record" href="' + teleprompterUrl(p) + '" target="_blank" rel="noopener">● Record Video</a>';
-      if (p.content_url) h += '<a class="pipe-btn view" href="' + esc(p.content_url) + '" target="_blank" rel="noopener">View</a>';
+      var stageLabel = p.status === 'approval' ? 'Needs Approval' : (p.status === 'scheduled' ? 'Scheduled' : (p.status === 'published' ? 'Published' : 'Drafting'));
+      t1 += '<div class="pipe-row" data-post="' + esc(p.id) + '">';
+      t1 += '<div class="pipe-date">' + fmtPipeDate(p.date) + '</div>';
+      t1 += '<div class="pipe-type">' + esc(p.channel) + '</div>';
+      t1 += '<div class="pipe-title">' + esc(p.title) + '</div>';
+      t1 += '<span class="pipe-stage s-' + esc(p.status) + '">' + stageLabel + '</span>';
+      t1 += '<div class="pipe-actions">';
+      if (p.script) t1 += '<a class="pipe-btn record" href="' + teleprompterUrl(p) + '" target="_blank" rel="noopener">● Record Video</a>';
+      if (p.content_url) t1 += '<a class="pipe-btn view" href="' + esc(p.content_url) + '" target="_blank" rel="noopener">View</a>';
       if (p.status === 'approval') {
-        h += '<button class="pipe-btn approve" onclick="approvePost(this)">Approve</button>';
-        h += '<button class="pipe-btn changes" onclick="requestChanges(this)">Changes</button>';
+        t1 += '<button class="pipe-btn approve" onclick="approvePost(this)">Approve</button>';
+        t1 += '<button class="pipe-btn changes" onclick="requestChanges(this)">Changes</button>';
       } else if (p.status === 'scheduled') {
-        h += '<span class="done-tag">Locked in ✓</span>';
+        t1 += '<span class="done-tag">Locked in ✓</span>';
       } else if (p.status === 'draft') {
-        h += '<span class="done-tag">With OnCue</span>';
+        t1 += '<span class="done-tag">With OnCue</span>';
       } else {
-        h += '<span class="done-tag">Published ✓</span>';
+        t1 += '<span class="done-tag">Published ✓</span>';
       }
-      h += '</div></div>';
+      t1 += '</div></div>';
     });
-    h += '</div></div>';
+    t1 += '</div></div>';
 
-    // ── Monthly recap ──
-    h += '<hr class="divider"/><div class="kicker">Monthly Recap</div>';
-    h += '<div class="sec-title" style="font-size:26px;margin-bottom:18px;">' + esc(c.recap_month) + '</div>';
-    h += '<div class="recap-card"><div class="card-label">What we did this month</div>';
-    h += '<div class="recap-body">';
-    (c.recap_body || '').split('\n\n').forEach(function (para) { if (para.trim()) h += '<p>' + esc(para) + '</p>'; });
-    h += '</div></div>';
+    // ── TAB 2: Project ──
+    var t2 = '';
+    t2 += '<div class="hero" style="margin-top:0;"><div class="hero-body"><div class="hero-left">';
+    t2 += '<h2>' + esc(c.name) + '</h2><p>' + esc(c.project_subtitle) + '</p></div>';
+    t2 += '<div class="badge-stack">';
+    if (c.status_badge)   t2 += '<span class="pill live">' + esc(c.status_badge) + '</span>';
+    if (c.setup_badge)    t2 += '<span class="pill">' + esc(c.setup_badge) + '</span>';
+    if (c.retainer_badge) t2 += '<span class="pill">' + esc(c.retainer_badge) + '</span>';
+    t2 += '</div></div>';
+    t2 += '<div class="hero-foot">';
+    t2 += '<span>Last updated by OnCue: <strong>' + esc(c.last_updated) + '</strong></span>';
+    t2 += '<span>Project manager: <strong>' + esc(c.pm_name) + '</strong></span>';
+    t2 += '</div></div>';
+    t2 += '<div class="sec"><div class="package"><div class="package-left">';
+    t2 += '<div class="package-eyebrow">Current Package</div>';
+    t2 += '<div class="package-name">' + esc(c.package_name);
+    if (c.package_sub) t2 += '<small>' + esc(c.package_sub) + '</small>';
+    t2 += '</div></div><div class="quota-grid">';
+    (data.quotas || []).forEach(function (q) {
+      var pct = q.total > 0 ? Math.round(q.used / q.total * 100) : 0;
+      t2 += '<div class="quota-item"><div class="quota-count"><span class="used">' + q.used + '</span><span class="of">/' + q.total + '</span></div>';
+      t2 += '<div class="quota-label">' + esc(q.label) + '</div>';
+      t2 += '<div class="quota-bar' + (pct >= 100 ? ' full' : '') + '"><span style="width:' + Math.min(pct, 100) + '%"></span></div></div>';
+    });
+    t2 += '</div></div></div>';
+    t2 += '<div class="sec"><div class="sec-head"><div class="sec-title">Project Phases</div></div>';
+    t2 += '<div class="phases">';
+    (data.phases || []).forEach(function (p) {
+      var cls = p.status === 'done' ? 'is-done' : (p.status === 'active' ? 'is-active' : '');
+      var label = p.status === 'done' ? 'Complete' : (p.status === 'active' ? 'In Progress' : 'Upcoming');
+      t2 += '<div class="phase ' + cls + '"><div class="phase-num">' + esc(p.num) + '</div>';
+      t2 += '<div class="phase-name">' + esc(p.name) + '</div>';
+      t2 += '<span class="phase-status ' + esc(p.status) + '">' + label + '</span></div>';
+    });
+    t2 += '</div></div>';
+    t2 += '<div class="sec"><div class="sec-head"><div class="sec-title">Deliverables</div></div>';
+    t2 += '<div class="card">';
+    (data.deliverables || []).forEach(function (d) {
+      t2 += '<div class="deliverable"><div class="deliverable-icon">' + esc(d.icon) + '</div>';
+      t2 += '<div class="deliverable-name">' + esc(d.name) + '</div>';
+      if (d.link) t2 += '<a class="deliverable-link" href="' + esc(d.link) + '" target="_blank" rel="noopener">View →</a>';
+      else t2 += '<span class="deliverable-status">' + esc(d.status) + '</span>';
+      t2 += '</div>';
+    });
+    t2 += '</div></div>';
 
-    // ── Contact ──
-    h += '<div class="contact"><div><div class="kicker">Questions?</div>';
-    h += '<h3>Reach Michael directly</h3></div>';
-    h += '<div class="contact-links">';
-    h += '<a class="contact-link" href="mailto:hello@oncue.site">hello@oncue.site</a>';
-    h += '<a class="contact-link alt" href="tel:+61447542930">+61 447 542 930</a>';
-    h += '</div></div>';
+    // ── TAB 3: Calendar ──
+    var t3 = '';
+    var mixOrder = ['Static Posts', 'Reels', 'Stories', 'Blog', 'GBP Posts'];
+    var mix = { 'Static Posts': 0, 'Reels': 0, 'Stories': 0, 'Blog': 0, 'GBP Posts': 0 };
+    posts.forEach(function (p) { mix[mixCategory(p.channel)]++; });
+    t3 += '<div class="sec-head" style="margin-bottom:6px;"><div><div class="kicker">Content Calendar</div>';
+    t3 += '<div class="sec-title" style="font-size:26px;">What’s going out &amp; when</div></div></div>';
+    t3 += '<p class="sec-note" style="margin-bottom:22px;max-width:62ch;">Every planned post this month, the channel it runs on, and where it sits in the approval pipeline. Click a post to view the creative.</p>';
+    t3 += '<div class="cal-toolbar"><div class="cal-month">' + esc(c.cal_label) + '</div><div class="cal-legend">';
+    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--muted-2)"></div>Drafting</div>';
+    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>Needs Approval</div>';
+    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>Scheduled</div>';
+    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Published</div>';
+    t3 += '</div></div>';
+    t3 += buildCalendar(c.cal_year, c.cal_month, posts);
+    t3 += '<div class="sec"><div class="sec-head"><div class="sec-title" style="font-size:18px;">This month’s content mix</div></div>';
+    t3 += '<div class="mix-grid">';
+    mixOrder.forEach(function (k) {
+      t3 += '<div class="mix-item"><div class="mix-count">' + mix[k] + '</div><div class="mix-label">' + k + '</div></div>';
+    });
+    t3 += '<div class="mix-item total"><div class="mix-count">' + posts.length + '</div><div class="mix-label">Total Planned</div></div>';
+    t3 += '</div></div>';
 
-    document.getElementById('portal-main').innerHTML = h;
+    // ── TAB 4: Recap ──
+    var t4 = '';
+    t4 += '<div class="kicker">Monthly Recap</div>';
+    t4 += '<div class="sec-title" style="font-size:26px;margin-bottom:18px;">' + esc(c.recap_month) + '</div>';
+    t4 += '<div class="recap-card"><div class="card-label">What we did this month</div>';
+    t4 += '<div class="recap-body">';
+    (c.recap_body || '').split('\n\n').forEach(function (para) { if (para.trim()) t4 += '<p>' + esc(para) + '</p>'; });
+    t4 += '</div></div>';
+    t4 += '<div class="contact" style="margin-top:36px;"><div><div class="kicker">Questions?</div>';
+    t4 += '<h3>Reach Michael directly</h3></div>';
+    t4 += '<div class="contact-links">';
+    t4 += '<a class="contact-link" href="mailto:hello@oncue.site">hello@oncue.site</a>';
+    t4 += '<a class="contact-link alt" href="tel:+61447542930">+61 447 542 930</a>';
+    t4 += '</div></div>';
+
+    // ── Assemble ──
+    var main = document.getElementById('portal-main');
+    main.innerHTML =
+      header +
+      '<div id="tab-actions" class="tab-panel active">' + t1 + '</div>' +
+      '<div id="tab-project" class="tab-panel">' + t2 + '</div>' +
+      '<div id="tab-calendar" class="tab-panel">' + t3 + '</div>' +
+      '<div id="tab-recap" class="tab-panel">' + t4 + '</div>';
   }
 
   function buildCalendar(year, month, posts) {
@@ -923,6 +990,12 @@
     }
     const cnt = document.querySelector('.card-count');
     if (cnt) { if (remaining === 0) cnt.remove(); else cnt.textContent = remaining + ' to review'; }
+    // sync tab badge
+    const badge = document.getElementById('tab-badge-actions');
+    if (badge) {
+      if (remaining === 0) badge.style.display = 'none';
+      else { badge.textContent = remaining; badge.style.display = 'inline-flex'; }
+    }
   }
 
   // ── Enter key + auto-login ──
@@ -1010,7 +1083,7 @@
         { id: 'p5',  date: iso(11), channel: 'GBP',          title: 'Weekly update: vendor applications open', content_url: '', status: 'scheduled', in_pipeline: true },
         { id: 'p6',  date: iso(13), channel: 'Reel · IG',    title: 'Cosplay contest announcement', content_url: '#', status: 'approval', in_pipeline: true },
         { id: 'p7',  date: iso(17), channel: 'Static · IG',  title: 'Meet the panel hosts', content_url: '#', status: 'approval', in_pipeline: true },
-        { id: 'p8',  date: iso(18), channel: 'Blog',         title: 'First-timer\u2019s guide to CrownCon', content_url: '', status: 'draft', in_pipeline: false },
+        { id: 'p8',  date: iso(18), channel: 'Blog',         title: 'First-timer’s guide to CrownCon', content_url: '', status: 'draft', in_pipeline: false },
         { id: 'p9',  date: iso(20), channel: 'Story · IG',   title: 'Early-bird tickets — 48hr flash', content_url: '', status: 'scheduled', in_pipeline: true },
         { id: 'p10', date: iso(24), channel: 'Static · IG',  title: 'Vendor spotlight series — #1', content_url: '', status: 'draft', in_pipeline: false },
         { id: 'p11', date: iso(26), channel: 'Reel · IG',    title: 'Venue walkthrough teaser', content_url: '', status: 'draft', in_pipeline: false },
