@@ -178,27 +178,9 @@
     }
     .lede { font-size: 15px; color: var(--muted); max-width: 60ch; }
 
-    /* ── TABS NAVIGATION ── */
-    .tab-nav {
-      display: flex; gap: 4px; margin: 32px 0 24px;
-      border-bottom: 1px solid var(--line); padding-bottom: 1px;
-      overflow-x: auto; scrollbar-width: none;
-    }
-    .tab-nav::-webkit-scrollbar { display: none; }
-    .tab-btn {
-      font-family: 'Archivo Narrow', sans-serif; font-weight: 700; font-size: 14px;
-      text-transform: uppercase; letter-spacing: .5px; background: transparent;
-      color: var(--muted); border: none; padding: 10px 16px; cursor: pointer;
-      border-bottom: 2px solid transparent; transition: all .15s ease; white-space: nowrap;
-    }
-    .tab-btn:hover { color: var(--ink); }
-    .tab-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
-    .tab-panel { display: block; }
-    .tab-panel.hidden { display: none; }
-
     /* attention banner */
     .alert {
-      margin: 16px 0 0; display: flex; align-items: center; gap: 14px;
+      margin: 26px 0 0; display: flex; align-items: center; gap: 14px;
       background: var(--rust-tint); border: 1px solid #F3C9B8;
       border-radius: var(--r); padding: 14px 18px; cursor: pointer;
       transition: transform .12s, box-shadow .15s;
@@ -218,7 +200,7 @@
 
     /* hero / project card */
     .hero {
-      margin-top: 16px;
+      margin-top: 30px;
       border: 1px solid var(--line); border-radius: var(--r);
       background: var(--surface); box-shadow: var(--shadow);
       overflow: hidden;
@@ -257,7 +239,7 @@
     .hero-foot strong { color: var(--ink); font-weight: 600; }
 
     /* section heads */
-    .sec { margin-top: 32px; }
+    .sec { margin-top: 52px; }
     .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
     .sec-title {
       font-family: 'Archivo Narrow', sans-serif;
@@ -330,7 +312,8 @@
     .phase-status.active { background: var(--hi); color: var(--ink); font-weight: 500; }
     .phase-status.pending { border: 1px solid var(--line-2); color: var(--muted); }
 
-    /* cards */
+    /* two-col cards */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .card {
       border: 1px solid var(--line); border-radius: var(--r);
       background: var(--surface); box-shadow: var(--shadow-sm); padding: 24px 26px;
@@ -507,7 +490,7 @@
 
     /* contact */
     .contact {
-      margin-top: 32px; border: 1px solid var(--line); border-radius: var(--r);
+      margin-top: 52px; border: 1px solid var(--line); border-radius: var(--r);
       background: var(--ink); color: var(--paper); padding: 30px 34px;
       display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
     }
@@ -526,7 +509,7 @@
     .contact-link.alt { background: transparent; color: var(--paper); border: 1px solid rgba(243,237,225,.4); }
     .contact-link:hover { transform: translateY(-1px); }
 
-    .divider { border: none; border-top: 1px solid var(--line); margin: 32px 0; }
+    .divider { border: none; border-top: 1px solid var(--line); margin: 52px 0; }
     .portal-loading {
       font-family: 'JetBrains Mono', monospace; font-size: 11px;
       text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
@@ -539,6 +522,7 @@
       .hero-body { flex-direction: column; gap: 16px; }
       .badge-stack { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
       .phases { grid-auto-flow: row; grid-auto-columns: auto; }
+      .two-col { grid-template-columns: 1fr; }
       .package { flex-direction: column; align-items: flex-start; }
       .cal-cell { min-height: 70px; padding: 4px; }
       .cal-post { font-size: 9px; }
@@ -583,12 +567,15 @@
   const SUPABASE_URL = 'https://rrxveifshucpinajtkgf.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_548FF3LDIHbz55iHtylFZw_HKBW06Aj';
   const RPC = SUPABASE_URL + '/rest/v1/rpc/';
+  // Where the teleprompter lives (adjust if hosted elsewhere)
   const TELEPROMPTER_URL = '../teleprompter/teleprompt.html';
   function teleprompterUrl(p) {
     return TELEPROMPTER_URL + '?post=' + encodeURIComponent(p.id) + '&script=' + encodeURIComponent(p.script || '');
   }
 
   // ── DEMO MODE ──────────────────────────────────────────────────────────
+  // Live on oncue.site; sample data everywhere else (preview/sharing).
+  // Add ?demo=1 to force it, or ?live=1 to force the real backend.
   const DEMO = (function () {
     const q = new URLSearchParams(location.search);
     if (q.has('live')) return false;
@@ -656,22 +643,7 @@
     window.scrollTo(0, 0);
   }
 
-  // ── Tabs Switching Logic ──
-  function switchTab(tabId) {
-    document.querySelectorAll('.tab-panel').forEach(function(panel) {
-      panel.classList.add('hidden');
-    });
-    document.querySelectorAll('.tab-btn').forEach(function(btn) {
-      btn.classList.remove('active');
-    });
-    
-    const targetPanel = document.getElementById(tabId);
-    if (targetPanel) targetPanel.classList.remove('hidden');
-
-    const targetBtn = document.querySelector(`.tab-btn[onclick*="${tabId}"]`);
-    if (targetBtn) targetBtn.classList.add('active');
-  }
-
+  // ── Helpers ──
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function fmtPipeDate(iso) {
     if (!iso) return '';
@@ -704,22 +676,12 @@
 
     let h = '';
 
-    // ── Global Project Sticky Header ──
+    // ── Project header ──
     h += '<div class="kicker">Active Project</div>';
     h += '<h1 class="display">' + esc(c.project_title) + '</h1>';
     h += '<p class="lede">' + esc(c.project_started) + '</p>';
 
-    // ── Tab Bar Navigation ──
-    h += '<div class="tab-nav">';
-    h += '  <button class="tab-btn active" onclick="switchTab(\'tab-actions\')">Action Items</button>';
-    h += '  <button class="tab-btn" onclick="switchTab(\'tab-status\')">Project Status</button>';
-    h += '  <button class="tab-btn" onclick="switchTab(\'tab-calendar\')">Content Calendar</button>';
-    h += '  <button class="tab-btn" onclick="switchTab(\'tab-deliverables\')">Deliverables</button>';
-    h += '  <button class="tab-btn" onclick="switchTab(\'tab-recap\')">Recap & Contact</button>';
-    h += '</div>';
-
-    // ───────────────────────────── TAB 1: ACTION ITEMS ─────────────────────────────
-    h += '<div id="tab-actions" class="tab-panel">';
+    // attention banner
     if (needApproval.length) {
       h += '<div class="alert" onclick="scrollToEl(\'sec-approvals\')">';
       h += '<div class="alert-dot">' + needApproval.length + '</div>';
@@ -727,20 +689,104 @@
       h += '<div class="alert-go">Review →</div></div>';
     }
 
-    h += '<div class="sec">';
-    h += '  <div class="card"><div class="card-label">Next Steps</div>';
-    h += '  <div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>OnCue</div>';
-    h += '  <div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>' + esc(c.contact_name || 'You') + '</div></div>';
-    h += '  <ul class="steps">';
+    // hero card
+    h += '<div class="hero"><div class="hero-body"><div class="hero-left">';
+    h += '<h2>' + esc(c.name) + '</h2><p>' + esc(c.project_subtitle) + '</p></div>';
+    h += '<div class="badge-stack">';
+    if (c.status_badge)   h += '<span class="pill live">' + esc(c.status_badge) + '</span>';
+    if (c.setup_badge)    h += '<span class="pill">' + esc(c.setup_badge) + '</span>';
+    if (c.retainer_badge) h += '<span class="pill">' + esc(c.retainer_badge) + '</span>';
+    h += '</div></div>';
+    h += '<div class="hero-foot">';
+    h += '<span>Last updated by OnCue: <strong>' + esc(c.last_updated) + '</strong></span>';
+    h += '<span>Project manager: <strong>' + esc(c.pm_name) + '</strong></span>';
+    h += '</div></div>';
+
+    // ── Package + quotas ──
+    h += '<div class="sec"><div class="package"><div class="package-left">';
+    h += '<div class="package-eyebrow">Current Package</div>';
+    h += '<div class="package-name">' + esc(c.package_name);
+    if (c.package_sub) h += '<small>' + esc(c.package_sub) + '</small>';
+    h += '</div></div><div class="quota-grid">';
+    (data.quotas || []).forEach(function (q) {
+      const pct = q.total > 0 ? Math.round(q.used / q.total * 100) : 0;
+      h += '<div class="quota-item"><div class="quota-count"><span class="used">' + q.used + '</span><span class="of">/' + q.total + '</span></div>';
+      h += '<div class="quota-label">' + esc(q.label) + '</div>';
+      h += '<div class="quota-bar' + (pct >= 100 ? ' full' : '') + '"><span style="width:' + Math.min(pct, 100) + '%"></span></div></div>';
+    });
+    h += '</div></div></div>';
+
+    // ── Phases ──
+    h += '<div class="sec"><div class="sec-head"><div class="sec-title">Project Phases</div></div>';
+    h += '<div class="phases">';
+    (data.phases || []).forEach(function (p) {
+      const cls = p.status === 'done' ? 'is-done' : (p.status === 'active' ? 'is-active' : '');
+      const label = p.status === 'done' ? 'Complete' : (p.status === 'active' ? 'In Progress' : 'Upcoming');
+      h += '<div class="phase ' + cls + '"><div class="phase-num">' + esc(p.num) + '</div>';
+      h += '<div class="phase-name">' + esc(p.name) + '</div>';
+      h += '<span class="phase-status ' + esc(p.status) + '">' + label + '</span></div>';
+    });
+    h += '</div></div>';
+
+    // ── Next steps + Decisions ──
+    h += '<div class="sec"><div class="two-col">';
+    h += '<div class="card"><div class="card-label">Next Steps</div>';
+    h += '<div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>OnCue</div>';
+    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>' + esc(c.contact_name || 'You') + '</div></div>';
+    h += '<ul class="steps">';
     (data.next_steps || []).forEach(function (s) {
       const ownerLabel = s.owner === 'oncue' ? 'OnCue' : (s.owner === 'client' ? esc(c.contact_name || 'You') : 'Waiting');
       h += '<li class="step"><div class="step-dot ' + esc(s.owner) + '"></div>';
       h += '<div class="step-text">' + esc(s.body) + '</div>';
       h += '<div class="step-owner ' + esc(s.owner) + '">' + ownerLabel + '</div></li>';
     });
-    h += '  </ul></div>';
-    h += '</div>';
+    h += '</ul></div>';
 
+    h += '<div class="card"><div class="card-label">Decisions Log</div>';
+    (data.decisions || []).forEach(function (d) {
+      h += '<div class="decision"><div class="decision-date">' + esc(d.date) + '</div>';
+      h += '<div class="decision-text">' + esc(d.body) + '</div></div>';
+    });
+    h += '</div></div></div>';
+
+    // ── Deliverables ──
+    h += '<div class="sec"><div class="sec-head"><div class="sec-title">Deliverables</div></div>';
+    h += '<div class="card">';
+    (data.deliverables || []).forEach(function (d) {
+      h += '<div class="deliverable"><div class="deliverable-icon">' + esc(d.icon) + '</div>';
+      h += '<div class="deliverable-name">' + esc(d.name) + '</div>';
+      if (d.link) h += '<a class="deliverable-link" href="' + esc(d.link) + '" target="_blank" rel="noopener">View →</a>';
+      else h += '<span class="deliverable-status">' + esc(d.status) + '</span>';
+      h += '</div>';
+    });
+    h += '</div></div>';
+
+    // ── Content calendar ──
+    h += '<hr class="divider"/>';
+    h += '<div class="sec-head"><div><div class="kicker">Content Calendar</div>';
+    h += '<div class="sec-title" style="font-size:26px;">What\u2019s going out &amp; when</div></div></div>';
+    h += '<p class="sec-note" style="margin-bottom:22px;max-width:62ch;">Every planned post this month, the channel it runs on, and where it sits in the approval pipeline. Click a post to view the creative.</p>';
+    h += '<div class="cal-toolbar"><div class="cal-month">' + esc(c.cal_label) + '</div><div class="cal-legend">';
+    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--muted-2)"></div>Drafting</div>';
+    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>Needs Approval</div>';
+    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>Scheduled</div>';
+    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Published</div>';
+    h += '</div></div>';
+    h += buildCalendar(c.cal_year, c.cal_month, posts);
+
+    // ── Content mix ──
+    const mixOrder = ['Static Posts', 'Reels', 'Stories', 'Blog', 'GBP Posts'];
+    const mix = { 'Static Posts': 0, 'Reels': 0, 'Stories': 0, 'Blog': 0, 'GBP Posts': 0 };
+    posts.forEach(function (p) { mix[mixCategory(p.channel)]++; });
+    h += '<div class="sec"><div class="sec-head"><div class="sec-title" style="font-size:18px;">This month\u2019s content mix</div></div>';
+    h += '<div class="mix-grid">';
+    mixOrder.forEach(function (k) {
+      h += '<div class="mix-item"><div class="mix-count">' + mix[k] + '</div><div class="mix-label">' + k + '</div></div>';
+    });
+    h += '<div class="mix-item total"><div class="mix-count">' + posts.length + '</div><div class="mix-label">Total Planned</div></div>';
+    h += '</div></div>';
+
+    // ── Approval pipeline ──
     h += '<div class="sec" id="sec-approvals"><div class="card"><div class="card-label">Posts Awaiting Your Approval';
     if (needApproval.length) h += '<span class="card-count">' + needApproval.length + ' to review</span>';
     h += '</div>';
@@ -767,111 +813,22 @@
       h += '</div></div>';
     });
     h += '</div></div>';
-    h += '</div>'; // End Tab 1
 
-    // ───────────────────────────── TAB 2: PROJECT STATUS ─────────────────────────────
-    h += '<div id="tab-status" class="tab-panel hidden">';
-    h += '<div class="hero"><div class="hero-body"><div class="hero-left">';
-    h += '<h2>' + esc(c.name) + '</h2><p>' + esc(c.project_subtitle) + '</p></div>';
-    h += '<div class="badge-stack">';
-    if (c.status_badge)   h += '<span class="pill live">' + esc(c.status_badge) + '</span>';
-    if (c.setup_badge)    h += '<span class="pill">' + esc(c.setup_badge) + '</span>';
-    if (c.retainer_badge) h += '<span class="pill">' + esc(c.retainer_badge) + '</span>';
-    h += '</div></div>';
-    h += '<div class="hero-foot">';
-    h += '<span>Last updated by OnCue: <strong>' + esc(c.last_updated) + '</strong></span>';
-    h += '<span>Project manager: <strong>' + esc(c.pm_name) + '</strong></span>';
-    h += '</div></div>';
-
-    h += '<div class="sec"><div class="sec-head"><div class="sec-title">Project Phases</div></div>';
-    h += '<div class="phases">';
-    (data.phases || []).forEach(function (p) {
-      const cls = p.status === 'done' ? 'is-done' : (p.status === 'active' ? 'is-active' : '');
-      const label = p.status === 'done' ? 'Complete' : (p.status === 'active' ? 'In Progress' : 'Upcoming');
-      h += '<div class="phase ' + cls + '"><div class="phase-num">' + esc(p.num) + '</div>';
-      h += '<div class="phase-name">' + esc(p.name) + '</div>';
-      h += '<span class="phase-status ' + esc(p.status) + '">' + label + '</span></div>';
-    });
-    h += '</div></div>';
-
-    h += '<div class="sec"><div class="package"><div class="package-left">';
-    h += '<div class="package-eyebrow">Current Package</div>';
-    h += '<div class="package-name">' + esc(c.package_name);
-    if (c.package_sub) h += '<small>' + esc(c.package_sub) + '</small>';
-    h += '</div></div><div class="quota-grid">';
-    (data.quotas || []).forEach(function (q) {
-      const pct = q.total > 0 ? Math.round(q.used / q.total * 100) : 0;
-      h += '<div class="quota-item"><div class="quota-count"><span class="used">' + q.used + '</span><span class="of">/' + q.total + '</span></div>';
-      h += '<div class="quota-label">' + esc(q.label) + '</div>';
-      h += '<div class="quota-bar' + (pct >= 100 ? ' full' : '') + '"><span style="width:' + Math.min(pct, 100) + '%"></span></div></div>';
-    });
-    h += '</div></div></div>';
-
-    h += '<div class="sec">';
-    h += '  <div class="card"><div class="card-label">Decisions Log</div>';
-    (data.decisions || []).forEach(function (d) {
-      h += '<div class="decision"><div class="decision-date">' + esc(d.date) + '</div>';
-      h += '<div class="decision-text">' + esc(d.body) + '</div></div>';
-    });
-    h += '  </div>';
-    h += '</div>';
-    h += '</div>'; // End Tab 2
-
-    // ───────────────────────────── TAB 3: CONTENT CALENDAR ─────────────────────────────
-    h += '<div id="tab-calendar" class="tab-panel hidden">';
-    h += '<div class="sec"><div class="sec-head"><div><div class="kicker">Content Calendar</div>';
-    h += '<div class="sec-title" style="font-size:26px;">What\u2019s going out &amp; when</div></div></div>';
-    h += '<p class="sec-note" style="margin-bottom:22px;max-width:62ch;">Every planned post this month, the channel it runs on, and where it sits in the approval pipeline. Click a post to view the creative.</p>';
-    h += '<div class="cal-toolbar"><div class="cal-month">' + esc(c.cal_label) + '</div><div class="cal-legend">';
-    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--muted-2)"></div>Drafting</div>';
-    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>Needs Approval</div>';
-    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>Scheduled</div>';
-    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Published</div>';
-    h += '</div></div>';
-    h += buildCalendar(c.cal_year, c.cal_month, posts);
-
-    const mixOrder = ['Static Posts', 'Reels', 'Stories', 'Blog', 'GBP Posts'];
-    const mix = { 'Static Posts': 0, 'Reels': 0, 'Stories': 0, 'Blog': 0, 'GBP Posts': 0 };
-    posts.forEach(function (p) { mix[mixCategory(p.channel)]++; });
-    h += '<div class="sec"><div class="sec-head"><div class="sec-title" style="font-size:18px;">This month\u2019s content mix</div></div>';
-    h += '<div class="mix-grid">';
-    mixOrder.forEach(function (k) {
-      h += '<div class="mix-item"><div class="mix-count">' + mix[k] + '</div><div class="mix-label">' + k + '</div></div>';
-    });
-    h += '<div class="mix-item total"><div class="mix-count">' + posts.length + '</div><div class="mix-label">Total Planned</div></div>';
-    h += '</div></div>';
-    h += '</div>'; // End Tab 3
-
-    // ───────────────────────────── TAB 4: DELIVERABLES ─────────────────────────────
-    h += '<div id="tab-deliverables" class="tab-panel hidden">';
-    h += '<div class="sec"><div class="sec-head"><div class="sec-title">Deliverables</div></div>';
-    h += '<div class="card">';
-    (data.deliverables || []).forEach(function (d) {
-      h += '<div class="deliverable"><div class="deliverable-icon">' + esc(d.icon) + '</div>';
-      h += '<div class="deliverable-name">' + esc(d.name) + '</div>';
-      if (d.link) h += '<a class="deliverable-link" href="' + esc(d.link) + '" target="_blank" rel="noopener">View →</a>';
-      else h += '<span class="deliverable-status">' + esc(d.status) + '</span>';
-      h += '</div>';
-    });
-    h += '</div></div>';
-    h += '</div>'; // End Tab 4
-
-    // ───────────────────────────── TAB 5: RECAP & CONTACT ─────────────────────────────
-    h += '<div id="tab-recap" class="tab-panel hidden">';
-    h += '<div class="sec"><div class="kicker">Monthly Recap</div>';
+    // ── Monthly recap ──
+    h += '<hr class="divider"/><div class="kicker">Monthly Recap</div>';
     h += '<div class="sec-title" style="font-size:26px;margin-bottom:18px;">' + esc(c.recap_month) + '</div>';
     h += '<div class="recap-card"><div class="card-label">What we did this month</div>';
     h += '<div class="recap-body">';
     (c.recap_body || '').split('\n\n').forEach(function (para) { if (para.trim()) h += '<p>' + esc(para) + '</p>'; });
-    h += '</div></div></div>';
+    h += '</div></div>';
 
+    // ── Contact ──
     h += '<div class="contact"><div><div class="kicker">Questions?</div>';
     h += '<h3>Reach Michael directly</h3></div>';
     h += '<div class="contact-links">';
     h += '<a class="contact-link" href="mailto:hello@oncue.site">hello@oncue.site</a>';
     h += '<a class="contact-link alt" href="tel:+61447542930">+61 447 542 930</a>';
     h += '</div></div>';
-    h += '</div>'; // End Tab 5
 
     document.getElementById('portal-main').innerHTML = h;
   }
@@ -955,6 +912,7 @@
   function approvePost(btn) { decide(btn, 'approved'); }
   function requestChanges(btn) { decide(btn, 'changes'); }
 
+  // keep the attention banner / count in sync after an action
   function refreshAlert() {
     const remaining = document.querySelectorAll('.pipe-stage.s-approval').length;
     const alert = document.querySelector('.alert');
@@ -967,16 +925,19 @@
     if (cnt) { if (remaining === 0) cnt.remove(); else cnt.textContent = remaining + ' to review'; }
   }
 
+  // ── Enter key + auto-login ──
   document.getElementById('pw').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') tryLogin();
   });
 
   (function () {
     if (DEMO) {
+      // Auto-enter the portal with sample data for preview/sharing.
       CURRENT_CODE = 'demo';
       rpc('get_portal', { p_code: 'demo' }).then(function (data) { if (data) showPortal(data); });
       return;
     }
+    // honor ?code=… (used by the admin "Preview as client" link)
     const urlCode = new URLSearchParams(location.search).get('code');
     const saved = urlCode || sessionStorage.getItem('oc_code');
     if (!saved) return;
