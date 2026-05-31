@@ -2,201 +2,865 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OnCue Prompter & Recorder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>OnCue Prompter</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --ink:#0A0A0A; --bone:#F2EDE2; --hi:#E5FF3D; --rust:#E5542A; --rule:#2A2A2A; --light:#A09A94; }
-    body { background:var(--ink); color:var(--bone); font-family:system-ui,-apple-system,sans-serif; height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+    :root {
+      --ink: #0A0A0A;
+      --ink2: #161616;
+      --bone: #F2EDE2;
+      --hi: #E5FF3D;
+      --rust: #E5542A;
+      --rule: #2A2A2A;
+      --light: #6B6560;
+      --bar-h: 80px;
+    }
 
-    .viewport { flex:1; position:relative; background:#000; display:flex; align-items:center; justify-content:center; }
-    video { width:100%; height:100%; object-fit:cover; }
-    video.mirror { transform:scaleX(-1); }
+    html, body {
+      height: 100%; height: 100dvh;
+      overflow: hidden;
+      background: #000;
+      color: var(--bone);
+      font-family: system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
 
-    /* Teleprompter overlay — scrolls */
-    .prompter-box { position:absolute; top:16px; left:50%; transform:translateX(-50%); width:92%; max-width:680px;
-      height:38%; background:rgba(10,10,10,0.82); border:1px solid var(--rule); padding:18px 22px;
-      overflow:hidden; backdrop-filter:blur(8px); }
-    .prompter-scroll { will-change:transform; }
-    .prompter-text { font-size:26px; line-height:1.55; font-weight:600; color:#fff; text-align:center; white-space:pre-wrap; }
-    .lens-hint { position:absolute; top:2px; left:50%; transform:translateX(-50%); font-size:9px; letter-spacing:1px;
-      text-transform:uppercase; color:var(--hi); font-family:monospace; }
+    /* ── MAIN LAYOUT ── */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+    }
 
-    /* Countdown + timer */
-    .countdown { position:absolute; inset:0; display:none; align-items:center; justify-content:center;
-      font-size:120px; font-weight:800; color:var(--hi); background:rgba(0,0,0,0.5); z-index:5; }
-    .rec-timer { position:absolute; top:14px; right:16px; font-family:monospace; font-size:13px; color:#fff;
-      background:var(--rust); padding:4px 10px; display:none; z-index:6; }
-    .rec-timer.show { display:block; }
-    .rec-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#fff; margin-right:6px; animation:pulse 1.2s infinite; }
-    @keyframes pulse { 50% { opacity:0.3; } }
+    /* ── VIEWPORT (camera + prompter) ── */
+    #viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
 
-    /* Controls */
-    .controls { border-top:1px solid var(--rule); background:var(--ink); padding:12px 14px;
-      display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:10px; z-index:10; }
-    .btn { background:var(--bone); color:var(--ink); border:none; padding:11px 18px; font-weight:700;
-      text-transform:uppercase; letter-spacing:0.5px; cursor:pointer; font-size:12px; }
-    .btn:disabled { opacity:0.35; cursor:not-allowed; }
-    .btn-record { background:var(--rust); color:#fff; }
-    .btn-record.recording { background:#fff; color:var(--ink); }
-    .ctrl-group { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--light); font-family:monospace; }
-    input[type=range] { width:90px; accent-color:var(--hi); }
-    select { background:#000; color:var(--bone); border:1px solid var(--rule); padding:6px; font-size:11px; }
-    .status { font-family:monospace; font-size:11px; color:var(--hi); min-width:120px; }
+    #preview {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #preview.mirror { transform: scaleX(-1); }
 
-    /* Script editor panel */
-    .panel { position:absolute; inset:0; background:rgba(10,10,10,0.96); z-index:20; display:none;
-      flex-direction:column; padding:24px; gap:14px; }
-    .panel.show { display:flex; }
-    .panel h2 { font-size:14px; text-transform:uppercase; letter-spacing:1px; }
-    .panel textarea { flex:1; background:#000; color:var(--bone); border:1px solid var(--rule); padding:14px;
-      font-size:16px; line-height:1.5; resize:none; }
-    .panel-row { display:flex; gap:10px; justify-content:flex-end; }
+    /* ── PROMPTER OVERLAY ── */
+    #prompter-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      pointer-events: none;
+      /* Semi-transparent bg — shows face behind text */
+      background: rgba(0,0,0,0);
+      transition: background 0.4s ease;
+    }
+
+    /* In fullscreen mode, show the overlay bg */
+    #app.fullscreen #prompter-overlay {
+      background: rgba(0,0,0,0.45);
+    }
+
+    /* top fade */
+    #prompter-overlay::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
+      z-index: 2;
+      pointer-events: none;
+    }
+    /* bottom fade */
+    #prompter-overlay::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ── SCROLL CONTAINER ── */
+    #scroll-window {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    #scroll-track {
+      padding-bottom: 40px;
+      will-change: transform;
+    }
+
+    #prompter-text {
+      font-size: 32px;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      white-space: pre-wrap;
+      padding: 0 28px;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.7);
+      word-break: break-word;
+    }
+
+    /* ── FOCUS LINE — where reader's eyes sit ── */
+    #focus-line {
+      position: absolute;
+      left: 0; right: 0;
+      top: 38%;
+      height: 2px;
+      background: var(--hi);
+      opacity: 0.6;
+      z-index: 3;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    #focus-line.hidden { opacity: 0; }
+
+    /* ── LENS HINT ── */
+    #lens-hint {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--hi);
+      font-family: monospace;
+      z-index: 4;
+      opacity: 0.7;
+    }
+
+    /* ── REC TIMER ── */
+    #rec-timer {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #fff;
+      background: var(--rust);
+      padding: 5px 11px;
+      display: none;
+      z-index: 6;
+    }
+    #rec-timer.show { display: block; }
+    .rec-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      margin-right: 5px;
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse { 50% { opacity: 0.2; } }
+
+    /* ── COUNTDOWN ── */
+    #countdown {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 140px;
+      font-weight: 800;
+      color: var(--hi);
+      background: rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+
+    /* ── PAUSE OVERLAY ── */
+    #pause-overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      pointer-events: none;
+    }
+    #pause-overlay.show { display: flex; }
+    #pause-badge {
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-family: monospace;
+      color: var(--hi);
+      background: rgba(0,0,0,0.6);
+      padding: 8px 20px;
+      border: 1px solid var(--hi);
+    }
+
+    /* ── TAP TO PAUSE ── */
+    #tap-zone {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      cursor: pointer;
+    }
+
+    /* ── FULLSCREEN RECORDING MODE ── */
+    /* Viewport expands to fill whole screen */
+    #app.fullscreen #viewport {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+    }
+    /* Controls bar hides below screen */
+    #app.fullscreen #controls {
+      transform: translateY(100%);
+      pointer-events: none;
+    }
+
+    /* Floating stop bar — appears during recording */
+    #float-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 30;
+      background: rgba(10,10,10,0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 14px 18px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    #float-bar.show {
+      display: flex;
+      transform: translateY(0);
+    }
+    #float-bar .ctrl-row { display: flex; align-items: center; gap: 8px; }
+    #float-bar .slider-group { flex: 1; display: flex; align-items: center; gap: 8px; }
+    #float-bar .slider-label { font-family: monospace; font-size: 10px; color: var(--light); text-transform: uppercase; }
+
+    /* ── BOTTOM CONTROLS ── */
+    #controls {
+      flex-shrink: 0;
+      background: var(--ink);
+      border-top: 1px solid var(--rule);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    /* Main action row */
+    .ctrl-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      background: var(--bone);
+      color: var(--ink);
+      border: none;
+      padding: 0 16px;
+      height: 44px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn:active:not(:disabled) { opacity: 0.75; }
+
+    .btn-primary { background: var(--hi); color: var(--ink); }
+    .btn-record  { background: var(--rust); color: #fff; flex: 1; font-size: 14px; height: 52px; }
+    .btn-record.recording { background: #fff; color: var(--ink); }
+    .btn-icon    { width: 44px; padding: 0; font-size: 18px; }
+
+    /* Sliders row */
+    .sliders-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+    .slider-label {
+      font-family: monospace;
+      font-size: 10px;
+      color: var(--light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    input[type=range] {
+      flex: 1;
+      accent-color: var(--hi);
+      height: 4px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    /* Status */
+    #status {
+      font-family: monospace;
+      font-size: 10px;
+      color: var(--light);
+      text-align: center;
+      letter-spacing: 0.5px;
+      min-height: 14px;
+    }
+    #status.ok { color: var(--hi); }
+    #status.err { color: var(--rust); }
+
+    /* Camera select */
+    #camsel {
+      background: var(--ink2);
+      color: var(--bone);
+      border: 1px solid var(--rule);
+      padding: 0 8px;
+      height: 44px;
+      font-size: 11px;
+      display: none;
+      max-width: 140px;
+    }
+
+    /* ── SCRIPT PANEL ── */
+    #panel {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.97);
+      z-index: 30;
+      display: none;
+      flex-direction: column;
+      padding: 20px 16px 24px;
+      gap: 12px;
+    }
+    #panel.show { display: flex; }
+    #panel h2 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--light);
+      font-family: monospace;
+    }
+    #script-input {
+      flex: 1;
+      background: var(--ink2);
+      color: var(--bone);
+      border: 1px solid var(--rule);
+      padding: 16px;
+      font-size: 16px;
+      line-height: 1.6;
+      resize: none;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    #script-input:focus { outline: none; border-color: var(--hi); }
+    .panel-btns {
+      display: flex;
+      gap: 8px;
+    }
+    .panel-btns .btn { flex: 1; height: 52px; }
+
+    /* ── SETTINGS PANEL ── */
+    #settings-panel {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.97);
+      z-index: 30;
+      display: none;
+      flex-direction: column;
+      padding: 20px 16px 32px;
+      gap: 20px;
+    }
+    #settings-panel.show { display: flex; }
+    #settings-panel h2 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--light);
+      font-family: monospace;
+    }
+    .setting-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .setting-label {
+      font-size: 12px;
+      font-family: monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--bone);
+    }
+    .setting-hint {
+      font-size: 11px;
+      color: var(--light);
+    }
+    .setting-row input[type=range] {
+      width: 100%;
+      height: 6px;
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .toggle-label { font-size: 13px; }
+    .toggle {
+      width: 44px; height: 26px;
+      background: var(--rule);
+      border-radius: 13px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .toggle.on { background: var(--hi); }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 20px; height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      top: 3px; left: 3px;
+      transition: transform 0.2s;
+    }
+    .toggle.on::after { transform: translateX(18px); }
   </style>
 </head>
 <body>
 
-  <div class="viewport">
+<div id="app">
+
+  <!-- ── VIEWPORT ── -->
+  <div id="viewport">
     <video id="preview" class="mirror" autoplay muted playsinline></video>
-    <div class="prompter-box">
-      <span class="lens-hint">▲ eyes here, near lens</span>
-      <div class="prompter-scroll" id="scroll">
-        <p class="prompter-text" id="prompter-target">Tap “Script” to load your lines, then “Enable Camera”. Press record and the script scrolls automatically — keep your eyes here.</p>
+
+    <div id="prompter-overlay">
+      <div id="scroll-window">
+        <div id="scroll-track">
+          <p id="prompter-text">Tap Script to load your lines, then Enable Camera. Hit Record and read — the script scrolls up automatically. Keep your eyes on the focus line.</p>
+        </div>
       </div>
     </div>
-    <div class="countdown" id="countdown"></div>
-    <div class="rec-timer" id="rec-timer"><span class="rec-dot"></span><span id="timer-val">0:00</span></div>
+
+    <div id="focus-line"></div>
+    <div id="lens-hint">▲ look here · near lens</div>
+
+    <div id="tap-zone" onclick="tapPause()"></div>
+    <div id="pause-overlay"><div id="pause-badge">⏸ Paused — tap to resume</div></div>
+    <div id="countdown"></div>
+    <div id="rec-timer"><span class="rec-dot"></span><span id="timer-val">0:00</span></div>
   </div>
 
-  <div class="controls">
-    <button class="btn" id="btn-script" onclick="openPanel()">Script</button>
-    <button class="btn" id="btn-camera" onclick="initCamera()">Enable Camera</button>
-    <button class="btn btn-record" id="btn-record" onclick="toggleRecording()" disabled>Record</button>
-    <button class="btn" id="btn-review" onclick="reviewVideo()" disabled>Review</button>
-    <button class="btn" id="btn-upload" onclick="uploadVideo()" disabled>Upload</button>
-    <button class="btn" id="btn-download" onclick="downloadVideo()" disabled>Save File</button>
-    <div class="ctrl-group">Speed <input type="range" id="speed" min="10" max="120" value="45"></div>
-    <div class="ctrl-group">Size <input type="range" id="fontsize" min="16" max="44" value="26"></div>
-    <select id="camsel" onchange="initCamera()" style="display:none"></select>
-    <span class="status" id="status"></span>
+  <!-- ── CONTROLS ── -->
+  <div id="controls">
+    <!-- Row 1: actions -->
+    <div class="ctrl-row">
+      <button class="btn" onclick="openPanel()" style="width:72px">Script</button>
+      <button class="btn" id="btn-camera" onclick="initCamera()" style="width:72px">Cam</button>
+      <button class="btn btn-record" id="btn-record" onclick="toggleRecording()" disabled>⏺ Record</button>
+      <button class="btn btn-icon" id="btn-reset" onclick="resetScroll()" title="Rewind">↺</button>
+      <button class="btn btn-icon" onclick="openSettings()" title="Settings">⚙</button>
+    </div>
+    <!-- Row 2: sliders -->
+    <div class="sliders-row">
+      <div class="slider-group">
+        <span class="slider-label">Speed</span>
+        <input type="range" id="speed" min="5" max="120" value="40">
+      </div>
+      <div class="slider-group">
+        <span class="slider-label">Size</span>
+        <input type="range" id="fontsize" min="18" max="56" value="32">
+      </div>
+    </div>
+    <!-- Row 3: secondary actions + status -->
+    <div class="ctrl-row" style="gap:6px">
+      <select id="camsel" onchange="switchCamera()"></select>
+      <button class="btn" id="btn-review" onclick="reviewVideo()" disabled style="flex:1">Review</button>
+      <button class="btn" id="btn-upload" onclick="uploadVideo()" disabled style="flex:1">Upload</button>
+      <button class="btn" id="btn-download" onclick="downloadVideo()" disabled style="flex:1">Save</button>
+    </div>
+    <div id="status"></div>
   </div>
 
-  <div class="panel" id="panel">
-    <h2>Recording Script</h2>
-    <textarea id="script-input" placeholder="Paste or type the script the client should read..."></textarea>
-    <div class="panel-row">
-      <button class="btn" onclick="closePanel()">Cancel</button>
-      <button class="btn btn-record" onclick="saveScript()">Use Script</button>
+</div>
+
+<!-- ── FLOATING STOP BAR (shown during recording) ── -->
+<div id="float-bar">
+  <div class="ctrl-row">
+    <button class="btn btn-record recording" id="float-stop" onclick="toggleRecording()" style="flex:1;height:52px;font-size:14px">⏹ Stop Recording</button>
+    <button class="btn btn-icon" id="float-reset" onclick="resetScroll()" title="Rewind" style="height:52px;width:52px;font-size:20px">↺</button>
+  </div>
+  <div class="ctrl-row">
+    <div class="slider-group">
+      <span class="slider-label">Speed</span>
+      <input type="range" id="speed-float" min="5" max="120" value="40">
+    </div>
+  </div>
+</div>
+
+<!-- ── SCRIPT PANEL ── -->
+<div id="panel">
+  <h2>Recording Script</h2>
+  <textarea id="script-input" placeholder="Paste or type the script here…" autocomplete="off" autocorrect="on" spellcheck="true"></textarea>
+  <div class="panel-btns">
+    <button class="btn" onclick="closePanel()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveScript()">Use Script</button>
+  </div>
+</div>
+
+<!-- ── SETTINGS PANEL ── -->
+<div id="settings-panel">
+  <h2>Settings</h2>
+
+  <div class="toggle-row">
+    <div>
+      <div class="toggle-label">Mirror text</div>
+      <div class="setting-hint">Flip for physical teleprompter glass</div>
+    </div>
+    <div class="toggle" id="mirror-toggle" onclick="toggleMirrorText()"></div>
+  </div>
+
+  <div class="toggle-row">
+    <div>
+      <div class="toggle-label">Mirror camera</div>
+      <div class="setting-hint">Flip the camera preview horizontally</div>
+    </div>
+    <div class="toggle on" id="cam-toggle" onclick="toggleMirrorCam()"></div>
+  </div>
+
+  <div class="toggle-row">
+    <div>
+      <div class="toggle-label">Focus line</div>
+      <div class="setting-hint">Show reading guide line</div>
+    </div>
+    <div class="toggle on" id="focus-toggle" onclick="toggleFocusLine()"></div>
+  </div>
+
+  <div class="setting-row">
+    <span class="setting-label">Focus line position</span>
+    <input type="range" id="focus-pos" min="10" max="70" value="38">
+    <span class="setting-hint">Move the guide line up or down</span>
+  </div>
+
+  <div class="setting-row">
+    <span class="setting-label">Text colour</span>
+    <div class="ctrl-row" style="gap:8px;margin-top:4px">
+      <button class="btn" onclick="setTextColour('#ffffff')" style="flex:1">White</button>
+      <button class="btn" onclick="setTextColour('#E5FF3D')" style="flex:1;color:#000">Yellow</button>
+      <button class="btn" onclick="setTextColour('#F2EDE2')" style="flex:1;background:#F2EDE2;color:#000">Warm</button>
     </div>
   </div>
 
-  <script>
-    // ── Supabase config (publishable key = safe to expose; bucket allows anon insert only) ──
-    const SUPABASE_URL = 'https://rrxveifshucpinajtkgf.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_548FF3LDIHbz55iHtylFZw_HKBW06Aj';
-    const BUCKET = 'recordings';
+  <div style="flex:1"></div>
+  <button class="btn btn-primary" onclick="closeSettings()" style="width:100%;height:52px">Done</button>
+</div>
 
-    // ── State ──
-    let stream=null, mediaRecorder=null, recordedChunks=[], finalBlob=null, finalExt='webm';
-    let scrollRAF=null, scrollPos=0, timerInt=null, secs=0;
+<script>
+  // ── Config ──
+  const SUPABASE_URL = 'https://rrxveifshucpinajtkgf.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_548FF3LDIHbz55iHtylFZw_HKBW06Aj';
+  const BUCKET = 'recordings';
 
-    const $ = id => document.getElementById(id);
-    const videoEl=$('preview'), btnCam=$('btn-camera'), btnRec=$('btn-record'),
-          btnReview=$('btn-review'), btnUp=$('btn-upload'), btnDl=$('btn-download'), statusEl=$('status');
+  // ── State ──
+  let stream = null, mediaRecorder = null, recordedChunks = [], finalBlob = null, finalExt = 'webm';
+  let scrollRAF = null, scrollPos = 0, isPaused = false;
+  let timerInt = null, secs = 0;
+  let mirrorText = false, mirrorCam = true, focusLineVisible = true;
 
-    // ── Script: preload via ?script= or ?c=<client code> (future), else editable ──
-    (function loadScript(){
-      const p = new URLSearchParams(location.search);
-      const s = p.get('script');
-      if (s) setScript(decodeURIComponent(s));
-      window.POST_ID = p.get('post') || '';
-    })();
-    function setScript(t){ $('prompter-target').textContent = t; $('script-input').value = t; }
-    function openPanel(){ $('panel').classList.add('show'); }
-    function closePanel(){ $('panel').classList.remove('show'); }
-    function saveScript(){ const t=$('script-input').value.trim(); if(t) setScript(t); closePanel(); }
+  const $ = id => document.getElementById(id);
 
-    $('fontsize').addEventListener('input', e => { $('prompter-target').style.fontSize = e.target.value+'px'; });
+  const scrollTrack   = $('scroll-track');
+  const scrollWindow  = $('scroll-window');
+  const prompterText  = $('prompter-text');
+  const videoEl       = $('preview');
+  const statusEl      = $('status');
+  const btnRec        = $('btn-record');
+  const btnReview     = $('btn-review');
+  const btnUp         = $('btn-upload');
+  const btnDl         = $('btn-download');
 
-    // ── Camera ──
-    async function initCamera(){
-      try{
-        statusEl.textContent='Connecting…';
-        if(stream) stream.getTracks().forEach(t=>t.stop());
-        const sel=$('camsel').value;
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: sel ? {deviceId:{exact:sel},width:1280,height:720} : {width:1280,height:720,facingMode:'user'},
-          audio:true
-        });
-        videoEl.srcObject=stream; videoEl.srcObject && (videoEl.muted=true);
-        videoEl.play();
-        btnRec.disabled=false; statusEl.textContent='Ready';
-        // populate camera list once permission granted
-        const devs=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='videoinput');
-        if(devs.length>1){ const cs=$('camsel'); cs.style.display='inline-block';
-          cs.innerHTML=devs.map(d=>`<option value="${d.deviceId}">${d.label||'Camera'}</option>`).join(''); }
-      }catch(err){ statusEl.textContent='Camera/mic access required.'; }
+  // ── Sliders ──
+  $('fontsize').addEventListener('input', e => {
+    prompterText.style.fontSize = e.target.value + 'px';
+  });
+  $('focus-pos').addEventListener('input', e => {
+    $('focus-line').style.top = e.target.value + '%';
+  });
+
+  // ── Preload script from URL ──
+  (function loadScript() {
+    const p = new URLSearchParams(location.search);
+    const s = p.get('script');
+    if (s) setScript(decodeURIComponent(s));
+    window.POST_ID = p.get('post') || '';
+  })();
+
+  function setScript(t) {
+    prompterText.textContent = t;
+    $('script-input').value = t;
+    resetScroll();
+  }
+
+  // ── Script panel ──
+  function openPanel()   { $('panel').classList.add('show'); setTimeout(() => $('script-input').focus(), 100); }
+  function closePanel()  { $('panel').classList.remove('show'); }
+  function saveScript()  { const t = $('script-input').value.trim(); if (t) setScript(t); closePanel(); }
+
+  // ── Settings panel ──
+  function openSettings()  { $('settings-panel').classList.add('show'); }
+  function closeSettings() { $('settings-panel').classList.remove('show'); }
+
+  function toggleMirrorText() {
+    mirrorText = !mirrorText;
+    $('mirror-toggle').classList.toggle('on', mirrorText);
+    prompterText.style.transform = mirrorText ? 'scaleX(-1)' : '';
+  }
+  function toggleMirrorCam() {
+    mirrorCam = !mirrorCam;
+    $('cam-toggle').classList.toggle('on', mirrorCam);
+    videoEl.classList.toggle('mirror', mirrorCam);
+  }
+  function toggleFocusLine() {
+    focusLineVisible = !focusLineVisible;
+    $('focus-toggle').classList.toggle('on', focusLineVisible);
+    $('focus-line').classList.toggle('hidden', !focusLineVisible);
+  }
+  function setTextColour(c) { prompterText.style.color = c; }
+
+  // ── Camera ──
+  async function initCamera() {
+    try {
+      setStatus('Connecting…');
+      if (stream) stream.getTracks().forEach(t => t.stop());
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
+        audio: true
+      });
+      videoEl.srcObject = stream;
+      videoEl.play();
+      btnRec.disabled = false;
+      setStatus('Ready — tap Record to start', 'ok');
+      await populateCamList();
+    } catch (err) {
+      setStatus('Camera / mic access required.', 'err');
     }
+  }
 
-    // ── Prompter scroll ──
-    function startScroll(){
-      const box=$('scroll'); scrollPos=0; box.style.transform='translateY(0)';
-      const speed=()=>parseInt($('speed').value,10)/60; // px per frame approx
-      function step(){ scrollPos+=speed(); box.style.transform=`translateY(${-scrollPos}px)`; scrollRAF=requestAnimationFrame(step); }
-      scrollRAF=requestAnimationFrame(step);
+  async function switchCamera() {
+    if (!stream) return;
+    try {
+      stream.getTracks().forEach(t => t.stop());
+      const deviceId = $('camsel').value;
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: { exact: deviceId } },
+        audio: true
+      });
+      videoEl.srcObject = stream;
+      videoEl.play();
+    } catch (e) { setStatus('Camera switch failed', 'err'); }
+  }
+
+  async function populateCamList() {
+    const devs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
+    if (devs.length > 1) {
+      const sel = $('camsel');
+      sel.style.display = 'block';
+      sel.innerHTML = devs.map(d => `<option value="${d.deviceId}">${d.label || 'Camera'}</option>`).join('');
     }
-    function stopScroll(){ if(scrollRAF) cancelAnimationFrame(scrollRAF); scrollRAF=null; }
+  }
 
-    // ── Recording ──
-    function toggleRecording(){ (!mediaRecorder||mediaRecorder.state==='inactive') ? countdownStart() : stopRecording(); }
-    function countdownStart(){
-      const cd=$('countdown'); let n=3; cd.style.display='flex'; cd.textContent=n;
-      const iv=setInterval(()=>{ n--; if(n<=0){ clearInterval(iv); cd.style.display='none'; startRecording(); } else cd.textContent=n; },800);
+  // ── Scroll mechanics ──
+  // Text starts below the visible area (padding-top = window height), scrolls up.
+  function initScrollPosition() {
+    const winH = scrollWindow.offsetHeight;
+    scrollTrack.style.paddingTop = winH + 'px';
+    scrollPos = 0;
+    scrollTrack.style.transform = 'translateY(0)';
+  }
+
+  function resetScroll() {
+    stopScroll();
+    isPaused = false;
+    $('pause-overlay').classList.remove('show');
+    initScrollPosition();
+  }
+
+  function startScroll() {
+    initScrollPosition();
+    const speedPx = () => parseFloat($('speed').value) / 60;
+    function step() {
+      if (!isPaused) {
+        scrollPos += speedPx();
+        scrollTrack.style.transform = `translateY(${-scrollPos}px)`;
+      }
+      scrollRAF = requestAnimationFrame(step);
     }
-    function startRecording(){
-      recordedChunks=[]; finalBlob=null; btnUp.disabled=true; btnDl.disabled=true; btnReview.disabled=true;
-      let mime='video/webm';
-      if(MediaRecorder.isTypeSupported('video/mp4')) mime='video/mp4';
-      else if(MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) mime='video/webm;codecs=vp9';
-      finalExt = mime.includes('mp4')?'mp4':'webm';
-      mediaRecorder=new MediaRecorder(stream,{mimeType:mime});
-      mediaRecorder.ondataavailable=e=>{ if(e.data&&e.data.size>0) recordedChunks.push(e.data); };
-      mediaRecorder.onstop=()=>{ finalBlob=new Blob(recordedChunks,{type:mime});
-        btnUp.disabled=false; btnDl.disabled=false; btnReview.disabled=false;
-        statusEl.textContent=`Ready · ${(finalBlob.size/1048576).toFixed(1)}MB`; };
-      mediaRecorder.start();
-      btnRec.textContent='Stop'; btnRec.classList.add('recording'); statusEl.textContent='Recording…';
-      startScroll(); secs=0; $('rec-timer').classList.add('show'); $('timer-val').textContent='0:00';
-      timerInt=setInterval(()=>{ secs++; $('timer-val').textContent=`${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}`; },1000);
+    scrollRAF = requestAnimationFrame(step);
+  }
+
+  function stopScroll() {
+    if (scrollRAF) cancelAnimationFrame(scrollRAF);
+    scrollRAF = null;
+  }
+
+  // ── Tap to pause/resume ──
+  function tapPause() {
+    if (!scrollRAF) return; // not scrolling, ignore
+    isPaused = !isPaused;
+    $('pause-overlay').classList.toggle('show', isPaused);
+  }
+
+  // ── Recording ──
+  function toggleRecording() {
+    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+      countdownStart();
+    } else {
+      stopRecording();
     }
-    function stopRecording(){ mediaRecorder.stop(); btnRec.textContent='Record'; btnRec.classList.remove('recording');
-      stopScroll(); clearInterval(timerInt); $('rec-timer').classList.remove('show'); }
+  }
 
-    // ── Review (watch back) ──
-    function reviewVideo(){ if(!finalBlob) return; videoEl.srcObject=null; videoEl.classList.remove('mirror');
-      videoEl.src=URL.createObjectURL(finalBlob); videoEl.muted=false; videoEl.controls=true; videoEl.play();
-      statusEl.textContent='Reviewing — press Record to redo'; }
+  function countdownStart() {
+    const cd = $('countdown'); let n = 3;
+    cd.style.display = 'flex'; cd.textContent = n;
+    const iv = setInterval(() => {
+      n--;
+      if (n <= 0) { clearInterval(iv); cd.style.display = 'none'; startRecording(); }
+      else cd.textContent = n;
+    }, 800);
+  }
 
-    // ── Download fallback ──
-    function downloadVideo(){ if(!finalBlob) return; const a=document.createElement('a');
-      a.href=URL.createObjectURL(finalBlob); a.download=`recording-${Date.now()}.${finalExt}`; a.click(); }
+  function enterFullscreen() {
+    document.getElementById('app').classList.add('fullscreen');
+    $('float-bar').classList.add('show');
+    // sync float speed slider to main
+    $('speed-float').value = $('speed').value;
+  }
 
-    // ── Upload straight to Supabase Storage ──
-    async function uploadVideo(){
-      if(!finalBlob) return;
-      btnUp.disabled=true; statusEl.textContent='Uploading…';
-      const tag = window.POST_ID ? `post-${window.POST_ID}-` : '';
-      const path=`uploads/${tag}${Date.now()}-${Math.random().toString(36).slice(2,8)}.${finalExt}`;
-      try{
-        const res=await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`,{
-          method:'POST',
-          headers:{ 'apikey':SUPABASE_KEY, 'Authorization':'Bearer '+SUPABASE_KEY, 'Content-Type':finalBlob.type, 'x-upsert':'false' },
-          body:finalBlob
-        });
-        if(!res.ok) throw new Error('HTTP '+res.status);
-        statusEl.textContent='Uploaded ✓ Thank you!';
-      }catch(err){ statusEl.textContent='Upload failed — use Save File'; btnUp.disabled=false; btnDl.disabled=false; }
+  function exitFullscreen() {
+    document.getElementById('app').classList.remove('fullscreen');
+    $('float-bar').classList.remove('show');
+  }
+
+  // Keep both speed sliders in sync
+  $('speed').addEventListener('input', e => { $('speed-float').value = e.target.value; });
+  $('speed-float').addEventListener('input', e => { $('speed').value = e.target.value; });
+
+  function startRecording() {
+    recordedChunks = []; finalBlob = null;
+    btnUp.disabled = true; btnDl.disabled = true; btnReview.disabled = true;
+    let mime = 'video/webm';
+    if (MediaRecorder.isTypeSupported('video/mp4'))             mime = 'video/mp4';
+    else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) mime = 'video/webm;codecs=vp9';
+    finalExt = mime.includes('mp4') ? 'mp4' : 'webm';
+    mediaRecorder = new MediaRecorder(stream, { mimeType: mime });
+    mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
+    mediaRecorder.onstop = () => {
+      finalBlob = new Blob(recordedChunks, { type: mime });
+      btnUp.disabled = false; btnDl.disabled = false; btnReview.disabled = false;
+      setStatus(`Done · ${(finalBlob.size / 1048576).toFixed(1)} MB`, 'ok');
+    };
+    mediaRecorder.start();
+    btnRec.innerHTML = '⏹ Stop'; btnRec.classList.add('recording');
+    setStatus('Recording…');
+    enterFullscreen();
+    startScroll();
+    secs = 0; $('rec-timer').classList.add('show'); $('timer-val').textContent = '0:00';
+    timerInt = setInterval(() => {
+      secs++;
+      $('timer-val').textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+    }, 1000);
+  }
+
+  function stopRecording() {
+    mediaRecorder.stop();
+    btnRec.innerHTML = '⏺ Record'; btnRec.classList.remove('recording');
+    exitFullscreen();
+    stopScroll(); resetScroll();
+    clearInterval(timerInt); $('rec-timer').classList.remove('show');
+  }
+
+  // ── Review ──
+  function reviewVideo() {
+    if (!finalBlob) return;
+    videoEl.srcObject = null;
+    videoEl.classList.remove('mirror');
+    videoEl.src = URL.createObjectURL(finalBlob);
+    videoEl.muted = false; videoEl.controls = true; videoEl.play();
+    setStatus('Reviewing — tap Record to redo');
+  }
+
+  // ── Download ──
+  function downloadVideo() {
+    if (!finalBlob) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(finalBlob);
+    a.download = `recording-${Date.now()}.${finalExt}`;
+    a.click();
+  }
+
+  // ── Upload to Supabase ──
+  async function uploadVideo() {
+    if (!finalBlob) return;
+    btnUp.disabled = true; setStatus('Uploading…');
+    const tag  = window.POST_ID ? `post-${window.POST_ID}-` : '';
+    const path = `uploads/${tag}${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${finalExt}`;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': finalBlob.type,
+          'x-upsert': 'false'
+        },
+        body: finalBlob
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      setStatus('Uploaded ✓ All done!', 'ok');
+    } catch (err) {
+      setStatus('Upload failed — use Save File', 'err');
+      btnUp.disabled = false;
     }
-  </script>
+  }
+
+  // ── Status helper ──
+  function setStatus(msg, type = '') {
+    statusEl.textContent = msg;
+    statusEl.className = type;
+  }
+
+  // ── Init scroll position on load ──
+  window.addEventListener('load', () => {
+    // Wait for layout, then set initial scroll
+    requestAnimationFrame(() => initScrollPosition());
+  });
+  window.addEventListener('resize', () => {
+    if (!scrollRAF) initScrollPosition(); // only reset if not actively scrolling
+  });
+</script>
 </body>
 </html>
