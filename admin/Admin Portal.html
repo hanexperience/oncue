@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin · OnCue</title>
+  <title>Admin · Beets & Co</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700;800&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -212,7 +212,7 @@
 <!-- ── KEY GATE ── -->
 <div id="gate">
   <div class="gate-box">
-    <h1>OnCue Admin</h1>
+    <h1>Beets & Co Admin</h1>
     <p class="gate-note">Paste your Supabase <b>service_role</b> key to begin. It is held in this browser session only and is <b>never saved to the file</b>. Use this tool locally only — do not deploy or share it.</p>
     <div class="form-group">
       <label class="form-label">Service Role Key</label>
@@ -266,12 +266,12 @@
   let activeTab = 'details';
   let allClients = [];
 
-  // ── DEMO MODE: live with a real key on oncue.site; in-memory sample data elsewhere ──
+  // ── DEMO MODE: live with a real key on beetsandco.com.au; in-memory sample data elsewhere ──
   const DEMO = (function () {
     const q = new URLSearchParams(location.search);
     if (q.has('live')) return false;
     if (q.has('demo')) return true;
-    return !/(^|\.)oncue\.site$/.test(location.hostname);
+    return !/(^|\.)beetsandco\.com\.au$/.test(location.hostname);
   })();
 
   // ── Key gate ──
@@ -336,7 +336,7 @@
   // ── Select options for nested tables ──
   const SELECT_OPTS = {
     phase_status: [['done','Complete'],['active','In Progress'],['pending','Upcoming']],
-    owner: [['oncue','OnCue'],['client','Client'],['waiting','Waiting']],
+    owner: [['oncue','Beets & Co'],['client','Client'],['waiting','Waiting']],
     post_status: [['draft','Drafting'],['approval','Needs Approval'],['scheduled','Scheduled'],['published','Published']]
   };
   const NESTED = {
@@ -857,4 +857,3 @@
 </script>
 
 </body>
-</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Client Portal · OnCue</title>
+  <title>Client Portal · Beets & Co</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700;800&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -11,7 +11,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      /* Evolved OnCue palette — warm paper light theme */
+      /* Evolved Beets & Co palette — warm paper light theme */
       --paper:     #F3EDE1;   /* page background, warm */
       --paper-2:   #ECE4D4;   /* sunken / weekend cells */
       --surface:   #FBF7EF;   /* cards */
@@ -611,7 +611,7 @@
   <div class="login-wordmark">On<span class="mark">Cue</span></div>
   <div class="login-box">
     <h1>Client Portal</h1>
-    <p class="sub">OnCue Agency</p>
+    <p class="sub">Beets & Co</p>
     <label class="login-label" for="pw">Access Code</label>
     <input class="login-input" type="password" id="pw" placeholder="Enter your access code" autocomplete="current-password"/>
     <button class="btn-primary" id="login-btn" onclick="tryLogin()">Enter Portal</button>
@@ -655,13 +655,13 @@
   }
 
   // ── DEMO MODE ──────────────────────────────────────────────────────────
-  // Live on oncue.site; sample data everywhere else (preview/sharing).
+  // Live on beetsandco.com.au; sample data everywhere else (preview/sharing).
   // Add ?demo=1 to force it, or ?live=1 to force the real backend.
   const DEMO = (function () {
     const q = new URLSearchParams(location.search);
     if (q.has('live')) return false;
     if (q.has('demo')) return true;
-    return !/(^|\.)oncue\.site$/.test(location.hostname);
+    return !/(^|\.)beetsandco\.com\.au$/.test(location.hostname);
   })();
 
   let CURRENT_CODE = null;
@@ -793,11 +793,11 @@
     }
     t1 += '<div class="sec" style="margin-top:0;"><div class="two-col">';
     t1 += '<div class="card"><div class="card-label">Next Steps</div>';
-    t1 += '<div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>OnCue</div>';
+    t1 += '<div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>Beets & Co</div>';
     t1 += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>' + esc(c.contact_name || 'You') + '</div></div>';
     t1 += '<ul class="steps">';
     (data.next_steps || []).forEach(function (s) {
-      var ownerLabel = s.owner === 'oncue' ? 'OnCue' : (s.owner === 'client' ? esc(c.contact_name || 'You') : 'Waiting');
+      var ownerLabel = s.owner === 'oncue' ? 'Beets & Co' : (s.owner === 'client' ? esc(c.contact_name || 'You') : 'Waiting');
       t1 += '<li class="step"><div class="step-dot ' + esc(s.owner) + '"></div>';
       t1 += '<div class="step-text">' + esc(s.body) + '</div>';
       t1 += '<div class="step-owner ' + esc(s.owner) + '">' + ownerLabel + '</div></li>';
@@ -843,7 +843,7 @@
       } else if (p.status === 'scheduled') {
         t1 += '<span class="done-tag">Locked in ✓</span>';
       } else if (p.status === 'draft') {
-        t1 += '<span class="done-tag">With OnCue</span>';
+        t1 += '<span class="done-tag">With Beets & Co</span>';
       } else {
         t1 += '<span class="done-tag">Published ✓</span>';
       }
@@ -861,7 +861,7 @@
     if (c.retainer_badge) t2 += '<span class="pill">' + esc(c.retainer_badge) + '</span>';
     t2 += '</div></div>';
     t2 += '<div class="hero-foot">';
-    t2 += '<span>Last updated by OnCue: <strong>' + esc(c.last_updated) + '</strong></span>';
+    t2 += '<span>Last updated by Beets & Co: <strong>' + esc(c.last_updated) + '</strong></span>';
     t2 += '<span>Project manager: <strong>' + esc(c.pm_name) + '</strong></span>';
     t2 += '</div></div>';
     t2 += '<div class="sec"><div class="package"><div class="package-left">';
@@ -931,7 +931,7 @@
     t4 += '<div class="contact" style="margin-top:36px;"><div><div class="kicker">Questions?</div>';
     t4 += '<h3>Reach Michael directly</h3></div>';
     t4 += '<div class="contact-links">';
-    t4 += '<a class="contact-link" href="mailto:hello@oncue.site">hello@oncue.site</a>';
+    t4 += '<a class="contact-link" href="mailto:hello@beetsandco.com.au">hello@beetsandco.com.au</a>';
     t4 += '<a class="contact-link alt" href="tel:+61447542930">+61 447 542 930</a>';
     t4 += '</div></div>';
 
@@ -967,7 +967,7 @@
     var el = document.getElementById('history-inner');
     if (!el) return;
     if (!_historyData || !_historyData.length) {
-      el.innerHTML = '<div style="padding:40px 0;text-align:center;font-family:var(--font-mono,monospace);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted-2);">No monthly reports yet.<br><br>Reports appear here after OnCue closes each month.</div>';
+      el.innerHTML = '<div style="padding:40px 0;text-align:center;font-family:var(--font-mono,monospace);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted-2);">No monthly reports yet.<br><br>Reports appear here after Beets & Co closes each month.</div>';
       return;
     }
     var h = '<div class="kicker">Monthly History</div>';
@@ -1172,7 +1172,7 @@
         } else {
           stage.className = 'pipe-stage s-draft';
           stage.textContent = 'Changes Requested';
-          actions.innerHTML = '<span class="done-tag">Sent to OnCue ✓</span>';
+          actions.innerHTML = '<span class="done-tag">Sent to Beets & Co ✓</span>';
         }
         refreshAlert();
       }).catch(function () {
@@ -1298,4 +1298,3 @@
 </script>
 
 </body>
-</html>

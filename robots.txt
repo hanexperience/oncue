@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://oncue.site/sitemap.xml
+Sitemap: https://beetsandco.com.au/sitemap.xml
