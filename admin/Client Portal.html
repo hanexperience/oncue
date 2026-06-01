@@ -608,7 +608,7 @@
 
 <!-- ── LOGIN SCREEN ── -->
 <div id="login-screen">
-  <div class="login-wordmark">On<span class="mark">Cue</span></div>
+  <div class="topbar-wordmark"><span class="mark">Beets & Co.</span></div>
   <div class="login-box">
     <h1>Client Portal</h1>
     <p class="sub">Beets & Co</p>
@@ -789,7 +789,7 @@
       t1 += '<div class="alert" style="margin-top:0;margin-bottom:26px;">';
       t1 += '<div class="alert-dot">' + needApproval.length + '</div>';
       t1 += '<div class="alert-text"><strong>' + needApproval.length + ' post' + (needApproval.length > 1 ? 's' : '') + ' need' + (needApproval.length > 1 ? '' : 's') + ' your approval.</strong> Review and lock them in below.</div>';
-      t1 += '<div class="alert-go">↓ Below</div></div>';
+      t1 += '<div class="alert-go" onclick="scrollToEl(\'sec-approvals\')" style="cursor:pointer;">↓ Below</div></div>';
     }
     t1 += '<div class="sec" style="margin-top:0;"><div class="two-col">';
     t1 += '<div class="card"><div class="card-label">Next Steps</div>';
