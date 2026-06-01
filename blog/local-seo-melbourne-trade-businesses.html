@@ -25,129 +25,109 @@
   "keywords": ["local SEO Melbourne trades", "SEO for tradies Melbourne", "Google Business Profile Melbourne", "ranking on Google Melbourne tradie", "local search Melbourne trade business"]
 }
 </script>
-<link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon-16x16.png">
+<link rel="manifest" href="../images/favicon/site.webmanifest">
+<link rel="shortcut icon" href="../images/favicon/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css"/>
 <style>
-:root{--ink:#0A0A0A;--ink-2:#161616;--bone:#F2EDE2;--bone-2:#E8E2D4;--hi:#E5FF3D;--rust:#E5542A;--line:rgba(10,10,10,.14);--line-on-dark:rgba(242,237,226,.16);--ease:cubic-bezier(.2,.7,.2,1)}
-*,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:"Archivo",system-ui,sans-serif;background:var(--bone);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-::selection{background:var(--hi);color:var(--ink)}
-h1,h2,h3,h4{margin:0}
-p{line-height:1.65;margin:0}
-.topbar{position:sticky;top:0;z-index:60;background:var(--ink);color:var(--bone);border-bottom:1px solid var(--line-on-dark)}
-.topbar .row{display:flex;align-items:center;justify-content:space-between;height:64px;gap:24px;max-width:1240px;margin:0 auto;padding:0 28px}
-.brand{display:flex;align-items:center;gap:10px}
-.brand .dot{width:14px;height:14px;background:var(--hi);display:inline-block;border:1.5px solid var(--bone)}
-.brand .wordmark{font-family:"Archivo Narrow",sans-serif;font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.04em}
-.nav{display:flex;gap:28px;align-items:center}
-.nav a{font-size:13px;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
-.nav a:hover{color:var(--hi);opacity:1}
-.cta-sm{display:inline-flex;align-items:center;gap:8px;background:var(--hi);color:var(--ink);font-weight:700;font-size:12px;padding:9px 14px;border:1.5px solid var(--ink);text-transform:uppercase;letter-spacing:.08em}
-.cta-sm:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--bone)}
-.burger{display:none;background:none;border:0;color:var(--bone);cursor:pointer;padding:8px}
-.burger span{display:block;width:22px;height:2px;background:var(--bone);margin:4px 0}
-.post-hero{background:var(--ink);color:var(--bone);padding:72px 0 64px}
-.post-hero .inner{max-width:800px;margin:0 auto;padding:0 28px}
-.post-meta{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:28px}
-.post-meta span{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
-.post-meta .tag{background:var(--hi);color:var(--ink);padding:4px 10px;border:1px solid var(--ink);opacity:1}
-.post-hero h1{font-family:"Archivo Narrow",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(36px,6vw,80px);line-height:.92;letter-spacing:-.015em}
-.post-hero h1 .hi{color:var(--hi)}
-.post-hero .deck{font-size:20px;opacity:.82;margin-top:24px;max-width:60ch;line-height:1.5}
-.post-body{max-width:800px;margin:0 auto;padding:64px 28px 80px}
-.post-body h2{font-family:"Archivo Narrow",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(26px,3.5vw,42px);line-height:.95;letter-spacing:-.01em;margin:56px 0 20px;padding-top:8px;border-top:2px solid var(--hi)}
-.post-body h3{font-family:"Archivo Narrow",sans-serif;font-weight:800;text-transform:uppercase;font-size:22px;letter-spacing:.005em;margin:36px 0 12px}
-.post-body p{font-size:17px;margin-bottom:22px}
-.post-body ul,ol{font-size:17px;line-height:1.65;padding-left:24px;margin:0 0 22px}
-.post-body li{margin-bottom:10px}
-.post-body strong{font-weight:700}
-.callout{background:var(--ink);color:var(--bone);padding:32px 36px;margin:40px 0;border-left:4px solid var(--hi)}
-.callout p{font-size:18px;font-family:"Archivo Narrow",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.01em;line-height:1.2;margin:0}
-.callout p .hi{color:var(--hi)}
-.steps-list{display:grid;gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink);margin:36px 0}
-.step-item{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:24px 22px;display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start}
-.step-num{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--hi);color:var(--ink);width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-weight:600;border:1px solid var(--ink);flex-shrink:0}
-.step-item h4{font-family:"Archivo Narrow";font-weight:800;text-transform:uppercase;font-size:18px;margin:0 0 8px;letter-spacing:.01em}
-.step-item p{font-size:15px;margin:0;opacity:.85}
-.post-cta{background:var(--ink);color:var(--bone);padding:72px 0}
-.post-cta .inner{max-width:800px;margin:0 auto;padding:0 28px;display:flex;flex-direction:column;gap:28px}
-.post-cta h2{font-family:"Archivo Narrow",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(36px,5vw,72px);line-height:.9;letter-spacing:-.015em}
-.post-cta h2 .hi{color:var(--hi)}
-.post-cta p{font-size:17px;opacity:.82;max-width:52ch}
-.cta-btn{display:inline-flex;align-items:center;gap:10px;background:var(--hi);color:var(--ink);font-weight:700;font-size:14px;padding:14px 20px;border:1.5px solid var(--hi);text-transform:uppercase;letter-spacing:.08em;align-self:flex-start}
-.cta-btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--bone)}
-.cta-btn svg{width:16px;height:16px}
-.related{padding:64px 0 80px;border-top:1px solid var(--line)}
-.related .inner{max-width:800px;margin:0 auto;padding:0 28px}
-.related h3{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:28px;opacity:.7}
-.related-links{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
-.related-link{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:24px 22px;display:block}
-.related-link:hover{background:var(--ink);color:var(--bone)}
-.related-link .tag{font-family:"JetBrains Mono";font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:var(--hi);color:var(--ink);padding:3px 8px;border:1px solid var(--ink);display:inline-block;margin-bottom:12px}
-.related-link h4{font-family:"Archivo Narrow";font-weight:800;text-transform:uppercase;font-size:18px;line-height:1.1;letter-spacing:-.005em}
-footer{background:var(--ink);color:var(--bone);border-top:1px solid var(--line-on-dark);padding:32px 0}
-.foot{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;max-width:1240px;margin:0 auto;padding:0 28px}
-.foot .legal{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
-.foot .social{display:flex;gap:18px}
-.foot .social a{font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
-.foot .social a:hover{color:var(--hi);opacity:1}
-@media(max-width:768px){.nav{display:none}.burger{display:block}.topbar.open .nav{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--ink);padding:20px;border-bottom:1px solid var(--line-on-dark)}.topbar.open .nav a{padding:8px 0}.related-links{grid-template-columns:1fr}}
+  .post-hero{background:var(--green);color:var(--on-green);padding:80px 0 64px}
+  .post-wrap{max-width:760px;margin:0 auto;padding:0 28px}
+  .post-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px}
+  .post-meta .tag{background:var(--sand);color:var(--green);font-weight:650;font-size:12.5px;padding:6px 13px;border-radius:var(--pill)}
+  .post-meta .m{font-size:13px;color:var(--on-green-soft);letter-spacing:.02em}
+  .post-hero h1{font-size:clamp(38px,6.4vw,76px);line-height:.98;letter-spacing:-.03em;margin:0}
+  .post-hero h1 .serif-em{color:var(--sand)}
+  .post-hero .deck{font-size:20px;color:var(--on-green-soft);margin-top:24px;line-height:1.5;max-width:60ch}
+  .byline{display:flex;align-items:center;gap:13px;margin-top:32px;padding-top:24px;border-top:1px solid var(--line-on-green)}
+  .byline .av{width:44px;height:44px;border-radius:50%;background:var(--sand);color:var(--green);display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:18px;flex-shrink:0}
+  .byline .who{font-family:var(--font-display);font-weight:700;font-size:15.5px}
+  .byline .role{font-size:13px;color:var(--on-green-soft)}
+  .post-body{max-width:760px;margin:0 auto;padding:64px 28px 24px}
+  .post-body h2{font-size:clamp(26px,3.6vw,40px);line-height:1.02;letter-spacing:-.02em;margin:52px 0 18px}
+  .post-body h2 .serif-em{color:var(--green)}
+  .post-body h3{font-size:21px;letter-spacing:-.01em;margin:34px 0 10px;font-family:var(--font-display);font-weight:700}
+  .post-body p{font-size:18px;line-height:1.7;color:var(--ink-2);margin-bottom:22px}
+  .post-body p b,.post-body strong{color:var(--ink);font-weight:650}
+  .post-body ul,ol{font-size:17px;line-height:1.7;padding-left:24px;margin:0 0 22px}
+  .post-body li{margin-bottom:10px;color:var(--ink-2)}
+  .post-body a{color:var(--accent);text-decoration:underline}
+  .callout{background:var(--sand-soft);border-radius:var(--radius-lg);padding:30px 34px;margin:40px 0;border-left:4px solid var(--accent)}
+  .callout p{font-family:var(--font-serif);font-style:italic;font-size:22px;line-height:1.45;color:var(--ink);margin:0}
+  .callout p .hi{color:var(--accent);font-style:normal;font-family:var(--font-display);font-weight:700}
+  /* steps list */
+  .steps-list{display:grid;gap:16px;margin:36px 0}
+  .step-item{border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px 22px;display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start;background:var(--paper)}
+  .step-num{background:var(--green);color:var(--on-green);font-size:13px;font-weight:700;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;font-family:var(--font-display)}
+  .step-item h4{font-family:var(--font-display);font-weight:700;font-size:17px;margin:0 0 8px;letter-spacing:-.01em}
+  .step-item p{font-size:15px;margin:0;color:var(--ink-2);line-height:1.6}
+  .post-cta{margin:64px auto 0;max-width:760px;padding:0 28px}
+  .post-cta .inner{background:var(--green);color:var(--on-green);border-radius:var(--radius-xl);padding:48px 44px}
+  .post-cta h2{font-size:clamp(28px,4vw,48px);line-height:1;letter-spacing:-.03em;margin:0}
+  .post-cta h2 .serif-em{color:var(--sand)}
+  .post-cta p{font-size:17px;color:var(--on-green-soft);margin:18px 0 28px;max-width:52ch;line-height:1.55}
+  .related{max-width:760px;margin:0 auto;padding:72px 28px 0}
+  .related h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--ink-soft);font-weight:600;margin-bottom:22px}
+  .related-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .related-link{border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;background:var(--paper);transition:transform .25s var(--ease),box-shadow .25s var(--ease);display:block}
+  .related-link:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .related-link .cat{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:11px}
+  .related-link h4{font-size:18px;line-height:1.15;letter-spacing:-.01em;margin:0}
+  .post-foot-pad{height:80px}
+  @media(max-width:620px){.step-item{grid-template-columns:1fr}.related-grid{grid-template-columns:1fr}.post-cta .inner{padding:32px 26px}}
 </style>
 </head>
 <body>
-
-<header class="topbar" id="topbar">
-  <div class="row">
-    <a href="https://beetsandco.com.au" class="brand">
-      <span class="dot"></span>
-      <span class="wordmark">BEETS &amp; CO</span>
+<header class="nav" id="nav">
+  <div class="container row">
+    <a href="../index.html#top" class="brand" aria-label="Beets & Co home">
+      <span class="wm">Beets <span class="amp">&amp;</span> Co</span>
     </a>
-    <nav class="nav">
-      <a href="https://beetsandco.com.au/#services">Services</a>
-      <a href="https://beetsandco.com.au/#locations">Locations</a>
-      <a href="https://beetsandco.com.au/blog/">Insights</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="../index.html#model">The model</a>
+      <a href="../index.html#services">What I do</a>
+      <a href="../index.html#crowncon">Work</a>
+      <a href="../index.html#about">About Michael</a>
+      <a href="../index.html#journal">Journal</a>
     </nav>
-    <a href="https://beetsandco.com.au/#contact" class="cta-sm">Start a project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-    <button class="burger" onclick="document.getElementById('topbar').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <div class="nav-cta">
+      <a href="../index.html#apply" class="btn btn-primary">Apply to work together
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
   </div>
 </header>
-
 <section class="post-hero">
-  <div class="inner">
+  <div class="post-wrap">
     <div class="post-meta">
       <span class="tag">SEO</span>
-      <span>7 min read</span>
-      <span>Greater Melbourne</span>
+      <span class="m">7 min read</span>
+      <span class="m">·</span>
+      <span class="m">Greater Melbourne</span>
     </div>
-    <h1>Local SEO for<br/>Melbourne<br/><span class="hi">trade businesses.</span></h1>
+    <h1>Local SEO for<br/>Melbourne<br/><span class="serif-em">trade businesses.</span></h1>
     <p class="deck">Google Business Profile, on-page signals, reviews and suburb-specific content — what actually moves the needle for Melbourne tradies who want to rank and ring.</p>
+    <div class="byline">
+      <span class="av">M</span>
+      <div><div class="who">Michael Beets</div><div class="role">Founder &amp; Director, Beets &amp; Co</div></div>
+    </div>
   </div>
 </section>
-
 <article class="post-body">
-
   <p>Most Melbourne tradies know they need to "do SEO." Almost none of them know what that actually means in practice — or why the $199/month SEO package they bought two years ago achieved nothing.</p>
-
   <p>Local SEO for trade businesses is a specific discipline. It's not about blogging constantly or building thousands of backlinks. It's about <strong>sending the right signals to Google about who you are, where you work, and what you do</strong> — so that when someone in Mordialloc searches "electrician near me," you show up.</p>
-
   <p>Here's what actually works.</p>
-
-  <h2>Start with your Google Business Profile</h2>
-
+  <h2>Start with your <span class="serif-em">Google Business Profile</span></h2>
   <p>If you do nothing else, do this. Your Google Business Profile (GBP) is the single most important local SEO asset a Melbourne trade business has — and it's free. It controls your appearance in the map pack: the three business listings that appear at the top of Google search results before the organic results.</p>
-
   <p>Getting into that map pack for searches like "plumber Chelsea" or "electrician Mordialloc" is worth more than any amount of paid advertising, because those searchers have extremely high intent — they need someone now.</p>
-
   <div class="callout">
     <p>Businesses in the Google <span class="hi">map pack</span> get 44% of all clicks on a local search result. If you're not in it, you're splitting the remaining 56% with everyone else on the page.</p>
   </div>
-
   <p>To optimise your GBP properly:</p>
   <ul>
     <li>Choose the most specific primary category for your trade (e.g. "Plumber" not "Contractor")</li>
@@ -157,13 +137,9 @@ footer{background:var(--ink);color:var(--bone);border-top:1px solid var(--line-o
     <li>Post an update at least once a fortnight — Google treats this as a signal of an active business</li>
     <li>Respond to every review, even the good ones</li>
   </ul>
-
-  <h2>On-page SEO: what your website needs to say</h2>
-
+  <h2>On-page SEO: what your website <span class="serif-em">needs to say</span></h2>
   <p>Google reads your website to understand what you do and where. If your site doesn't explicitly say "plumber serving Mordialloc, Edithvale, Chelsea and Aspendale," Google won't assume it — and won't rank you for those searches.</p>
-
   <p>The minimum on-page requirements for a Melbourne trade business:</p>
-
   <div class="steps-list">
     <div class="step-item">
       <div class="step-num">01</div>
@@ -201,21 +177,13 @@ footer{background:var(--ink);color:var(--bone);border-top:1px solid var(--line-o
       </div>
     </div>
   </div>
-
-  <h2>Google reviews: the ranking signal everyone underestimates</h2>
-
+  <h2>Google reviews: the ranking signal <span class="serif-em">everyone underestimates</span></h2>
   <p>Review quantity, review recency, and review responses are all direct ranking factors for local search. A Melbourne electrician with 40 Google reviews will outrank one with 4 — all else being equal — because Google uses reviews as social proof that the business is real, active, and trusted.</p>
-
   <p>The goal isn't just to collect reviews. It's to build a consistent cadence: 2–3 new reviews per month. Google notices when reviews stop coming in and treats it as a signal that the business might be inactive.</p>
-
-  <p>A simple system that works: send every completed job a text message with a direct link to your Google review page. The conversion rate on same-day requests from happy customers is much higher than you'd expect. For a detailed guide on collecting reviews, see our post: <a href="google-reviews-melbourne-trade-business.html" style="color:var(--rust);text-decoration:underline">How to Get More Google Reviews for Your Melbourne Trade Business</a>.</p>
-
-  <h2>Citations: building your local authority</h2>
-
+  <p>A simple system that works: send every completed job a text message with a direct link to your Google review page. The conversion rate on same-day requests from happy customers is much higher than you'd expect. For a detailed guide on collecting reviews, see our post: <a href="google-reviews-melbourne-trade-business.html">How to Get More Google Reviews for Your Melbourne Trade Business</a>.</p>
+  <h2>Citations: building your <span class="serif-em">local authority</span></h2>
   <p>A citation is any mention of your business name, address, and phone number on another website. Local directories like Yellow Pages, True Local, Hipages, and industry-specific directories all count. So does your local Chamber of Commerce website, a mention in a Bayside community Facebook group's directory, or a local newspaper article.</p>
-
   <p>Citations aren't as powerful as they once were, but they still matter — particularly in competitive local markets. The key is consistency (same NAP everywhere) and breadth (the more legitimate sources mention you, the more Google trusts you're a real local business).</p>
-
   <p>Priority citations for Melbourne tradies:</p>
   <ul>
     <li>Google Business Profile (the most important)</li>
@@ -227,54 +195,71 @@ footer{background:var(--ink);color:var(--bone);border-top:1px solid var(--line-o
     <li>Yelp Australia</li>
     <li>Your industry association's member directory</li>
   </ul>
-
-  <h2>The Bayside opportunity in plain numbers</h2>
-
+  <h2>The Bayside opportunity <span class="serif-em">in plain numbers</span></h2>
   <p>Chelsea, Mordialloc, Seaford, Edithvale, Bonbeach and Aspendale are growing residential areas with consistent, year-round demand for trade services. The digital competition is thin: many local tradies have no website, or one that's 8 years old and doesn't work on mobile.</p>
-
   <p>If you build a properly optimised local presence now — GBP, website, reviews, citations — you can own the first page of Google for your trade across the Bayside corridor within 3–6 months. That's leads, calls, and jobs that come to you instead of you chasing them.</p>
-
-  <p>That's what we build at Beets & Co. Not vanity metrics — actual phone calls from actual Melbourne customers.</p>
-
 </article>
-
 <section class="post-cta">
   <div class="inner">
-    <h2>Want to rank in<br/><span class="hi">your suburb?</span></h2>
-    <p>Beets & Co handles the full local SEO picture for Melbourne trade businesses — website, GBP setup, structured data, and ongoing optimisation. Fixed pricing, plain English.</p>
-    <a href="https://beetsandco.com.au/#contact" class="cta-btn">
-      Talk to us
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    <span class="label on-green" style="color:var(--sand)"><span style="background:var(--sand)"></span>Work with me</span>
+    <h2 style="margin-top:16px">Want to rank in<br/><span class="serif-em">your suburb?</span></h2>
+    <p>I handle the full local SEO picture for Bayside businesses — website, GBP setup, structured data, and ongoing optimisation. Fixed pricing, plain English.</p>
+    <a href="../index.html#apply" class="btn btn-light">Apply to work together
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
   </div>
 </section>
-
 <section class="related">
-  <div class="inner">
-    <h3>More from Beets & Co</h3>
-    <div class="related-links">
-      <a href="web-design-bayside-melbourne-tradies.html" class="related-link">
-        <div class="tag">Web Design</div>
-        <h4>Web Design for Tradies in Bayside Melbourne</h4>
-      </a>
-      <a href="google-reviews-melbourne-trade-business.html" class="related-link">
-        <div class="tag">Reviews</div>
-        <h4>How to Get More Google Reviews for Your Melbourne Trade Business</h4>
-      </a>
-    </div>
+  <h3>More from the journal</h3>
+  <div class="related-grid">
+    <a href="web-design-bayside-melbourne-tradies.html" class="related-link">
+      <div class="cat">Web Design</div>
+      <h4>Why most local websites lose the job before the call</h4>
+    </a>
+    <a href="google-reviews-melbourne-trade-business.html" class="related-link">
+      <div class="cat">Reviews</div>
+      <h4>How to get more Google reviews for your trade business</h4>
+    </a>
   </div>
 </section>
-
+<div class="post-foot-pad"></div>
 <footer>
-  <div class="foot">
-    <div class="legal">© 2025 Beets & Co · Melbourne, VIC, Australia · beetsandco.com.au</div>
-    <div class="social">
-      <a href="https://www.instagram.com/beetsandco" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://www.linkedin.com/company/beetsandco" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="mailto:hello@beetsandco.com.au">Email</a>
+  <div class="container">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="../index.html#top" class="brand"><span class="wm">Beets <span class="amp" style="color:var(--sand)">&amp;</span> Co</span></a>
+        <p>A founder-led brand, web and story studio in Bayside Melbourne. Built by Michael Beets for the few local businesses ready to become the obvious choice.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Studio</h5>
+        <a href="../index.html#model">The model</a>
+        <a href="../index.html#services">What I do</a>
+        <a href="../index.html#crowncon">Work</a>
+        <a href="../index.html#about">About Michael</a>
+        <a href="../index.html#journal">Journal</a>
+      </div>
+      <div class="foot-col">
+        <h5>Get in touch</h5>
+        <a href="../index.html#apply">Apply to work together</a>
+        <a href="mailto:hello@beetsandco.com.au">hello@beetsandco.com.au</a>
+        <p>Bayside, Melbourne · VIC</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Beets &amp; Co · Melbourne, VIC, Australia</span>
+      <div class="social">
+        <a href="https://www.instagram.com/beetsandco" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.linkedin.com/company/beetsandco" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:hello@beetsandco.com.au">Email</a>
+      </div>
     </div>
   </div>
 </footer>
-<script>document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>document.getElementById('topbar').classList.remove('open')));</script>
+<script>
+  const nav=document.getElementById('nav');
+  addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>12),{passive:true});
+  document.getElementById('burger').addEventListener('click',()=>nav.classList.toggle('open'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+</script>
 </body>
 </html>

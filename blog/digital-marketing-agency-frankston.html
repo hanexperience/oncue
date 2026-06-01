@@ -25,211 +25,196 @@
   "keywords": ["digital marketing agency Frankston", "digital agency Frankston", "marketing for tradies Frankston", "SEO Frankston", "web design Frankston Melbourne"]
 }
 </script>
-<link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon-16x16.png">
+<link rel="manifest" href="../images/favicon/site.webmanifest">
+<link rel="shortcut icon" href="../images/favicon/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css"/>
 <style>
-:root{--ink:#0A0A0A;--ink-2:#161616;--bone:#F2EDE2;--bone-2:#E8E2D4;--hi:#E5FF3D;--rust:#E5542A;--line:rgba(10,10,10,.14);--line-on-dark:rgba(242,237,226,.16);--ease:cubic-bezier(.2,.7,.2,1)}
-*,*::before,*::after{box-sizing:border-box}
-html,body{margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:"Archivo",system-ui,sans-serif;background:var(--bone);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-::selection{background:var(--hi);color:var(--ink)}
-h1,h2,h3,h4{margin:0}
-p{line-height:1.65;margin:0}
-.topbar{position:sticky;top:0;z-index:60;background:var(--ink);color:var(--bone);border-bottom:1px solid var(--line-on-dark)}
-.topbar .row{display:flex;align-items:center;justify-content:space-between;height:64px;gap:24px;max-width:1240px;margin:0 auto;padding:0 28px}
-.brand{display:flex;align-items:center;gap:10px}
-.brand .dot{width:14px;height:14px;background:var(--hi);display:inline-block;border:1.5px solid var(--bone)}
-.brand .wordmark{font-family:"Archivo Narrow",sans-serif;font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.04em}
-.nav{display:flex;gap:28px;align-items:center}
-.nav a{font-size:13px;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
-.nav a:hover{color:var(--hi);opacity:1}
-.cta-sm{display:inline-flex;align-items:center;gap:8px;background:var(--hi);color:var(--ink);font-weight:700;font-size:12px;padding:9px 14px;border:1.5px solid var(--ink);text-transform:uppercase;letter-spacing:.08em}
-.cta-sm:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--bone)}
-.burger{display:none;background:none;border:0;color:var(--bone);cursor:pointer;padding:8px}
-.burger span{display:block;width:22px;height:2px;background:var(--bone);margin:4px 0}
-/* POST LAYOUT */
-.post-hero{background:var(--ink);color:var(--bone);padding:72px 0 64px}
-.post-hero .inner{max-width:800px;margin:0 auto;padding:0 28px}
-.post-meta{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:28px}
-.post-meta span{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
-.post-meta .tag{background:var(--hi);color:var(--ink);padding:4px 10px;border:1px solid var(--ink);opacity:1}
-.post-hero h1{font-family:"Archivo Narrow",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(36px,6vw,80px);line-height:.92;letter-spacing:-.015em}
-.post-hero h1 .hi{color:var(--hi)}
-.post-hero .deck{font-size:20px;opacity:.82;margin-top:24px;max-width:60ch;line-height:1.5}
-.post-body{max-width:800px;margin:0 auto;padding:64px 28px 80px}
-.post-body h2{font-family:"Archivo Narrow",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(26px,3.5vw,42px);line-height:.95;letter-spacing:-.01em;margin:56px 0 20px;padding-top:8px;border-top:2px solid var(--hi)}
-.post-body h3{font-family:"Archivo Narrow",sans-serif;font-weight:800;text-transform:uppercase;font-size:22px;letter-spacing:.005em;margin:36px 0 12px}
-.post-body p{font-size:17px;margin-bottom:22px}
-.post-body ul,ol{font-size:17px;line-height:1.65;padding-left:24px;margin:0 0 22px}
-.post-body li{margin-bottom:10px}
-.post-body strong{font-weight:700}
-.callout{background:var(--ink);color:var(--bone);padding:32px 36px;margin:40px 0;border-left:4px solid var(--hi)}
-.callout p{font-size:18px;font-family:"Archivo Narrow",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.01em;line-height:1.2;margin:0}
-.callout p .hi{color:var(--hi)}
-.fact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink);margin:36px 0}
-.fact{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:22px 20px}
-.fact strong{display:block;font-family:"Archivo Narrow";font-weight:800;font-size:36px;color:var(--hi);background:var(--ink);padding:4px 8px;display:inline-block;margin-bottom:10px}
-.fact span{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
-.post-cta{background:var(--ink);color:var(--bone);padding:72px 0}
-.post-cta .inner{max-width:800px;margin:0 auto;padding:0 28px;display:flex;flex-direction:column;gap:28px}
-.post-cta h2{font-family:"Archivo Narrow",sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(36px,5vw,72px);line-height:.9;letter-spacing:-.015em}
-.post-cta h2 .hi{color:var(--hi)}
-.post-cta p{font-size:17px;opacity:.82;max-width:52ch}
-.cta-btn{display:inline-flex;align-items:center;gap:10px;background:var(--hi);color:var(--ink);font-weight:700;font-size:14px;padding:14px 20px;border:1.5px solid var(--hi);text-transform:uppercase;letter-spacing:.08em;align-self:flex-start}
-.cta-btn:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--bone)}
-.cta-btn svg{width:16px;height:16px}
-.related{padding:64px 0 80px;border-top:1px solid var(--line)}
-.related .inner{max-width:800px;margin:0 auto;padding:0 28px}
-.related h3{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:28px;opacity:.7}
-.related-links{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
-.related-link{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:24px 22px;display:block}
-.related-link:hover{background:var(--ink);color:var(--bone)}
-.related-link .tag{font-family:"JetBrains Mono";font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:var(--hi);color:var(--ink);padding:3px 8px;border:1px solid var(--ink);display:inline-block;margin-bottom:12px}
-.related-link h4{font-family:"Archivo Narrow";font-weight:800;text-transform:uppercase;font-size:18px;line-height:1.1;letter-spacing:-.005em}
-footer{background:var(--ink);color:var(--bone);border-top:1px solid var(--line-on-dark);padding:32px 0}
-.foot{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;max-width:1240px;margin:0 auto;padding:0 28px}
-.foot .legal{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
-.foot .social{display:flex;gap:18px}
-.foot .social a{font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
-.foot .social a:hover{color:var(--hi);opacity:1}
-@media(max-width:768px){.nav{display:none}.burger{display:block}.topbar.open .nav{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--ink);padding:20px;border-bottom:1px solid var(--line-on-dark)}.topbar.open .nav a{padding:8px 0}.fact-grid{grid-template-columns:1fr 1fr}.related-links{grid-template-columns:1fr}}
+  .post-hero{background:var(--green);color:var(--on-green);padding:80px 0 64px}
+  .post-wrap{max-width:760px;margin:0 auto;padding:0 28px}
+  .post-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px}
+  .post-meta .tag{background:var(--sand);color:var(--green);font-weight:650;font-size:12.5px;padding:6px 13px;border-radius:var(--pill)}
+  .post-meta .m{font-size:13px;color:var(--on-green-soft);letter-spacing:.02em}
+  .post-hero h1{font-size:clamp(38px,6.4vw,76px);line-height:.98;letter-spacing:-.03em;margin:0}
+  .post-hero h1 .serif-em{color:var(--sand)}
+  .post-hero .deck{font-size:20px;color:var(--on-green-soft);margin-top:24px;line-height:1.5;max-width:60ch}
+  .byline{display:flex;align-items:center;gap:13px;margin-top:32px;padding-top:24px;border-top:1px solid var(--line-on-green)}
+  .byline .av{width:44px;height:44px;border-radius:50%;background:var(--sand);color:var(--green);display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:18px;flex-shrink:0}
+  .byline .who{font-family:var(--font-display);font-weight:700;font-size:15.5px}
+  .byline .role{font-size:13px;color:var(--on-green-soft)}
+  .post-body{max-width:760px;margin:0 auto;padding:64px 28px 24px}
+  .post-body h2{font-size:clamp(26px,3.6vw,40px);line-height:1.02;letter-spacing:-.02em;margin:52px 0 18px}
+  .post-body h2 .serif-em{color:var(--green)}
+  .post-body h3{font-size:21px;letter-spacing:-.01em;margin:34px 0 10px;font-family:var(--font-display);font-weight:700}
+  .post-body p{font-size:18px;line-height:1.7;color:var(--ink-2);margin-bottom:22px}
+  .post-body p b,.post-body strong{color:var(--ink);font-weight:650}
+  .post-body ul,ol{font-size:17px;line-height:1.7;padding-left:24px;margin:0 0 22px}
+  .post-body li{margin-bottom:10px;color:var(--ink-2)}
+  .callout{background:var(--sand-soft);border-radius:var(--radius-lg);padding:30px 34px;margin:40px 0;border-left:4px solid var(--accent)}
+  .callout p{font-family:var(--font-serif);font-style:italic;font-size:22px;line-height:1.45;color:var(--ink);margin:0}
+  .callout p .hi{color:var(--accent);font-style:normal;font-family:var(--font-display);font-weight:700}
+  .fact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:36px 0}
+  .fact{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px 20px}
+  .fact strong{display:block;font-family:var(--font-display);font-weight:800;font-size:40px;color:var(--accent);margin-bottom:8px;letter-spacing:-.02em}
+  .fact span{font-size:13px;color:var(--ink-2);line-height:1.4}
+  .post-cta{margin:64px auto 0;max-width:760px;padding:0 28px}
+  .post-cta .inner{background:var(--green);color:var(--on-green);border-radius:var(--radius-xl);padding:48px 44px}
+  .post-cta h2{font-size:clamp(28px,4vw,48px);line-height:1;letter-spacing:-.03em;margin:0}
+  .post-cta h2 .serif-em{color:var(--sand)}
+  .post-cta p{font-size:17px;color:var(--on-green-soft);margin:18px 0 28px;max-width:52ch;line-height:1.55}
+  .related{max-width:760px;margin:0 auto;padding:72px 28px 0}
+  .related h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--ink-soft);font-weight:600;margin-bottom:22px}
+  .related-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .related-link{border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;background:var(--paper);transition:transform .25s var(--ease),box-shadow .25s var(--ease);display:block}
+  .related-link:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .related-link .cat{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:11px}
+  .related-link h4{font-size:18px;line-height:1.15;letter-spacing:-.01em;margin:0}
+  .post-foot-pad{height:80px}
+  @media(max-width:620px){.fact-grid{grid-template-columns:1fr 1fr}.related-grid{grid-template-columns:1fr}.post-cta .inner{padding:32px 26px}}
 </style>
 </head>
 <body>
-
-<header class="topbar" id="topbar">
-  <div class="row">
-    <a href="https://beetsandco.com.au" class="brand">
-      <span class="dot"></span>
-      <span class="wordmark">BEETS &amp; CO</span>
+<header class="nav" id="nav">
+  <div class="container row">
+    <a href="../index.html#top" class="brand" aria-label="Beets & Co home">
+      <span class="wm">Beets <span class="amp">&amp;</span> Co</span>
     </a>
-    <nav class="nav">
-      <a href="https://beetsandco.com.au/#services">Services</a>
-      <a href="https://beetsandco.com.au/#locations">Locations</a>
-      <a href="https://beetsandco.com.au/blog/">Insights</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="../index.html#model">The model</a>
+      <a href="../index.html#services">What I do</a>
+      <a href="../index.html#crowncon">Work</a>
+      <a href="../index.html#about">About Michael</a>
+      <a href="../index.html#journal">Journal</a>
     </nav>
-    <a href="https://beetsandco.com.au/#contact" class="cta-sm">Start a project <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-    <button class="burger" onclick="document.getElementById('topbar').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <div class="nav-cta">
+      <a href="../index.html#apply" class="btn btn-primary">Apply to work together
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
   </div>
 </header>
-
 <section class="post-hero">
-  <div class="inner">
+  <div class="post-wrap">
     <div class="post-meta">
       <span class="tag">Digital Marketing</span>
-      <span>6 min read</span>
-      <span>Frankston, VIC</span>
+      <span class="m">6 min read</span>
+      <span class="m">·</span>
+      <span class="m">Frankston, VIC</span>
     </div>
-    <h1>Digital marketing agency<br/><span class="hi">Frankston.</span></h1>
+    <h1>Digital marketing agency<br/><span class="serif-em">Frankston.</span></h1>
     <p class="deck">What Frankston trade businesses actually need from a digital marketing agency — and why most of them are paying for the wrong things.</p>
+    <div class="byline">
+      <span class="av">M</span>
+      <div><div class="who">Michael Beets</div><div class="role">Founder &amp; Director, Beets &amp; Co</div></div>
+    </div>
   </div>
 </section>
-
 <article class="post-body">
-
   <p>If you run a trade business, a manufacturing operation, or a service company in Frankston, Frankston North, Frankston South, Carrum Downs or Seaford — you've probably been approached by a digital marketing agency at some point. Maybe several times.</p>
-
   <p>The pitch usually sounds similar: "We'll get you to the top of Google, more leads, more visibility." The results often don't match. You're left paying a monthly retainer for a dashboard full of graphs that don't explain why the phone isn't ringing any louder.</p>
-
   <p>Here's what a digital marketing agency should actually be doing for a Frankston trade business in 2026.</p>
-
-  <h2>Why Frankston is a real SEO opportunity</h2>
-
+  <h2>Why Frankston is a real <span class="serif-em">SEO opportunity</span></h2>
   <p>Frankston sits at the southern end of Melbourne's metropolitan growth corridor — a mix of residential expansion, industrial precincts along Frankston-Dandenong Road, and a genuinely strong local economy. Trades are in demand: builders, plumbers, electricians, HVAC, landscapers, concreters, fabricators.</p>
-
   <p>The competitive gap in digital marketing here is real. Most trade businesses in the Frankston area either have no website, have a website that hasn't been touched since 2018, or are running Google Ads with no supporting SEO strategy. That means the bar to rank locally is low — and businesses that invest now will hold those positions for years.</p>
-
   <div class="callout">
     <p>A tradie in Frankston with a fast, suburb-specific website and a complete Google Business Profile is already ahead of <span class="hi">the majority of local competitors.</span> The bar is that low.</p>
   </div>
-
-  <h2>What digital marketing should actually deliver</h2>
-
+  <h2>What digital marketing should <span class="serif-em">actually deliver</span></h2>
   <p>For a Frankston trade or industrial business, digital marketing comes down to one outcome: <strong>more qualified enquiries</strong>. Not impressions, not followers, not "brand awareness." Calls, quote requests, and booked jobs.</p>
-
   <p>Everything else — the SEO rankings, the Google Business Profile, the website conversion rate, the review volume — is infrastructure that feeds that outcome. A good agency ties every activity back to it.</p>
-
   <h3>1. Local SEO that targets the right suburbs</h3>
   <p>Ranking for "plumber Frankston" or "electrician Carrum Downs" is genuinely achievable for a local business with a properly optimised site. It requires suburb-specific content, a fully built-out Google Business Profile, consistent NAP (name, address, phone) data across the web, and a steady stream of real Google reviews. None of this is complicated. Almost none of Frankston's trade businesses are doing it properly.</p>
-
   <h3>2. A website that converts — not just ranks</h3>
   <p>Traffic without conversion is a waste. A trade website for a Frankston business should do a small number of things very well: load fast on mobile, show a phone number immediately, name the suburbs it serves, and make it easy to request a quote. If your site does those four things, it will outperform 90% of your local competition in both rankings and conversion rate.</p>
-
   <h3>3. Google Business Profile optimisation</h3>
   <p>The Local Pack — those three businesses that appear on the map when someone searches "electrician near me" — is often the highest-value real estate in local search. Getting into it requires a complete and actively managed Google Business Profile: accurate categories, real photos, weekly posts, and a consistent flow of five-star reviews. Most Frankston businesses have a claimed but neglected profile. That's an easy win for anyone willing to manage it properly.</p>
-
   <h3>4. Paid search with a clear ROI</h3>
   <p>Google Ads can work well for Frankston trade businesses — particularly for high-value jobs (HVAC installation, electrical upgrades, construction) where a single conversion justifies the spend. The key is tight geo-targeting (Frankston, Carrum Downs, Seaford, Langwarrin, Mornington Peninsula) and landing pages that match the ad. Running broad campaigns to a generic homepage is how most trade businesses waste their ad budget.</p>
-
   <div class="fact-grid">
     <div class="fact"><strong>76%</strong><span>of local mobile searches result in a visit or call within 24 hours</span></div>
     <div class="fact"><strong>KD 5</strong><span>keyword difficulty for "digital marketing agency Frankston" — nearly uncontested</span></div>
     <div class="fact"><strong>3–6mo</strong><span>typical time to rank page 1 locally with proper on-page SEO</span></div>
   </div>
-
-  <h2>What to look for in a digital marketing agency</h2>
-
+  <h2>What to look for in a <span class="serif-em">digital marketing agency</span></h2>
   <p>If you're evaluating agencies as a Frankston business, here's a short filter:</p>
-
   <ul>
     <li><strong>Do they understand your industry?</strong> A generalist agency that also does e-commerce and hospitality will not think like a trade business. You want someone who knows your customer — a homeowner or site manager making a decision under time pressure, on a mobile phone.</li>
     <li><strong>Do they give you fixed pricing?</strong> Hourly rates and open-ended retainers are how agencies protect their margin, not yours. Fixed project pricing and clear retainer scopes let you budget properly.</li>
     <li><strong>Can they show local results?</strong> Not case studies from Sydney. Melbourne rankings, Melbourne clients, Melbourne trade businesses. Local search is local — the agency should know the geography.</li>
     <li><strong>Do they talk about calls and jobs, or clicks and impressions?</strong> If every conversation is about traffic metrics and your phone isn't ringing more, something is wrong.</li>
   </ul>
-
-  <h2>What Beets & Co does for Frankston businesses</h2>
-
-  <p>We're a Melbourne-based digital marketing agency — and Frankston is part of our core service area. We work with trade businesses, manufacturers, operators, and dealers across the southeast corridor: Frankston, Carrum Downs, Seaford, Langwarrin, Mornington, Hallam, Dandenong.</p>
-
-  <p>Our work covers branding and identity, website design and build, local SEO, Google Business Profile management, and content. Projects are fixed-price — no timesheets, no surprise invoices. Most clients are live within 2–6 weeks of kickoff.</p>
-
-  <p>We're not the biggest agency in Melbourne. We're the one that picks up the phone, does the work, and measures success the way you do: by whether your phone rings more often.</p>
-
+  <h2>What Beets &amp; Co does for <span class="serif-em">Frankston businesses</span></h2>
+  <p>I'm a Melbourne-based designer and marketing specialist — and Frankston is part of my core service area. I work with trade businesses, manufacturers, operators, and dealers across the southeast corridor: Frankston, Carrum Downs, Seaford, Langwarrin, Mornington, Hallam, Dandenong.</p>
+  <p>My work covers branding and identity, website design and build, local SEO, Google Business Profile management, and content. Projects are fixed-price — no timesheets, no surprise invoices. Most clients are live within 2–6 weeks of kickoff.</p>
+  <p>I'm not the biggest agency in Melbourne. I'm the one that picks up the phone, does the work, and measures success the way you do: by whether your phone rings more often.</p>
 </article>
-
 <section class="post-cta">
   <div class="inner">
-    <h2>Based in Frankston.<br/><span class="hi">Let's talk.</span></h2>
+    <span class="label on-green" style="color:var(--sand)"><span style="background:var(--sand)"></span>Work with me</span>
+    <h2 style="margin-top:16px">Based in Frankston.<br/><span class="serif-em">Let's talk.</span></h2>
     <p>Fixed-price digital marketing for Frankston trade businesses. Branding, web design, SEO and more. No retainer runaround — just work that gets your phone ringing.</p>
-    <a href="https://beetsandco.com.au/#contact" class="cta-btn">
-      Start a project
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    <a href="../index.html#apply" class="btn btn-light">Apply to work together
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
   </div>
 </section>
-
 <section class="related">
-  <div class="inner">
-    <h3>More from Beets & Co</h3>
-    <div class="related-links">
-      <a href="local-seo-melbourne-trade-businesses.html" class="related-link">
-        <div class="tag">SEO</div>
-        <h4>Local SEO for Melbourne Trade Businesses: What Actually Works</h4>
-      </a>
-      <a href="web-design-bayside-melbourne-tradies.html" class="related-link">
-        <div class="tag">Web Design</div>
-        <h4>Web Design for Tradies in Bayside Melbourne</h4>
-      </a>
-    </div>
+  <h3>More from the journal</h3>
+  <div class="related-grid">
+    <a href="local-seo-melbourne-trade-businesses.html" class="related-link">
+      <div class="cat">SEO</div>
+      <h4>Local SEO that actually works in Melbourne</h4>
+    </a>
+    <a href="web-design-bayside-melbourne-tradies.html" class="related-link">
+      <div class="cat">Web Design</div>
+      <h4>Why most local websites lose the job before the call</h4>
+    </a>
   </div>
 </section>
-
+<div class="post-foot-pad"></div>
 <footer>
-  <div class="foot">
-    <div class="legal">© 2026 Beets & Co · Melbourne, VIC, Australia · beetsandco.com.au</div>
-    <div class="social">
-      <a href="https://www.instagram.com/beetsandco" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://www.linkedin.com/company/beetsandco" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="mailto:hello@beetsandco.com.au">Email</a>
+  <div class="container">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="../index.html#top" class="brand"><span class="wm">Beets <span class="amp" style="color:var(--sand)">&amp;</span> Co</span></a>
+        <p>A founder-led brand, web and story studio in Bayside Melbourne. Built by Michael Beets for the few local businesses ready to become the obvious choice.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Studio</h5>
+        <a href="../index.html#model">The model</a>
+        <a href="../index.html#services">What I do</a>
+        <a href="../index.html#crowncon">Work</a>
+        <a href="../index.html#about">About Michael</a>
+        <a href="../index.html#journal">Journal</a>
+      </div>
+      <div class="foot-col">
+        <h5>Get in touch</h5>
+        <a href="../index.html#apply">Apply to work together</a>
+        <a href="mailto:hello@beetsandco.com.au">hello@beetsandco.com.au</a>
+        <p>Bayside, Melbourne · VIC</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Beets &amp; Co · Melbourne, VIC, Australia</span>
+      <div class="social">
+        <a href="https://www.instagram.com/beetsandco" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.linkedin.com/company/beetsandco" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:hello@beetsandco.com.au">Email</a>
+      </div>
     </div>
   </div>
 </footer>
-<script>document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>document.getElementById('topbar').classList.remove('open')));</script>
+<script>
+  const nav=document.getElementById('nav');
+  addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>12),{passive:true});
+  document.getElementById('burger').addEventListener('click',()=>nav.classList.toggle('open'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+</script>
 </body>
 </html>
