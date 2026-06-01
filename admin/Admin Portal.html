@@ -222,7 +222,7 @@
       <input type="checkbox" id="gate-remember" /> Remember for this browser session
     </label>
     <button class="btn solid" style="width:100%;justify-content:center;padding:14px;font-size:12px;" onclick="unlock()">Enter</button>
-    <div id="gate-err" style="color:var(--rust);font-size:11px;font-family:'JetBrains Mono',monospace;margin-top:14px;display:none;">Could not connect with that key.</div>
+    <div id="gate-err" style="color:var(--rust);font-size:11px;font-family:inherit,monospace;margin-top:14px;display:none;">Could not connect with that key.</div>
   </div>
 </div>
 
@@ -325,7 +325,7 @@
 
   // ── Field labels ──
   const FIELD_LABELS = {
-    name:'Client Name', access_code:'Access Code (Login)', project_title:'Project Title',
+    name:'Client Name', slug:'Client Slug (for history)', access_code:'Access Code (Login)', project_title:'Project Title',
     project_started:'Project Started (sub-line)', project_subtitle:'Project Subtitle', pm_name:'Project Manager',
     status_badge:'Status Badge', last_updated:'Last Updated (DD Mon YYYY)', setup_badge:'Setup Badge',
     retainer_badge:'Retainer Badge', package_name:'Package Name', package_sub:'Package Sub-line',
@@ -350,14 +350,15 @@
 
   // ── Tabs ── (distribute the giant form into clean sections)
   const TABS = [
-    { id:'details', label:'Details', fields:['name','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated'], nested:[] },
+    { id:'details', label:'Details', fields:['name','slug','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated'], nested:[] },
     { id:'package', label:'Package', fields:['package_name','package_sub'], nested:['quotas'] },
     { id:'phases', label:'Phases & Steps', fields:[], nested:['phases','next_steps'] },
     { id:'deliverables', label:'Deliverables', fields:[], nested:['deliverables','decisions_log'] },
     { id:'content', label:'Content', fields:['cal_label','cal_year','cal_month'], nested:['posts'] },
-    { id:'recap', label:'Recap', fields:['recap_month'], textarea:'recap_body', nested:[] }
+    { id:'recap', label:'Recap', fields:['recap_month'], textarea:'recap_body', nested:[] },
+    { id:'history', label:'History', fields:[], nested:[] }
   ];
-  const ALL_FIELDS = ['name','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated','package_name','package_sub','cal_label','cal_year','cal_month','recap_month'];
+  const ALL_FIELDS = ['name','slug','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated','package_name','package_sub','cal_label','cal_year','cal_month','recap_month'];
 
   // ── Sidebar ──
   async function loadClients() {
@@ -445,7 +446,8 @@
       phases: ['Phases & Next Steps', 'The project phase tracker and the shared to-do list.'],
       deliverables: ['Deliverables & Decisions', 'Shared files and the running log of decisions made.'],
       content: ['Content Calendar', 'Calendar month and every planned post in the pipeline.'],
-      recap: ['Monthly Recap', 'The written wrap-up shown at the bottom of the portal.']
+      recap: ['Monthly Recap', 'The written wrap-up shown at the bottom of the portal.'],
+      history: ['Monthly History', 'Close out a month to save a permanent snapshot. Clients can browse all past months in their portal.']
     };
     h += '<div class="panel-title">' + intros[tab.id][0] + '</div><div class="panel-note">' + intros[tab.id][1] + '</div>';
 
@@ -467,8 +469,14 @@
     // nested tables
     tab.nested.forEach(function (t) { h += '<div id="sec-' + t + '"></div>'; });
 
+    // history tab special content
+    if (tab.id === 'history') {
+      h += '<div id="history-tab-content"><div style="font-family:inherit,monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted-2);padding:24px 0;">Loading…</div></div>';
+    }
+
     panel.innerHTML = h;
     for (const t of tab.nested) await loadNested(t);
+    if (tab.id === 'history') await renderHistoryTab();
   }
 
   // ── Field autosave (debounced) ──
@@ -697,6 +705,119 @@
   })();
 
   let _idc = 1000;
+  // ── History tab ───────────────────────────────────────────────────────────
+  var MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  async function renderHistoryTab() {
+    var el = document.getElementById('history-tab-content');
+    if (!el) return;
+    var now = new Date();
+    var monthOpts = '';
+    for (var offset = 0; offset >= -11; offset--) {
+      var d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+      var y = d.getFullYear(), m = d.getMonth() + 1;
+      var label = MONTH_NAMES[d.getMonth()] + ' ' + y;
+      var val = y + '|' + m + '|' + label;
+      monthOpts += '<option value="' + val + '"' + (offset === 0 ? ' selected' : '') + '>' + label + '</option>';
+    }
+    var h = '<div class="field-card" style="margin-bottom:24px;">';
+    h += '<div class="sec-head" style="margin-top:0;"><h3>Close a Month</h3></div>';
+    h += '<p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Saves a permanent snapshot of all current data for this client. Appears immediately in their History tab.</p>';
+    h += '<div class="grid-2" style="margin-bottom:16px;">';
+    h += '<div class="form-group"><label class="form-label">Month</label><select class="form-select" id="close-month-select">' + monthOpts + '</select></div>';
+    h += '<div class="form-group"><label class="form-label">Closed by</label><input type="text" class="form-input" id="close-month-by" value="Michael" placeholder="Your name"></div>';
+    h += '</div>';
+    h += '<div class="form-group" style="margin-bottom:16px;"><label class="form-label">Internal notes (not shown to client)</label>';
+    h += '<textarea class="form-textarea" id="close-month-notes" style="min-height:80px;" placeholder="Anything worth noting about this month..."></textarea></div>';
+    h += '<button class="btn solid" onclick="closeMonth()" id="close-month-btn">Save Snapshot</button>';
+    h += '<span id="close-month-status" style="font-family:inherit,monospace;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-left:14px;"></span>';
+    h += '</div>';
+    h += '<div id="snapshot-list"><div style="font-family:inherit,monospace;font-size:10px;color:var(--muted-2);padding:8px 0;">Loading past reports...</div></div>';
+    el.innerHTML = h;
+    await loadSnapshotList();
+  }
+
+  async function loadSnapshotList() {
+    var el = document.getElementById('snapshot-list');
+    if (!el) return;
+    var slug = clientCache.slug || '';
+    if (!slug) { el.innerHTML = '<p style="color:var(--muted);font-size:13px;">No client slug set. Add one in Details tab first.</p>'; return; }
+    try {
+      var snaps = await rpcAdmin('list_snapshots', { p_client_slug: slug });
+      if (!snaps || !snaps.length) {
+        el.innerHTML = '<div style="font-family:inherit,monospace;font-size:10px;color:var(--muted-2);padding:8px 0;">No snapshots yet. Close a month above to create the first one.</div>';
+        return;
+      }
+      var h = '<div class="sec-head"><h3>Past Reports</h3></div>';
+      h += '<div class="table-card"><table class="data-table"><thead><tr>';
+      h += '<th>Month</th><th>Closed By</th><th>Date Saved</th><th>Notes</th><th></th></tr></thead><tbody>';
+      snaps.forEach(function (s) {
+        var d = new Date(s.created_at);
+        var ds = d.getDate() + ' ' + MONTH_SHORT[d.getMonth()] + ' ' + d.getFullYear();
+        h += '<tr><td><strong>' + esc(s.month_label) + '</strong></td>';
+        h += '<td style="color:var(--muted)">' + esc(s.created_by || '') + '</td>';
+        h += '<td style="font-family:inherit,monospace;font-size:10px;color:var(--muted)">' + ds + '</td>';
+        h += '<td style="color:var(--muted);font-size:12.5px;">' + esc(s.notes || '') + '</td>';
+        h += '<td class="cell-actions"><button class="btn" data-sid="' + s.id + '" onclick="copySnapLink(this.dataset.sid)">Copy link</button></td>';
+        h += '</tr>';
+      });
+      h += '</tbody></table></div>';
+      el.innerHTML = h;
+    } catch (err) {
+      el.innerHTML = '<p style="color:var(--rust);font-size:13px;">Failed: ' + esc(err.message) + '</p>';
+    }
+  }
+
+  async function closeMonth() {
+    var slug = clientCache.slug || '';
+    if (!slug) { toast('Add a client slug in Details first', true); return; }
+    var parts = document.getElementById('close-month-select').value.split('|');
+    var year = parseInt(parts[0],10), monthNum = parseInt(parts[1],10), label = parts[2];
+    var by = (document.getElementById('close-month-by').value || 'admin').trim();
+    var notes = document.getElementById('close-month-notes').value.trim() || null;
+    var btn = document.getElementById('close-month-btn');
+    var status = document.getElementById('close-month-status');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    status.textContent = '';
+    try {
+      var res = await rpcAdmin('save_snapshot', { p_client_slug: slug, p_month_label: label, p_month_year: year, p_month_num: monthNum, p_created_by: by, p_notes: notes });
+      if (res && res.ok) {
+        status.textContent = 'Saved'; status.style.color = 'var(--green)';
+        toast(label + ' snapshot saved');
+        await loadSnapshotList();
+      } else { throw new Error((res && res.error) || 'Unknown error'); }
+    } catch (err) {
+      status.textContent = 'Failed'; status.style.color = 'var(--rust)';
+      toast('Save failed: ' + err.message, true);
+    } finally { btn.disabled = false; btn.textContent = 'Save Snapshot'; }
+  }
+
+  function copySnapLink(snapId) {
+    var url = 'https://beetsandco.com.au/clients/report.html?id=' + snapId;
+    navigator.clipboard.writeText(url).then(function () { toast('Report link copied'); });
+  }
+
+  async function rpcAdmin(fn, body) {
+    if (DEMO) return demoRpcAdmin(fn, body);
+    var res = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + fn, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) { var e = await res.json().catch(function(){return {};}); throw new Error(e.message || 'HTTP ' + res.status); }
+    return res.json();
+  }
+
+  function demoRpcAdmin(fn) {
+    if (fn === 'list_snapshots') return Promise.resolve([
+      { id: 'demo-1', month_label: 'April 2026', created_by: 'Michael', created_at: '2026-04-30T10:00:00Z', notes: 'Strong reel month.' },
+      { id: 'demo-2', month_label: 'March 2026', created_by: 'Michael', created_at: '2026-03-31T10:00:00Z', notes: null }
+    ]);
+    if (fn === 'save_snapshot') return Promise.resolve({ ok: true, id: 'demo-new' });
+    return Promise.resolve(null);
+  }
+
   function demoDb(table, method, body, query) {
     return new Promise(function (resolve) {
       setTimeout(function () { resolve(demoDbSync(table, method, body, query)); }, 160); // simulate latency
@@ -731,7 +852,7 @@
       if (i > -1) store.splice(i, 1);
       return true;
     }
-    return [];
+        return [];
   }
 </script>
 
