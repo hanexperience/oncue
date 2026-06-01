@@ -18,6 +18,14 @@
   </url>
 
   <!-- Blog posts -->
+  
+    <url>
+    <loc>https://beetsandco.com.au/blog/digital-marketing-agency-frankston.html</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <url>
     <loc>https://beetsandco.com.au/blog/web-design-bayside-melbourne-tradies.html</loc>
     <lastmod>2025-06-01</lastmod>
