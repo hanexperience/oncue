@@ -164,9 +164,19 @@ a{ color:inherit; }
 .btn--primary{ background:var(--ink); color:#fff; border-color:var(--ink); }
 .btn--primary:hover{ background:var(--ink-deep); box-shadow:var(--shadow-md); }
 
-.btn--spark{ background:var(--spark); color:var(--ink-900); border-color:var(--spark); box-shadow:0 6px 22px -10px rgba(180,186,20,.8); }
-.btn--spark:hover{ filter:brightness(1.05); box-shadow:0 10px 30px -10px rgba(180,186,20,.95); }
+.btn--spark { 
+  background: var(--gold); 
+  color: var(--ink-900); 
+  border-color: var(--gold); 
+  box-shadow: 0 4px 12px rgba(40, 38, 33, 0.1); 
+}
 
+.btn--spark:hover { 
+  background: var(--gold-soft); 
+  border-color: var(--gold-soft); 
+  filter: none; /* Removes the artificial brightness filter */
+  box-shadow: 0 6px 20px rgba(40, 38, 33, 0.15); 
+}
 .btn--ghost{ background:transparent; color:var(--ink); border-color:rgba(69,68,65,.32); }
 .btn--ghost:hover{ border-color:var(--ink); background:rgba(69,68,65,.04); }
 
@@ -542,3 +552,112 @@ a{ color:inherit; }
   :root{ --gutter:26px; }
 }
 @media(max-width:520px){ :root{ --gutter:20px; } }
+
+/* ────────────────────────────────────────────────────────────
+   REFINED FULL-SCREEN MOBILE NAV
+   ──────────────────────────────────────────────────────────── */
+
+/* 1. Ensure the header items stay visible on top of the overlay */
+.nav-inner {
+  position: relative;
+  z-index: 100; /* Keeps logo and hamburger above the overlay */
+}
+
+/* 2. Turn the mobile drawer into a fixed full-screen overlay */
+.nav-mobile {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh; /* Handles mobile browser address bar layout shifts */
+  background: var(--ink-deep);
+  z-index: 90;    /* Positioned perfectly underneath nav-inner elements */
+  
+  /* Layout Alignment */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px var(--gutter) 40px;
+  
+  /* Smooth Premium Animation Entry */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.2,.7,.2,1), visibility 0.4s;
+}
+
+/* 3. Smooth Open State Transition */
+.nav-mobile.open {
+  display: flex; /* Matches your JS toggle logic */
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* 4. Editorial Layout Inside the Container */
+.nav-mobile .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+/* 5. Premium Mobile Links styling */
+.nav-mobile a {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  padding: 18px 0;
+  font-family: var(--serif); /* Swapped to the premium serif font for an upscale look */
+  font-size: 24px;
+  font-weight: 500;
+  color: #e7e3da;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  letter-spacing: 0.01em;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.nav-mobile a:hover {
+  color: var(--gold-soft);
+  border-bottom-color: var(--gold-line);
+}
+
+/* 6. CTA Adjustment */
+.nav-mobile-cta {
+  margin-top: 32px;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-mobile .btn--spark {
+  background: var(--gold);
+  color: var(--ink-900);
+  border-color: var(--gold);
+  
+  /* Strip the bright neon acid-yellow shadow */
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  
+  /* Increased typography size for readability */
+  font-size: 20px;
+  letter-spacing: .04em;
+  
+  /* Adjusted padding slightly to keep proportions balanced */
+  padding: 18px 32px;
+  width: 100%;
+  max-width: 280px;
+  justify-content: center;
+}
+
+/* Hover/Active states inside mobile drawer */
+.nav-mobile .btn--spark:hover {
+  background: var(--gold-soft);
+  border-color: var(--gold-soft);
+  filter: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
