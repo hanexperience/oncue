@@ -49,11 +49,11 @@ section{padding:104px 0}
 .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .svc{
   background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);
-  padding:30px 28px 32px;transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s;
+  padding:30px 28px 32px;transition:transform .3s var(--ease),box-shadow .3s var(--ease),outline-color .3s;
   display:flex;flex-direction:column;min-height:268px;position:relative;overflow:hidden;
 }
-.svc:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:transparent}
-.svc .ic{width:50px;height:50px;border-radius:14px;background:var(--green-tint);color:var(--green);display:grid;place-items:center;margin-bottom:22px;transition:.3s var(--ease)}
+.svc:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:transparent;outline:none}
+.svc .ic{width:50px;height:50px;border-radius:14px;background:var(--green-tint);color:var(--green);display:grid;place-items:center;margin-bottom:22px;transition:background .3s var(--ease),color .3s var(--ease)}
 .svc:hover .ic{background:var(--green);color:var(--on-green)}
 .svc .ic svg{width:24px;height:24px}
 .svc h3{font-size:23px;letter-spacing:-.02em;margin-bottom:11px}
@@ -160,10 +160,10 @@ section{padding:104px 0}
 .field input,.field select,.field textarea{
   font-family:inherit;font-size:15.5px;color:var(--ink);background:var(--bg);
   border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:13px 15px;outline:none;
-  transition:border-color .2s,box-shadow .2s;width:100%;
+  transition:outline-color .2s,box-shadow .2s;width:100%;
 }
 .field textarea{min-height:104px;resize:vertical}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-tint)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--green);outline-offset:-1px;box-shadow:0 0 0 3px var(--green-tint)}
 .form .btn{width:100%;justify-content:center;margin-top:6px}
 .form .fineprint{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:14px;line-height:1.5}
 
