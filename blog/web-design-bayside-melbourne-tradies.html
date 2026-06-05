@@ -78,7 +78,15 @@
   .post-foot-pad{height:80px}
   @media(max-width:620px){.fact-grid{grid-template-columns:1fr 1fr}.related-grid{grid-template-columns:1fr}.post-cta .inner{padding:32px 26px}}
 </style>
-</head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-29SKC7VN4C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-29SKC7VN4C');
+    </script>
+  </head>
 <body>
 <header class="nav" id="nav">
   <div class="container row">
@@ -217,8 +225,4 @@
 <script>
   const nav=document.getElementById('nav');
   addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>12),{passive:true});
-  document.getElementById('burger').addEventListener('click',()=>nav.classList.toggle('open'));
-  document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
-</script>
-</body>
-</html>
+  document.getElementById('burger').addEventListener('click',()
