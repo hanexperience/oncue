@@ -53,7 +53,15 @@
   .post-card .rd svg { width: 16px; height: 16px; transition: transform 0.2s; }
   .post-card:hover .rd svg { transform: translateX(4px); }
 </style>
-</head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-29SKC7VN4C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-29SKC7VN4C');
+    </script>
+  </head>
 <body>
 
 <!-- ============================ NAV ============================ -->
@@ -224,27 +232,4 @@
       <div class="foot-col">
         <h5>Get in touch</h5>
         <a href="../index.html#apply">Start a conversation</a>
-        <a href="mailto:hello@beetsandco.com.au">hello@beetsandco.com.au</a>
-        <p>Bayside, Melbourne · VIC</p>
-      </div>
-    </div>
-    <div class="foot-bottom">
-      <span>© 2026 Beets &amp; Co · Melbourne, VIC, Australia</span>
-      <div class="social">
-        <a href="https://www.instagram.com/beetsandco" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.linkedin.com/company/beetsandco" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="mailto:hello@beetsandco.com.au">Email</a>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<script>
-  const nav=document.getElementById('nav');
-  addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>12),{passive:true});
-  document.getElementById('burger').addEventListener('click',()=>nav.classList.toggle('open'));
-  document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
-</script>
-
-</body>
-</html>
+        <a href="mailto:hello@beetsandco.com.au">
