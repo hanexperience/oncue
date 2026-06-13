@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crowncon SEO Manager</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root { color-scheme: light; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f7f6f3;color:#1a1a1a;font-size:14px;line-height:1.5;}
+
+.page{max-width:1120px;margin:0 auto;padding:22px 18px;}
+
+/* Header */
+.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px;}
+.header h1{font-size:21px;font-weight:700;color:#111;}
+.header p{color:#777;font-size:12px;margin-top:3px;}
+.badge{background:#fff3cd;color:#7d5a00;border:1px solid #ffd76e;border-radius:6px;padding:5px 11px;font-size:12px;font-weight:600;white-space:nowrap;align-self:flex-start;}
+
+/* Alert */
+.alert{background:#fffbea;border:1px solid #fbbf24;border-left:4px solid #fbbf24;border-radius:8px;padding:13px 15px;margin-bottom:20px;font-size:13px;color:#5a3e00;line-height:1.6;}
+.alert strong{color:#3d2800;}
+
+/* Stat cards */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr);}}
+.stat{background:#fff;border:1px solid #e5e2dc;border-radius:10px;padding:15px;position:relative;overflow:hidden;}
+.stat .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#999;font-weight:600;}
+.stat .val{font-size:26px;font-weight:700;margin:5px 0 2px;line-height:1;}
+.stat .sub{font-size:11px;color:#aaa;}
+.stat.red .val{color:#dc2626;}
+.stat.amber .val{color:#d97706;}
+.stat.green .val{color:#16a34a;}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;}
+.stat.red::after{background:#fee2e2;}
+.stat.amber::after{background:#fef3c7;}
+.stat.green::after{background:#dcfce7;}
+.stat.neutral::after{background:#e5e7eb;}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:18px;flex-wrap:wrap;}
+.tab{padding:7px 15px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:#555;transition:all .12s;}
+.tab:hover{background:#f0ede8;}
+.tab.active{background:#111;color:#fff;border-color:#111;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* Cards */
+.card{background:#fff;border:1px solid #e5e2dc;border-radius:10px;padding:18px;margin-bottom:14px;}
+.card h2{font-size:13px;font-weight:700;color:#111;margin-bottom:13px;display:flex;align-items:center;gap:7px;}
+.card h2 .ico{font-size:15px;}
+
+/* Two col */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:760px){.two-col{grid-template-columns:1fr;}}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:900px){.three-col{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.three-col{grid-template-columns:1fr;}}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#999;font-weight:600;border-bottom:1px solid #ede9e3;padding:0 8px 7px;}
+td{padding:8px 8px;border-bottom:1px solid #f2ede7;color:#333;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#faf9f7;}
+
+/* Tags */
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.tag-go{background:#dcfce7;color:#15803d;}
+.tag-soon{background:#dbeafe;color:#1d4ed8;}
+.tag-later{background:#f3e8ff;color:#7e22ce;}
+.tag-warn{background:#fee2e2;color:#b91c1c;}
+.tag-grey{background:#f1f0ee;color:#666;}
+
+/* KD / volume badges */
+.kd{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;min-width:28px;text-align:center;}
+.kd-easy{background:#dcfce7;color:#15803d;}
+.kd-med{background:#fef9c3;color:#854d0e;}
+.kd-hard{background:#fee2e2;color:#b91c1c;}
+.vol{font-weight:600;color:#444;}
+
+/* Comp bar */
+.cbar-wrap{display:flex;align-items:center;gap:5px;}
+.cbar{height:6px;border-radius:3px;background:#eee;width:55px;overflow:hidden;flex-shrink:0;}
+.cbar-fill{height:100%;border-radius:3px;}
+
+/* Insight box */
+.insight{background:#eef4ff;border:1px solid #c7d7ff;border-radius:8px;padding:12px 14px;margin-bottom:13px;font-size:13px;color:#1e3a8a;line-height:1.65;}
+.insight strong{color:#1e3a8a;}
+
+.insight.amber{background:#fffbea;border-color:#fde68a;color:#78350f;}
+.insight.amber strong{color:#78350f;}
+
+.insight.green{background:#f0fdf4;border-color:#86efac;color:#14532d;}
+.insight.green strong{color:#14532d;}
+
+/* Section label */
+.sec-label{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#bbb;font-weight:700;margin:14px 0 8px;}
+
+/* Chart */
+.chart-wrap{height:200px;position:relative;}
+
+/* Backlink item */
+.bl-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f2ede7;font-size:13px;}
+.bl-row:last-child{border-bottom:none;}
+.bl-domain{color:#333;font-weight:500;}
+.as-badge{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:700;}
+.as-hi{background:#dcfce7;color:#15803d;}
+.as-mid{background:#fef9c3;color:#854d0e;}
+.as-low{background:#fee2e2;color:#b91c1c;}
+.as-spam{background:#f1f0ee;color:#888;}
+
+/* Checklist */
+.checklist{list-style:none;}
+.checklist li{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid #f2ede7;font-size:13px;color:#333;}
+.checklist li:last-child{border-bottom:none;}
+.checklist input[type=checkbox]{width:15px;height:15px;margin-top:2px;flex-shrink:0;cursor:pointer;accent-color:#16a34a;}
+.checklist label{cursor:pointer;flex:1;}
+.checklist input:checked+label{text-decoration:line-through;color:#bbb;}
+
+/* Roadmap */
+.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:760px){.roadmap{grid-template-columns:1fr;}}
+.phase{border:1px solid #e5e2dc;border-radius:9px;padding:14px;background:#fafaf8;}
+.phase .ph-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#aaa;font-weight:700;margin-bottom:3px;}
+.phase .ph-title{font-size:13px;font-weight:700;color:#111;margin-bottom:10px;}
+.phase ul{list-style:none;}
+.phase ul li{font-size:12px;color:#555;padding:3px 0;padding-left:13px;position:relative;}
+.phase ul li::before{content:'→';position:absolute;left:0;color:#ccc;font-size:10px;}
+.phase-1{border-top:3px solid #16a34a;}
+.phase-2{border-top:3px solid #2563eb;}
+.phase-3{border-top:3px solid #7c3aed;}
+
+/* Competitor table highlights */
+.comp-you{background:#fef9f0 !important;}
+.comp-top{color:#16a34a;font-weight:700;}
+.comp-zero{color:#dc2626;font-weight:600;}
+
+/* Suburb grid */
+.suburb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+@media(max-width:600px){.suburb-grid{grid-template-columns:1fr 1fr;}}
+.suburb-card{border:1px solid #e5e2dc;border-radius:8px;padding:11px 12px;background:#fafaf8;}
+.suburb-card .s-name{font-size:13px;font-weight:600;color:#111;}
+.suburb-card .s-kw{font-size:11px;color:#666;margin-top:3px;}
+.suburb-card .s-tag{margin-top:6px;}
+
+.footer{text-align:center;color:#ccc;font-size:11px;margin-top:26px;padding-top:14px;border-top:1px solid #e8e5e0;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- Header -->
+<div class="header">
+  <div>
+    <h1>Crowncon SEO Manager</h1>
+    <p>crowncon.com.au · Carrum Downs VIC · Bayside + Mornington Peninsula · Data: Semrush AU, June 2026</p>
+  </div>
+  <div class="badge">⚠ Starting from Zero</div>
+</div>
+
+<!-- Alert -->
+<div class="alert">
+  <strong>The honest picture:</strong> Crowncon ranks for 35 keywords — all accidental brand-confusion matches, zero real traffic. The good news: the Mornington Peninsula and Bayside terms you should own have very low keyword difficulty (KD 5–22). A single well-built landing page targeting "custom home builders mornington peninsula" (KD 16, 480/mo searches) could rank within 6–8 weeks. That's the first move.
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stat red">
+    <div class="lbl">Domain Rank (AU)</div>
+    <div class="val">3.3M</div>
+    <div class="sub">Semrush AU position</div>
+  </div>
+  <div class="stat red">
+    <div class="lbl">Organic Keywords</div>
+    <div class="val">35</div>
+    <div class="sub">All accidental — 0 intentional</div>
+  </div>
+  <div class="stat red">
+    <div class="lbl">Monthly Traffic</div>
+    <div class="val">~0</div>
+    <div class="sub">Estimated by Semrush</div>
+  </div>
+  <div class="stat red">
+    <div class="lbl">Backlinks</div>
+    <div class="val">18</div>
+    <div class="sub">14 domains · mostly spam</div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" onclick="showTab('overview',this)">Overview</button>
+  <button class="tab" onclick="showTab('keywords',this)">Keyword Targets</button>
+  <button class="tab" onclick="showTab('suburbs',this)">Suburb Pages</button>
+  <button class="tab" onclick="showTab('competitors',this)">Competitors</button>
+  <button class="tab" onclick="showTab('backlinks',this)">Backlinks</button>
+  <button class="tab" onclick="showTab('roadmap',this)">Roadmap</button>
+  <button class="tab" onclick="showTab('checklist',this)">Monthly Checklist</button>
+</div>
+
+<!-- ═══ OVERVIEW ═══ -->
+<div id="tab-overview" class="panel active">
+
+  <div class="insight green">
+    <strong>The opportunity in one sentence:</strong> Your most valuable target — "custom home builders mornington peninsula" — gets 480 searches/month and has a keyword difficulty of 16. Ocean Blue Builders on Nepean Hwy (your direct local competitor) is already declining 52% in traffic. The territory is open.
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h2><span class="ico">📊</span> Where You Are vs Where You Need to Be</h2>
+      <div class="chart-wrap"><canvas id="gapChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h2><span class="ico">🎯</span> Keyword Difficulty Distribution</h2>
+      <div class="chart-wrap"><canvas id="kdChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ico">⚡</span> 5 Quick Wins — Do These First</h2>
+    <table>
+      <thead><tr><th>#</th><th>Action</th><th>Impact</th><th>Time</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><strong>Build /custom-home-builders-mornington-peninsula page</strong><br><span style="font-size:12px;color:#888;">480/mo searches, KD 16 — Ocean Blue already has this page, theirs is declining</span></td>
+          <td><span class="tag tag-go">🟢 High</span></td>
+          <td>This week</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><strong>List on archipro.com.au</strong><br><span style="font-size:12px;color:#888;">AS 37 — all 3 major competitors (Thomas Archer, Arli, Glenvill) are listed here. Free tier available.</span></td>
+          <td><span class="tag tag-go">🟢 High</span></td>
+          <td>Today</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><strong>Fix homepage: add "custom home builder south east Melbourne" to H1 + title tag</strong><br><span style="font-size:12px;color:#888;">Currently targets nothing. 30-min change, immediately starts accumulating signals.</span></td>
+          <td><span class="tag tag-go">🟢 High</span></td>
+          <td>Today</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><strong>List on truelocal.com.au + businesslistings.net.au</strong><br><span style="font-size:12px;color:#888;">Ocean Blue has 50 backlinks from businesslistings.net.au alone. Free local citation.</span></td>
+          <td><span class="tag tag-go">🟢 Medium</span></td>
+          <td>This week</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><strong>Disavow spam backlinks via Google Search Console</strong><br><span style="font-size:12px;color:#888;">seogeko.shop, fiverr-cost-effective-seo.site, byteshort.xyz — hurting trust signals</span></td>
+          <td><span class="tag tag-soon">🔵 Medium</span></td>
+          <td>This week</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="ico">📈</span> Projected Growth Trajectory</h2>
+    <div class="chart-wrap" style="height:220px;"><canvas id="trajectoryChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══ KEYWORDS ═══ -->
+<div id="tab-keywords" class="panel">
+
+  <div class="insight">
+    <strong>Strategy:</strong> Attack the Mornington Peninsula + Bayside cluster first (KD 5–22). These are your real market and they're nearly uncontested. The broader Melbourne terms (KD 55+) require domain authority you don't have yet — they become possible by month 5–6 if the foundation is built correctly.
+  </div>
+
+  <div class="sec-label">🏆 Tier 1 — Target Now (KD &lt; 25 · Your actual geography)</div>
+  <div class="card" style="padding:0 18px;">
+    <table>
+      <thead><tr><th>Keyword</th><th>Volume/mo</th><th>KD</th><th>SERP Features</th><th>Content to Build</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>custom home builders mornington peninsula</strong></td>
+          <td><span class="vol">480</span></td>
+          <td><span class="kd kd-easy">16</span></td>
+          <td style="font-size:11px;color:#888;">Local pack, Related</td>
+          <td>Dedicated landing page</td>
+          <td><span class="tag tag-go">Now</span></td>
+        </tr>
+        <tr>
+          <td><strong>home builders mornington peninsula</strong></td>
+          <td><span class="vol">140</span></td>
+          <td><span class="kd kd-easy">22</span></td>
+          <td style="font-size:11px;color:#888;">Video, Local pack</td>
+          <td>Same page, secondary keyword</td>
+          <td><span class="tag tag-go">Now</span></td>
+        </tr>
+        <tr>
+          <td><strong>custom home builders bayside melbourne</strong></td>
+          <td><span class="vol">70</span></td>
+          <td><span class="kd kd-easy">15</span></td>
+          <td style="font-size:11px;color:#888;">Sitelinks, Local pack</td>
+          <td>Bayside landing page</td>
+          <td><span class="tag tag-go">Now</span></td>
+        </tr>
+        <tr>
+          <td><strong>modern homes melbourne</strong></td>
+          <td><span class="vol">110</span></td>
+          <td><span class="kd kd-easy">14</span></td>
+          <td style="font-size:11px;color:#888;">Local pack</td>
+          <td>Homepage + style page</td>
+          <td><span class="tag tag-go">Now</span></td>
+        </tr>
+        <tr>
+          <td><strong>display homes melbourne south east</strong></td>
+          <td><span class="vol">110</span></td>
+          <td><span class="kd kd-easy">17</span></td>
+          <td style="font-size:11px;color:#888;">Local pack</td>
+          <td>Projects / display page</td>
+          <td><span class="tag tag-go">Now</span></td>
+        </tr>
+        <tr>
+          <td><strong>home builder mornington peninsula</strong></td>
+          <td><span class="vol">40</span></td>
+          <td><span class="kd kd-easy">~20</span></td>
+          <td style="font-size:11px;color:#888;">Local pack</td>
+          <td>Mornington Peninsula page</td>
+          <td><span class="tag tag-go">Now</span></td>
+        </tr>
+        <tr>
+          <td><strong>custom home builders mordialloc</strong></td>
+          <td><span class="vol">50</span></td>
+          <td><span class="kd kd-easy">5</span></td>
+          <td style="font-size:11px;color:#888;">Local pack</td>
+          <td>Suburb page</td>
+          <td><span class="tag tag-go">Now</span></td>
+        </tr>
+        <tr>
+          <td><strong>boutique home builders melbourne</strong></td>
+          <td><span class="vol">110</span></td>
+          <td><span class="kd kd-easy">24</span></td>
+          <td style="font-size:11px;color:#888;">Local pack</td>
+          <td>About/brand page</td>
+          <td><span class="tag tag-go">Now</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-label">📈 Tier 2 — Build Toward (KD 25–40 · Month 2–4)</div>
+  <div class="card" style="padding:0 18px;">
+    <table>
+      <thead><tr><th>Keyword</th><th>Volume/mo</th><th>KD</th><th>CPC (USD)</th><th>Content to Build</th><th>Timeline</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>affordable custom home builders melbourne</strong></td>
+          <td><span class="vol">320</span></td>
+          <td><span class="kd kd-med">26</span></td>
+          <td style="color:#2563eb;">$2.70</td>
+          <td>Service page + price guide</td>
+          <td><span class="tag tag-soon">Month 2–3</span></td>
+        </tr>
+        <tr>
+          <td><strong>custom home builders south east melbourne</strong></td>
+          <td><span class="vol">170</span></td>
+          <td><span class="kd kd-med">29</span></td>
+          <td style="color:#2563eb;">$6.29</td>
+          <td>South east landing page</td>
+          <td><span class="tag tag-soon">Month 2–3</span></td>
+        </tr>
+        <tr>
+          <td><strong>luxury home builders mornington peninsula</strong></td>
+          <td><span class="vol">210</span></td>
+          <td><span class="kd kd-med">31</span></td>
+          <td style="color:#2563eb;">—</td>
+          <td>Expand Mornington page</td>
+          <td><span class="tag tag-soon">Month 3</span></td>
+        </tr>
+        <tr>
+          <td><strong>best custom home builders melbourne</strong></td>
+          <td><span class="vol">210</span></td>
+          <td><span class="kd kd-med">30</span></td>
+          <td style="color:#2563eb;">$2.48</td>
+          <td>Reviews/credibility page</td>
+          <td><span class="tag tag-soon">Month 3–4</span></td>
+        </tr>
+        <tr>
+          <td><strong>custom home builders western suburbs melbourne</strong></td>
+          <td><span class="vol">210</span></td>
+          <td><span class="kd kd-easy">17</span></td>
+          <td style="color:#2563eb;">—</td>
+          <td>Only if expanding west</td>
+          <td><span class="tag tag-grey">Optional</span></td>
+        </tr>
+        <tr>
+          <td><strong>coastal home builders mornington peninsula</strong></td>
+          <td><span class="vol">20</span></td>
+          <td><span class="kd kd-easy">~15</span></td>
+          <td style="color:#2563eb;">—</td>
+          <td>Mornington page variant</td>
+          <td><span class="tag tag-soon">Month 2</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-label">🏔 Tier 3 — Long Game (KD 55+ · Month 5–12)</div>
+  <div class="card" style="padding:0 18px;">
+    <table>
+      <thead><tr><th>Keyword</th><th>Volume/mo</th><th>KD</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>custom home builders melbourne</strong></td>
+          <td><span class="vol">1,600</span></td>
+          <td><span class="kd kd-hard">57</span></td>
+          <td style="font-size:12px;color:#888;">Main prize. Needs domain authority first.</td>
+        </tr>
+        <tr>
+          <td><strong>custom builders melbourne</strong></td>
+          <td><span class="vol">1,300</span></td>
+          <td><span class="kd kd-hard">59</span></td>
+          <td style="font-size:12px;color:#888;">Variant of above.</td>
+        </tr>
+        <tr>
+          <td><strong>luxury home builders melbourne</strong></td>
+          <td><span class="vol">1,000</span></td>
+          <td><span class="kd kd-hard">59</span></td>
+          <td style="font-size:12px;color:#888;">High value. Requires PR + backlinks from design media.</td>
+        </tr>
+        <tr>
+          <td><strong>home builders melbourne</strong></td>
+          <td><span class="vol">1,900</span></td>
+          <td><span class="kd kd-hard">64</span></td>
+          <td style="font-size:12px;color:#888;">Very competitive. Domain authority required.</td>
+        </tr>
+        <tr>
+          <td><strong>custom home builder melbourne</strong></td>
+          <td><span class="vol">720</span></td>
+          <td><span class="kd kd-hard">65</span></td>
+          <td style="font-size:12px;color:#888;">Most competitive single-builder term.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-label">✍️ Blog Content Plan (8 posts · Months 1–4)</div>
+  <div class="card" style="padding:0 18px;">
+    <table>
+      <thead><tr><th>#</th><th>Post Title</th><th>Primary Keyword</th><th>Month</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>What does it cost to build a custom home on the Mornington Peninsula?</td><td>custom home builders mornington peninsula</td><td><span class="tag tag-go">Month 1</span></td></tr>
+        <tr><td>2</td><td>Custom vs volume home builder: which is right for you?</td><td>custom vs volume builder melbourne</td><td><span class="tag tag-go">Month 1</span></td></tr>
+        <tr><td>3</td><td>Building a custom home in Bayside Melbourne: what to expect</td><td>custom home builders bayside melbourne</td><td><span class="tag tag-go">Month 2</span></td></tr>
+        <tr><td>4</td><td>How to choose a home builder in Melbourne's south east</td><td>custom home builders south east melbourne</td><td><span class="tag tag-go">Month 2</span></td></tr>
+        <tr><td>5</td><td>What's included in an $800k–$900k custom build in Victoria?</td><td>affordable custom home builders melbourne</td><td><span class="tag tag-soon">Month 3</span></td></tr>
+        <tr><td>6</td><td>Why Mornington Peninsula buyers are choosing custom over display</td><td>luxury home builders mornington peninsula</td><td><span class="tag tag-soon">Month 3</span></td></tr>
+        <tr><td>7</td><td>The Crowncon build process: from brief to handover</td><td>boutique home builders melbourne</td><td><span class="tag tag-soon">Month 4</span></td></tr>
+        <tr><td>8</td><td>[Client case study] — Bayside / Mornington Peninsula project</td><td>[suburb] + custom home builder</td><td><span class="tag tag-soon">Month 4</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ SUBURB PAGES ═══ -->
+<div id="tab-suburbs" class="panel">
+
+  <div class="insight">
+    <strong>Why suburb pages matter:</strong> Local pack results (the map + 3 listings in Google) are triggered by geographic intent. A page for each suburb Crowncon builds in tells Google exactly where the business operates — and captures people searching from those specific areas. These pages are also extremely low competition.
+  </div>
+
+  <div class="card">
+    <h2><span class="ico">🗺</span> Suggested Suburb Pages to Build</h2>
+    <div class="suburb-grid">
+      <div class="suburb-card">
+        <div class="s-name">Mornington Peninsula</div>
+        <div class="s-kw">480/mo · KD 16</div>
+        <div class="s-tag"><span class="tag tag-go">Build first</span></div>
+      </div>
+      <div class="suburb-card">
+        <div class="s-name">Bayside Melbourne</div>
+        <div class="s-kw">70/mo · KD 15</div>
+        <div class="s-tag"><span class="tag tag-go">Build first</span></div>
+      </div>
+      <div class="suburb-card">
+        <div class="s-name">Carrum Downs</div>
+        <div class="s-kw">10/mo · KD 5 · Home base</div>
+        <div class="s-tag"><span class="tag tag-go">Build first</span></div>
+      </div>
+      <div class="suburb-card">
+        <div class="s-name">Frankston</div>
+        <div class="s-kw">Est. 50–100/mo · Very low KD</div>
+        <div class="s-tag"><span class="tag tag-soon">Month 2</span></div>
+      </div>
+      <div class="suburb-card">
+        <div class="s-name">Mordialloc</div>
+        <div class="s-kw">50/mo · KD 5</div>
+        <div class="s-tag"><span class="tag tag-soon">Month 2</span></div>
+      </div>
+      <div class="suburb-card">
+        <div class="s-name">Chelsea / Aspendale</div>
+        <div class="s-kw">Low vol · Hyper local</div>
+        <div class="s-tag"><span class="tag tag-soon">Month 2</span></div>
+      </div>
+      <div class="suburb-card">
+        <div class="s-name">Mornington</div>
+        <div class="s-kw">Low vol · Good local signal</div>
+        <div class="s-tag"><span class="tag tag-later">Month 3</span></div>
+      </div>
+      <div class="suburb-card">
+        <div class="s-name">Bonbeach / Edithvale</div>
+        <div class="s-kw">Low vol · Ocean Blue's turf</div>
+        <div class="s-tag"><span class="tag tag-later">Month 3</span></div>
+      </div>
+      <div class="suburb-card">
+        <div class="s-name">South East Melbourne</div>
+        <div class="s-kw">170/mo · KD 29</div>
+        <div class="s-tag"><span class="tag tag-later">Month 3</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ico">📋</span> What Each Suburb Page Needs</h2>
+    <table>
+      <thead><tr><th>Element</th><th>What to include</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Title tag</strong></td><td>Custom Home Builder [Suburb] | Crowncon</td><td>Primary keyword signal</td></tr>
+        <tr><td><strong>H1</strong></td><td>Custom Home Builders in [Suburb], VIC</td><td>Matches search query exactly</td></tr>
+        <tr><td><strong>Intro copy</strong></td><td>Mention suburb, nearby areas, lifestyle, Crowncon's local experience</td><td>Relevance + local E-E-A-T</td></tr>
+        <tr><td><strong>Project mention</strong></td><td>At least one completed or current build in the area</td><td>Proof of local presence</td></tr>
+        <tr><td><strong>Google Map embed</strong></td><td>Show Crowncon's location + service area</td><td>Local SEO signal</td></tr>
+        <tr><td><strong>Internal links</strong></td><td>Link to: Services, Projects, Contact, related suburb pages</td><td>Distributes authority</td></tr>
+        <tr><td><strong>Schema markup</strong></td><td>LocalBusiness + Service schema with suburb in addressLocality</td><td>Tells Google precisely where you operate</td></tr>
+        <tr><td><strong>CTA</strong></td><td>"Building in [Suburb]? Get a free consultation."</td><td>Converts local traffic</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ COMPETITORS ═══ -->
+<div id="tab-competitors" class="panel">
+
+  <div class="insight amber">
+    <strong>Key competitor insight:</strong> Ocean Blue Builders (oceanbluebuilders.com.au) operates from 513 Nepean Hwy, Bonbeach — directly in Crowncon's territory. Their traffic is down 52% and declining. They have 76 referring domains vs Crowncon's 14, but they're weakening. Their Mornington Peninsula page is their core asset — Crowncon should build a better one.
+  </div>
+
+  <div class="card">
+    <h2><span class="ico">🏆</span> Competitor Domain Comparison</h2>
+    <table>
+      <thead><tr><th>Domain</th><th>Keywords</th><th>Est. Traffic</th><th>Backlinks</th><th>Ref Domains</th><th>Strength</th><th>Relevance to Crowncon</th></tr></thead>
+      <tbody>
+        <tr class="comp-you">
+          <td><strong>crowncon.com.au</strong> <span style="font-size:11px;color:#888;">(you)</span></td>
+          <td class="comp-zero">35</td>
+          <td class="comp-zero">~0</td>
+          <td>18</td>
+          <td>14</td>
+          <td><span class="tag tag-warn">None</span></td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>arlihomes.com.au</strong></td>
+          <td class="comp-top">High</td>
+          <td class="comp-top">Strong</td>
+          <td>Many</td>
+          <td>High</td>
+          <td><span class="tag tag-go">Strong</span></td>
+          <td>Melbourne-wide custom builder. Main SEO benchmark.</td>
+        </tr>
+        <tr>
+          <td><strong>glenvillhomes.com.au</strong></td>
+          <td class="comp-top">High</td>
+          <td class="comp-top">Strong</td>
+          <td>Many</td>
+          <td>High</td>
+          <td><span class="tag tag-go">Strong</span></td>
+          <td>Established custom builder. Strong across all Melbourne terms.</td>
+        </tr>
+        <tr>
+          <td><strong>thomasarcher.com.au</strong></td>
+          <td>Good</td>
+          <td>Moderate</td>
+          <td>High quality</td>
+          <td>Many</td>
+          <td><span class="tag tag-soon">Premium</span></td>
+          <td>Luxury/architectural focus. Has media/PR backlinks (homebeautiful, designfiles). Blueprint for Crowncon's long-term direction.</td>
+        </tr>
+        <tr>
+          <td><strong>oceanbluebuilders.com.au</strong></td>
+          <td>98 <span style="color:#dc2626;font-size:11px;">↓52%</span></td>
+          <td>21 <span style="color:#dc2626;font-size:11px;">↓52%</span></td>
+          <td>199</td>
+          <td>76</td>
+          <td><span class="tag" style="background:#fff3cd;color:#7d5a00;">Declining</span></td>
+          <td><strong>Direct local competitor — Bonbeach (Nepean Hwy).</strong> Same geography. Weakening. Their Mornington Peninsula page is the model to beat.</td>
+        </tr>
+        <tr>
+          <td><strong>elizahomes.com.au</strong></td>
+          <td>54</td>
+          <td>1</td>
+          <td>4</td>
+          <td>3</td>
+          <td><span class="tag tag-grey">Weak</span></td>
+          <td>Frankston area. No real SEO. Worth monitoring.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h2><span class="ico">🔍</span> What Arli Homes Does Right (Benchmark)</h2>
+      <ul style="list-style:none;font-size:13px;">
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">✅ Ranks page 1 for "custom home builders melbourne" (KD 57)</li>
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">✅ Dedicated page: /custom-home-builders-melbourne/</li>
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">✅ Has /home-builders-geelong/ — shows location page strategy</li>
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">✅ Has /home-designs/ — design gallery pages drive search</li>
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">✅ /home-estimator/ — high-intent commercial page</li>
+        <li style="padding:6px 0;">✅ Listed on archipro, wikidot, writeupcafe — multiple citation sources</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2><span class="ico">🌊</span> What Ocean Blue Did (Your Local Blueprint)</h2>
+      <ul style="list-style:none;font-size:13px;">
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">✅ Dedicated page: /luxury-home-builders-mornington-peninsula/</li>
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">✅ Listed on truelocal.com.au with Bonbeach address</li>
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">✅ 50 backlinks from businesslistings.net.au</li>
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">✅ Homepage title: "Custom Home Builders Melbourne | Best Luxury New Home High End Builder"</li>
+        <li style="padding:6px 0;border-bottom:1px solid #f2ede7;">❌ Traffic declining 52% — not maintaining content</li>
+        <li style="padding:6px 0;">❌ 98 keywords but almost no real traffic — poor content quality</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ico">📊</span> Gap Keywords — What Competitors Rank For That Crowncon Doesn't</h2>
+    <div class="insight" style="margin-bottom:13px;">Crowncon shows position 0 for every keyword below. These are confirmed gaps from the Semrush keyword gap report (vs Glenvill, Arli, Thomas Archer).</div>
+    <table>
+      <thead><tr><th>Keyword</th><th>Volume</th><th>KD</th><th>Arli pos.</th><th>Glenvill pos.</th><th>Thomas Archer pos.</th></tr></thead>
+      <tbody>
+        <tr><td>custom home builders mordialloc</td><td>50</td><td><span class="kd kd-easy">5</span></td><td>16</td><td>40</td><td>78</td></tr>
+        <tr><td>display homes melbourne south east</td><td>110</td><td><span class="kd kd-easy">17</span></td><td>22</td><td>15</td><td>39</td></tr>
+        <tr><td>modern homes melbourne</td><td>110</td><td><span class="kd kd-easy">14</span></td><td>19</td><td>2</td><td>15</td></tr>
+        <tr><td>boutique home builders melbourne</td><td>110</td><td><span class="kd kd-easy">24</span></td><td>3</td><td>20</td><td>26</td></tr>
+        <tr><td>affordable custom home builders melbourne</td><td>320</td><td><span class="kd kd-med">26</span></td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>best custom home builders melbourne</td><td>210</td><td><span class="kd kd-med">30</span></td><td>8</td><td>47</td><td>18</td></tr>
+        <tr><td>custom home builders south east melbourne</td><td>170</td><td><span class="kd kd-med">29</span></td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>custom builders melbourne</td><td>1,300</td><td><span class="kd kd-hard">59</span></td><td>8</td><td>67</td><td>11</td></tr>
+        <tr><td>home builders melbourne</td><td>1,900</td><td><span class="kd kd-hard">64</span></td><td>9</td><td>15</td><td>21</td></tr>
+        <tr><td>luxury home builders melbourne</td><td>1,000</td><td><span class="kd kd-hard">59</span></td><td>6</td><td>7</td><td>88</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ BACKLINKS ═══ -->
+<div id="tab-backlinks" class="panel">
+
+  <div class="stats" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px;">
+    <div class="stat red"><div class="lbl">Total Backlinks</div><div class="val">18</div><div class="sub">vs Ocean Blue: 199</div></div>
+    <div class="stat red"><div class="lbl">Referring Domains</div><div class="val">14</div><div class="sub">vs Ocean Blue: 76</div></div>
+    <div class="stat red"><div class="lbl">Dofollow Links</div><div class="val">1</div><div class="sub">17 nofollow</div></div>
+    <div class="stat red"><div class="lbl">Best Domain AS</div><div class="val">21</div><div class="sub">drjack.world (low quality)</div></div>
+  </div>
+
+  <div class="insight">
+    <strong>The core backlink problem:</strong> Every link Crowncon has is either spam (seogeko.shop, fiverr-cost-effective-seo.site) or accidental (link farms, URL shorteners). There is not a single editorial, directory, or industry link. Meanwhile Thomas Archer has links from homebeautiful.com.au (AS 37), domain.com.au (AS 71), and realestate.com.au (AS 84). The gap is fixable — but it requires deliberate action.
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h2><span class="ico">🔗</span> Current Backlinks — Crowncon</h2>
+      <div class="bl-row"><span class="bl-domain">proglowelectrics.com.au ✓ <span style="font-size:11px;color:#888;">(only real one)</span></span><span class="as-badge as-mid">AS 9</span></div>
+      <div class="bl-row"><span class="bl-domain">drjack.world</span><span class="as-badge as-mid">AS 21</span></div>
+      <div class="bl-row"><span class="bl-domain">jake.eu <span style="font-size:11px;color:#dc2626;">⚠ disavow</span></span><span class="as-badge as-low">AS 5</span></div>
+      <div class="bl-row"><span class="bl-domain">byteshort.xyz <span style="font-size:11px;color:#dc2626;">⚠ disavow</span></span><span class="as-badge as-low">AS 5</span></div>
+      <div class="bl-row"><span class="bl-domain">fiverr-cost-effective-seo.site <span style="font-size:11px;color:#dc2626;">⚠ disavow</span></span><span class="as-badge as-low">AS 3</span></div>
+      <div class="bl-row"><span class="bl-domain">seogeko.shop <span style="font-size:11px;color:#dc2626;">⚠ disavow</span></span><span class="as-badge as-spam">AS 0</span></div>
+      <div class="bl-row"><span class="bl-domain">findmyplumber.com.au</span><span class="as-badge as-spam">AS 2</span></div>
+      <div class="bl-row"><span class="bl-domain">ready.pro · blueinblue.com · sites.*</span><span class="as-badge as-spam">AS 2–4</span></div>
+    </div>
+    <div class="card">
+      <h2><span class="ico">🎯</span> Backlink Targets — Priority Order</h2>
+      <div class="bl-row">
+        <span class="bl-domain"><strong>archipro.com.au</strong> — free self-serve listing<br><span style="font-size:11px;color:#888;">All 3 major competitors listed. Thomas Archer: 58 links from here.</span></span>
+        <span class="as-badge as-hi">AS 37</span>
+      </div>
+      <div class="bl-row">
+        <span class="bl-domain"><strong>businesslistings.net.au</strong> — free directory<br><span style="font-size:11px;color:#888;">Ocean Blue gets 50 backlinks from here. Easy win.</span></span>
+        <span class="as-badge as-mid">~AS 20</span>
+      </div>
+      <div class="bl-row">
+        <span class="bl-domain"><strong>truelocal.com.au</strong> — local business<br><span style="font-size:11px;color:#888;">Ocean Blue is listed in Bonbeach. Strong local citation.</span></span>
+        <span class="as-badge as-mid">AS 25</span>
+      </div>
+      <div class="bl-row">
+        <span class="bl-domain"><strong>bark.com.au</strong> — trades marketplace<br><span style="font-size:11px;color:#888;">Eliza Homes uses it for backlinks + leads.</span></span>
+        <span class="as-badge as-hi">AS 58</span>
+      </div>
+      <div class="bl-row">
+        <span class="bl-domain"><strong>hia.com.au</strong> — HIA membership listing<br><span style="font-size:11px;color:#888;">Industry credibility. Thomas Archer has 6 links. Requires membership.</span></span>
+        <span class="as-badge as-hi">AS 43</span>
+      </div>
+      <div class="bl-row">
+        <span class="bl-domain"><strong>thelocalproject.com.au</strong> — design media<br><span style="font-size:11px;color:#888;">All 3 competitors listed. Editorial pitch or paid feature.</span></span>
+        <span class="as-badge as-hi">AS 41</span>
+      </div>
+      <div class="bl-row">
+        <span class="bl-domain"><strong>homebeautiful.com.au / homestolove.com.au</strong><br><span style="font-size:11px;color:#888;">Thomas Archer: 18 + 3 links. PR pitch — completed project feature.</span></span>
+        <span class="as-badge as-hi">AS 37–46</span>
+      </div>
+      <div class="bl-row">
+        <span class="bl-domain"><strong>thedesignfiles.net / habitusliving.com</strong><br><span style="font-size:11px;color:#888;">Design blogs. Thomas Archer links. Pitch a project once you have strong photography.</span></span>
+        <span class="as-badge as-hi">AS 39–41</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ico">🗑</span> Disavow File — Submit to Google Search Console</h2>
+    <div class="insight" style="margin-bottom:13px;">Create a disavow.txt file and submit at search.google.com/search-console/disavow-links. These domains are hurting trust and have no legitimate purpose.</div>
+    <table>
+      <thead><tr><th>Domain to Disavow</th><th>AS</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>seogeko.shop</td><td>0</td><td>SEO spam farm</td></tr>
+        <tr><td>fiverr-cost-effective-seo.site</td><td>3</td><td>Name says it all — Fiverr spam links</td></tr>
+        <tr><td>byteshort.xyz</td><td>5</td><td>Link farm / URL shortener spam</td></tr>
+        <tr><td>reports.webredirect.org</td><td>0</td><td>Redirect farm, Moldova IP</td></tr>
+        <tr><td>sites.bounceme.net</td><td>4</td><td>Dynamic DNS link farm</td></tr>
+        <tr><td>urls-shortener.eu</td><td>5</td><td>URL shortener spam</td></tr>
+        <tr><td>sites.loseyourip.com</td><td>3</td><td>Dynamic DNS link farm</td></tr>
+        <tr><td>websites.freemyip.com</td><td>5</td><td>Dynamic DNS link farm</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ ROADMAP ═══ -->
+<div id="tab-roadmap" class="panel">
+
+  <div class="insight">
+    <strong>The logic of this roadmap:</strong> Months 1–2 build the foundation that makes everything else possible — if the Mornington Peninsula page and directory listings aren't done first, all subsequent content effort is less effective. Months 3–4 compound the authority. Months 5–6 are when the broader Melbourne terms start becoming reachable.
+  </div>
+
+  <div class="roadmap">
+    <div class="phase phase-1">
+      <div class="ph-label">Phase 1 · Months 1–2</div>
+      <div class="ph-title">🏗 Foundation</div>
+      <ul>
+        <li>Fix homepage title tag + H1 — add "custom home builder south east Melbourne"</li>
+        <li>Build /custom-home-builders-mornington-peninsula page</li>
+        <li>Build /custom-home-builders-bayside-melbourne page</li>
+        <li>Build /custom-home-builder-carrum-downs suburb page</li>
+        <li>List on archipro.com.au (free tier)</li>
+        <li>List on businesslistings.net.au + truelocal.com.au</li>
+        <li>List on bark.com.au</li>
+        <li>Submit disavow file to Search Console</li>
+        <li>Set up / verify Google Business Profile</li>
+        <li>Add LocalBusiness + Service schema to site</li>
+        <li>Publish blog #1: Cost to build on Mornington Peninsula</li>
+        <li>Publish blog #2: Custom vs volume builder</li>
+      </ul>
+    </div>
+    <div class="phase phase-2">
+      <div class="ph-label">Phase 2 · Months 3–4</div>
+      <div class="ph-title">📈 Content + Authority</div>
+      <ul>
+        <li>Build /custom-home-builders-south-east-melbourne page</li>
+        <li>Build suburb pages: Frankston, Mordialloc, Chelsea/Aspendale</li>
+        <li>Publish blogs #3–#6</li>
+        <li>Add keyword-rich copy to each project in /projects</li>
+        <li>First case study — client testimonial + build story</li>
+        <li>Get HIA membership + listing (hia.com.au)</li>
+        <li>Pitch thelocalproject.com.au for editorial listing</li>
+        <li>Internal linking: blog → service pages → suburb pages</li>
+        <li>First Search Console ranking report</li>
+        <li>Start tracking Tier 1 keyword positions monthly</li>
+      </ul>
+    </div>
+    <div class="phase phase-3">
+      <div class="ph-label">Phase 3 · Months 5–6</div>
+      <div class="ph-title">🚀 Competitive Growth</div>
+      <ul>
+        <li>Publish blogs #7–#8 (case studies + lifestyle)</li>
+        <li>Begin targeting "affordable custom home builders melbourne"</li>
+        <li>Pitch homebeautiful.com.au / homestolove.com.au — project feature</li>
+        <li>Pitch thedesignfiles.net / habitusliving.com</li>
+        <li>Expand Mornington Peninsula page with more suburb sections</li>
+        <li>Consider Google Ads on Tier 1 keywords (to drive early traffic)</li>
+        <li>Case study clause triggered — get testimonial from Tim</li>
+        <li>Begin tracking domain rank + monthly traffic movement</li>
+        <li>Review + refresh Month 1 content based on Search Console data</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <h2><span class="ico">📊</span> Expected Keyword Growth Trajectory</h2>
+    <div class="chart-wrap" style="height:230px;"><canvas id="growthChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══ CHECKLIST ═══ -->
+<div id="tab-checklist" class="panel">
+
+  <div class="insight" style="margin-bottom:14px;">
+    Monthly SEO work should take 3–4 hours once the foundation is built. Tick items as you complete them — state persists between sessions.
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h2><span class="ico">🏗</span> Foundation (one-time · do now)</h2>
+      <ul class="checklist">
+        <li><input type="checkbox" id="f1"><label for="f1">Fix homepage title tag — include "custom home builder south east Melbourne"</label></li>
+        <li><input type="checkbox" id="f2"><label for="f2">Build Mornington Peninsula landing page</label></li>
+        <li><input type="checkbox" id="f3"><label for="f3">Build Bayside Melbourne landing page</label></li>
+        <li><input type="checkbox" id="f4"><label for="f4">Add LocalBusiness schema markup to site</label></li>
+        <li><input type="checkbox" id="f5"><label for="f5">Set up / verify Google Business Profile (Carrum Downs)</label></li>
+        <li><input type="checkbox" id="f6"><label for="f6">Submit disavow.txt to Google Search Console</label></li>
+        <li><input type="checkbox" id="f7"><label for="f7">List on archipro.com.au</label></li>
+        <li><input type="checkbox" id="f8"><label for="f8">List on businesslistings.net.au + truelocal.com.au</label></li>
+        <li><input type="checkbox" id="f9"><label for="f9">List on bark.com.au</label></li>
+        <li><input type="checkbox" id="f10"><label for="f10">Install Google Analytics 4 + Search Console (verify)</label></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2><span class="ico">✍️</span> Content (monthly)</h2>
+      <ul class="checklist">
+        <li><input type="checkbox" id="c1"><label for="c1">Publish 4 x blog posts (see Keyword Targets tab)</label></li>
+        <li><input type="checkbox" id="c2"><label for="c2">Update content calendar for next month</label></li>
+        <li><input type="checkbox" id="c3"><label for="c3">Add 1 new project to /projects with location + keyword copy</label></li>
+        <li><input type="checkbox" id="c4"><label for="c4">Add internal links from new posts → service/suburb pages</label></li>
+        <li><input type="checkbox" id="c5"><label for="c5">Update any existing page with fresher copy if needed</label></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2><span class="ico">🔗</span> Links (monthly)</h2>
+      <ul class="checklist">
+        <li><input type="checkbox" id="l1"><label for="l1">Submit to 1 new AU business directory</label></li>
+        <li><input type="checkbox" id="l2"><label for="l2">Check for new spam backlinks in Semrush → disavow if needed</label></li>
+        <li><input type="checkbox" id="l3"><label for="l3">Ask completed client for Google review</label></li>
+        <li><input type="checkbox" id="l4"><label for="l4">Identify 1 media/PR opportunity (thelocalproject, homebeautiful etc.)</label></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2><span class="ico">📈</span> Reporting (monthly)</h2>
+      <ul class="checklist">
+        <li><input type="checkbox" id="r1"><label for="r1">Pull Semrush domain overview — note rank movement</label></li>
+        <li><input type="checkbox" id="r2"><label for="r2">Check Search Console: top queries, impressions, clicks</label></li>
+        <li><input type="checkbox" id="r3"><label for="r3">Log keyword positions for Tier 1 targets</label></li>
+        <li><input type="checkbox" id="r4"><label for="r4">Note Google Business Profile views + direction requests</label></li>
+        <li><input type="checkbox" id="r5"><label for="r5">Add SEO section to monthly client performance recap for Tim</label></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Crowncon SEO Manager · Carrum Downs VIC · Bayside + Mornington Peninsula · Semrush AU data June 2026 · Refresh: re-run Crowncon SEO session in Cowork</div>
+</div>
+
+<script>
+// Tab switching
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'overview') { setTimeout(renderOverview, 80); }
+  if (name === 'roadmap') { setTimeout(renderGrowth, 80); }
+}
+
+// Charts
+let rendered = {};
+
+function renderOverview() {
+  if (rendered.overview) return;
+  rendered.overview = true;
+
+  new Chart(document.getElementById('gapChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Organic Keywords', 'Monthly Traffic', 'Quality Backlinks', 'Ref Domains'],
+      datasets: [
+        { label: 'Crowncon (now)', data: [35, 0, 1, 14], backgroundColor: '#fecaca', borderColor: '#dc2626', borderWidth: 2, borderRadius: 4 },
+        { label: 'Ocean Blue (local rival)', data: [98, 21, 199, 76], backgroundColor: '#fde68a', borderColor: '#d97706', borderWidth: 2, borderRadius: 4 },
+        { label: 'Arli Homes (target)', data: [400, 500, 300, 120], backgroundColor: '#bbf7d0', borderColor: '#16a34a', borderWidth: 2, borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } } },
+      scales: { y: { beginAtZero: true, ticks: { font: { size: 10 } } }, x: { ticks: { font: { size: 10 } } } }
+    }
+  });
+
+  new Chart(document.getElementById('kdChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Tier 1: KD < 25 (8 keywords)', 'Tier 2: KD 25–40 (6 keywords)', 'Tier 3: KD 55+ (5 keywords)'],
+      datasets: [{ data: [8, 6, 5], backgroundColor: ['#16a34a', '#2563eb', '#9333ea'], borderWidth: 0 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '62%',
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 12 } } }
+    }
+  });
+}
+
+function renderGrowth() {
+  if (rendered.growth) return;
+  rendered.growth = true;
+  new Chart(document.getElementById('growthChart'), {
+    type: 'line',
+    data: {
+      labels: ['Now', 'Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
+      datasets: [
+        {
+          label: 'Ranking Keywords (target)',
+          data: [35, 80, 140, 200, 270, 360, 460],
+          borderColor: '#16a34a', backgroundColor: 'rgba(22,163,74,0.07)', fill: true, tension: 0.4, pointRadius: 4
+        },
+        {
+          label: 'Est. Monthly Organic Traffic',
+          data: [0, 10, 35, 80, 150, 260, 400],
+          borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.05)', fill: true, tension: 0.4, pointRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } }, tooltip: { mode: 'index' } },
+      scales: { y: { beginAtZero: true, ticks: { font: { size: 10 } } }, x: { ticks: { font: { size: 10 } } } }
+    }
+  });
+}
+
+// Persist checklist
+document.querySelectorAll('.checklist input[type=checkbox]').forEach(cb => {
+  const key = 'crowncon_seo_' + cb.id;
+  cb.checked = localStorage.getItem(key) === '1';
+  cb.addEventListener('change', () => localStorage.setItem(key, cb.checked ? '1' : '0'));
+});
+
+// Auto-render overview
+setTimeout(renderOverview, 120);
+</script>
+</body>
+</html>
