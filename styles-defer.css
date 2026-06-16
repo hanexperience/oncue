@@ -74,9 +74,12 @@ section{padding:104px 0}
 .flag-visual{position:relative;background:var(--green);min-height:520px}
 .flag-visual image-slot{width:100%;height:100%;position:absolute;inset:0}
 .flag-visual img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;display:block}
+.flag-visual video{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;display:block}
+@media(prefers-reduced-motion:reduce){.flag-visual video{display:none}}
 .flag-visual .ph{
-  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;
-  padding:34px;color:var(--on-green);background:linear-gradient(150deg,#1f5a46,#123528);
+  position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:space-between;
+  padding:34px;color:var(--on-green);
+  background:linear-gradient(to bottom,rgba(18,53,40,.88) 0%,rgba(18,53,40,.38) 45%,rgba(18,53,40,.72) 100%);
 }
 .flag-visual .ph .top{display:flex;justify-content:space-between;align-items:flex-start}
 .flag-visual .ph .num{font-family:var(--font-serif);font-style:italic;font-size:20px;color:var(--sand)}
