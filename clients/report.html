@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Monthly Report · Beets & Co</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700;800&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:     #F3EDE1;
+      --paper-2:   #ECE4D4;
+      --surface:   #FBF7EF;
+      --surface-hi:#FFFFFF;
+      --ink:       #17140E;
+      --ink-soft:  #3D372D;
+      --muted:     #8A8071;
+      --muted-2:   #B0A693;
+      --line:      #E1D8C5;
+      --line-2:    #D2C7B0;
+      --hi:        #E5FF3D;
+      --hi-ink:    #4A5200;
+      --rust:      #E5542A;
+      --rust-tint: #FBEADF;
+      --green:     #3F7A34;
+      --green-tint:#E7EFDD;
+      --shadow:    0 1px 2px rgba(23,20,14,.04), 0 18px 40px -28px rgba(23,20,14,.28);
+      --shadow-sm: 0 1px 2px rgba(23,20,14,.05);
+      --r:   12px;
+      --r-sm: 8px;
+    }
+
+    html, body { height: 100%; }
+    body {
+      font-family: 'Archivo', sans-serif;
+      background: var(--paper);
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mark {
+      background: var(--hi);
+      box-shadow: 0 0 0 2px var(--hi);
+      border-radius: 2px;
+      color: var(--ink);
+      padding: 0 .5px;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      border-bottom: 1px solid var(--line);
+      padding: 0 32px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 30;
+      background: rgba(243,237,225,.86);
+      backdrop-filter: blur(10px);
+    }
+    .topbar-wordmark {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-weight: 800; font-size: 19px;
+      text-transform: uppercase; letter-spacing: -.3px; color: var(--ink);
+    }
+    .topbar-right {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--muted);
+    }
+
+    /* ── MAIN ── */
+    .report-main { max-width: 860px; margin: 0 auto; padding: 52px 32px 96px; }
+
+    /* ── TYPE ── */
+    .kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1.8px;
+      color: var(--rust); margin-bottom: 10px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .kicker::before { content: ""; width: 18px; height: 1.5px; background: var(--rust); }
+
+    h1.display {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-weight: 800; font-size: clamp(34px, 5vw, 52px);
+      text-transform: uppercase; letter-spacing: -1px; line-height: 1.02;
+      color: var(--ink); margin-bottom: 10px; text-wrap: balance;
+    }
+    .lede { font-size: 15px; color: var(--muted); max-width: 60ch; margin-bottom: 6px; }
+
+    /* ── CLIENT HEADER ── */
+    .client-bar {
+      margin-top: 28px;
+      border: 1px solid var(--line); border-radius: var(--r);
+      background: var(--surface); box-shadow: var(--shadow-sm);
+      padding: 20px 26px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 20px; flex-wrap: wrap;
+    }
+    .client-bar-name {
+      font-family: 'Archivo Narrow', sans-serif; font-weight: 800;
+      font-size: 20px; text-transform: uppercase; letter-spacing: -.3px; color: var(--ink);
+    }
+    .client-bar-meta {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      text-transform: uppercase; letter-spacing: .8px; color: var(--muted);
+      margin-top: 4px;
+    }
+    .pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+      padding: 5px 12px; border-radius: 999px;
+      border: 1px solid var(--line-2); color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── SECTIONS ── */
+    .sec { margin-top: 52px; }
+    .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .sec-title {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-weight: 800; font-size: 22px; text-transform: uppercase;
+      letter-spacing: -.4px; color: var(--ink);
+    }
+    .sec-note { font-size: 13px; color: var(--muted); }
+
+    /* ── CARD ── */
+    .card {
+      border: 1px solid var(--line); border-radius: var(--r);
+      background: var(--surface); box-shadow: var(--shadow-sm); padding: 24px 26px;
+    }
+    .card-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── RECAP ── */
+    .recap-body { font-size: 14.5px; color: var(--ink-soft); line-height: 1.85; }
+    .recap-body p { margin-bottom: 14px; }
+    .recap-body p:last-child { margin-bottom: 0; }
+
+    /* ── QUOTA ── */
+    .package {
+      border: 1px solid var(--line); border-radius: var(--r);
+      background:
+        linear-gradient(180deg, rgba(229,255,61,.10), transparent 70%),
+        var(--surface);
+      box-shadow: var(--shadow);
+      padding: 24px 28px; display: flex; justify-content: space-between;
+      align-items: center; gap: 28px; flex-wrap: wrap;
+    }
+    .package-eyebrow {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1.5px; color: var(--rust); margin-bottom: 6px;
+    }
+    .package-name {
+      font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 26px;
+      text-transform: uppercase; letter-spacing: -.4px; line-height: 1; color: var(--ink);
+    }
+    .package-name small {
+      display: block; font-family: 'JetBrains Mono', monospace; font-weight: 400;
+      font-size: 11px; letter-spacing: 1px; color: var(--muted); margin-top: 9px; text-transform: none;
+    }
+    .quota-grid { display: flex; gap: 26px; flex-wrap: wrap; }
+    .quota-item { min-width: 72px; }
+    .quota-count {
+      font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 24px;
+      line-height: 1; color: var(--ink);
+    }
+    .quota-count .used { color: var(--ink); }
+    .quota-count .of { color: var(--muted-2); font-weight: 600; }
+    .quota-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px;
+      text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 8px;
+    }
+    .quota-bar { height: 5px; background: var(--line-2); border-radius: 999px; margin-top: 8px; overflow: hidden; }
+    .quota-bar > span { display: block; height: 100%; background: var(--ink); border-radius: 999px; }
+    .quota-bar.full > span { background: var(--rust); }
+
+    /* ── PHASES ── */
+    .phases { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 12px; }
+    .phase {
+      border: 1px solid var(--line); border-radius: var(--r-sm);
+      background: var(--surface); padding: 18px 16px;
+    }
+    .phase.is-active { border-color: var(--ink); box-shadow: var(--shadow); }
+    .phase-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+    }
+    .phase-name {
+      font-family: 'Archivo Narrow', sans-serif; font-weight: 700; font-size: 15px;
+      text-transform: uppercase; letter-spacing: .2px; margin-bottom: 14px; color: var(--ink);
+    }
+    .phase-status {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      text-transform: uppercase; letter-spacing: .8px;
+      padding: 4px 9px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .phase-status.done { background: var(--ink); color: var(--paper); }
+    .phase-status.done::before { content: "✓"; }
+    .phase-status.active { background: var(--hi); color: var(--ink); font-weight: 500; }
+    .phase-status.pending { border: 1px solid var(--line-2); color: var(--muted); }
+
+    /* ── DELIVERABLES ── */
+    .deliverable { padding: 14px 0; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 14px; }
+    .deliverable:last-child { border-bottom: none; padding-bottom: 0; }
+    .deliverable-icon {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--ink);
+      text-transform: uppercase; letter-spacing: .5px; width: 42px; flex-shrink: 0;
+      border: 1px solid var(--line-2); border-radius: 5px; padding: 4px 0; text-align: center;
+    }
+    .deliverable-name { font-size: 14px; color: var(--ink); flex: 1; }
+    .deliverable-link {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--ink); text-decoration: none;
+      padding: 6px 12px; border: 1px solid var(--ink); border-radius: 999px;
+      transition: all .15s; flex-shrink: 0;
+    }
+    .deliverable-link:hover { background: var(--ink); color: var(--paper); }
+
+    /* ── DECISIONS ── */
+    .decision { padding: 12px 0; border-bottom: 1px solid var(--line); display: flex; gap: 16px; align-items: baseline; }
+    .decision:last-child { border-bottom: none; padding-bottom: 0; }
+    .decision-date {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .6px; flex-shrink: 0; width: 72px;
+    }
+    .decision-text { font-size: 13.5px; color: var(--ink-soft); }
+
+    /* ── CONTENT PUBLISHED ── */
+    .post-row { padding: 14px 0; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 14px; }
+    .post-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .post-channel {
+      font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--ink);
+      text-transform: uppercase; letter-spacing: .5px; width: 52px; flex-shrink: 0;
+      border: 1px solid var(--line-2); border-radius: 5px; padding: 4px 0; text-align: center;
+    }
+    .post-title { font-size: 14px; color: var(--ink); flex: 1; }
+    .post-date {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted);
+      flex-shrink: 0;
+    }
+    .post-link {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--ink); text-decoration: none;
+      padding: 6px 12px; border: 1px solid var(--ink); border-radius: 999px;
+      transition: all .15s; flex-shrink: 0;
+    }
+    .post-link:hover { background: var(--ink); color: var(--paper); }
+
+    /* ── CONTACT / FOOTER ── */
+    .report-footer {
+      margin-top: 64px; border: 1px solid var(--line); border-radius: var(--r);
+      background: var(--ink); color: var(--paper); padding: 30px 34px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 20px; flex-wrap: wrap;
+    }
+    .report-footer .kicker { color: var(--hi); }
+    .report-footer .kicker::before { background: var(--hi); }
+    .report-footer h3 {
+      font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 22px;
+      text-transform: uppercase; letter-spacing: -.3px; color: var(--paper);
+    }
+    .footer-link {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--ink); text-decoration: none; background: var(--hi);
+      padding: 11px 16px; border-radius: 999px; transition: transform .12s; display: inline-block;
+    }
+    .footer-link:hover { transform: translateY(-1px); }
+
+    /* ── STATES ── */
+    #loading, #error-state {
+      min-height: 60vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center; padding: 40px;
+    }
+    #loading {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
+    }
+    #error-state { display: none; }
+    #error-state h2 {
+      font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 28px;
+      text-transform: uppercase; color: var(--ink); margin-bottom: 10px;
+    }
+    #error-state p { font-size: 14px; color: var(--muted); max-width: 40ch; }
+
+    #report-content { display: none; }
+
+    @media (max-width: 680px) {
+      .topbar { padding: 0 18px; }
+      .report-main { padding: 32px 18px 64px; }
+      .phases { grid-auto-flow: row; grid-auto-columns: auto; }
+      .client-bar { flex-direction: column; align-items: flex-start; }
+      .report-footer { flex-direction: column; align-items: flex-start; }
+      .post-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-wordmark"><span class="mark">Beets & Co.</span></div>
+  <div class="topbar-right" id="topbar-month"></div>
+</div>
+
+<div id="loading">Loading report…</div>
+
+<div id="error-state">
+  <h2>Report not found</h2>
+  <p>This link may be invalid or the report may have been removed.</p>
+</div>
+
+<div id="report-content">
+  <div class="report-main" id="report-inner"></div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://rrxveifshucpinajtkgf.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_548FF3LDIHbz55iHtylFZw_HKBW06Aj';
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const p = iso.split('-');
+    return MONTHS[parseInt(p[1], 10) - 1] + ' ' + parseInt(p[2], 10);
+  }
+
+  async function loadReport(id) {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      },
+      body: JSON.stringify({ p_snapshot_id: id })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }
+
+  function render(s) {
+    const c = s.client || {};
+    const published = (s.posts || []).filter(p => p.status === 'published');
+    const delivered = (s.deliverables || []).filter(d => d.link);
+
+    // Topbar month
+    document.getElementById('topbar-month').textContent = s.month_label || '';
+
+    let h = '';
+
+    // Header
+    h += '<div class="kicker">' + esc(s.month_label) + '</div>';
+    h += '<h1 class="display">Monthly Report</h1>';
+    if (c.project_title) h += '<p class="lede">' + esc(c.project_title) + '</p>';
+
+    // Client bar
+    if (c.name) {
+      h += '<div class="client-bar">';
+      h += '<div><div class="client-bar-name">' + esc(c.name) + '</div>';
+      if (c.pm_name) h += '<div class="client-bar-meta">Account Manager · ' + esc(c.pm_name) + '</div>';
+      h += '</div>';
+      if (c.package_name) {
+        h += '<div class="pill">' + esc(c.package_name) + '</div>';
+      }
+      h += '</div>';
+    }
+
+    // Recap
+    if (s.recap_body) {
+      h += '<div class="sec"><div class="sec-head"><div class="sec-title">What happened this month</div></div>';
+      h += '<div class="card"><div class="recap-body">';
+      s.recap_body.split('\n\n').forEach(p => { if (p.trim()) h += '<p>' + esc(p) + '</p>'; });
+      h += '</div></div></div>';
+    }
+
+    // Output vs Quota
+    if (s.quotas && s.quotas.length) {
+      h += '<div class="sec"><div class="sec-head"><div class="sec-title">Output vs. Quota</div></div>';
+      h += '<div class="package">';
+      if (c.package_name) {
+        h += '<div><div class="package-eyebrow">Package</div>';
+        h += '<div class="package-name">' + esc(c.package_name);
+        if (c.package_sub) h += '<small>' + esc(c.package_sub) + '</small>';
+        h += '</div></div>';
+      }
+      h += '<div class="quota-grid">';
+      s.quotas.forEach(q => {
+        const pct = q.total > 0 ? Math.round(q.used / q.total * 100) : 0;
+        h += '<div class="quota-item"><div class="quota-count"><span class="used">' + q.used + '</span><span class="of">/' + q.total + '</span></div>';
+        h += '<div class="quota-label">' + esc(q.label) + '</div>';
+        h += '<div class="quota-bar' + (pct >= 100 ? ' full' : '') + '"><span style="width:' + Math.min(pct, 100) + '%"></span></div></div>';
+      });
+      h += '</div></div></div>';
+    }
+
+    // Phase snapshot
+    if (s.phases && s.phases.length) {
+      h += '<div class="sec"><div class="sec-head"><div class="sec-title">Phase Snapshot</div></div>';
+      h += '<div class="phases">';
+      s.phases.forEach(p => {
+        const cls = p.status === 'active' ? 'is-active' : '';
+        const label = p.status === 'done' ? 'Complete' : (p.status === 'active' ? 'In Progress' : 'Upcoming');
+        h += '<div class="phase ' + cls + '">';
+        h += '<div class="phase-num">' + esc(p.num) + '</div>';
+        h += '<div class="phase-name">' + esc(p.name) + '</div>';
+        h += '<span class="phase-status ' + esc(p.status) + '">' + label + '</span>';
+        h += '</div>';
+      });
+      h += '</div></div>';
+    }
+
+    // Content published
+    h += '<div class="sec"><div class="sec-head"><div class="sec-title">Content Published</div>';
+    h += '<span class="sec-note">' + published.length + ' post' + (published.length !== 1 ? 's' : '') + ' went live</span></div>';
+    h += '<div class="card">';
+    if (!published.length) {
+      h += '<p style="font-size:13px;color:var(--muted);padding:8px 0;">No published posts recorded for this month.</p>';
+    } else {
+      published.forEach(p => {
+        h += '<div class="post-row">';
+        h += '<div class="post-channel">' + esc(p.channel) + '</div>';
+        h += '<div class="post-title">' + esc(p.title) + '</div>';
+        if (p.date) h += '<div class="post-date">' + esc(fmtDate(p.date)) + '</div>';
+        if (p.content_url) h += '<a class="post-link" href="' + esc(p.content_url) + '" target="_blank" rel="noopener">View →</a>';
+        h += '</div>';
+      });
+    }
+    h += '</div></div>';
+
+    // Deliverables
+    h += '<div class="sec"><div class="sec-head"><div class="sec-title">Deliverables Handed Over</div></div>';
+    h += '<div class="card">';
+    if (!delivered.length) {
+      h += '<p style="font-size:13px;color:var(--muted);padding:8px 0;">No deliverables recorded for this month.</p>';
+    } else {
+      delivered.forEach(d => {
+        h += '<div class="deliverable">';
+        h += '<div class="deliverable-icon">' + esc(d.icon) + '</div>';
+        h += '<div class="deliverable-name">' + esc(d.name) + '</div>';
+        h += '<a class="deliverable-link" href="' + esc(d.link) + '" target="_blank" rel="noopener">View →</a>';
+        h += '</div>';
+      });
+    }
+    h += '</div></div>';
+
+    // Decisions
+    if (s.decisions && s.decisions.length) {
+      h += '<div class="sec"><div class="sec-head"><div class="sec-title">Decisions Made</div></div>';
+      h += '<div class="card">';
+      s.decisions.forEach(d => {
+        h += '<div class="decision">';
+        h += '<div class="decision-date">' + esc(d.date) + '</div>';
+        h += '<div class="decision-text">' + esc(d.body) + '</div>';
+        h += '</div>';
+      });
+      h += '</div></div>';
+    }
+
+    // Footer
+    h += '<div class="report-footer">';
+    h += '<div><div class="kicker">Beets &amp; Co</div>';
+    h += '<h3>Questions about this report?</h3></div>';
+    h += '<a class="footer-link" href="mailto:hello@beetsandco.com.au">Get in touch</a>';
+    h += '</div>';
+
+    document.getElementById('report-inner').innerHTML = h;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('report-content').style.display = 'block';
+    document.title = (s.month_label || 'Monthly Report') + ' · Beets & Co';
+  }
+
+  function showError() {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error-state').style.display = 'flex';
+  }
+
+  (function init() {
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    if (!id) { showError(); return; }
+
+    loadReport(id).then(data => {
+      if (!data || !data.id) { showError(); return; }
+      render(data);
+    }).catch(() => showError());
+  })();
+</script>
+</body>
+</html>

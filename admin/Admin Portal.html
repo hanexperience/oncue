@@ -330,7 +330,7 @@
     status_badge:'Status Badge', last_updated:'Last Updated (DD Mon YYYY)', setup_badge:'Setup Badge',
     retainer_badge:'Retainer Badge', package_name:'Package Name', package_sub:'Package Sub-line',
     cal_label:'Calendar Label (e.g. June 2026)', cal_year:'Calendar Year', cal_month:'Calendar Month (1–12)',
-    recap_month:'Recap Month'
+    recap_month:'Recap Month', contract_start:'Contract Start Date'
   };
 
   // ── Select options for nested tables ──
@@ -350,7 +350,7 @@
 
   // ── Tabs ── (distribute the giant form into clean sections)
   const TABS = [
-    { id:'details', label:'Details', fields:['name','slug','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated'], nested:[] },
+    { id:'details', label:'Details', fields:['name','slug','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated','contract_start'], nested:[] },
     { id:'package', label:'Package', fields:['package_name','package_sub'], nested:['quotas'] },
     { id:'phases', label:'Phases & Steps', fields:[], nested:['phases','next_steps'] },
     { id:'deliverables', label:'Deliverables', fields:[], nested:['deliverables','decisions_log'] },
@@ -358,7 +358,7 @@
     { id:'recap', label:'Recap', fields:['recap_month'], textarea:'recap_body', nested:[] },
     { id:'history', label:'History', fields:[], nested:[] }
   ];
-  const ALL_FIELDS = ['name','slug','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated','package_name','package_sub','cal_label','cal_year','cal_month','recap_month'];
+  const ALL_FIELDS = ['name','slug','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated','package_name','package_sub','cal_label','cal_year','cal_month','recap_month','contract_start'];
 
   // ── Sidebar ──
   async function loadClients() {
@@ -457,7 +457,8 @@
       tab.fields.forEach(function (f) {
         const wide = (f === 'project_title' || f === 'project_subtitle' || f === 'project_started') ? ' span-2' : '';
         h += '<div class="form-group' + wide + '"><label class="form-label">' + FIELD_LABELS[f] + '</label>';
-        h += '<input type="text" class="form-input" id="cf-' + f + '" value="' + esc(c[f]) + '" oninput="onFieldInput(\'' + f + '\')"></div>';
+        var inputType = (f === 'contract_start') ? 'date' : 'text';
+        h += '<input type="' + inputType + '" class="form-input" id="cf-' + f + '" value="' + esc(c[f] || '') + '" oninput="onFieldInput(\'' + f + '\')"></div>';
       });
       h += '</div></div>';
     }
@@ -709,33 +710,111 @@
   var MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   var MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
+  // ── Contract period helpers ──
+  function contractPeriods(startDateStr, count) {
+    // Returns array of {label, year, month} for `count` periods from contract_start
+    if (!startDateStr) return null;
+    var parts = startDateStr.split('-');
+    var startY = parseInt(parts[0], 10), startM = parseInt(parts[1], 10) - 1, startD = parseInt(parts[2], 10);
+    var periods = [];
+    for (var i = 0; i < count; i++) {
+      var pStartY = startY, pStartM = startM + i, pStartD = startD;
+      // normalise month overflow
+      pStartY += Math.floor(pStartM / 12);
+      pStartM = ((pStartM % 12) + 12) % 12;
+      var pEndDate = new Date(pStartY, pStartM + 1, pStartD - 1 < 1 ? 0 : pStartD - 1);
+      // if day-1 crossed month boundary, adjust
+      var pEnd = new Date(pStartY, pStartM, pStartD);
+      pEnd.setMonth(pEnd.getMonth() + 1);
+      pEnd.setDate(pEnd.getDate() - 1);
+      var pStart = new Date(pStartY, pStartM, pStartD);
+      var fmtShort = function(d) {
+        return d.getDate() + ' ' + MONTH_SHORT[d.getMonth()];
+      };
+      var label = 'Month ' + (i + 1) + ' · ' + fmtShort(pStart) + ' – ' + fmtShort(pEnd) + ' ' + pEnd.getFullYear();
+      periods.push({ label: label, year: pEnd.getFullYear(), month: pEnd.getMonth() + 1 });
+    }
+    return periods;
+  }
+
+  function currentContractPeriod(startDateStr) {
+    if (!startDateStr) return null;
+    var parts = startDateStr.split('-');
+    var startY = parseInt(parts[0], 10), startM = parseInt(parts[1], 10) - 1, startD = parseInt(parts[2], 10);
+    var now = new Date();
+    // how many full months since contract start?
+    var totalMonths = (now.getFullYear() - startY) * 12 + (now.getMonth() - startM);
+    if (now.getDate() < startD) totalMonths -= 1;
+    var periodIndex = Math.max(0, totalMonths);
+    var periods = contractPeriods(startDateStr, periodIndex + 1);
+    return periods ? periods[periodIndex] : null;
+  }
+
   async function renderHistoryTab() {
     var el = document.getElementById('history-tab-content');
     if (!el) return;
-    var now = new Date();
-    var monthOpts = '';
-    for (var offset = 0; offset >= -11; offset--) {
-      var d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
-      var y = d.getFullYear(), m = d.getMonth() + 1;
-      var label = MONTH_NAMES[d.getMonth()] + ' ' + y;
-      var val = y + '|' + m + '|' + label;
-      monthOpts += '<option value="' + val + '"' + (offset === 0 ? ' selected' : '') + '>' + label + '</option>';
+    var contractStart = (clientCache && clientCache.contract_start) || null;
+    var currentPeriod = contractStart ? currentContractPeriod(contractStart) : null;
+
+    // Build quick-fill suggestions
+    var suggestions = [];
+    if (currentPeriod) {
+      suggestions.push({ label: currentPeriod.label, year: currentPeriod.year, month: currentPeriod.month, hint: 'Current contract period' });
     }
+    // Last calendar month as fallback
+    var now = new Date();
+    var lastMo = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    suggestions.push({ label: MONTH_NAMES[lastMo.getMonth()] + ' ' + lastMo.getFullYear(), year: lastMo.getFullYear(), month: lastMo.getMonth() + 1, hint: 'Last calendar month' });
+    suggestions.push({ label: 'Initial Setup — Complete', year: now.getFullYear(), month: now.getMonth() + 1, hint: 'Phase archive' });
+
     var h = '<div class="field-card" style="margin-bottom:24px;">';
-    h += '<div class="sec-head" style="margin-top:0;"><h3>Close a Month</h3></div>';
-    h += '<p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Saves a permanent snapshot of all current data for this client. Appears immediately in their History tab.</p>';
-    h += '<div class="grid-2" style="margin-bottom:16px;">';
-    h += '<div class="form-group"><label class="form-label">Month</label><select class="form-select" id="close-month-select">' + monthOpts + '</select></div>';
-    h += '<div class="form-group"><label class="form-label">Closed by</label><input type="text" class="form-input" id="close-month-by" value="Michael" placeholder="Your name"></div>';
+    h += '<div class="sec-head" style="margin-top:0;"><h3>Save a Snapshot</h3></div>';
+    h += '<p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Saves a permanent record of all current data for this client. Appears in their History tab as a reportable month or milestone.</p>';
+
+    if (!contractStart) {
+      h += '<p style="font-size:12px;color:var(--rust);margin-bottom:16px;font-family:\'JetBrains Mono\',monospace;text-transform:uppercase;letter-spacing:.6px;">⚠ No contract start date set — add one in the Details tab for accurate period labels.</p>';
+    }
+
+    // Quick-fill chips
+    h += '<div class="form-group" style="margin-bottom:6px;"><label class="form-label">Quick-fill label</label>';
+    h += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">';
+    suggestions.forEach(function(s, i) {
+      h += '<button type="button" class="btn" style="font-size:11px;padding:5px 12px;" ';
+      h += 'onclick="fillSnapLabel(' + JSON.stringify(s.label) + ',' + s.year + ',' + s.month + ')">';
+      h += esc(s.hint) + '</button>';
+    });
+    h += '</div>';
+
+    // Editable label field
+    var defaultLabel = currentPeriod ? currentPeriod.label : (MONTH_NAMES[now.getMonth()] + ' ' + now.getFullYear());
+    var defaultYear  = currentPeriod ? currentPeriod.year  : now.getFullYear();
+    var defaultMonth = currentPeriod ? currentPeriod.month : now.getMonth() + 1;
+    h += '<input type="text" class="form-input" id="close-label" value="' + esc(defaultLabel) + '" placeholder="e.g. Month 2 · 14 Feb – 13 Mar 2026">';
+    h += '<input type="hidden" id="close-year" value="' + defaultYear + '">';
+    h += '<input type="hidden" id="close-month-num" value="' + defaultMonth + '">';
+    h += '</div>';
+
+    h += '<div class="form-group" style="margin-bottom:16px;">';
+    h += '<label class="form-label">Closed by</label>';
+    h += '<input type="text" class="form-input" id="close-month-by" value="' + esc((clientCache && clientCache.pm_name) || 'Michael') + '" placeholder="Your name">';
     h += '</div>';
     h += '<div class="form-group" style="margin-bottom:16px;"><label class="form-label">Internal notes (not shown to client)</label>';
-    h += '<textarea class="form-textarea" id="close-month-notes" style="min-height:80px;" placeholder="Anything worth noting about this month..."></textarea></div>';
+    h += '<textarea class="form-textarea" id="close-month-notes" style="min-height:80px;" placeholder="Anything worth noting..."></textarea></div>';
     h += '<button class="btn solid" onclick="closeMonth()" id="close-month-btn">Save Snapshot</button>';
     h += '<span id="close-month-status" style="font-family:inherit,monospace;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-left:14px;"></span>';
     h += '</div>';
     h += '<div id="snapshot-list"><div style="font-family:inherit,monospace;font-size:10px;color:var(--muted-2);padding:8px 0;">Loading past reports...</div></div>';
     el.innerHTML = h;
     await loadSnapshotList();
+  }
+
+  function fillSnapLabel(label, year, month) {
+    var lEl = document.getElementById('close-label');
+    var yEl = document.getElementById('close-year');
+    var mEl = document.getElementById('close-month-num');
+    if (lEl) lEl.value = label;
+    if (yEl) yEl.value = year;
+    if (mEl) mEl.value = month;
   }
 
   async function loadSnapshotList() {
@@ -772,8 +851,10 @@
   async function closeMonth() {
     var slug = clientCache.slug || '';
     if (!slug) { toast('Add a client slug in Details first', true); return; }
-    var parts = document.getElementById('close-month-select').value.split('|');
-    var year = parseInt(parts[0],10), monthNum = parseInt(parts[1],10), label = parts[2];
+    var label    = (document.getElementById('close-label').value || '').trim();
+    var year     = parseInt(document.getElementById('close-year').value, 10);
+    var monthNum = parseInt(document.getElementById('close-month-num').value, 10);
+    if (!label) { toast('Please enter a snapshot label', true); return; }
     var by = (document.getElementById('close-month-by').value || 'admin').trim();
     var notes = document.getElementById('close-month-notes').value.trim() || null;
     var btn = document.getElementById('close-month-btn');
