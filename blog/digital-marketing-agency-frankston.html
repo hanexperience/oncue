@@ -25,7 +25,7 @@
   "author": {"@type": "Person", "name": "Michael Beets"},
   "publisher": {"@type": "Organization", "name": "Beets & Co", "url": "https://beetsandco.com.au"},
   "datePublished": "2026-06-01",
-  "dateModified": "2026-06-13",
+  "dateModified": "2026-06-22",
   "url": "https://beetsandco.com.au/blog/digital-marketing-agency-frankston.html",
   "keywords": ["digital marketing agency Frankston", "digital agency Frankston", "marketing for tradies Frankston", "SEO Frankston", "web design Frankston Melbourne"]
 }
@@ -81,6 +81,50 @@
   .related-link h4{font-size:18px;line-height:1.15;letter-spacing:-.01em;margin:0}
   .post-foot-pad{height:80px}
   @media(max-width:620px){.fact-grid{grid-template-columns:1fr 1fr}.related-grid{grid-template-columns:1fr}.post-cta .inner{padding:32px 26px}}
+
+  /* ── VIDEO SECTION ── */
+  .post-video-section{padding:72px 0;background:var(--green);color:var(--on-green);margin-top:0}
+  .pvs-heading{font-size:clamp(28px,4vw,46px);line-height:1.02;letter-spacing:-.03em;margin:16px 0 16px}
+  .pvs-heading .serif-em{color:var(--sand)}
+  .pvs-body{font-size:18px;color:var(--on-green-soft);line-height:1.6;margin:0 0 36px;max-width:54ch}
+  .pvs-video-inner{border-radius:var(--radius-xl);overflow:hidden;aspect-ratio:16/9;background:rgba(244,241,232,.06);position:relative;cursor:pointer;box-shadow:0 20px 60px rgba(18,53,40,.4)}
+  .pvs-video-inner video{width:100%;height:100%;object-fit:cover}
+  .pvs-play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(18,53,40,.3);transition:background .25s}
+  .pvs-video-inner:hover .pvs-play-btn{background:rgba(18,53,40,.5)}
+  .pvs-play-circle{width:72px;height:72px;border-radius:50%;background:var(--on-green);color:var(--green);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(18,53,40,.4);transition:transform .25s var(--ease)}
+  .pvs-video-inner:hover .pvs-play-circle{transform:scale(1.08)}
+  .pvs-play-circle svg{width:26px;height:26px;margin-left:3px}
+  .pvs-video-label{position:absolute;bottom:20px;left:20px;background:rgba(18,53,40,.7);backdrop-filter:blur(8px);color:var(--on-green);border-radius:var(--pill);padding:7px 14px;font-size:13px;font-weight:500}
+
+  /* ── CASE STUDY SECTION ── */
+  .post-cs{padding:72px 0 0}
+  .post-cs-inner{max-width:760px;margin:0 auto;padding:0 28px}
+  .post-cs-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-soft);display:inline-flex;align-items:center;gap:10px;margin-bottom:18px}
+  .post-cs-label::before{content:"";width:18px;height:1.5px;background:var(--accent);display:inline-block}
+  .post-cs h2{font-size:clamp(26px,3.6vw,40px);line-height:1.02;letter-spacing:-.02em;margin:0 0 18px}
+  .post-cs h2 .serif-em{color:var(--green)}
+  .post-cs-lead{font-size:18px;line-height:1.7;color:var(--ink-2);margin-bottom:32px}
+  .cs-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow)}
+  .cs-card-header{background:var(--green);padding:36px 36px 32px;color:var(--on-green)}
+  .cs-card-header .cs-tag{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.16em;color:var(--sand);margin-bottom:14px;display:block}
+  .cs-card-header h3{font-size:clamp(22px,2.8vw,34px);line-height:1.02;letter-spacing:-.02em;color:var(--on-green);margin:0 0 12px}
+  .cs-card-header h3 .serif-em{color:var(--sand)}
+  .cs-card-header p{font-size:16px;color:var(--on-green-soft);line-height:1.55;margin:0}
+  .cs-card-body{padding:32px 36px 36px}
+  .cs-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+  .cs-stat{border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .cs-stat strong{display:block;font-family:var(--font-display);font-weight:800;font-size:28px;color:var(--accent);margin-bottom:6px;letter-spacing:-.02em;line-height:1}
+  .cs-stat span{font-size:13px;color:var(--ink-2);line-height:1.45}
+  .cs-scope{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+  .cs-scope-tag{font-size:13px;font-weight:600;padding:6px 13px;border-radius:var(--pill);background:var(--sand-soft);color:var(--ink);border:1px solid var(--line)}
+  .cs-read-link{display:inline-flex;align-items:center;gap:10px;font-weight:650;font-size:15.5px;color:var(--green);text-decoration:none;transition:gap .25s var(--ease)}
+  .cs-read-link:hover{gap:14px}
+  .cs-read-link svg{width:17px;height:17px}
+  .cs-meta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .cs-meta-note{font-size:14px;color:var(--ink-soft)}
+  .cs-meta-note a{color:var(--green);font-weight:600;text-decoration:underline;text-underline-offset:3px;transition:opacity .2s}
+  .cs-meta-note a:hover{opacity:.75}
+  @media(max-width:620px){.cs-stats{grid-template-columns:1fr 1fr}.pvs-play-circle{width:56px;height:56px}.pvs-play-circle svg{width:20px;height:20px}}
 </style>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-29SKC7VN4C"></script>
@@ -139,6 +183,63 @@
     </div>
   </div>
 </section>
+
+<!-- ─── VIDEO SECTION ─── -->
+<section class="post-video-section">
+  <div class="post-wrap">
+    <span class="label on-green" style="color:var(--sand)"><span style="background:var(--sand)"></span>The work</span>
+    <h2 class="pvs-heading">See what it looks like<br/><span class="serif-em">in practice</span>.</h2>
+    <p class="pvs-body">Marketing talk is cheap. Here's a look at the actual work — from a Frankston-area client who came in with scattered vendors and no coherent story, and left with a brand, website, video presence and SEO strategy that works.</p>
+    <div class="pvs-video-inner" id="frankVideoWrap">
+      <video id="frankVideo" preload="metadata">
+        <source src="../images/intro1.mp4" type="video/mp4">
+      </video>
+      <div class="pvs-play-btn" id="frankPlayBtn" onclick="playFrankVideo()">
+        <div class="pvs-play-circle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="pvs-video-label">Crowncon — Brand Film Extract · Beets &amp; Co · 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CASE STUDY ─── -->
+<section class="post-cs">
+  <div class="post-cs-inner">
+    <span class="post-cs-label">Case Study</span>
+    <h2>Real results from a <span class="serif-em">real client</span>.</h2>
+    <p class="post-cs-lead">Crowncon is a custom home builder delivering $800–900k builds in Bayside and Southeast Melbourne — including Frankston and Carrum Downs. They came in with three vendors, no unified direction, and a website that didn't reflect the quality of their work. Here's what changed.</p>
+    <div class="cs-card">
+      <div class="cs-card-header">
+        <span class="cs-tag">Beets &amp; Co · 2026</span>
+        <h3>Crowncon — a full <span class="serif-em">rebuild</span>,<br/>end to end.</h3>
+        <p>Brand, website, video production and SEO — consolidated under one roof, with a clear strategy aligned to their actual market.</p>
+      </div>
+      <div class="cs-card-body">
+        <div class="cs-stats">
+          <div class="cs-stat"><strong>78→99%</strong><span>Site health after full technical audit &amp; fix</span></div>
+          <div class="cs-stat"><strong>39</strong><span>Keywords tracked from day one — local, service and informational intent</span></div>
+          <div class="cs-stat"><strong>24→0</strong><span>Crawl errors eliminated — down from 24 errors and 43 warnings</span></div>
+        </div>
+        <div class="cs-scope">
+          <span class="cs-scope-tag">Brand identity</span>
+          <span class="cs-scope-tag">Website design</span>
+          <span class="cs-scope-tag">Video production</span>
+          <span class="cs-scope-tag">Local SEO</span>
+          <span class="cs-scope-tag">Content strategy</span>
+        </div>
+        <div class="cs-meta">
+          <span class="cs-meta-note">Work shown: <a href="../crowncon/">Crowncon — full case study</a></span>
+          <a href="../crowncon/" class="btn btn-primary" style="font-size:14px;padding:10px 20px">View case study
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <article class="post-body">
   <p>If you run a trade business, a manufacturing operation, or a service company in Frankston, Frankston North, Frankston South, Carrum Downs or Seaford — you've probably been approached by a digital marketing agency at some point. Maybe several times.</p>
   <p>The pitch usually sounds similar: "We'll get you to the top of Google, more leads, more visibility." The results often don't match. You're left paying a monthly retainer for a dashboard full of graphs that don't explain why the phone isn't ringing any louder.</p>
@@ -179,6 +280,7 @@
   <p>I'm not the biggest agency in Melbourne. I'm the one that picks up the phone, does the work, and measures success the way you do: by whether your phone rings more often.</p>
   <p>If you want to understand what a <a href="../tradie-marketing-agency-melbourne.html" style="color:var(--green);font-weight:650;text-decoration:underline;text-underline-offset:3px">marketing agency built specifically for tradies</a> looks like — and what's included — that's a good place to start.</p>
 </article>
+
 <section class="post-cta">
   <div class="inner">
     <span class="label on-green" style="color:var(--sand)"><span style="background:var(--sand)"></span>Work with me</span>
@@ -203,6 +305,22 @@
   </div>
 </section>
 <div class="post-foot-pad"></div>
+<script>
+  function playFrankVideo() {
+    const wrap = document.getElementById('frankVideoWrap');
+    const video = document.getElementById('frankVideo');
+    const btn = document.getElementById('frankPlayBtn');
+    if (!video) return;
+    if (video.paused) {
+      video.play();
+      btn.style.display = 'none';
+    } else {
+      video.pause();
+      btn.style.display = 'flex';
+    }
+    video.addEventListener('ended', () => { btn.style.display = 'flex'; }, { once: true });
+  }
+</script>
 <footer>
   <div class="container">
     <div class="foot-top">

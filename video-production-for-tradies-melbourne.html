@@ -156,6 +156,10 @@
   .vp-thumb .thumb-label{position:absolute;bottom:14px;left:14px;right:14px;font-size:12.5px;font-weight:600;color:var(--on-green);line-height:1.4}
   .vp-client-note{margin-top:22px;font-size:14px;color:var(--on-green-soft);text-align:center}
   .vp-client-note a{color:var(--sand);text-decoration:underline;text-underline-offset:3px}
+  .vp-meta{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:20px;flex-wrap:wrap}
+  .vp-meta-note{font-size:14px;color:var(--on-green-soft)}
+  .vp-meta-note a{color:var(--sand);text-decoration:underline;text-underline-offset:3px;transition:opacity .2s}
+  .vp-meta-note a:hover{opacity:.75}
   @media(max-width:600px){.vp-grid{grid-template-columns:1fr}}
 
   /* CTA block */
@@ -209,7 +213,7 @@
       <a href="index.html#journal">Journal</a>
     </nav>
     <div class="nav-cta">
-      <a href="index.html#apply" class="btn btn-primary">Get in touch
+      <a href="mailto:hello@beetsandco.com.au" class="btn btn-primary">Get in touch
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
       <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -224,7 +228,7 @@
     <h1>Video that shows<br/>the real <span class="serif-em">work.</span></h1>
     <p class="deck">Construction videography and business video production for Melbourne trade businesses. Job site footage, testimonials, before-and-afters and recruitment videos — made by a team that understands your industry.</p>
     <div class="page-hero-actions">
-      <a href="index.html#apply" class="btn btn-light">Get in touch
+      <a href="mailto:hello@beetsandco.com.au" class="btn btn-light">Get in touch
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
       <a href="#what-we-shoot" class="btn btn-ghost on-green">See what's included</a>
@@ -375,59 +379,13 @@
 
 </div>
 
-<!-- VIDEO PORTFOLIO -->
-<section class="video-portfolio">
-  <div class="vp-inner">
-    <div class="vp-label">Sample work · Crowncon · 2026</div>
-    <h2>The work, <span class="serif-em">on camera.</span></h2>
-    <p class="vp-deck">From our ongoing engagement with Crowncon — a Melbourne custom home builder. On-site footage, interviews and social reels captured across active construction sites.</p>
-
-    <div class="video-hero-wrap" id="tradieMainWrap">
-      <video poster="images/crowncon-film-poster.webp" id="tradieMainVideo">
-        <source src="images/sample_interview.mp4" type="video/mp4">
-      </video>
-      <div class="play-btn" onclick="playTradieMain()">
-        <div class="play-circle">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-        </div>
-      </div>
-      <div class="video-film-label">On-site interview · Crowncon build · 2026</div>
-    </div>
-
-    <div class="vp-grid">
-      <div class="vp-thumb">
-        <video poster="images/mobile_sample.webp" src="images/mobile_sample.mp4"></video>
-        <div class="thumb-overlay">
-          <div class="mini-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="thumb-label">Site reel · 45s</div>
-      </div>
-      <div class="vp-thumb">
-        <video poster="images/mobile_interview.webp" src="images/mobile_interview.mp4"></video>
-        <div class="thumb-overlay">
-          <div class="mini-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="thumb-label">Builder interview</div>
-      </div>
-      <div class="vp-thumb">
-        <video poster="images/sample_customer.webp" src="images/sample_customer.mp4"></video>
-        <div class="thumb-overlay">
-          <div class="mini-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-        </div>
-        <div class="thumb-label">Active site BTS · 30s</div>
-      </div>
-    </div>
-    <p class="vp-client-note">Full case study: <a href="crowncon/index.html">Crowncon — brand, website, video &amp; SEO</a></p>
-  </div>
-</section>
-
 <!-- CTA -->
 <section class="page-cta">
   <div class="inner">
     <span class="label on-green" style="color:var(--sand)"><span style="background:var(--sand)"></span>Video production for tradies · Melbourne</span>
     <h2 style="margin-top:16px">Let's put your<br/><span class="serif-em">work on camera.</span></h2>
     <p>Fixed-price video production for Melbourne trade businesses. Construction videography, testimonials, before-and-afters and recruitment content — by a team that understands the work.</p>
-    <a href="index.html#apply" class="btn btn-light">Get in touch
+    <a href="mailto:hello@beetsandco.com.au" class="btn btn-light">Get in touch
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
   </div>
@@ -476,7 +434,7 @@
       </div>
       <div class="foot-col">
         <h5>Get in touch</h5>
-        <a href="index.html#apply">Get in touch</a>
+        <a href="mailto:hello@beetsandco.com.au">Get in touch</a>
         <a href="mailto:hello@beetsandco.com.au">hello@beetsandco.com.au</a>
         <p>Bayside, Melbourne · VIC</p>
       </div>
