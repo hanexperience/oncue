@@ -404,6 +404,19 @@
 
     /* calendar */
     .cal-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+    .cal-toolbar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .cal-nav-btn {
+      width: 30px; height: 30px; border: 1px solid var(--line-2); border-radius: 8px;
+      background: var(--surface); color: var(--ink); font-size: 14px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s;
+    }
+    .cal-nav-btn:hover { background: var(--surface-hi); border-color: var(--ink); }
+    .cal-back-btn {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .5px;
+      color: var(--muted); border: 1px solid var(--line-2); border-radius: 999px; padding: 6px 12px;
+      background: transparent; cursor: pointer; transition: color .15s, border-color .15s;
+    }
+    .cal-back-btn:hover { color: var(--ink); border-color: var(--ink); }
     .cal-month {
       font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 20px;
       text-transform: uppercase; letter-spacing: -.3px; color: var(--ink);
@@ -683,6 +696,8 @@
   })();
 
   let CURRENT_CODE = null;
+  let CAL_C = null, CAL_POSTS = null, CAL_GAPS = null;
+  let CAL_VIEW_Y = null, CAL_VIEW_M = null;
 
   function rpc(fn, body) {
     if (DEMO) return demoRpc(fn, body);
@@ -780,6 +795,8 @@
     document.getElementById('tb-client').textContent = c.name + (c.contact_name ? ' · ' + c.contact_name : '');
 
     var posts = data.posts || [];
+    CAL_C = c; CAL_POSTS = posts; CAL_GAPS = data.gaps || [];
+    CAL_VIEW_Y = c.cal_year; CAL_VIEW_M = c.cal_month;
     var pipe = posts.filter(function (p) { return p.in_pipeline || p.status === 'approval' || p.status === 'scheduled'; });
     var needApproval = pipe.filter(function (p) { return p.status === 'approval'; });
 
@@ -916,56 +933,7 @@
     t2 += '</div></div>';
 
     // ── TAB 3: Calendar ──
-    var t3 = '';
-    var mixOrder = ['Static Posts', 'Reels', 'Stories', 'Blog', 'GBP Posts'];
-    var mix = { 'Static Posts': 0, 'Reels': 0, 'Stories': 0, 'Blog': 0, 'GBP Posts': 0 };
-    posts.forEach(function (p) { mix[mixCategory(p.channel)]++; });
-    var pillarOrder = ['visibility', 'trust', 'conversion'];
-    var pillarLabels = { visibility: 'Visibility / SEO', trust: 'Trust / Authority', conversion: 'Conversion / Leads', untagged: 'Untagged' };
-    var pillarMix = { visibility: 0, trust: 0, conversion: 0, untagged: 0 };
-    posts.forEach(function (p) { pillarMix[p.pillar && pillarMix.hasOwnProperty(p.pillar) ? p.pillar : 'untagged']++; });
-    if (c.focus_label || (data.gaps && data.gaps.length)) {
-      t3 += '<div class="focus-card">';
-      t3 += '<div class="card-label">This Month\u2019s Focus</div>';
-      if (c.focus_label) t3 += '<div class="focus-headline">' + esc(c.focus_label) + '</div>';
-      if (c.focus_notes) t3 += '<div class="focus-notes">' + esc(c.focus_notes) + '</div>';
-      if (data.gaps && data.gaps.length) {
-        t3 += '<div class="gap-list">';
-        data.gaps.forEach(function (g) {
-          var gCls = g.status === 'closed' ? 'done' : (g.status === 'active' ? 'active' : 'pending');
-          var gLabel = g.status === 'closed' ? 'Closed' : (g.status === 'active' ? 'Active' : 'Queued');
-          var typeLabel = g.type === 'trust' ? 'Trust' : (g.type === 'conversion' ? 'Conversion' : 'Visibility');
-          t3 += '<div class="gap-row"><span class="gap-type-tag">' + esc(typeLabel) + '</span>';
-          t3 += '<span class="gap-text">' + esc(g.gap) + '</span>';
-          t3 += '<span class="phase-status ' + gCls + '">' + gLabel + '</span></div>';
-        });
-        t3 += '</div>';
-      }
-      t3 += '</div>';
-    }
-    t3 += '<div class="sec-head" style="margin-bottom:6px;"><div><div class="kicker">Content Calendar</div>';
-    t3 += '<div class="sec-title" style="font-size:26px;">What’s going out &amp; when</div></div></div>';
-    t3 += '<p class="sec-note" style="margin-bottom:22px;max-width:62ch;">Every planned post this month, the channel it runs on, and where it sits in the approval pipeline. Click a post to view the creative.</p>';
-    t3 += '<div class="cal-toolbar"><div class="cal-month">' + esc(c.cal_label) + '</div><div class="cal-legend">';
-    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--muted-2)"></div>Drafting</div>';
-    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>Needs Approval</div>';
-    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>Scheduled</div>';
-    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Published</div>';
-    t3 += '</div></div>';
-    t3 += buildCalendar(c.cal_year, c.cal_month, posts);
-    t3 += '<div class="sec"><div class="sec-head"><div class="sec-title" style="font-size:18px;">This month’s content mix</div></div>';
-    t3 += '<div class="mix-grid">';
-    mixOrder.forEach(function (k) {
-      t3 += '<div class="mix-item"><div class="mix-count">' + mix[k] + '</div><div class="mix-label">' + k + '</div></div>';
-    });
-    t3 += '<div class="mix-item total"><div class="mix-count">' + posts.length + '</div><div class="mix-label">Total Planned</div></div>';
-    t3 += '</div></div>';
-    t3 += '<div class="sec"><div class="sec-head"><div class="sec-title" style="font-size:18px;">Where the effort went</div></div>';
-    t3 += '<div class="mix-grid">';
-    pillarOrder.concat(pillarMix.untagged ? ['untagged'] : []).forEach(function (k) {
-      t3 += '<div class="mix-item"><div class="mix-count">' + pillarMix[k] + '</div><div class="mix-label">' + pillarLabels[k] + '</div></div>';
-    });
-    t3 += '</div></div>';
+    var t3 = renderCalendarTab();
 
     // ── TAB 4: Recap ──
     var t4 = '';
@@ -1215,6 +1183,92 @@
     for (let i = 0; i < trail; i++) g += '<div class="cal-cell empty"></div>';
     g += '</div>';
     return g;
+  }
+
+  // ── Calendar tab (navigable — can page to other months) ──
+  function renderCalendarTab() {
+    var c = CAL_C, posts = CAL_POSTS, gaps = CAL_GAPS;
+    var viewY = CAL_VIEW_Y, viewM = CAL_VIEW_M;
+    var isCurrent = (viewY === c.cal_year && viewM === c.cal_month);
+    var viewLabel = isCurrent ? c.cal_label : (MONTHS[viewM - 1] + ' ' + viewY);
+
+    var viewPosts = posts.filter(function (p) {
+      if (!p.date) return false;
+      var parts = p.date.split('-');
+      return parseInt(parts[0], 10) === viewY && parseInt(parts[1], 10) === viewM;
+    });
+
+    var mixOrder = ['Static Posts', 'Reels', 'Stories', 'Blog', 'GBP Posts'];
+    var mix = { 'Static Posts': 0, 'Reels': 0, 'Stories': 0, 'Blog': 0, 'GBP Posts': 0 };
+    viewPosts.forEach(function (p) { mix[mixCategory(p.channel)]++; });
+    var pillarOrder = ['visibility', 'trust', 'conversion'];
+    var pillarLabels = { visibility: 'Visibility / SEO', trust: 'Trust / Authority', conversion: 'Conversion / Leads', untagged: 'Untagged' };
+    var pillarMix = { visibility: 0, trust: 0, conversion: 0, untagged: 0 };
+    viewPosts.forEach(function (p) { pillarMix[p.pillar && pillarMix.hasOwnProperty(p.pillar) ? p.pillar : 'untagged']++; });
+
+    var t3 = '';
+    if (isCurrent && (c.focus_label || (gaps && gaps.length))) {
+      t3 += '<div class="focus-card">';
+      t3 += '<div class="card-label">This Month\u2019s Focus</div>';
+      if (c.focus_label) t3 += '<div class="focus-headline">' + esc(c.focus_label) + '</div>';
+      if (c.focus_notes) t3 += '<div class="focus-notes">' + esc(c.focus_notes) + '</div>';
+      if (gaps && gaps.length) {
+        t3 += '<div class="gap-list">';
+        gaps.forEach(function (g) {
+          var gCls = g.status === 'closed' ? 'done' : (g.status === 'active' ? 'active' : 'pending');
+          var gLabel = g.status === 'closed' ? 'Closed' : (g.status === 'active' ? 'Active' : 'Queued');
+          var typeLabel = g.type === 'trust' ? 'Trust' : (g.type === 'conversion' ? 'Conversion' : 'Visibility');
+          t3 += '<div class="gap-row"><span class="gap-type-tag">' + esc(typeLabel) + '</span>';
+          t3 += '<span class="gap-text">' + esc(g.gap) + '</span>';
+          t3 += '<span class="phase-status ' + gCls + '">' + gLabel + '</span></div>';
+        });
+        t3 += '</div>';
+      }
+      t3 += '</div>';
+    }
+    t3 += '<div class="sec-head" style="margin-bottom:6px;"><div><div class="kicker">Content Calendar</div>';
+    t3 += '<div class="sec-title" style="font-size:26px;">What\u2019s going out &amp; when</div></div></div>';
+    t3 += '<p class="sec-note" style="margin-bottom:22px;max-width:62ch;">Every planned post that month, the channel it runs on, and where it sits in the approval pipeline. Click a post to view the creative.</p>';
+    t3 += '<div class="cal-toolbar"><div class="cal-toolbar-left">';
+    t3 += '<button class="cal-nav-btn" onclick="calNav(-1)" aria-label="Previous month">\u2190</button>';
+    t3 += '<div class="cal-month">' + esc(viewLabel) + '</div>';
+    t3 += '<button class="cal-nav-btn" onclick="calNav(1)" aria-label="Next month">\u2192</button>';
+    if (!isCurrent) t3 += '<button class="cal-back-btn" onclick="calNavReset()">Back to current month</button>';
+    t3 += '</div><div class="cal-legend">';
+    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--muted-2)"></div>Drafting</div>';
+    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>Needs Approval</div>';
+    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>Scheduled</div>';
+    t3 += '<div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Published</div>';
+    t3 += '</div></div>';
+    t3 += buildCalendar(viewY, viewM, posts);
+    t3 += '<div class="sec"><div class="sec-head"><div class="sec-title" style="font-size:18px;">' + (isCurrent ? 'This' : 'That') + ' month\u2019s content mix</div></div>';
+    t3 += '<div class="mix-grid">';
+    mixOrder.forEach(function (k) {
+      t3 += '<div class="mix-item"><div class="mix-count">' + mix[k] + '</div><div class="mix-label">' + k + '</div></div>';
+    });
+    t3 += '<div class="mix-item total"><div class="mix-count">' + viewPosts.length + '</div><div class="mix-label">Total Planned</div></div>';
+    t3 += '</div></div>';
+    t3 += '<div class="sec"><div class="sec-head"><div class="sec-title" style="font-size:18px;">Where the effort went</div></div>';
+    t3 += '<div class="mix-grid">';
+    pillarOrder.concat(pillarMix.untagged ? ['untagged'] : []).forEach(function (k) {
+      t3 += '<div class="mix-item"><div class="mix-count">' + pillarMix[k] + '</div><div class="mix-label">' + pillarLabels[k] + '</div></div>';
+    });
+    t3 += '</div></div>';
+    return t3;
+  }
+
+  function calNav(delta) {
+    var m = CAL_VIEW_M + delta, y = CAL_VIEW_Y;
+    if (m < 1) { m = 12; y -= 1; }
+    if (m > 12) { m = 1; y += 1; }
+    CAL_VIEW_Y = y; CAL_VIEW_M = m;
+    var panel = document.getElementById('tab-calendar');
+    if (panel) panel.innerHTML = renderCalendarTab();
+  }
+  function calNavReset() {
+    CAL_VIEW_Y = CAL_C.cal_year; CAL_VIEW_M = CAL_C.cal_month;
+    var panel = document.getElementById('tab-calendar');
+    if (panel) panel.innerHTML = renderCalendarTab();
   }
 
   // ── Decisions (write to Supabase) ──
