@@ -183,6 +183,60 @@
     .table-empty { padding: 24px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted-2); }
     input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--ink); cursor: pointer; }
 
+    /* calendar tab */
+    .cal-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+    .cal-toolbar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .cal-nav-btn {
+      width: 30px; height: 30px; border: 1px solid var(--line-2); border-radius: var(--r-sm);
+      background: var(--surface-hi); color: var(--ink); font-size: 14px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s;
+    }
+    .cal-nav-btn:hover { background: var(--hi); border-color: var(--ink); }
+    .cal-back-btn {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .5px;
+      color: var(--muted); border: 1px solid var(--line-2); border-radius: 999px; padding: 6px 12px;
+      background: var(--surface-hi); cursor: pointer; transition: color .15s, border-color .15s;
+    }
+    .cal-back-btn:hover { color: var(--ink); border-color: var(--ink); }
+    .cal-month {
+      font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 19px;
+      text-transform: uppercase; letter-spacing: -.3px; color: var(--ink);
+    }
+    .cal-legend { display: flex; gap: 14px; flex-wrap: wrap; }
+    .cal-legend .legend-item {
+      display: flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted);
+    }
+    .cal-legend .legend-dot { width: 7px; height: 7px; border-radius: 3px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--surface-hi); }
+    .cal-dow {
+      padding: 8px 10px; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--muted-2); background: var(--surface); border-bottom: 1px solid var(--line); text-align: center;
+    }
+    .cal-cell { min-height: 96px; padding: 7px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; }
+    .cal-cell:nth-child(7n) { border-right: none; }
+    .cal-cell.empty { background: var(--surface); }
+    .cal-cell.today { background: rgba(229,255,61,.16); }
+    .cal-date { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-bottom: 5px; }
+    .cal-cell.today .cal-date { color: var(--ink); font-weight: 700; }
+    .cal-post {
+      display: block; font-size: 10.5px; line-height: 1.35; padding: 4px 6px; margin-bottom: 3px;
+      border-radius: 5px; background: var(--surface); border-left: 3px solid var(--muted-2); color: var(--ink-soft);
+      text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .cal-post .ct { display: block; font-family: 'JetBrains Mono', monospace; font-size: 8.5px; text-transform: uppercase; color: var(--muted); letter-spacing: .4px; }
+    .cal-post.s-approval { border-left-color: var(--rust); background: var(--rust-tint); }
+    .cal-post.s-scheduled { border-left-color: var(--ink); }
+    .cal-post.s-published { border-left-color: var(--green); background: var(--green-tint); }
+    .mix-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+    .mix-item { border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-hi); padding: 14px 12px; text-align: center; }
+    .mix-item.total { background: var(--ink); border-color: var(--ink); }
+    .mix-item.total .mix-count, .mix-item.total .mix-label { color: var(--hi); }
+    .mix-count { font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 24px; color: var(--ink); }
+    .mix-label { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-top: 2px; }
+    .cal-sec { margin-top: 28px; }
+    .cal-sec-title { font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 12px; }
+
     /* toast */
     .toast {
       position: fixed; bottom: 22px; right: 22px; background: var(--ink); color: var(--paper);
@@ -361,6 +415,7 @@
     { id:'deliverables', label:'Deliverables', fields:[], nested:['deliverables','decisions_log'] },
     { id:'planning', label:'Planning', fields:['focus_label'], textarea:'focus_notes', textareaLabel:'The Why (1\u20132 sentences on why this is the focus)', nested:['gaps'] },
     { id:'content', label:'Content', fields:['cal_label','cal_year','cal_month'], nested:['posts'] },
+    { id:'calendar', label:'Calendar', fields:[], nested:[] },
     { id:'recap', label:'Recap', fields:['recap_month'], textarea:'recap_body', textareaLabel:'Monthly Recap (blank line separates paragraphs)', nested:[] },
     { id:'history', label:'History', fields:[], nested:[] }
   ];
@@ -453,6 +508,7 @@
       deliverables: ['Deliverables & Decisions', 'Shared files and the running log of decisions made.'],
       planning: ['Monthly Planning', 'Set this month\u2019s focus and keep the running register of gaps it should close. Do this first, before touching the content calendar.'],
       content: ['Content Calendar', 'Calendar month and every planned post in the pipeline.'],
+      calendar: ['Calendar', 'A visual look at the month — the same grid your client sees in their portal, with quick navigation to plan ahead.'],
       recap: ['Monthly Recap', 'The written wrap-up shown at the bottom of the portal.'],
       history: ['Monthly History', 'Close out a month to save a permanent snapshot. Clients can browse all past months in their portal.']
     };
@@ -481,10 +537,140 @@
     if (tab.id === 'history') {
       h += '<div id="history-tab-content"><div style="font-family:inherit,monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted-2);padding:24px 0;">Loading…</div></div>';
     }
+    // calendar tab special content
+    if (tab.id === 'calendar') {
+      h += '<div id="admin-cal-root"><div style="font-family:inherit,monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted-2);padding:24px 0;">Loading…</div></div>';
+    }
 
     panel.innerHTML = h;
     for (const t of tab.nested) await loadNested(t);
     if (tab.id === 'history') await renderHistoryTab();
+    if (tab.id === 'calendar') await renderAdminCalendar();
+  }
+
+  // ── Calendar tab (visual, navigable — mirrors the client portal's calendar) ──
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function mixCategory(channel) {
+    const c = (channel || '').toLowerCase();
+    if (c.indexOf('reel') > -1) return 'Reels';
+    if (c.indexOf('story') > -1) return 'Stories';
+    if (c.indexOf('blog') > -1) return 'Blog';
+    if (c.indexOf('gbp') > -1) return 'GBP Posts';
+    return 'Static Posts';
+  }
+  function buildCalendarGrid(year, month, posts) {
+    if (!year || !month) return '<div class="table-empty">Set a calendar year and month on the Content tab first.</div>';
+    const dow = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    let g = '<div class="cal-grid">';
+    dow.forEach(function (d) { g += '<div class="cal-dow">' + d + '</div>'; });
+    const byDay = {};
+    posts.forEach(function (p) {
+      if (!p.post_date) return;
+      const parts = p.post_date.split('-');
+      if (parseInt(parts[0], 10) === year && parseInt(parts[1], 10) === month) {
+        const day = parseInt(parts[2], 10);
+        (byDay[day] = byDay[day] || []).push(p);
+      }
+    });
+    const firstWeekday = new Date(year, month - 1, 1).getDay();
+    const lead = (firstWeekday + 6) % 7;
+    const days = new Date(year, month, 0).getDate();
+    const now = new Date();
+    const isThisMonth = now.getFullYear() === year && (now.getMonth() + 1) === month;
+    for (let i = 0; i < lead; i++) g += '<div class="cal-cell empty"></div>';
+    for (let d = 1; d <= days; d++) {
+      const weekday = new Date(year, month - 1, d).getDay();
+      const isWeekend = weekday === 0 || weekday === 6;
+      const dayPosts = byDay[d] || [];
+      const emptyCls = (isWeekend && dayPosts.length === 0) ? ' empty' : '';
+      const todayCls = (isThisMonth && now.getDate() === d) ? ' today' : '';
+      g += '<div class="cal-cell' + emptyCls + todayCls + '"><div class="cal-date">' + d + '</div>';
+      dayPosts.forEach(function (p) {
+        const tag = p.content_url ? 'a' : 'span';
+        const href = p.content_url ? ' href="' + esc(p.content_url) + '" target="_blank" rel="noopener"' : '';
+        g += '<' + tag + ' class="cal-post s-' + esc(p.status) + '"' + href + '>';
+        g += '<span class="ct">' + esc(p.channel) + '</span>' + esc(p.title) + '</' + tag + '>';
+      });
+      g += '</div>';
+    }
+    const total = lead + days;
+    const trail = (7 - (total % 7)) % 7;
+    for (let i = 0; i < trail; i++) g += '<div class="cal-cell empty"></div>';
+    g += '</div>';
+    return g;
+  }
+
+  let adminCalPosts = [];
+  let adminCalViewY = null, adminCalViewM = null;
+
+  async function renderAdminCalendar() {
+    const root = document.getElementById('admin-cal-root');
+    if (!root) return;
+    try {
+      adminCalPosts = await db('posts', 'GET', null, '?client_id=eq.' + currentClientId + '&order=post_date.asc');
+    } catch (e) { adminCalPosts = []; }
+    adminCalViewY = clientCache.cal_year;
+    adminCalViewM = clientCache.cal_month;
+    root.innerHTML = renderAdminCalendarHTML();
+  }
+
+  function renderAdminCalendarHTML() {
+    const c = clientCache;
+    const posts = adminCalPosts;
+    const viewY = adminCalViewY, viewM = adminCalViewM;
+    const isCurrent = (viewY === c.cal_year && viewM === c.cal_month);
+    const viewLabel = isCurrent ? (c.cal_label || (viewY && viewM ? MONTHS[viewM - 1] + ' ' + viewY : '—')) : (MONTHS[viewM - 1] + ' ' + viewY);
+
+    const viewPosts = posts.filter(function (p) {
+      if (!p.post_date) return false;
+      const parts = p.post_date.split('-');
+      return parseInt(parts[0], 10) === viewY && parseInt(parts[1], 10) === viewM;
+    });
+
+    const mixOrder = ['Static Posts', 'Reels', 'Stories', 'Blog', 'GBP Posts'];
+    const mix = { 'Static Posts': 0, 'Reels': 0, 'Stories': 0, 'Blog': 0, 'GBP Posts': 0 };
+    viewPosts.forEach(function (p) { mix[mixCategory(p.channel)]++; });
+    const pillarOrder = ['visibility', 'trust', 'conversion'];
+    const pillarLabels = { visibility: 'Visibility / SEO', trust: 'Trust / Authority', conversion: 'Conversion / Leads', untagged: 'Untagged' };
+    const pillarMix = { visibility: 0, trust: 0, conversion: 0, untagged: 0 };
+    viewPosts.forEach(function (p) { pillarMix[p.pillar && pillarMix.hasOwnProperty(p.pillar) ? p.pillar : 'untagged']++; });
+
+    let h = '<div class="cal-toolbar"><div class="cal-toolbar-left">';
+    h += '<button class="cal-nav-btn" onclick="adminCalNav(-1)" aria-label="Previous month">\u2190</button>';
+    h += '<div class="cal-month">' + esc(viewLabel) + '</div>';
+    h += '<button class="cal-nav-btn" onclick="adminCalNav(1)" aria-label="Next month">\u2192</button>';
+    if (!isCurrent) h += '<button class="cal-back-btn" onclick="adminCalNavReset()">Back to current month</button>';
+    h += '</div><div class="cal-legend">';
+    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--muted-2)"></div>Drafting</div>';
+    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div>Needs Approval</div>';
+    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--ink)"></div>Scheduled</div>';
+    h += '<div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Published</div>';
+    h += '</div></div>';
+    h += buildCalendarGrid(viewY, viewM, posts);
+
+    h += '<div class="cal-sec"><div class="cal-sec-title">' + (isCurrent ? 'This' : 'That') + ' month\u2019s content mix</div><div class="mix-grid">';
+    mixOrder.forEach(function (k) { h += '<div class="mix-item"><div class="mix-count">' + mix[k] + '</div><div class="mix-label">' + k + '</div></div>'; });
+    h += '<div class="mix-item total"><div class="mix-count">' + viewPosts.length + '</div><div class="mix-label">Total Planned</div></div>';
+    h += '</div></div>';
+
+    h += '<div class="cal-sec"><div class="cal-sec-title">Where the effort went</div><div class="mix-grid">';
+    pillarOrder.concat(pillarMix.untagged ? ['untagged'] : []).forEach(function (k) { h += '<div class="mix-item"><div class="mix-count">' + pillarMix[k] + '</div><div class="mix-label">' + pillarLabels[k] + '</div></div>'; });
+    h += '</div></div>';
+    return h;
+  }
+
+  function adminCalNav(delta) {
+    let m = adminCalViewM + delta, y = adminCalViewY;
+    if (m < 1) { m = 12; y -= 1; }
+    if (m > 12) { m = 1; y += 1; }
+    adminCalViewY = y; adminCalViewM = m;
+    const root = document.getElementById('admin-cal-root');
+    if (root) root.innerHTML = renderAdminCalendarHTML();
+  }
+  function adminCalNavReset() {
+    adminCalViewY = clientCache.cal_year; adminCalViewM = clientCache.cal_month;
+    const root = document.getElementById('admin-cal-root');
+    if (root) root.innerHTML = renderAdminCalendarHTML();
   }
 
   // ── Field autosave (debounced) ──
@@ -655,11 +841,12 @@
   // ── In-memory demo backend ──────────────────────────────────────────────
   const DEMO_DB = (function () {
     const now = new Date(); const Y = now.getFullYear(), M = now.getMonth() + 1;
+    const MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][M - 1] + ' ' + Y;
     const iso = function (d) { return Y + '-' + String(M).padStart(2,'0') + '-' + String(d).padStart(2,'0'); };
     return {
       clients: [
-        { id:'c1', slug:'crowncon', name:'CrownCon', access_code:'crown26', project_title:'CrownCon 2026 — Brand & Social Launch', project_started:'Engagement started 14 Jan 2026 · 6-month retainer', project_subtitle:'Pop-culture & gaming convention · Brisbane', pm_name:'Michael', status_badge:'Active', setup_badge:'Setup Complete', retainer_badge:'Retainer · Mo. 4', last_updated:'28 May 2026', package_name:'Growth Social', package_sub:'Managed content + community · billed monthly', cal_label: 'May ' + Y, cal_year:Y, cal_month:M, recap_month:'May ' + Y + ' Recap', recap_body:'Reach grew 34% month-on-month, driven mostly by the two artist-reveal Reels.\n\nWe locked the visual system for the ticket-tier announcements and rolled it across both static posts and Stories.\n\nNext month we shift focus to early-bird ticket conversion and the first creator collaboration.', focus_label:'Trust: proof of vendor & artist commitments', focus_notes:'Ticket buyers are asking whether the lineup is locked. This month\u2019s content leans into confirmed bookings and behind-the-scenes prep to remove that doubt before the early-bird push.' },
-        { id:'c2', slug:'harborline', name:'Harborline Café', access_code:'harbor7', project_title:'Harborline — Local Brand Refresh', project_started:'Engagement started 3 Mar 2026 · 3-month sprint', project_subtitle:'Specialty coffee & brunch · Fremantle', pm_name:'Michael', status_badge:'Active', setup_badge:'Onboarding', retainer_badge:'Sprint · Mo. 2', last_updated:'27 May 2026', package_name:'Local Essentials', package_sub:'Lite content + Google presence', cal_label:'May ' + Y, cal_year:Y, cal_month:M, recap_month:'May ' + Y + ' Recap', recap_body:'Refreshed the menu photography and launched the weekly specials format.\n\nGoogle Business profile is now fully optimised with weekly posts.', focus_label:'Visibility: local brunch search terms', focus_notes:'Near-zero presence on \u201cbrunch near me\u201d searches. Focus is GBP cadence and a blog post built around the new menu, both targeting that search intent.' }
+        { id:'c1', slug:'crowncon', name:'CrownCon', access_code:'crown26', project_title:'CrownCon 2026 — Brand & Social Launch', project_started:'Engagement started 14 Jan 2026 · 6-month retainer', project_subtitle:'Pop-culture & gaming convention · Brisbane', pm_name:'Michael', status_badge:'Active', setup_badge:'Setup Complete', retainer_badge:'Retainer · Mo. 4', last_updated:'28 May 2026', package_name:'Growth Social', package_sub:'Managed content + community · billed monthly', cal_label: MN, cal_year:Y, cal_month:M, recap_month:MN + ' Recap', recap_body:'Reach grew 34% month-on-month, driven mostly by the two artist-reveal Reels.\n\nWe locked the visual system for the ticket-tier announcements and rolled it across both static posts and Stories.\n\nNext month we shift focus to early-bird ticket conversion and the first creator collaboration.', focus_label:'Trust: proof of vendor & artist commitments', focus_notes:'Ticket buyers are asking whether the lineup is locked. This month\u2019s content leans into confirmed bookings and behind-the-scenes prep to remove that doubt before the early-bird push.' },
+        { id:'c2', slug:'harborline', name:'Harborline Café', access_code:'harbor7', project_title:'Harborline — Local Brand Refresh', project_started:'Engagement started 3 Mar 2026 · 3-month sprint', project_subtitle:'Specialty coffee & brunch · Fremantle', pm_name:'Michael', status_badge:'Active', setup_badge:'Onboarding', retainer_badge:'Sprint · Mo. 2', last_updated:'27 May 2026', package_name:'Local Essentials', package_sub:'Lite content + Google presence', cal_label:MN, cal_year:Y, cal_month:M, recap_month:MN + ' Recap', recap_body:'Refreshed the menu photography and launched the weekly specials format.\n\nGoogle Business profile is now fully optimised with weekly posts.', focus_label:'Visibility: local brunch search terms', focus_notes:'Near-zero presence on \u201cbrunch near me\u201d searches. Focus is GBP cadence and a blog post built around the new menu, both targeting that search intent.' }
       ],
       quotas: [
         { id:'q1', client_id:'c1', label:'Static Posts', used:8, total:12, sort:0 },
