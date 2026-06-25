@@ -330,21 +330,26 @@
     status_badge:'Status Badge', last_updated:'Last Updated (DD Mon YYYY)', setup_badge:'Setup Badge',
     retainer_badge:'Retainer Badge', package_name:'Package Name', package_sub:'Package Sub-line',
     cal_label:'Calendar Label (e.g. June 2026)', cal_year:'Calendar Year', cal_month:'Calendar Month (1–12)',
-    recap_month:'Recap Month', contract_start:'Contract Start Date'
+    recap_month:'Recap Month', contract_start:'Contract Start Date',
+    focus_label:'Monthly Focus (e.g. Trust: proof-of-process)'
   };
 
   // ── Select options for nested tables ──
   const SELECT_OPTS = {
     phase_status: [['done','Complete'],['active','In Progress'],['pending','Upcoming']],
     owner: [['oncue','Beets & Co'],['client','Client'],['waiting','Waiting']],
-    post_status: [['draft','Drafting'],['approval','Needs Approval'],['scheduled','Scheduled'],['published','Published']]
+    post_status: [['draft','Drafting'],['approval','Needs Approval'],['scheduled','Scheduled'],['published','Published']],
+    gap_type: [['visibility','Visibility'],['trust','Trust'],['conversion','Conversion']],
+    gap_status: [['open','Queued'],['active','Active'],['closed','Closed']],
+    pillar: [['','— None —'],['visibility','Visibility'],['trust','Trust'],['conversion','Conversion']]
   };
   const NESTED = {
     quotas: { title:'Quotas', order:'sort', cols:[['label','Label','text'],['used','Used','number','tiny'],['total','Total','number','tiny']] },
     phases: { title:'Phases', order:'sort', cols:[['num','Phase #','text','narrow'],['name','Name','text'],['status','Status','select:phase_status','narrow']] },
     next_steps: { title:'Next Steps', order:'sort', cols:[['body','Step','text'],['owner','Owner','select:owner','narrow']] },
     deliverables: { title:'Deliverables', order:'sort', cols:[['icon','Icon','text','tiny'],['name','Name','text'],['status','Status','text','narrow'],['link','Link','text']] },
-    posts: { title:'Content Pipeline', order:'post_date', cols:[['post_date','Date','date','narrow'],['channel','Channel','text','narrow'],['title','Title','text'],['content_url','Content URL','text'],['status','Status','select:post_status','narrow'],['in_pipeline','Pipeline?','checkbox','tiny'],['script','Teleprompter Script','text']] },
+    gaps: { title:'Gap Register', order:'sort', cols:[['gap','Gap','text'],['type','Type','select:gap_type','narrow'],['status','Status','select:gap_status','narrow'],['notes','Notes','text']] },
+    posts: { title:'Content Pipeline', order:'post_date', cols:[['post_date','Date','date','narrow'],['channel','Channel','text','narrow'],['title','Title','text'],['pillar','Pillar','select:pillar','narrow'],['content_url','Content URL','text'],['status','Status','select:post_status','narrow'],['in_pipeline','Pipeline?','checkbox','tiny'],['script','Teleprompter Script','text']] },
     decisions_log: { title:'Decisions Log', order:'sort', cols:[['decision_date','Date','text','narrow'],['body','Decision','text']] }
   };
 
@@ -354,11 +359,12 @@
     { id:'package', label:'Package', fields:['package_name','package_sub'], nested:['quotas'] },
     { id:'phases', label:'Phases & Steps', fields:[], nested:['phases','next_steps'] },
     { id:'deliverables', label:'Deliverables', fields:[], nested:['deliverables','decisions_log'] },
+    { id:'planning', label:'Planning', fields:['focus_label'], textarea:'focus_notes', textareaLabel:'The Why (1\u20132 sentences on why this is the focus)', nested:['gaps'] },
     { id:'content', label:'Content', fields:['cal_label','cal_year','cal_month'], nested:['posts'] },
-    { id:'recap', label:'Recap', fields:['recap_month'], textarea:'recap_body', nested:[] },
+    { id:'recap', label:'Recap', fields:['recap_month'], textarea:'recap_body', textareaLabel:'Monthly Recap (blank line separates paragraphs)', nested:[] },
     { id:'history', label:'History', fields:[], nested:[] }
   ];
-  const ALL_FIELDS = ['name','slug','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated','package_name','package_sub','cal_label','cal_year','cal_month','recap_month','contract_start'];
+  const ALL_FIELDS = ['name','slug','access_code','project_title','project_started','project_subtitle','pm_name','status_badge','setup_badge','retainer_badge','last_updated','package_name','package_sub','cal_label','cal_year','cal_month','recap_month','contract_start','focus_label'];
 
   // ── Sidebar ──
   async function loadClients() {
@@ -445,6 +451,7 @@
       package: ['Package & Quotas', 'The package banner and the monthly usage counters your client sees.'],
       phases: ['Phases & Next Steps', 'The project phase tracker and the shared to-do list.'],
       deliverables: ['Deliverables & Decisions', 'Shared files and the running log of decisions made.'],
+      planning: ['Monthly Planning', 'Set this month\u2019s focus and keep the running register of gaps it should close. Do this first, before touching the content calendar.'],
       content: ['Content Calendar', 'Calendar month and every planned post in the pipeline.'],
       recap: ['Monthly Recap', 'The written wrap-up shown at the bottom of the portal.'],
       history: ['Monthly History', 'Close out a month to save a permanent snapshot. Clients can browse all past months in their portal.']
@@ -462,9 +469,9 @@
       });
       h += '</div></div>';
     }
-    // textarea (recap body)
+    // generic textarea (label set per-tab)
     if (tab.textarea) {
-      h += '<div class="field-card"><div class="form-group"><label class="form-label">Monthly Recap (blank line separates paragraphs)</label>';
+      h += '<div class="field-card"><div class="form-group"><label class="form-label">' + esc(tab.textareaLabel || 'Notes') + '</label>';
       h += '<textarea class="form-textarea" id="cf-' + tab.textarea + '" oninput="onFieldInput(\'' + tab.textarea + '\')">' + esc(c[tab.textarea]) + '</textarea></div></div>';
     }
     // nested tables
@@ -613,6 +620,7 @@
     if (table === 'quotas') { base.label = 'New'; base.used = 0; base.total = 0; }
     if (table === 'deliverables') { base.name = 'New deliverable'; base.icon = 'PDF'; base.status = 'Upcoming'; }
     if (table === 'decisions_log') { base.decision_date = ''; base.body = 'New decision'; }
+    if (table === 'gaps') { base.gap = 'New gap'; base.type = 'visibility'; base.status = 'open'; }
     setStatus('saving');
     try { await db(table, 'POST', base); setStatus('saved'); loadNested(table); }
     catch (err) { setStatus('error'); toast('Add failed: ' + err.message, true); }
@@ -650,8 +658,8 @@
     const iso = function (d) { return Y + '-' + String(M).padStart(2,'0') + '-' + String(d).padStart(2,'0'); };
     return {
       clients: [
-        { id:'c1', slug:'crowncon', name:'CrownCon', access_code:'crown26', project_title:'CrownCon 2026 — Brand & Social Launch', project_started:'Engagement started 14 Jan 2026 · 6-month retainer', project_subtitle:'Pop-culture & gaming convention · Brisbane', pm_name:'Michael', status_badge:'Active', setup_badge:'Setup Complete', retainer_badge:'Retainer · Mo. 4', last_updated:'28 May 2026', package_name:'Growth Social', package_sub:'Managed content + community · billed monthly', cal_label: 'May ' + Y, cal_year:Y, cal_month:M, recap_month:'May ' + Y + ' Recap', recap_body:'Reach grew 34% month-on-month, driven mostly by the two artist-reveal Reels.\n\nWe locked the visual system for the ticket-tier announcements and rolled it across both static posts and Stories.\n\nNext month we shift focus to early-bird ticket conversion and the first creator collaboration.' },
-        { id:'c2', slug:'harborline', name:'Harborline Café', access_code:'harbor7', project_title:'Harborline — Local Brand Refresh', project_started:'Engagement started 3 Mar 2026 · 3-month sprint', project_subtitle:'Specialty coffee & brunch · Fremantle', pm_name:'Michael', status_badge:'Active', setup_badge:'Onboarding', retainer_badge:'Sprint · Mo. 2', last_updated:'27 May 2026', package_name:'Local Essentials', package_sub:'Lite content + Google presence', cal_label:'May ' + Y, cal_year:Y, cal_month:M, recap_month:'May ' + Y + ' Recap', recap_body:'Refreshed the menu photography and launched the weekly specials format.\n\nGoogle Business profile is now fully optimised with weekly posts.' }
+        { id:'c1', slug:'crowncon', name:'CrownCon', access_code:'crown26', project_title:'CrownCon 2026 — Brand & Social Launch', project_started:'Engagement started 14 Jan 2026 · 6-month retainer', project_subtitle:'Pop-culture & gaming convention · Brisbane', pm_name:'Michael', status_badge:'Active', setup_badge:'Setup Complete', retainer_badge:'Retainer · Mo. 4', last_updated:'28 May 2026', package_name:'Growth Social', package_sub:'Managed content + community · billed monthly', cal_label: 'May ' + Y, cal_year:Y, cal_month:M, recap_month:'May ' + Y + ' Recap', recap_body:'Reach grew 34% month-on-month, driven mostly by the two artist-reveal Reels.\n\nWe locked the visual system for the ticket-tier announcements and rolled it across both static posts and Stories.\n\nNext month we shift focus to early-bird ticket conversion and the first creator collaboration.', focus_label:'Trust: proof of vendor & artist commitments', focus_notes:'Ticket buyers are asking whether the lineup is locked. This month\u2019s content leans into confirmed bookings and behind-the-scenes prep to remove that doubt before the early-bird push.' },
+        { id:'c2', slug:'harborline', name:'Harborline Café', access_code:'harbor7', project_title:'Harborline — Local Brand Refresh', project_started:'Engagement started 3 Mar 2026 · 3-month sprint', project_subtitle:'Specialty coffee & brunch · Fremantle', pm_name:'Michael', status_badge:'Active', setup_badge:'Onboarding', retainer_badge:'Sprint · Mo. 2', last_updated:'27 May 2026', package_name:'Local Essentials', package_sub:'Lite content + Google presence', cal_label:'May ' + Y, cal_year:Y, cal_month:M, recap_month:'May ' + Y + ' Recap', recap_body:'Refreshed the menu photography and launched the weekly specials format.\n\nGoogle Business profile is now fully optimised with weekly posts.', focus_label:'Visibility: local brunch search terms', focus_notes:'Near-zero presence on \u201cbrunch near me\u201d searches. Focus is GBP cadence and a blog post built around the new menu, both targeting that search intent.' }
       ],
       quotas: [
         { id:'q1', client_id:'c1', label:'Static Posts', used:8, total:12, sort:0 },
@@ -692,15 +700,22 @@
         { id:'dl3', client_id:'c1', decision_date:'12 May', body:'Moved cosplay contest reveal to early June.', sort:2 },
         { id:'dl4', client_id:'c2', decision_date:'20 May', body:'Adopted the weekly-specials post format.', sort:0 }
       ],
+      gaps: [
+        { id:'g1', client_id:'c1', gap:'No proof bookings are locked', type:'trust', status:'active', notes:'This month\u2019s focus', sort:0 },
+        { id:'g2', client_id:'c1', gap:'Low visibility on \u201ccosplay contest brisbane\u201d', type:'visibility', status:'open', notes:'Queued for next month', sort:1 },
+        { id:'g3', client_id:'c1', gap:'No clear early-bird CTA in bio/posts', type:'conversion', status:'open', notes:'', sort:2 },
+        { id:'g4', client_id:'c2', gap:'No presence on \u201cbrunch near me\u201d searches', type:'visibility', status:'active', notes:'This month\u2019s focus', sort:0 },
+        { id:'g5', client_id:'c2', gap:'Zero Google reviews', type:'trust', status:'open', notes:'', sort:1 }
+      ],
       posts: [
-        { id:'p1', client_id:'c1', post_date:iso(3),  channel:'Static · IG', title:'Countdown: 90 days to CrownCon', content_url:'#', status:'published', in_pipeline:false },
-        { id:'p2', client_id:'c1', post_date:iso(5),  channel:'Reel · IG',   title:'Artist reveal — headliner teaser', content_url:'#', status:'published', in_pipeline:false },
-        { id:'p3', client_id:'c1', post_date:iso(10), channel:'Static · IG', title:'Ticket tiers explained — carousel', content_url:'#', status:'approval', in_pipeline:true },
-        { id:'p4', client_id:'c1', post_date:iso(13), channel:'Reel · IG',   title:'Cosplay contest announcement', content_url:'#', status:'approval', in_pipeline:true },
-        { id:'p5', client_id:'c1', post_date:iso(17), channel:'Static · IG', title:'Meet the panel hosts', content_url:'#', status:'approval', in_pipeline:true },
-        { id:'p6', client_id:'c1', post_date:iso(20), channel:'Story · IG',  title:'Early-bird tickets — 48hr flash', content_url:'', status:'scheduled', in_pipeline:true },
-        { id:'p7', client_id:'c2', post_date:iso(8),  channel:'Static · IG', title:'May specials — flat white week', content_url:'', status:'approval', in_pipeline:true },
-        { id:'p8', client_id:'c2', post_date:iso(15), channel:'GBP',         title:'Weekly update: new brunch hours', content_url:'', status:'scheduled', in_pipeline:true }
+        { id:'p1', client_id:'c1', post_date:iso(3),  channel:'Static · IG', title:'Countdown: 90 days to CrownCon', content_url:'#', status:'published', in_pipeline:false, pillar:'visibility' },
+        { id:'p2', client_id:'c1', post_date:iso(5),  channel:'Reel · IG',   title:'Artist reveal — headliner teaser', content_url:'#', status:'published', in_pipeline:false, pillar:'trust' },
+        { id:'p3', client_id:'c1', post_date:iso(10), channel:'Static · IG', title:'Ticket tiers explained — carousel', content_url:'#', status:'approval', in_pipeline:true, pillar:'conversion' },
+        { id:'p4', client_id:'c1', post_date:iso(13), channel:'Reel · IG',   title:'Cosplay contest announcement', content_url:'#', status:'approval', in_pipeline:true, pillar:'visibility' },
+        { id:'p5', client_id:'c1', post_date:iso(17), channel:'Static · IG', title:'Meet the panel hosts', content_url:'#', status:'approval', in_pipeline:true, pillar:'trust' },
+        { id:'p6', client_id:'c1', post_date:iso(20), channel:'Story · IG',  title:'Early-bird tickets — 48hr flash', content_url:'', status:'scheduled', in_pipeline:true, pillar:'conversion' },
+        { id:'p7', client_id:'c2', post_date:iso(8),  channel:'Static · IG', title:'May specials — flat white week', content_url:'', status:'approval', in_pipeline:true, pillar:'' },
+        { id:'p8', client_id:'c2', post_date:iso(15), channel:'GBP',         title:'Weekly update: new brunch hours', content_url:'', status:'scheduled', in_pipeline:true, pillar:'visibility' }
       ]
     };
   })();
