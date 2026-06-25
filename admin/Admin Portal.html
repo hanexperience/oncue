@@ -236,6 +236,35 @@
     .mix-label { font-family: 'JetBrains Mono', monospace; font-size: 8.5px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-top: 2px; }
     .cal-sec { margin-top: 28px; }
     .cal-sec-title { font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 12px; }
+    .cal-cell[data-date] { cursor: pointer; transition: background .12s; }
+    .cal-cell[data-date]:hover { background: var(--surface); }
+    .cal-cell-hint {
+      position: absolute; top: 6px; right: 7px; width: 16px; height: 16px; border-radius: 4px;
+      background: var(--ink); color: var(--hi); font-size: 12px; line-height: 16px; text-align: center;
+      opacity: 0; transition: opacity .12s; pointer-events: none;
+    }
+    .cal-cell[data-date]:hover .cal-cell-hint { opacity: 1; }
+    .cal-post { cursor: pointer; }
+    .cal-post:hover { filter: brightness(0.96); }
+
+    /* post add/edit modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(23,20,14,.45); z-index: 300;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-box {
+      width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; background: var(--surface-hi);
+      border: 1px solid var(--line-2); border-radius: var(--r); box-shadow: var(--shadow); padding: 26px 26px 0;
+    }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .modal-head h3 { font-family: 'Archivo Narrow', sans-serif; font-weight: 800; font-size: 19px; color: var(--ink); text-transform: uppercase; letter-spacing: -.2px; }
+    .modal-x { background: none; border: none; font-size: 22px; line-height: 1; color: var(--muted); cursor: pointer; padding: 0 4px; }
+    .modal-x:hover { color: var(--ink); }
+    .modal-body .form-group { margin-bottom: 16px; }
+    .modal-foot {
+      display: flex; align-items: center; gap: 10px; margin: 22px -26px 0; padding: 16px 26px;
+      border-top: 1px solid var(--line); position: sticky; bottom: 0; background: var(--surface-hi);
+    }
 
     /* toast */
     .toast {
@@ -310,6 +339,37 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="post-modal-overlay" style="display:none;" onclick="if(event.target===this) closePostModal()">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="post-modal-title">New Post</h3>
+      <button class="modal-x" onclick="closePostModal()" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="pm-date"></div>
+        <div class="form-group"><label class="form-label">Channel</label><input type="text" class="form-input" id="pm-channel" placeholder="Static · IG"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="pm-title" placeholder="Working title"></div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Pillar</label><select class="form-input" id="pm-pillar"></select></div>
+        <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="pm-status"></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Content URL</label><input type="text" class="form-input" id="pm-url" placeholder="https://…"></div>
+      <div class="form-group"><label class="form-label">Teleprompter / Script</label><textarea class="form-textarea" id="pm-script" style="min-height:90px;"></textarea></div>
+      <div class="form-group" style="display:flex;align-items:center;gap:9px;flex-direction:row;">
+        <input type="checkbox" id="pm-pipeline" style="margin:0;"><label class="form-label" style="margin:0;text-transform:none;letter-spacing:0;font-size:13px;">Show in client pipeline / approvals</label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn danger" id="pm-delete-btn" onclick="deletePostModalForm()">Delete</button>
+      <div style="flex:1"></div>
+      <button class="btn" onclick="closePostModal()">Cancel</button>
+      <button class="btn solid" onclick="savePostModalForm()">Save</button>
+    </div>
+  </div>
+</div>
 
 <script>
   const SUPABASE_URL = 'https://rrxveifshucpinajtkgf.supabase.co';
@@ -582,14 +642,15 @@
       const weekday = new Date(year, month - 1, d).getDay();
       const isWeekend = weekday === 0 || weekday === 6;
       const dayPosts = byDay[d] || [];
+      const dateStr = year + '-' + String(month).padStart(2,'0') + '-' + String(d).padStart(2,'0');
       const emptyCls = (isWeekend && dayPosts.length === 0) ? ' empty' : '';
       const todayCls = (isThisMonth && now.getDate() === d) ? ' today' : '';
-      g += '<div class="cal-cell' + emptyCls + todayCls + '"><div class="cal-date">' + d + '</div>';
+      g += '<div class="cal-cell' + emptyCls + todayCls + '" data-date="' + dateStr + '" onclick="openPostModal(null,\'' + dateStr + '\')">';
+      g += '<div class="cal-cell-hint">+</div>';
+      g += '<div class="cal-date">' + d + '</div>';
       dayPosts.forEach(function (p) {
-        const tag = p.content_url ? 'a' : 'span';
-        const href = p.content_url ? ' href="' + esc(p.content_url) + '" target="_blank" rel="noopener"' : '';
-        g += '<' + tag + ' class="cal-post s-' + esc(p.status) + '"' + href + '>';
-        g += '<span class="ct">' + esc(p.channel) + '</span>' + esc(p.title) + '</' + tag + '>';
+        g += '<div class="cal-post s-' + esc(p.status) + '" onclick="event.stopPropagation(); openPostModal(\'' + esc(p.id) + '\')">';
+        g += '<span class="ct">' + esc(p.channel) + '</span>' + esc(p.title) + '</div>';
       });
       g += '</div>';
     }
@@ -671,6 +732,68 @@
     adminCalViewY = clientCache.cal_year; adminCalViewM = clientCache.cal_month;
     const root = document.getElementById('admin-cal-root');
     if (root) root.innerHTML = renderAdminCalendarHTML();
+  }
+
+  // ── Post add/edit modal (opened from a calendar cell or post chip) ──
+  let pmEditingId = null;
+  function fillSelect(id, opts, val) {
+    const el = document.getElementById(id);
+    el.innerHTML = opts.map(function (o) { return '<option value="' + esc(o[0]) + '">' + esc(o[1]) + '</option>'; }).join('');
+    el.value = val || '';
+  }
+  function openPostModal(postId, prefillDate) {
+    pmEditingId = postId || null;
+    const post = postId ? adminCalPosts.find(function (p) { return String(p.id) === String(postId); }) : null;
+    document.getElementById('post-modal-title').textContent = post ? 'Edit Post' : 'New Post';
+    document.getElementById('pm-date').value = post ? post.post_date : (prefillDate || '');
+    document.getElementById('pm-channel').value = post ? (post.channel || '') : '';
+    document.getElementById('pm-title').value = post ? (post.title || '') : '';
+    fillSelect('pm-pillar', SELECT_OPTS.pillar, post ? post.pillar : '');
+    fillSelect('pm-status', SELECT_OPTS.post_status, post ? post.status : 'draft');
+    document.getElementById('pm-url').value = post ? (post.content_url || '') : '';
+    document.getElementById('pm-script').value = post ? (post.script || '') : '';
+    document.getElementById('pm-pipeline').checked = post ? !!post.in_pipeline : true;
+    document.getElementById('pm-delete-btn').style.display = post ? 'inline-flex' : 'none';
+    document.getElementById('post-modal-overlay').style.display = 'flex';
+  }
+  function closePostModal() {
+    document.getElementById('post-modal-overlay').style.display = 'none';
+    pmEditingId = null;
+  }
+  async function savePostModalForm() {
+    const date = document.getElementById('pm-date').value;
+    if (!date) { toast('Pick a date first', true); return; }
+    const payload = {
+      post_date: date,
+      channel: document.getElementById('pm-channel').value,
+      title: document.getElementById('pm-title').value,
+      pillar: document.getElementById('pm-pillar').value || null,
+      status: document.getElementById('pm-status').value,
+      content_url: document.getElementById('pm-url').value,
+      script: document.getElementById('pm-script').value,
+      in_pipeline: document.getElementById('pm-pipeline').checked
+    };
+    setStatus('saving');
+    try {
+      if (pmEditingId) await db('posts', 'PATCH', payload, '?id=eq.' + pmEditingId);
+      else { payload.client_id = currentClientId; await db('posts', 'POST', payload); }
+      setStatus('saved');
+      closePostModal();
+      toast('Post saved');
+      await renderAdminCalendar();
+    } catch (err) { setStatus('error'); toast('Save failed: ' + err.message, true); }
+  }
+  async function deletePostModalForm() {
+    if (!pmEditingId) return;
+    if (!confirm('Delete this post?')) return;
+    setStatus('saving');
+    try {
+      await db('posts', 'DELETE', null, '?id=eq.' + pmEditingId);
+      setStatus('saved');
+      closePostModal();
+      toast('Post deleted');
+      await renderAdminCalendar();
+    } catch (err) { setStatus('error'); toast('Delete failed', true); }
   }
 
   // ── Field autosave (debounced) ──
