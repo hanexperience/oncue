@@ -70,6 +70,13 @@
 
   <!-- Suburb landing pages -->
   <url>
+    <loc>https://beetsandco.com.au/marketing-agency-south-east-melbourne.html</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <url>
     <loc>https://beetsandco.com.au/marketing-agency-frankston.html</loc>
     <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
