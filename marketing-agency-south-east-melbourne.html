@@ -85,61 +85,7 @@
 <link rel="shortcut icon" href="images/favicon/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css"/>
-<style>
-  .page-hero{background:var(--green);color:var(--on-green);padding:90px 0 72px}
-  .page-wrap{max-width:780px;margin:0 auto;padding:0 28px}
-  .page-hero .eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--sand);margin-bottom:22px;display:flex;align-items:center;gap:10px}
-  .page-hero .eyebrow::before{content:"";width:18px;height:1.5px;background:var(--sand);display:inline-block}
-  .page-hero h1{font-size:clamp(42px,6.4vw,80px);line-height:.98;letter-spacing:-.03em;margin:0}
-  .page-hero h1 .serif-em{color:var(--sand)}
-  .page-hero .deck{font-size:20px;color:var(--on-green-soft);margin-top:26px;line-height:1.55;max-width:58ch}
-  .page-hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px}
-  .page-body{max-width:780px;margin:0 auto;padding:64px 28px 24px}
-  .page-body h2{font-size:clamp(28px,3.8vw,44px);line-height:1.02;letter-spacing:-.025em;margin:56px 0 18px}
-  .page-body h2 .serif-em{color:var(--green)}
-  .page-body h3{font-size:22px;letter-spacing:-.01em;margin:36px 0 12px;font-family:var(--font-display);font-weight:700}
-  .page-body p{font-size:18px;line-height:1.7;color:var(--ink-2);margin-bottom:22px}
-  .page-body p b,.page-body strong{color:var(--ink);font-weight:650}
-  .page-body ul{font-size:17px;line-height:1.7;padding-left:24px;margin:0 0 22px}
-  .page-body li{margin-bottom:10px;color:var(--ink-2)}
-  .callout{background:var(--sand-soft);border-radius:var(--radius-lg);padding:30px 34px;margin:40px 0;border-left:4px solid var(--accent)}
-  .callout p{font-family:var(--font-serif);font-style:italic;font-size:22px;line-height:1.45;color:var(--ink);margin:0}
-  .callout p .hi{color:var(--accent);font-style:normal;font-family:var(--font-display);font-weight:700}
-  .fact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:40px 0}
-  .fact{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px 20px}
-  .fact strong{display:block;font-family:var(--font-display);font-weight:800;font-size:40px;color:var(--accent);margin-bottom:8px;letter-spacing:-.02em}
-  .fact span{font-size:13px;color:var(--ink-2);line-height:1.4}
-  .services-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:36px 0}
-  .service-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px 26px}
-  .service-card .sc-icon{width:42px;height:42px;border-radius:10px;background:var(--green-tint);color:var(--green);display:grid;place-items:center;margin-bottom:16px}
-  .service-card h4{font-size:18px;letter-spacing:-.01em;margin:0 0 10px;font-family:var(--font-display);font-weight:700}
-  .service-card p{font-size:15px;color:var(--ink-2);line-height:1.5;margin:0}
-  .suburb-list{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 36px}
-  .suburb-chip{font-size:13px;font-weight:600;padding:7px 14px;border-radius:var(--pill);background:var(--paper);border:1px solid var(--line);color:var(--ink-2)}
-  .page-cta{margin:64px auto 0;max-width:780px;padding:0 28px}
-  .page-cta .inner{background:var(--green);color:var(--on-green);border-radius:var(--radius-xl);padding:52px 48px}
-  .page-cta h2{font-size:clamp(30px,4.2vw,52px);line-height:1;letter-spacing:-.03em;margin:0}
-  .page-cta h2 .serif-em{color:var(--sand)}
-  .page-cta p{font-size:17px;color:var(--on-green-soft);margin:18px 0 30px;max-width:52ch;line-height:1.55}
-  .related{max-width:780px;margin:0 auto;padding:72px 28px 0}
-  .related h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.16em;color:var(--ink-soft);font-weight:600;margin-bottom:22px}
-  .related-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .related-link{border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;background:var(--paper);transition:transform .25s var(--ease),box-shadow .25s var(--ease);display:block}
-  .related-link:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
-  .related-link .cat{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:11px}
-  .related-link h4{font-size:18px;line-height:1.15;letter-spacing:-.01em;margin:0}
-  .page-foot-pad{height:80px}
-  @media(max-width:760px){
-    .fact-grid{grid-template-columns:1fr 1fr}
-    .services-grid{grid-template-columns:1fr}
-    .related-grid{grid-template-columns:1fr}
-    .page-cta .inner{padding:34px 26px}
-    .page-hero-actions .btn-ghost{display:none}
-  }
-  @media(max-width:500px){.fact-grid{grid-template-columns:1fr 1fr}}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-29SKC7VN4C"></script>
 <script>
@@ -148,208 +94,447 @@
   gtag('js', new Date());
   gtag('config', 'G-29SKC7VN4C');
 </script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#FBFBF9;color:#1C1B17;font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-size:17px;line-height:1.6;overflow-x:hidden}
+img{max-width:100%;display:block}
+video{display:block}
+a{color:inherit;text-decoration:none}
+p{margin:0}
+h1,h2,h3,h4{margin:0}
+::selection{background:#C24B33;color:#fff}
+.bc-nav-link{transition:color .2s}.bc-nav-link:hover{color:#1C1B17}
+.bc-footer-link{transition:color .2s}.bc-footer-link:hover{color:#E6D9C2}
+.bc-cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(18,53,40,.28)}
+.bc-svc-row{transition:background .18s}.bc-svc-row:hover{background:rgba(28,27,23,.03)}
+.bc-related-card{transition:transform .2s,box-shadow .2s}.bc-related-card:hover{transform:translateY(-3px);box-shadow:0 6px 24px rgba(28,27,23,.1)}
+.bc-play-wrap:hover .bc-play-btn{background:rgba(18,53,40,.52) !important}
+.bc-play-wrap:hover .bc-play-circle{transform:scale(1.08)}
+@keyframes bc-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:900px){
+  .bc-hero-grid{grid-template-columns:1fr !important}
+  .bc-hero-video{display:none !important}
+  .bc-two-col{grid-template-columns:1fr !important}
+  .bc-three-col{grid-template-columns:1fr 1fr !important}
+  .bc-four-col{grid-template-columns:1fr 1fr !important}
+  .bc-nav-links{display:none !important}
+  .bc-screens-grid{grid-template-columns:1fr 1fr !important}
+  .bc-video-grid{grid-template-columns:1fr !important}
+}
+@media(max-width:600px){
+  .bc-three-col{grid-template-columns:1fr !important}
+  .bc-four-col{grid-template-columns:1fr !important}
+  .bc-screens-grid{grid-template-columns:1fr !important}
+}
+</style>
 </head>
 <body>
 
 <!-- NAV -->
-<header class="nav" id="nav">
-  <div class="container row">
-    <a href="index.html#top" class="brand" aria-label="Beets &amp; Co home">
-      <span class="wm">Beets <span class="amp">&amp;</span> Co</span>
-    </a>
-    <nav class="nav-links" aria-label="Primary">
-      <a href="index.html#model">The model</a>
-      <a href="index.html#services">What I do</a>
-      <a href="index.html#crowncon">Work</a>
-      <a href="index.html#about">About Michael</a>
-      <a href="index.html#journal">Journal</a>
+<header style="position:sticky;top:0;z-index:90;background:rgba(251,251,249,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(28,27,23,.10)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <a href="index.html" style="font-family:'Archivo';font-weight:800;font-size:21px;letter-spacing:-.03em;display:flex;align-items:center;gap:1px">Beets <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33;padding:0 3px">&amp;</span> Co</a>
+    <nav class="bc-nav-links" style="display:flex;align-items:center;gap:28px">
+      <a href="index.html#services" class="bc-nav-link" style="font-size:14px;font-weight:600;color:rgba(28,27,23,.6)">Services</a>
+      <a href="index.html#crowncon" class="bc-nav-link" style="font-size:14px;font-weight:600;color:rgba(28,27,23,.6)">Work</a>
+      <a href="index.html#about" class="bc-nav-link" style="font-size:14px;font-weight:600;color:rgba(28,27,23,.6)">About</a>
+      <a href="index.html#journal" class="bc-nav-link" style="font-size:14px;font-weight:600;color:rgba(28,27,23,.6)">Journal</a>
     </nav>
-    <div class="nav-cta">
-      <a href="index.html#apply" class="btn btn-primary">Get in touch
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
-    </div>
+    <a href="index.html#apply" style="font-family:'Archivo';font-weight:700;font-size:14.5px;background:#1A4D3C;color:#F4F1E8;border-radius:999px;padding:11px 22px;display:inline-flex;align-items:center;gap:8px">Get in touch <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   </div>
 </header>
 
 <!-- HERO -->
-<section class="page-hero">
-  <div class="page-wrap">
-    <div class="eyebrow">Marketing agency · South East Melbourne</div>
-    <h1>South East Melbourne's<br/><span class="serif-em">marketing agency.</span></h1>
-    <p class="deck">A branding, website and SEO studio built for trade businesses across South East Melbourne — Bayside, Frankston, Mordialloc, Chelsea, Edithvale and beyond. Not a generalist agency. Just trades.</p>
-    <div class="page-hero-actions">
-      <a href="index.html#apply" class="btn btn-light">Get in touch
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a href="#what-we-do" class="btn btn-ghost on-green">See what's included</a>
+<section style="background:#1A4D3C;color:#F4F1E8;padding:96px 0 0;overflow:hidden">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div class="bc-hero-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+      <div>
+        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.55)"><span style="color:#E6D9C2">▸</span> &nbsp;Marketing agency · South East Melbourne</span>
+        <h1 style="font-family:'Archivo';font-weight:800;font-size:clamp(44px,6.4vw,84px);line-height:.92;letter-spacing:-.045em;color:#F4F1E8;margin:22px 0 28px">South East<br>Melbourne's<br><span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">marketing agency.</span></h1>
+        <p style="max-width:52ch;font-size:18px;line-height:1.62;color:rgba(244,241,232,.72);margin-bottom:40px">A branding, website and SEO studio built for trade businesses across South East Melbourne — Bayside, Frankston, Mordialloc, Chelsea and beyond. Not a generalist agency. Just trades.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="index.html#apply" style="font-family:'Archivo';font-weight:700;font-size:15.5px;background:#F4F1E8;color:#123528;border-radius:999px;padding:14px 26px;display:inline-flex;align-items:center;gap:9px;transition:transform .2s,box-shadow .2s" class="bc-cta-btn">Get in touch <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a href="#what-we-do" style="font-family:'Archivo';font-weight:700;font-size:15.5px;background:transparent;color:#F4F1E8;border:1.5px solid rgba(244,241,232,.28);border-radius:999px;padding:14px 26px">See what's included</a>
+        </div>
+        <!-- Trust strip -->
+        <div style="display:flex;align-items:center;gap:24px;margin-top:44px;padding-top:36px;border-top:1px solid rgba(244,241,232,.12);flex-wrap:wrap">
+          <div style="text-align:left"><div style="font-family:'Archivo';font-weight:800;font-size:28px;letter-spacing:-.04em;color:#E6D9C2;line-height:1">Fixed</div><div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,241,232,.5);margin-top:4px">pricing always</div></div>
+          <div style="width:1px;height:36px;background:rgba(244,241,232,.16)"></div>
+          <div style="text-align:left"><div style="font-family:'Archivo';font-weight:800;font-size:28px;letter-spacing:-.04em;color:#E6D9C2;line-height:1">2–6 wk</div><div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,241,232,.5);margin-top:4px">brand to live</div></div>
+          <div style="width:1px;height:36px;background:rgba(244,241,232,.16)"></div>
+          <div style="text-align:left"><div style="font-family:'Archivo';font-weight:800;font-size:28px;letter-spacing:-.04em;color:#E6D9C2;line-height:1">SE Melb</div><div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,241,232,.5);margin-top:4px">based &amp; focused</div></div>
+        </div>
+      </div>
+      <!-- Hero video -->
+      <div class="bc-hero-video" style="position:relative;border-radius:20px 20px 0 0;overflow:hidden;height:560px;margin-bottom:0">
+        <video autoplay muted loop playsinline poster="images/exterior-chairs-960.webp" style="width:100%;height:100%;object-fit:cover;display:block">
+          <source src="images/intro1.mp4" type="video/mp4">
+        </video>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to bottom,transparent,#1A4D3C);pointer-events:none"></div>
+        <div style="position:absolute;top:18px;right:18px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:rgba(18,53,40,.8);color:#E6D9C2;padding:6px 12px;border-radius:999px">Crowncon · Brand film</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- BODY -->
-<div class="page-body">
-
-  <p>If you're a trade business in <strong>South East Melbourne</strong> searching for a marketing agency, the problem is familiar — generalist agencies charge retainers, produce reports, and don't actually understand how a Bayside plumber, a Frankston builder or a Mordialloc electrician wins work.</p>
-
-  <p>Beets & Co is different. I'm based in South East Melbourne (Bayside) and I work specifically with trade businesses across the south-east corridor. Every decision — the brand, the website, the local SEO — is built around one outcome: <strong>getting your phone to ring with better-quality jobs.</strong></p>
-
-  <div class="callout">
-    <p>Most South East Melbourne trade businesses are competing against websites built five years ago with no local SEO. <span class="hi">The gap is yours to take</span> — if your site is faster, clearer and ranking in the suburbs you actually work in.</p>
-  </div>
-
-  <div class="fact-grid">
-    <div class="fact"><strong>SE Melb</strong><span>One of Melbourne's busiest trade corridors — residential growth, renovations and commercial fit-outs driving consistent demand</span></div>
-    <div class="fact"><strong>2–6 wk</strong><span>typical time from first call to a live brand and website</span></div>
-    <div class="fact"><strong>Fixed</strong><span>pricing on every project — no timesheets, no surprise invoices</span></div>
-  </div>
-
-  <h2 id="what-we-do"><span class="serif-em">What South East Melbourne trade businesses actually need</span></h2>
-
-  <p>Most trades in South East Melbourne are losing jobs before they even know about them — because their website doesn't rank in the right suburbs, their brand doesn't build trust on first sight, and there's no system collecting reviews. Here's what fixes that.</p>
-
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="sc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
-      </div>
-      <h4>Brand &amp; Identity</h4>
-      <p>A logo, a colour system, a clear way of talking about what you do. South East Melbourne customers decide in seconds — a professional brand is how you win that first impression.</p>
+<!-- MARQUEE -->
+<div style="background:#16140E;padding:18px 0;overflow:hidden;border-top:1px solid rgba(255,255,255,.06)">
+  <div class="bc-marquee-track" style="display:flex;gap:0;animation:bc-marquee 30s linear infinite;width:max-content">
+    <div style="display:flex;gap:0;flex-shrink:0">
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Brand Identity</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Website Design</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Local SEO</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Video Production</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">South East Melbourne</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Content Strategy</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Trade Businesses</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Fixed Pricing</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
     </div>
-    <div class="service-card">
-      <div class="sc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg>
-      </div>
-      <h4>Website Design &amp; SEO</h4>
-      <p>Fast, mobile-first websites built to rank across South East Melbourne suburbs and convert visitors into callers. Suburb pages, structured data, and Google Business Profile — all included.</p>
-    </div>
-    <div class="service-card">
-      <div class="sc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 18 0A9 9 0 0 0 3 12z"/><path d="M3 12h18M12 3c-2.5 2.5-4 6-4 9s1.5 6.5 4 9M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9"/></svg>
-      </div>
-      <h4>Local SEO for South East Melbourne</h4>
-      <p>Rank in the suburbs you work in. Google Business Profile management, review strategy, suburb-specific pages — the full local SEO stack, built properly for the South East Melbourne corridor.</p>
-    </div>
-    <div class="service-card">
-      <div class="sc-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 10l4.553-2.069A1 1 0 0 1 21 8.882v6.236a1 1 0 0 1-1.447.894L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg>
-      </div>
-      <h4>Content &amp; Reviews</h4>
-      <p>Review strategy, suburb-specific copy, and content that tells Google you serve South East Melbourne specifically. Content that converts — not just fills a page.</p>
+    <div style="display:flex;gap:0;flex-shrink:0" aria-hidden="true">
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Brand Identity</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Website Design</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Local SEO</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Video Production</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">South East Melbourne</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Content Strategy</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Trade Businesses</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px;white-space:nowrap">Fixed Pricing</span><span style="color:#C24B33;font-size:14px;line-height:1;padding:0 4px">·</span>
     </div>
   </div>
-
-  <h2>The <span class="serif-em">South East Melbourne</span> local search opportunity</h2>
-
-  <p>South East Melbourne stretches from Cheltenham and Bayside down through Mordialloc, Chelsea, Edithvale, Aspendale and Frankston — one of Melbourne's busiest residential and trade corridors. Renovation demand, new builds and commercial development mean consistent work for the businesses that show up when someone searches.</p>
-
-  <p>Here are the suburbs I help trade businesses rank in across South East Melbourne:</p>
-
-  <div class="suburb-list">
-    <span class="suburb-chip">Bayside</span>
-    <span class="suburb-chip">Cheltenham</span>
-    <span class="suburb-chip">Mordialloc</span>
-    <span class="suburb-chip">Chelsea</span>
-    <span class="suburb-chip">Edithvale</span>
-    <span class="suburb-chip">Aspendale</span>
-    <span class="suburb-chip">Frankston</span>
-    <span class="suburb-chip">Carrum Downs</span>
-    <span class="suburb-chip">Seaford</span>
-    <span class="suburb-chip">Mentone</span>
-    <span class="suburb-chip">Parkdale</span>
-    <span class="suburb-chip">Bonbeach</span>
-  </div>
-
-  <h2>Common questions about <span class="serif-em">marketing in South East Melbourne</span></h2>
-
-  <div style="margin-top:8px">
-    <h3>Is there a marketing agency in South East Melbourne?</h3>
-    <p>Yes — Beets & Co is a marketing agency based in South East Melbourne (Bayside), specialising in trade businesses. Founded by Michael Beets, an award-winning creative director with a decade of senior work for clients including Volvo, the Australian Defence Force and Nando's.</p>
-
-    <h3>How much does a South East Melbourne marketing agency cost?</h3>
-    <p>At Beets & Co, projects start from $3,500 AUD. A full brand and website package sits between $7,000–$20,000 depending on scope. All pricing is fixed upfront — no timesheets, no monthly retainer lock-in.</p>
-
-    <h3>How long before my South East Melbourne trade business ranks on Google?</h3>
-    <p>Local suburb rankings typically start moving within 60–90 days of a properly built site going live. South East Melbourne has moderate competition — a well-structured site with the right on-page signals, a strong Google Business Profile and consistent reviews will outrank most competitors within a few months.</p>
-
-    <h3>Do you work with trade businesses across South East Melbourne specifically?</h3>
-    <p>Yes. I work with plumbers, electricians, builders, landscapers, HVAC businesses and similar across the South East Melbourne corridor — from Cheltenham and Bayside down through Mordialloc, Chelsea, Frankston and beyond. Not a generalist agency. Every strategy is built around how South East Melbourne customers search for and choose a tradie.</p>
-  </div>
-
 </div>
 
+<!-- INTRO PROSE -->
+<section style="padding:96px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div class="bc-two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
+      <div>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)"><span style="color:#C24B33">▸</span> &nbsp;The problem</span>
+        <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(30px,3.6vw,52px);line-height:.98;letter-spacing:-.04em;margin:20px 0 28px">Generalist agencies. <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">Trade-sized results.</span></h2>
+        <p style="font-size:18px;line-height:1.72;color:#46443c;margin-bottom:20px">If you're a trade business in <strong style="color:#1C1B17">South East Melbourne</strong> searching for a marketing agency, the problem is familiar — generalist agencies charge retainers, produce reports, and don't actually understand how a Bayside plumber, a Frankston builder or a Mordialloc electrician wins work.</p>
+        <p style="font-size:18px;line-height:1.72;color:#46443c">Beets & Co is different. I'm based in South East Melbourne (Bayside) and I work specifically with trade businesses across the south-east corridor. Every decision — the brand, the website, the local SEO — is built around one outcome: <strong style="color:#1C1B17">getting your phone to ring with better-quality jobs.</strong></p>
+      </div>
+      <div>
+        <!-- Callout -->
+        <div style="background:#F0E9DB;border-left:4px solid #C24B33;border-radius:0 14px 14px 0;padding:30px 32px;margin-bottom:28px">
+          <p style="font-family:'Newsreader',serif;font-style:italic;font-size:21px;line-height:1.48;color:#1C1B17">Most South East Melbourne trade businesses are competing against websites built five years ago with no local SEO. <span style="font-family:'Archivo',sans-serif;font-style:normal;font-weight:800;color:#C24B33">The gap is yours to take</span> — if your site is faster, clearer and ranking in the suburbs you work in.</p>
+        </div>
+        <!-- Stat strip -->
+        <div class="bc-three-col" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(28,27,23,.12);border-radius:14px;overflow:hidden;background:#fff">
+          <div style="padding:22px 20px;border-right:1px solid rgba(28,27,23,.1)">
+            <div style="font-family:'Archivo';font-weight:800;font-size:28px;letter-spacing:-.04em;color:#C24B33;line-height:1;margin-bottom:6px">99%</div>
+            <div style="font-size:13px;line-height:1.4;color:#46443c">Site health — Crowncon after rebuild</div>
+          </div>
+          <div style="padding:22px 20px;border-right:1px solid rgba(28,27,23,.1)">
+            <div style="font-family:'Archivo';font-weight:800;font-size:28px;letter-spacing:-.04em;color:#C24B33;line-height:1;margin-bottom:6px">39</div>
+            <div style="font-size:13px;line-height:1.4;color:#46443c">Local keywords tracked from day one</div>
+          </div>
+          <div style="padding:22px 20px">
+            <div style="font-family:'Archivo';font-weight:800;font-size:28px;letter-spacing:-.04em;color:#C24B33;line-height:1;margin-bottom:6px">2–6wk</div>
+            <div style="font-size:13px;line-height:1.4;color:#46443c">From first call to a live brand & site</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY SHOWCASE -->
+<section style="background:#fff;border-top:1px solid rgba(28,27,23,.08);padding:96px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:52px">
+      <div>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)"><span style="color:#C24B33">(01)</span> &nbsp;Featured work</span>
+        <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,48px);line-height:.98;letter-spacing:-.04em;margin:16px 0 0">Here's what this actually <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">looks like.</span></h2>
+      </div>
+      <a href="crowncon/" style="font-family:'Archivo';font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:8px;border-bottom:2px solid #C24B33;padding-bottom:3px;white-space:nowrap">Full case study <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#C24B33" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <!-- Crowncon featured screens -->
+    <div class="bc-screens-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+      <div style="border-radius:14px;overflow:hidden;background:#F0E9DB;aspect-ratio:4/3;box-shadow:0 4px 14px rgba(28,27,23,.07)">
+        <img src="images/crowncon-screen-hero.png" alt="Crowncon website homepage — South East Melbourne builder" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div style="border-radius:14px;overflow:hidden;background:#F0E9DB;aspect-ratio:4/3;box-shadow:0 4px 14px rgba(28,27,23,.07)">
+        <img src="images/crowncon-screen-services.png" alt="Crowncon services page" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div style="border-radius:14px;overflow:hidden;background:#F0E9DB;aspect-ratio:4/3;box-shadow:0 4px 14px rgba(28,27,23,.07)">
+        <img src="images/crowncon-screen-about.png" alt="Crowncon about page" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+    </div>
+    <!-- Result band -->
+    <div class="bc-four-col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(28,27,23,.12);border-radius:14px;overflow:hidden">
+      <div style="padding:24px 22px;border-right:1px solid rgba(28,27,23,.1);background:#FBFBF9">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(28,27,23,.4);margin-bottom:8px">Client</div>
+        <div style="font-family:'Archivo';font-weight:700;font-size:17px;color:#1C1B17">Crowncon</div>
+        <div style="font-size:13px;color:#46443c;margin-top:4px">Custom home builder · Bayside</div>
+      </div>
+      <div style="padding:24px 22px;border-right:1px solid rgba(28,27,23,.1);background:#FBFBF9">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(28,27,23,.4);margin-bottom:8px">Site health</div>
+        <div style="font-family:'Archivo';font-weight:800;font-size:26px;letter-spacing:-.04em;color:#1A4D3C;line-height:1">78→99%</div>
+        <div style="font-size:13px;color:#46443c;margin-top:4px">After full technical audit</div>
+      </div>
+      <div style="padding:24px 22px;border-right:1px solid rgba(28,27,23,.1);background:#FBFBF9">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(28,27,23,.4);margin-bottom:8px">Crawl errors</div>
+        <div style="font-family:'Archivo';font-weight:800;font-size:26px;letter-spacing:-.04em;color:#1A4D3C;line-height:1">24→0</div>
+        <div style="font-size:13px;color:#46443c;margin-top:4px">Eliminated on launch</div>
+      </div>
+      <div style="padding:24px 22px;background:#FBFBF9">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(28,27,23,.4);margin-bottom:8px">AI search health</div>
+        <div style="font-family:'Archivo';font-weight:800;font-size:26px;letter-spacing:-.04em;color:#1A4D3C;line-height:1">100%</div>
+        <div style="font-size:13px;color:#46443c;margin-top:4px">From day one</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO SECTION -->
+<section style="background:#123528;color:#F4F1E8;padding:96px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div class="bc-two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:52px">
+      <div>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.5)"><span style="color:#E6D9C2">▸</span> &nbsp;Video &amp; content</span>
+        <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,48px);line-height:.98;letter-spacing:-.04em;color:#F4F1E8;margin:20px 0 20px">Content that shows the <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">real work.</span></h2>
+        <p style="font-size:17px;line-height:1.7;color:rgba(244,241,232,.65)">Social reels, brand film, interview content — captured on site and cut to move the right person to call. South East Melbourne trade businesses win on trust. Video builds it faster than anything else.</p>
+      </div>
+      <!-- Main video click-to-play -->
+      <div id="semVideoWrap" class="bc-play-wrap" style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:16/9;cursor:pointer;background:rgba(244,241,232,.06)" onclick="toggleSemVideo()">
+        <video id="semVideo" poster="images/crowncon-film-poster.webp" style="width:100%;height:100%;object-fit:cover;display:block" preload="metadata">
+          <source src="images/sample_interview.mp4" type="video/mp4">
+        </video>
+        <div id="semPlayBtn" class="bc-play-btn" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(18,53,40,.3);transition:background .25s">
+          <div class="bc-play-circle" style="width:66px;height:66px;border-radius:50%;background:#F4F1E8;color:#123528;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(18,53,40,.4);transition:transform .25s">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:14px;left:14px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#123528;background:rgba(244,241,232,.92);padding:5px 10px;pointer-events:none">Brand film extract · Crowncon</div>
+      </div>
+    </div>
+    <!-- Vertical video grid -->
+    <div class="bc-three-col" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:9/16;position:relative;cursor:pointer;background:rgba(244,241,232,.06)" onclick="playVertThumb(this)">
+        <video poster="images/mobile_sample.webp" style="width:100%;height:100%;object-fit:cover;display:block" preload="metadata">
+          <source src="images/mobile_sample.mp4" type="video/mp4">
+        </video>
+        <div class="bc-vthumb-overlay" style="position:absolute;inset:0;background:rgba(18,53,40,.3);display:flex;align-items:center;justify-content:center;transition:opacity .2s">
+          <div style="width:42px;height:42px;border-radius:50%;background:rgba(244,241,232,.9);color:#123528;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="margin-left:2px"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div style="position:absolute;bottom:13px;left:13px;right:13px;font-size:12px;font-weight:600;color:#F4F1E8;line-height:1.4;pointer-events:none">Reel · On-site<br><span style="opacity:.7;font-weight:400">45s social cut-down</span></div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:9/16;position:relative;cursor:pointer;background:rgba(244,241,232,.06)" onclick="playVertThumb(this)">
+        <video poster="images/mobile_interview.webp" style="width:100%;height:100%;object-fit:cover;display:block" preload="metadata">
+          <source src="images/mobile_interview.mp4" type="video/mp4">
+        </video>
+        <div class="bc-vthumb-overlay" style="position:absolute;inset:0;background:rgba(18,53,40,.3);display:flex;align-items:center;justify-content:center;transition:opacity .2s">
+          <div style="width:42px;height:42px;border-radius:50%;background:rgba(244,241,232,.9);color:#123528;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="margin-left:2px"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div style="position:absolute;bottom:13px;left:13px;right:13px;font-size:12px;font-weight:600;color:#F4F1E8;line-height:1.4;pointer-events:none">Interview<br><span style="opacity:.7;font-weight:400">Short-form</span></div>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:9/16;position:relative;cursor:pointer;background:rgba(244,241,232,.06)" onclick="playVertThumb(this)">
+        <video poster="images/sample_customer.webp" style="width:100%;height:100%;object-fit:cover;display:block" preload="metadata">
+          <source src="images/sample_customer.mp4" type="video/mp4">
+        </video>
+        <div class="bc-vthumb-overlay" style="position:absolute;inset:0;background:rgba(18,53,40,.3);display:flex;align-items:center;justify-content:center;transition:opacity .2s">
+          <div style="width:42px;height:42px;border-radius:50%;background:rgba(244,241,232,.9);color:#123528;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="margin-left:2px"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div style="position:absolute;bottom:13px;left:13px;right:13px;font-size:12px;font-weight:600;color:#F4F1E8;line-height:1.4;pointer-events:none">Customer story<br><span style="opacity:.7;font-weight:400">Story · 30s</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES INDEX -->
+<section id="what-we-do" style="padding:96px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)"><span style="color:#C24B33">▸</span> &nbsp;What South East Melbourne trade businesses actually need</span>
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,48px);line-height:.98;letter-spacing:-.04em;margin:20px 0 0">One studio. Every <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">touchpoint.</span></h2>
+    <p style="max-width:58ch;font-size:17px;line-height:1.7;color:#46443c;margin:20px 0 48px">Most South East Melbourne trade businesses are losing jobs before they even know about them — because their site doesn't rank, their brand doesn't build trust, and there's no system for reviews. Here's what fixes that.</p>
+    <!-- Numbered service rows -->
+    <div style="border-top:1px solid rgba(28,27,23,.12)">
+      <div class="bc-svc-row" style="display:flex;align-items:start;gap:32px;padding:28px 0;border-bottom:1px solid rgba(28,27,23,.08)">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(28,27,23,.35);width:28px;flex-shrink:0;padding-top:3px">01</span>
+        <div style="flex:1">
+          <h3 style="font-family:'Archivo';font-weight:700;font-size:20px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:8px">Brand &amp; Identity</h3>
+          <p style="font-size:16px;line-height:1.65;color:#46443c;max-width:60ch">A logo, a colour system, a clear way of talking about what you do. South East Melbourne customers decide in seconds — a professional brand is how you win that first impression.</p>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(28,27,23,.3);white-space:nowrap;padding-top:3px">From $3,500</span>
+      </div>
+      <div class="bc-svc-row" style="display:flex;align-items:start;gap:32px;padding:28px 0;border-bottom:1px solid rgba(28,27,23,.08)">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(28,27,23,.35);width:28px;flex-shrink:0;padding-top:3px">02</span>
+        <div style="flex:1">
+          <h3 style="font-family:'Archivo';font-weight:700;font-size:20px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:8px">Website Design &amp; SEO</h3>
+          <p style="font-size:16px;line-height:1.65;color:#46443c;max-width:60ch">Fast, mobile-first websites built to rank across South East Melbourne suburbs and convert visitors into callers. Suburb pages, structured data, and Google Business Profile — all included.</p>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(28,27,23,.3);white-space:nowrap;padding-top:3px">From $4,500</span>
+      </div>
+      <div class="bc-svc-row" style="display:flex;align-items:start;gap:32px;padding:28px 0;border-bottom:1px solid rgba(28,27,23,.08)">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(28,27,23,.35);width:28px;flex-shrink:0;padding-top:3px">03</span>
+        <div style="flex:1">
+          <h3 style="font-family:'Archivo';font-weight:700;font-size:20px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:8px">Local SEO for South East Melbourne</h3>
+          <p style="font-size:16px;line-height:1.65;color:#46443c;max-width:60ch">Rank in the suburbs you work in. Google Business Profile management, review strategy, suburb-specific pages — the full local SEO stack, built properly for the South East Melbourne corridor.</p>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(28,27,23,.3);white-space:nowrap;padding-top:3px">Included in web</span>
+      </div>
+      <div class="bc-svc-row" style="display:flex;align-items:start;gap:32px;padding:28px 0;border-bottom:1px solid rgba(28,27,23,.08)">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(28,27,23,.35);width:28px;flex-shrink:0;padding-top:3px">04</span>
+        <div style="flex:1">
+          <h3 style="font-family:'Archivo';font-weight:700;font-size:20px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:8px">Video &amp; Content</h3>
+          <p style="font-size:16px;line-height:1.65;color:#46443c;max-width:60ch">Brand film, social reels, site BTS and customer interviews — shot on location across South East Melbourne. Content that shows the quality of the work, not just describes it.</p>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(28,27,23,.3);white-space:nowrap;padding-top:3px">From $2,800</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBURB COVERAGE -->
+<section style="background:#F0E9DB;border-top:1px solid rgba(28,27,23,.08);padding:80px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div class="bc-two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
+      <div>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)"><span style="color:#C24B33">▸</span> &nbsp;The South East Melbourne corridor</span>
+        <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(26px,3vw,42px);line-height:1;letter-spacing:-.04em;margin:20px 0 20px">Every suburb you <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">work in.</span></h2>
+        <p style="font-size:17px;line-height:1.72;color:#46443c;margin-bottom:12px">South East Melbourne stretches from Cheltenham and Bayside down through Mordialloc, Chelsea, Edithvale, Aspendale and Frankston — one of Melbourne's busiest residential and trade corridors.</p>
+        <p style="font-size:17px;line-height:1.72;color:#46443c">Every website I build includes suburb-specific pages and local SEO targeting. You show up where your customers are actually searching.</p>
+      </div>
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(28,27,23,.45);margin-bottom:18px">Suburbs covered</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#1A4D3C;color:#F4F1E8">Bayside</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Cheltenham</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Mordialloc</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Chelsea</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Edithvale</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Aspendale</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Frankston</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Carrum Downs</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Seaford</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Mentone</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Parkdale</span>
+          <span style="font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px;background:#fff;border:1px solid rgba(28,27,23,.16);color:#1C1B17">Bonbeach</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="padding:96px 0;border-top:1px solid rgba(28,27,23,.08)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div class="bc-two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
+      <div>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)"><span style="color:#C24B33">▸</span> &nbsp;Common questions</span>
+        <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(26px,3vw,42px);line-height:1;letter-spacing:-.04em;margin:20px 0 0">Questions about <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">marketing in South East Melbourne.</span></h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div style="padding:28px 0;border-bottom:1px solid rgba(28,27,23,.1)">
+          <h3 style="font-family:'Archivo';font-weight:700;font-size:17px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:10px">Is there a marketing agency in South East Melbourne?</h3>
+          <p style="font-size:15.5px;line-height:1.7;color:#46443c">Yes — Beets & Co is a marketing agency based in South East Melbourne (Bayside), specialising in trade businesses. Founded by Michael Beets, an award-winning creative director with a decade of senior work for clients including Volvo, the Australian Defence Force and Nando's.</p>
+        </div>
+        <div style="padding:28px 0;border-bottom:1px solid rgba(28,27,23,.1)">
+          <h3 style="font-family:'Archivo';font-weight:700;font-size:17px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:10px">How much does a South East Melbourne marketing agency cost?</h3>
+          <p style="font-size:15.5px;line-height:1.7;color:#46443c">Projects start from $3,500 AUD. A full brand and website package sits between $7,000–$20,000 depending on scope. All pricing is fixed upfront — no timesheets, no monthly retainer lock-in.</p>
+        </div>
+        <div style="padding:28px 0;border-bottom:1px solid rgba(28,27,23,.1)">
+          <h3 style="font-family:'Archivo';font-weight:700;font-size:17px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:10px">How long before my trade business ranks on Google?</h3>
+          <p style="font-size:15.5px;line-height:1.7;color:#46443c">Local suburb rankings typically start moving within 60–90 days of a properly built site going live. South East Melbourne has moderate competition — a well-structured site with the right on-page signals, a strong Google Business Profile and consistent reviews will outrank most competitors within a few months.</p>
+        </div>
+        <div style="padding:28px 0">
+          <h3 style="font-family:'Archivo';font-weight:700;font-size:17px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:10px">Do you work with trade businesses across South East Melbourne specifically?</h3>
+          <p style="font-size:15.5px;line-height:1.7;color:#46443c">Yes. I work with plumbers, electricians, builders, landscapers, HVAC businesses and similar across the South East Melbourne corridor — from Cheltenham and Bayside down through Mordialloc, Chelsea, Frankston and beyond. Not a generalist agency. Every strategy is built around how South East Melbourne customers search for and choose a tradie.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
-<section class="page-cta">
-  <div class="inner">
-    <span class="label on-green" style="color:var(--sand)"><span style="background:var(--sand)"></span>South East Melbourne's marketing agency for trades</span>
-    <h2 style="margin-top:16px">Let's get your<br/><span class="serif-em">phone ringing.</span></h2>
-    <p>Fixed-price marketing for South East Melbourne tradies and trade businesses. Branding, web design, local SEO and content — done by a senior creative who knows your market.</p>
-    <a href="index.html#apply" class="btn btn-light">Get in touch
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-    </a>
+<section style="background:#123528;color:#F4F1E8;padding:110px 0;text-align:center">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,241,232,.45);display:block;margin-bottom:24px"><span style="color:#E6D9C2">▸</span> &nbsp;South East Melbourne's marketing agency for trades</span>
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(36px,5vw,72px);line-height:.92;letter-spacing:-.045em;color:#F4F1E8;margin-bottom:22px">Let's get your<br><span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">phone ringing.</span></h2>
+    <p style="font-size:18px;line-height:1.6;color:rgba(244,241,232,.65);max-width:46ch;margin:0 auto 44px">Fixed-price marketing for South East Melbourne tradies and trade businesses. Branding, web design, local SEO and content — done by a senior creative who knows your market.</p>
+    <a href="index.html#apply" style="font-family:'Archivo';font-weight:700;font-size:16px;background:#F4F1E8;color:#123528;border-radius:999px;padding:16px 32px;display:inline-flex;align-items:center;gap:10px;transition:transform .2s,box-shadow .2s" class="bc-cta-btn">Get in touch <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   </div>
 </section>
 
 <!-- RELATED -->
-<section class="related">
-  <h3>Keep reading</h3>
-  <div class="related-grid">
-    <a href="marketing-agency-frankston.html" class="related-link">
-      <div class="cat">Local Area</div>
-      <h4>Marketing agency for trade businesses in Frankston</h4>
-    </a>
-    <a href="blog/local-seo-melbourne-trade-businesses.html" class="related-link">
-      <div class="cat">SEO</div>
-      <h4>Local SEO that actually works in Melbourne</h4>
-    </a>
-    <a href="tradie-marketing-agency-melbourne.html" class="related-link">
-      <div class="cat">Marketing</div>
-      <h4>Marketing agency for tradies across Greater Melbourne</h4>
-    </a>
+<section style="padding:72px 0;border-top:1px solid rgba(28,27,23,.08)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.4);margin-bottom:24px">Keep reading</div>
+    <div class="bc-three-col" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <a href="marketing-agency-frankston.html" class="bc-related-card" style="display:block;border:1px solid rgba(28,27,23,.12);border-radius:14px;padding:26px;background:#fff">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">Local area</div>
+        <h4 style="font-family:'Archivo';font-weight:700;font-size:18px;letter-spacing:-.02em;line-height:1.2;color:#1C1B17">Marketing agency for trade businesses in Frankston</h4>
+      </a>
+      <a href="blog/digital-marketing-agency-frankston.html" class="bc-related-card" style="display:block;border:1px solid rgba(28,27,23,.12);border-radius:14px;padding:26px;background:#fff">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">Digital marketing</div>
+        <h4 style="font-family:'Archivo';font-weight:700;font-size:18px;letter-spacing:-.02em;line-height:1.2;color:#1C1B17">What Frankston trade businesses need from a digital marketing agency</h4>
+      </a>
+      <a href="tradie-marketing-agency-melbourne.html" class="bc-related-card" style="display:block;border:1px solid rgba(28,27,23,.12);border-radius:14px;padding:26px;background:#fff">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">Marketing</div>
+        <h4 style="font-family:'Archivo';font-weight:700;font-size:18px;letter-spacing:-.02em;line-height:1.2;color:#1C1B17">Marketing agency for tradies across Greater Melbourne</h4>
+      </a>
+    </div>
   </div>
 </section>
 
-<div class="page-foot-pad"></div>
-
 <!-- FOOTER -->
-<footer>
-  <div class="container">
-    <div class="foot-top">
-      <div class="foot-brand">
-        <a href="index.html#top" class="brand"><span class="wm">Beets <span class="amp" style="color:var(--sand)">&amp;</span> Co</span></a>
-        <p>A founder-led brand, web and story studio in South East Melbourne (Bayside). Built by Michael Beets for local businesses ready to become the obvious choice.</p>
+<footer style="background:#16140E;color:#F4F1E8;padding:56px 0 40px">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div class="bc-two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-bottom:48px">
+      <div>
+        <div style="font-family:'Archivo';font-weight:800;font-size:22px;letter-spacing:-.03em;margin-bottom:16px">Beets <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">&amp;</span> Co</div>
+        <p style="font-size:15px;line-height:1.65;color:rgba(244,241,232,.5);max-width:40ch">A founder-led brand, web and story studio in South East Melbourne (Bayside). Built by Michael Beets for local businesses ready to become the obvious choice.</p>
       </div>
-      <div class="foot-col">
-        <h5>Studio</h5>
-        <a href="index.html#model">The model</a>
-        <a href="index.html#services">What I do</a>
-        <a href="index.html#crowncon">Work</a>
-        <a href="index.html#about">About Michael</a>
-        <a href="index.html#journal">Journal</a>
-      </div>
-      <div class="foot-col">
-        <h5>Get in touch</h5>
-        <a href="index.html#apply">Get in touch</a>
-        <a href="mailto:hello@beetsandco.com.au">hello@beetsandco.com.au</a>
-        <p>South East Melbourne · Bayside, VIC</p>
+      <div style="display:flex;gap:48px;flex-wrap:wrap">
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,241,232,.35);margin-bottom:16px">Studio</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <a href="index.html#services" class="bc-footer-link" style="font-size:15px;color:rgba(244,241,232,.6)">Services</a>
+            <a href="index.html#crowncon" class="bc-footer-link" style="font-size:15px;color:rgba(244,241,232,.6)">Work</a>
+            <a href="index.html#about" class="bc-footer-link" style="font-size:15px;color:rgba(244,241,232,.6)">About Michael</a>
+            <a href="index.html#journal" class="bc-footer-link" style="font-size:15px;color:rgba(244,241,232,.6)">Journal</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,241,232,.35);margin-bottom:16px">Get in touch</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <a href="index.html#apply" class="bc-footer-link" style="font-size:15px;color:rgba(244,241,232,.6)">Start a project</a>
+            <a href="mailto:hello@beetsandco.com.au" class="bc-footer-link" style="font-size:15px;color:rgba(244,241,232,.6)">hello@beetsandco.com.au</a>
+            <a href="https://www.instagram.com/beetsandco" target="_blank" rel="noopener" class="bc-footer-link" style="font-size:15px;color:rgba(244,241,232,.6)">Instagram</a>
+            <a href="https://www.linkedin.com/company/beetsandco" target="_blank" rel="noopener" class="bc-footer-link" style="font-size:15px;color:rgba(244,241,232,.6)">LinkedIn</a>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="foot-bottom">
-      <span>&copy; 2026 Beets &amp; Co &middot; South East Melbourne, VIC, Australia</span>
-      <div class="social">
-        <a href="https://www.instagram.com/beetsandco" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.linkedin.com/company/beetsandco" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="mailto:hello@beetsandco.com.au">Email</a>
-      </div>
+    <div style="border-top:1px solid rgba(244,241,232,.08);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <span style="font-size:13px;color:rgba(244,241,232,.3)">© 2026 Beets &amp; Co · South East Melbourne, VIC, Australia</span>
+      <a href="index.html" class="bc-footer-link" style="font-size:13px;color:rgba(244,241,232,.3)">beetsandco.com.au</a>
     </div>
   </div>
 </footer>
 
 <script>
-  const nav=document.getElementById('nav');
-  window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>40)});
-  document.getElementById('burger').addEventListener('click',function(){this.classList.toggle('open');document.querySelector('.nav-links').classList.toggle('open')});
+function toggleSemVideo() {
+  var video = document.getElementById('semVideo');
+  var btn = document.getElementById('semPlayBtn');
+  if (!video) return;
+  if (video.paused) { video.play(); btn.style.display = 'none'; }
+  else { video.pause(); btn.style.display = 'flex'; }
+  video.addEventListener('ended', function() { btn.style.display = 'flex'; }, { once: true });
+}
+function playVertThumb(wrap) {
+  var video = wrap.querySelector('video');
+  var overlay = wrap.querySelector('.bc-vthumb-overlay');
+  if (!video) return;
+  if (video.paused) {
+    document.querySelectorAll('.bc-vthumb-overlay').forEach(function(o) { o.style.opacity = '1'; });
+    document.querySelectorAll('video').forEach(function(v) { if (v !== video && v !== document.getElementById('semVideo')) v.pause(); });
+    video.play(); overlay.style.opacity = '0';
+  } else { video.pause(); overlay.style.opacity = '1'; }
+  video.addEventListener('ended', function() { overlay.style.opacity = '1'; }, { once: true });
+}
 </script>
+
 </body>
 </html>
