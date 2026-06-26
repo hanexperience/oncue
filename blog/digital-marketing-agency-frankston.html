@@ -107,72 +107,7 @@ h2,h3{margin:0}
   </div>
 </section>
 
-<!-- VIDEO / MEDIA FEATURE -->
-<section style="background:#123528;color:#F4F1E8;padding:90px 0">
-  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
-    <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.6)"><span style="color:#E6D9C2">▸</span> &nbsp;The work</span>
-    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(30px,4.4vw,56px);line-height:.98;letter-spacing:-.04em;margin:20px 0 0">See what it looks like <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">in practice.</span></h2>
-    <p style="max-width:56ch;font-size:18px;line-height:1.6;color:rgba(244,241,232,.7);margin:24px 0 40px">Marketing talk is cheap. Here's a look at the actual work — from a Frankston-area client who came in with scattered vendors and no coherent story, and left with a brand, website, video presence and SEO strategy that works.</p>
-    <div id="frankVideoWrap" style="position:relative;width:100%;aspect-ratio:16/9;background:rgba(244,241,232,.06);overflow:hidden;cursor:pointer" onclick="toggleFrankVideo()">
-      <video id="frankVideo" preload="metadata" poster="../images/crowncon-film-poster.webp" style="width:100%;height:100%;object-fit:cover">
-        <source src="../images/intro1.mp4" type="video/mp4">
-      </video>
-      <div id="frankPlayBtn" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(18,53,40,.25);transition:background .25s">
-        <div style="width:72px;height:72px;border-radius:50%;background:#F4F1E8;color:#123528;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(18,53,40,.4)"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg></div>
-      </div>
-      <div style="position:absolute;bottom:18px;left:18px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#123528;background:rgba(244,241,232,.9);padding:6px 11px;pointer-events:none">Crowncon — Brand Film Extract · 2026</div>
-    </div>
-    <script>
-    function toggleFrankVideo() {
-      var video = document.getElementById('frankVideo');
-      var btn = document.getElementById('frankPlayBtn');
-      if (video.paused) {
-        video.play();
-        btn.style.display = 'none';
-      } else {
-        video.pause();
-        btn.style.display = 'flex';
-      }
-      video.addEventListener('ended', function() { btn.style.display = 'flex'; }, { once: true });
-    }
-    </script>
-  </div>
-</section>
 
-<!-- CASE STUDY -->
-<section style="padding:100px 0">
-  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
-    <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)"><span style="color:#C24B33">(Case study)</span></span>
-    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(30px,4.4vw,58px);line-height:.98;letter-spacing:-.04em;margin:20px 0 0">Real results from a <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">real client.</span></h2>
-    <p style="max-width:64ch;font-size:18px;line-height:1.65;color:#46443c;margin:24px 0 0">Crowncon is a custom home builder delivering $800–900k builds in Bayside and Southeast Melbourne — including Frankston and Carrum Downs. They came in with three vendors, no unified direction, and a website that didn't reflect the quality of their work. Here's what changed.</p>
-
-    <div class="bc-three-col" style="display:grid;grid-template-columns:repeat(3,1fr);margin-top:48px;border-top:1px solid rgba(28,27,23,.16)">
-      <div style="padding:34px 28px 0;border-right:1px solid rgba(28,27,23,.16)">
-        <div style="font-family:'Archivo';font-weight:800;font-size:clamp(36px,4.6vw,64px);line-height:.9;letter-spacing:-.04em;color:#1C1B17">78→99%</div>
-        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(28,27,23,.55);margin-top:16px;line-height:1.6">Site health after full technical audit &amp; fix</div>
-      </div>
-      <div style="padding:34px 28px 0;border-right:1px solid rgba(28,27,23,.16)">
-        <div style="font-family:'Archivo';font-weight:800;font-size:clamp(36px,4.6vw,64px);line-height:.9;letter-spacing:-.04em;color:#1C1B17">39</div>
-        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(28,27,23,.55);margin-top:16px;line-height:1.6">Keywords tracked from day one — local, service &amp; informational intent</div>
-      </div>
-      <div style="padding:34px 28px 0">
-        <div style="font-family:'Archivo';font-weight:800;font-size:clamp(36px,4.6vw,64px);line-height:.9;letter-spacing:-.04em;color:#1C1B17">24→0</div>
-        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(28,27,23,.55);margin-top:16px;line-height:1.6">Crawl errors eliminated — down from 24 errors and 43 warnings</div>
-      </div>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;margin-top:40px">
-      <div style="display:flex;flex-wrap:wrap;gap:8px">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;padding:7px 13px;border:1px solid rgba(28,27,23,.18);color:#46443c">Brand identity</span>
-        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;padding:7px 13px;border:1px solid rgba(28,27,23,.18);color:#46443c">Website design</span>
-        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;padding:7px 13px;border:1px solid rgba(28,27,23,.18);color:#46443c">Video production</span>
-        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;padding:7px 13px;border:1px solid rgba(28,27,23,.18);color:#46443c">Local SEO</span>
-        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;padding:7px 13px;border:1px solid rgba(28,27,23,.18);color:#46443c">Content strategy</span>
-      </div>
-      <a href="../crowncon/" class="bc-cta-arrow" style="font-family:'Archivo';font-weight:700;font-size:16px;display:inline-flex;align-items:center;gap:9px;border-bottom:2px solid #C24B33;padding-bottom:3px">Read the full case study <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#C24B33" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-    </div>
-  </div>
-</section>
 
 <!-- ARTICLE BODY -->
 <article style="padding:30px 0 40px;border-top:1px solid rgba(28,27,23,.14)">
