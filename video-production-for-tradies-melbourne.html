@@ -109,7 +109,8 @@ h2,h3,h4{margin:0}
   .bc-two-col{grid-template-columns:1fr !important}
   .bc-three-col{grid-template-columns:1fr !important}
   .bc-four-col{grid-template-columns:1fr 1fr !important}
-  .bc-nav-links{display:none}
+  .bc-nav-links{display:none !important}
+  .bc-menu-btn{display:flex !important}
   .bc-video-grid{grid-template-columns:1fr !important}
 }
 @media(max-width:640px){
@@ -128,7 +129,7 @@ h2,h3,h4{margin:0}
 <body>
 
 <!-- NAV -->
-<header style="position:sticky;top:0;z-index:90;background:rgba(251,251,249,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(28,27,23,.10)">
+<header style="position:sticky;top:0;z-index:99;background:rgba(251,251,249,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(28,27,23,.10)">
   <div style="max-width:1180px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px">
     <a href="index.html" style="font-family:'Archivo';font-weight:800;font-size:21px;letter-spacing:-.03em;display:flex;align-items:center;gap:1px">Beets <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33;padding:0 3px">&amp;</span> Co</a>
     <nav class="bc-nav-links" style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;justify-content:flex-end">
@@ -139,8 +140,29 @@ h2,h3,h4{margin:0}
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
       </a>
     </nav>
+    <!-- Hamburger -->
+    <button id="bc-menu-btn" class="bc-menu-btn" onclick="toggleMobileMenu()" aria-label="Open menu" style="display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;margin:-8px">
+      <span class="bc-ham-bar" style="display:block;width:24px;height:2px;background:#1C1B17;transition:transform .25s,opacity .25s;transform-origin:center"></span>
+      <span class="bc-ham-bar" style="display:block;width:24px;height:2px;background:#1C1B17;transition:opacity .25s"></span>
+      <span class="bc-ham-bar" style="display:block;width:16px;height:2px;background:#1C1B17;transition:transform .25s,opacity .25s,width .25s;transform-origin:center"></span>
+    </button>
   </div>
 </header>
+<!-- Full-screen mobile menu -->
+<div id="bc-mobile-menu" style="display:none;position:fixed;top:73px;left:0;right:0;bottom:0;z-index:98;background:#FBFBF9;overflow-y:auto">
+  <div style="padding:40px 32px 48px">
+    <nav style="display:flex;flex-direction:column">
+      <a href="index.html#crowncon" onclick="closeMobileMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Work</a>
+      <a href="index.html#services" onclick="closeMobileMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Studio</a>
+      <a href="index.html#about" onclick="closeMobileMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">About</a>
+      <a href="index.html#journal" onclick="closeMobileMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Journal</a>
+      <a href="index.html#apply" onclick="closeMobileMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#C24B33;display:inline-flex;align-items:center;gap:12px;padding:24px 0 0">Start a conversation <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+    </nav>
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(28,27,23,.1)">
+      <a href="mailto:hello@beetsandco.com.au" style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,27,23,.45)">hello@beetsandco.com.au</a>
+    </div>
+  </div>
+</div>
 
 <!-- HERO -->
 <section style="background:#123528;color:#F4F1E8;padding:110px 0 100px">
@@ -372,5 +394,37 @@ function playTradieThumb(wrap) {
   v.addEventListener('ended',function(){b.style.display='flex';},{once:true});
 }
 </script>
+<script>
+function toggleMobileMenu(){
+  var m=document.getElementById('bc-mobile-menu');
+  var b=document.getElementById('bc-menu-btn');
+  if(!m||!b)return;
+  var bars=b.querySelectorAll('.bc-ham-bar');
+  var open=m.style.display==='block';
+  m.style.display=open?'none':'block';
+  b.setAttribute('aria-label',open?'Open menu':'Close menu');
+  if(!open){
+    bars[0].style.transform='translateY(7px) rotate(45deg)';
+    bars[1].style.opacity='0';
+    bars[2].style.transform='translateY(-7px) rotate(-45deg)';
+    bars[2].style.width='24px';
+  }else{
+    bars[0].style.transform='';bars[1].style.opacity='1';
+    bars[2].style.transform='';bars[2].style.width='16px';
+  }
+}
+function closeMobileMenu(){
+  var m=document.getElementById('bc-mobile-menu');
+  var b=document.getElementById('bc-menu-btn');
+  if(m)m.style.display='none';
+  if(b){
+    b.querySelectorAll('.bc-ham-bar').forEach(function(s,i){
+      s.style.transform='';s.style.opacity='1';s.style.width=i===2?'16px':'24px';
+    });
+    b.setAttribute('aria-label','Open menu');
+  }
+}
+</script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
