@@ -114,6 +114,7 @@ h2,h3,h4{margin:0}
   gtag('js', new Date());
   gtag('config', 'G-29SKC7VN4C');
 </script>
+<style>@media(max-width:900px){.bc-nav-links{display:none !important}.bc-menu-btn{display:flex !important}}</style>
 </head>
 <body>
 
@@ -129,8 +130,27 @@ h2,h3,h4{margin:0}
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
       </a>
     </nav>
+    <button id="bc-menu-btn" class="bc-menu-btn" onclick="bcToggleMenu()" aria-label="Open menu" style="display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;margin:-8px;flex-shrink:0">
+      <span style="display:block;width:24px;height:2px;background:#1C1B17;transition:transform .25s,opacity .25s;transform-origin:center"></span>
+      <span style="display:block;width:24px;height:2px;background:#1C1B17;transition:opacity .25s"></span>
+      <span style="display:block;width:16px;height:2px;background:#1C1B17;transition:transform .25s,width .25s;transform-origin:center"></span>
+    </button>
   </div>
 </header>
+<div id="bc-mobile-menu" style="display:none;position:fixed;top:73px;left:0;right:0;bottom:0;z-index:98;background:#FBFBF9;overflow-y:auto">
+  <div style="padding:40px 32px 48px">
+    <nav style="display:flex;flex-direction:column">
+      <a href="index.html#crowncon" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Work</a>
+      <a href="index.html#services" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Studio</a>
+      <a href="index.html#about" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">About</a>
+      <a href="index.html#journal" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Journal</a>
+      <a href="index.html#apply" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#C24B33;display:inline-flex;align-items:center;gap:12px;padding:24px 0 0">Start a conversation <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+    </nav>
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(28,27,23,.1)">
+      <a href="mailto:hello@beetsandco.com.au" style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,27,23,.45)">hello@beetsandco.com.au</a>
+    </div>
+  </div>
+</div>
 
 <!-- HERO -->
 <section style="background:#123528;color:#F4F1E8;padding:110px 0 100px">
@@ -303,5 +323,21 @@ h2,h3,h4{margin:0}
   </div>
 </footer>
 
+<script>
+function bcToggleMenu(){
+  var m=document.getElementById('bc-mobile-menu'),b=document.getElementById('bc-menu-btn'),s=b.querySelectorAll('span'),o=m.style.display==='block';
+  m.style.display=o?'none':'block';
+  document.body.style.overflow=o?'':'hidden';
+  s[0].style.transform=o?'':'translateY(7px) rotate(45deg)';
+  s[1].style.opacity=o?'':'0';
+  s[2].style.transform=o?'':'translateY(-7px) rotate(-45deg)';
+  s[2].style.width=o?'':'24px';
+}
+function bcCloseMenu(){
+  var m=document.getElementById('bc-mobile-menu'),b=document.getElementById('bc-menu-btn'),s=b?b.querySelectorAll('span'):[];
+  m.style.display='none';document.body.style.overflow='';
+  if(s.length){s[0].style.transform='';s[1].style.opacity='';s[2].style.transform='';s[2].style.width='';}
+}
+</script>
 </body>
 </html>

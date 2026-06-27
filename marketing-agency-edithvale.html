@@ -135,6 +135,8 @@ a{color:inherit;text-decoration:none}
   .bc-related-grid{grid-template-columns:1fr!important}
 }
 </style>
+<style>@media(max-width:900px){.bc-nav-links{display:none !important}.bc-menu-btn{display:flex !important}}</style>
+<style>@media(max-width:900px){.bc-cta-btn{display:none !important}}</style>
 </head>
 <body>
 
@@ -151,8 +153,27 @@ a{color:inherit;text-decoration:none}
       Get in touch
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
+    <button id="bc-menu-btn" class="bc-menu-btn" onclick="bcToggleMenu()" aria-label="Open menu" style="display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;margin:-8px;flex-shrink:0">
+      <span style="display:block;width:24px;height:2px;background:#1C1B17;transition:transform .25s,opacity .25s;transform-origin:center"></span>
+      <span style="display:block;width:24px;height:2px;background:#1C1B17;transition:opacity .25s"></span>
+      <span style="display:block;width:16px;height:2px;background:#1C1B17;transition:transform .25s,width .25s;transform-origin:center"></span>
+    </button>
   </div>
 </nav>
+<div id="bc-mobile-menu" style="display:none;position:fixed;top:65px;left:0;right:0;bottom:0;z-index:98;background:#FBFBF9;overflow-y:auto">
+  <div style="padding:40px 32px 48px">
+    <nav style="display:flex;flex-direction:column">
+      <a href="/tradie-marketing-agency-melbourne.html" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Services</a>
+      <a href="/crowncon/" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Work</a>
+      <a href="/#about" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">About</a>
+      <a href="/blog/" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Journal</a>
+      <a href="/#contact" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#C24B33;display:inline-flex;align-items:center;gap:12px;padding:24px 0 0">Get in touch <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+    </nav>
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(28,27,23,.1)">
+      <a href="mailto:hello@beetsandco.com.au" style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,27,23,.45)">hello@beetsandco.com.au</a>
+    </div>
+  </div>
+</div>
 
 <!-- HERO — image bg with mini video inset -->
 <section style="background:#1A4D3C;overflow:hidden;position:relative;min-height:600px">
@@ -562,6 +583,22 @@ function playEdithThumb(wrap){
   if(v.paused){v.play();b.style.display='none';}
   else{v.pause();b.style.display='flex';}
   v.addEventListener('ended',function(){b.style.display='flex';},{once:true});
+}
+</script>
+<script>
+function bcToggleMenu(){
+  var m=document.getElementById('bc-mobile-menu'),b=document.getElementById('bc-menu-btn'),s=b.querySelectorAll('span'),o=m.style.display==='block';
+  m.style.display=o?'none':'block';
+  document.body.style.overflow=o?'':'hidden';
+  s[0].style.transform=o?'':'translateY(7px) rotate(45deg)';
+  s[1].style.opacity=o?'':'0';
+  s[2].style.transform=o?'':'translateY(-7px) rotate(-45deg)';
+  s[2].style.width=o?'':'24px';
+}
+function bcCloseMenu(){
+  var m=document.getElementById('bc-mobile-menu'),b=document.getElementById('bc-menu-btn'),s=b?b.querySelectorAll('span'):[];
+  m.style.display='none';document.body.style.overflow='';
+  if(s.length){s[0].style.transform='';s[1].style.opacity='';s[2].style.transform='';s[2].style.width='';}
 }
 </script>
 </body>
