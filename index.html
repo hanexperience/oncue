@@ -195,6 +195,20 @@ p{margin:0}
   .bc-five-col{grid-template-columns:1fr 1fr !important}
   .bc-gallery{display:none}
   .bc-nav-links{display:none}
+  /* Services — collapse to number + title, desc full-width, hide label */
+  .bc-svc-row{grid-template-columns:44px 1fr !important;gap:10px 16px !important;align-items:start !important}
+  .bc-svc-row>p{grid-column:1/-1 !important;margin:0 !important}
+  .bc-svc-row>span:last-child{display:none !important}
+  /* Journal — stack vertically, hide arrow */
+  .bc-journal-row{grid-template-columns:1fr !important;gap:8px !important}
+  .bc-journal-row>svg{display:none !important}
+  /* Process — remove right borders, add bottom dividers */
+  .bc-five-col>div{border-right:none !important;border-bottom:1px solid rgba(28,27,23,.16) !important}
+  .bc-five-col>div:last-child{border-bottom:none !important}
+}
+@media(max-width:640px){
+  /* Reduce horizontal padding on all content containers */
+  [style*="padding:0 40px"]{padding-left:20px !important;padding-right:20px !important}
 }
 @media(max-width:600px){
   .bc-hero-h1{font-size:clamp(40px,14vw,80px) !important}
