@@ -185,6 +185,33 @@ p{margin:0}
 .bc-submit{transition:background .2s}
 .bc-submit:hover{background:#C24B33 !important}
 
+/* ── SCROLL ANIMATIONS ── */
+@keyframes bc-fade-up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bc-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes bc-scale-up{from{opacity:0;transform:scale(.97) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+.bc-anim{opacity:0;will-change:transform,opacity}
+.bc-anim.bc-in{animation:bc-fade-up .72s cubic-bezier(.22,1,.36,1) forwards}
+.bc-anim-fade{opacity:0}
+.bc-anim-fade.bc-in{animation:bc-fade-in .6s ease forwards}
+.bc-anim-scale{opacity:0;will-change:transform,opacity}
+.bc-anim-scale.bc-in{animation:bc-scale-up .72s cubic-bezier(.22,1,.36,1) forwards}
+
+.bc-d1{animation-delay:.07s!important}
+.bc-d2{animation-delay:.14s!important}
+.bc-d3{animation-delay:.21s!important}
+.bc-d4{animation-delay:.28s!important}
+.bc-d5{animation-delay:.35s!important}
+
+/* Scroll progress bar */
+#bc-prog{position:fixed;top:0;left:0;height:2px;background:#C24B33;width:0%;z-index:200;pointer-events:none;transition:width .08s linear}
+
+/* Reduce motion */
+@media(prefers-reduced-motion:reduce){
+  .bc-anim,.bc-anim-fade,.bc-anim-scale{animation:none!important;opacity:1!important;transform:none!important}
+  #bc-prog{display:none}
+}
+
 /* Placeholder image blocks */
 .bc-img-placeholder{background:#F0ECE3;display:flex;align-items:center;justify-content:center;color:rgba(28,27,23,.2);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 
@@ -228,6 +255,7 @@ p{margin:0}
 <style>@media(max-width:900px){.bc-nav-links{display:none !important}.bc-menu-btn{display:flex !important}}</style>
 </head>
 <body>
+<div id="bc-prog"></div>
 
 <!-- ===================== NAV ===================== -->
 <header style="position:sticky;top:0;z-index:90;background:rgba(251,251,249,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(28,27,23,.10)">
@@ -372,15 +400,15 @@ p{margin:0}
     <!-- stat band -->
     <div class="bc-stat-grid" style="display:grid;grid-template-columns:repeat(3,1fr);margin-top:64px;border-top:1px solid rgba(28,27,23,.16)">
       <div style="padding:34px 30px 0;border-right:1px solid rgba(28,27,23,.16)">
-        <div style="font-family:'Archivo';font-weight:800;font-size:clamp(48px,6vw,84px);line-height:.9;letter-spacing:-.04em;color:#1C1B17">99%</div>
+        <div data-count="99" data-suffix="%" style="font-family:'Archivo';font-weight:800;font-size:clamp(48px,6vw,84px);line-height:.9;letter-spacing:-.04em;color:#1C1B17">99%</div>
         <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,27,23,.55);margin-top:16px;line-height:1.5">Site health score</div>
       </div>
       <div style="padding:34px 30px 0;border-right:1px solid rgba(28,27,23,.16)">
-        <div style="font-family:'Archivo';font-weight:800;font-size:clamp(48px,6vw,84px);line-height:.9;letter-spacing:-.04em;color:#1C1B17">39</div>
+        <div data-count="39" data-suffix="" style="font-family:'Archivo';font-weight:800;font-size:clamp(48px,6vw,84px);line-height:.9;letter-spacing:-.04em;color:#1C1B17">39</div>
         <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,27,23,.55);margin-top:16px;line-height:1.5">Keywords tracked from day one</div>
       </div>
       <div style="padding:34px 30px 0">
-        <div style="font-family:'Archivo';font-weight:800;font-size:clamp(48px,6vw,84px);line-height:.9;letter-spacing:-.04em;color:#1C1B17">100%</div>
+        <div data-count="100" data-suffix="%" style="font-family:'Archivo';font-weight:800;font-size:clamp(48px,6vw,84px);line-height:.9;letter-spacing:-.04em;color:#1C1B17">100%</div>
         <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,27,23,.55);margin-top:16px;line-height:1.5">AI search health</div>
       </div>
     </div>
@@ -684,6 +712,119 @@ p{margin:0}
   </div>
 </footer>
 
+<script>
+// ── ANIMATIONS ──
+
+// Scroll progress bar
+(function(){
+  var p=document.getElementById('bc-prog');
+  if(!p)return;
+  window.addEventListener('scroll',function(){
+    var s=document.documentElement.scrollHeight-window.innerHeight;
+    p.style.width=(s>0?(window.scrollY/s*100):0)+'%';
+  },{passive:true});
+})();
+
+// IntersectionObserver reveal
+(function(){
+  if(!('IntersectionObserver' in window))return;
+
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('bc-in');io.unobserve(e.target);}
+    });
+  },{threshold:0.08,rootMargin:'0px 0px -36px 0px'});
+
+  // Hero — immediate fade up on load
+  var hero=document.querySelector('#top h1');
+  if(hero){hero.classList.add('bc-anim');setTimeout(function(){hero.classList.add('bc-in');},80);}
+
+  var heroSub=document.querySelector('#top > div > div:last-of-type p');
+  if(heroSub){heroSub.classList.add('bc-anim');setTimeout(function(){heroSub.classList.add('bc-in');},220);}
+
+  // Section eyebrow labels + h2 headings
+  document.querySelectorAll('section > div > span, section > div > h2').forEach(function(el){
+    el.classList.add('bc-anim');
+    io.observe(el);
+  });
+
+  // Crowncon section — work text and stat cells
+  document.querySelectorAll('#crowncon .bc-two-col > div').forEach(function(el,i){
+    el.classList.add('bc-anim');
+    if(i>0) el.classList.add('bc-d'+(i));
+    io.observe(el);
+  });
+  document.querySelectorAll('.bc-stat-grid > div').forEach(function(el,i){
+    el.classList.add('bc-anim','bc-d'+[1,2,3][i]);
+    io.observe(el);
+  });
+
+  // Service rows — stagger
+  document.querySelectorAll('.bc-svc-row').forEach(function(el,i){
+    el.classList.add('bc-anim','bc-d'+(i+1));
+    io.observe(el);
+  });
+
+  // Process steps — stagger
+  document.querySelectorAll('.bc-five-col > div').forEach(function(el,i){
+    el.classList.add('bc-anim','bc-d'+(i+1 > 5 ? 5 : i+1));
+    io.observe(el);
+  });
+
+  // About columns
+  document.querySelectorAll('#about .bc-two-col > div').forEach(function(el,i){
+    el.classList.add('bc-anim');
+    if(i>0) el.classList.add('bc-d2');
+    io.observe(el);
+  });
+
+  // Journal rows — stagger
+  document.querySelectorAll('.bc-journal-row').forEach(function(el,i){
+    el.classList.add('bc-anim','bc-d'+(i+1));
+    io.observe(el);
+  });
+
+  // Contact columns
+  document.querySelectorAll('#apply .bc-two-col > div, #apply .bc-two-col > form').forEach(function(el,i){
+    el.classList.add('bc-anim');
+    if(i>0) el.classList.add('bc-d2');
+    io.observe(el);
+  });
+
+  // Gallery figures
+  document.querySelectorAll('figure').forEach(function(el,i){
+    el.classList.add('bc-anim-scale','bc-d'+(i+1 > 5 ? 5 : i+1));
+    io.observe(el);
+  });
+
+  // Model rows
+  document.querySelectorAll('#model .bc-two-col[style*="padding:34px"]').forEach(function(el,i){
+    el.classList.add('bc-anim','bc-d'+(i+1));
+    io.observe(el);
+  });
+})();
+
+// Stat counters
+(function(){
+  if(!('IntersectionObserver' in window))return;
+  var co=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var el=e.target,target=parseInt(el.dataset.count),sfx=el.dataset.suffix||'';
+      var start=performance.now(),dur=1600;
+      function step(now){
+        var t=Math.min((now-start)/dur,1);
+        var ease=1-Math.pow(1-t,3);
+        el.textContent=Math.round(ease*target)+sfx;
+        if(t<1)requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+      co.unobserve(el);
+    });
+  },{threshold:0.5});
+  document.querySelectorAll('[data-count]').forEach(function(el){co.observe(el);});
+})();
+</script>
 <script>
 // Form submission
 const form = document.getElementById('contact-form');
