@@ -12,7 +12,7 @@
   <!-- Blog listing -->
   <url>
     <loc>https://beetsandco.com.au/blog/</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -171,6 +171,13 @@
   <url>
     <loc>https://beetsandco.com.au/blog/seo-for-electricians-melbourne.html</loc>
     <lastmod>2026-06-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://beetsandco.com.au/blog/content-marketing-for-local-seo.html</loc>
+    <lastmod>2026-06-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
