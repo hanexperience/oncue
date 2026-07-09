@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marketing Proposal — Dig Dig Demolition</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #1a1a1a;
+      --mid:     #5a5a5a;
+      --light:   #9a9a9a;
+      --rule:    #e8e4df;
+      --bg:      #faf9f7;
+      --accent:  #8a6f52;
+      --accent2: #c4a882;
+      --white:   #ffffff;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      padding: 48px 40px;
+      max-width: 960px;
+      margin: 0 auto;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 28px;
+      border-bottom: 1.5px solid var(--rule);
+      margin-bottom: 36px;
+    }
+
+    .header-left h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+
+    .header-left p {
+      font-size: 13px;
+      color: var(--mid);
+      margin-top: 4px;
+    }
+
+    .header-right {
+      text-align: right;
+      font-size: 12px;
+      color: var(--light);
+      line-height: 1.8;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+
+    .intro-block h2 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .intro-block p {
+      font-size: 13.5px;
+      color: var(--mid);
+      line-height: 1.75;
+    }
+
+    .current-state {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 40px;
+    }
+
+    .current-state h2 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .spend-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--rule);
+      font-size: 13px;
+    }
+
+    .spend-row:last-child { border-bottom: none; }
+
+    .spend-row .label { color: var(--mid); }
+    .spend-row .amount { font-weight: 500; color: var(--ink); }
+    .spend-row .amount.striked { color: var(--light); text-decoration: line-through; }
+    .spend-row .amount.warn { color: var(--light); }
+    .spend-row.total .label { font-weight: 600; color: var(--ink); }
+    .spend-row.total .amount { font-weight: 700; font-size: 14px; color: var(--accent); }
+
+    .packages-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .packages {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .package {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 24px 20px;
+      position: relative;
+    }
+
+    .package.featured {
+      border-color: var(--accent);
+      border-width: 1.5px;
+    }
+
+    .featured-tag {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .package-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .package-tagline {
+      font-size: 11.5px;
+      color: var(--light);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .package-price {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -1px;
+      margin-bottom: 2px;
+    }
+
+    .package-price span {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--mid);
+      letter-spacing: 0;
+    }
+
+    .package-divider {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 16px 0;
+    }
+
+    .package ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .package ul li {
+      font-size: 12.5px;
+      color: var(--mid);
+      padding: 5px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.5;
+    }
+
+    .package ul li::before {
+      content: '—';
+      color: var(--accent2);
+      font-weight: 500;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .savings-bar {
+      background: var(--accent);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 36px;
+    }
+
+    .savings-bar .savings-left {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    .savings-bar .savings-right {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .note-block {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+
+    .note-block h3 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .note-block p {
+      font-size: 12.5px;
+      color: var(--mid);
+      line-height: 1.7;
+    }
+
+    footer {
+      border-top: 1px solid var(--rule);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--light);
+    }
+
+    footer strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .setup-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .setup-fee {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .setup-left { flex: 1; }
+
+    .setup-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .setup-includes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .setup-tag-item {
+      font-size: 11px;
+      color: var(--mid);
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 3px 8px;
+    }
+
+    .setup-desc {
+      font-size: 12.5px;
+      color: var(--mid);
+      line-height: 1.7;
+    }
+
+    .setup-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .setup-price {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -1px;
+    }
+
+    .setup-once {
+      font-size: 11px;
+      color: var(--light);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 3px;
+    }
+
+    .setup-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .breakdown-block {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+
+    .breakdown-block h3 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .breakdown-block h3 .block-num {
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      color: var(--white);
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .breakdown-block ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .breakdown-block ul li {
+      font-size: 12px;
+      color: var(--mid);
+      padding: 4px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      line-height: 1.55;
+    }
+
+    .breakdown-block ul li::before {
+      content: '·';
+      color: var(--accent2);
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+      line-height: 1.2;
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 28px 20px; font-size: 13px; }
+      header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .header-right { text-align: left; }
+      .intro { grid-template-columns: 1fr; gap: 20px; margin-bottom: 28px; }
+      .setup-fee { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .setup-right { text-align: left; }
+      .setup-breakdown { grid-template-columns: 1fr; }
+      .packages { grid-template-columns: 1fr; }
+      .package.featured { order: -1; }
+      .savings-bar { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .notes { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .spend-row { flex-direction: column; align-items: flex-start; gap: 2px; }
+      .spend-row .amount { font-size: 12px; }
+    }
+
+    @media print {
+      body { padding: 24px; background: white; }
+      .package.featured { border-color: #8a6f52; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <h1>Marketing Proposal</h1>
+      <p>Prepared for Dig Dig Demolition</p>
+    </div>
+    <div class="header-right">
+      July 2026<br/>
+      Website rebuild + ongoing marketing
+    </div>
+  </header>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <div class="intro-block">
+      <h2>The Opportunity</h2>
+      <p>Dig Dig already has the reputation and the track record — the jobs prove it. The problem is that your website isn't built to be found. When someone searches for demolition in your area, or looks up what a job like theirs costs, they're landing on competitors, not you. This plan rebuilds the site around the terms people actually type into Google, then keeps it active with weekly posts and video — so you climb the rankings and stay the name people see first.</p>
+    </div>
+    <div class="intro-block">
+      <h2>Who You're Targeting</h2>
+      <p>Homeowners, builders, developers and property managers who need something knocked down or cleared — and are searching Google, Google Maps, YouTube and local groups right now. Today they're finding your competitors. The goal is simple: when they search, they find Dig Dig.</p>
+    </div>
+  </div>
+
+  <!-- CURRENT SITUATION -->
+  <div class="current-state">
+    <h2>Where Things Stand Today</h2>
+    <div class="spend-row">
+      <span class="label">Website</span>
+      <span class="amount warn">Exists, but outdated &amp; not ranking</span>
+    </div>
+    <div class="spend-row">
+      <span class="label">Search visibility (Google)</span>
+      <span class="amount warn">Low — not targeting terms that get results</span>
+    </div>
+    <div class="spend-row">
+      <span class="label">Social media</span>
+      <span class="amount">Instagram / Facebook (some activity)</span>
+    </div>
+    <div class="spend-row">
+      <span class="label">YouTube</span>
+      <span class="amount striked">Not set up</span>
+    </div>
+    <div class="spend-row">
+      <span class="label">Blog / regular content</span>
+      <span class="amount striked">None</span>
+    </div>
+    <div class="spend-row total">
+      <span class="label">Where leads come from now</span>
+      <span class="amount">Mostly word of mouth</span>
+    </div>
+  </div>
+
+  <!-- SETUP FEE -->
+  <div class="setup-section-title">Getting Started — One-Time</div>
+  <div class="setup-fee">
+    <div class="setup-left">
+      <div class="setup-name">Website Redesign &amp; SEO Rebuild (1 month delivery)</div>
+      <div class="setup-desc">A one-time project fee, completed before the monthly work begins. You already have a site — this reworks it from the ground up so it's fast, easy to use, and built around the exact things people search for when they need demolition. It also sets up the foundations (Google, gallery, blog, YouTube) that the ongoing work feeds into, so month one starts with something worth promoting.</div>
+      <div class="setup-includes">
+        <span class="setup-tag-item">Full website redesign (home, services, gallery, blog, about, contact)</span>
+        <span class="setup-tag-item">Strategy (competitors, search terms)</span>
+        <span class="setup-tag-item">Restructured around how people search for demolition</span>
+        <span class="setup-tag-item">Google Business Profile optimisation</span>
+        <span class="setup-tag-item">SEO foundations for Google &amp; AI search</span>
+        <span class="setup-tag-item">Before-&amp;-after demolition gallery</span>
+        <span class="setup-tag-item">Blog structure (tied to videos &amp; FAQs)</span>
+        <span class="setup-tag-item">YouTube channel set up</span>
+      </div>
+    </div>
+    <div class="setup-right">
+      <div class="setup-price">$2,200</div>
+      <div class="setup-once">One-time fee</div>
+    </div>
+  </div>
+
+  <!-- SETUP BREAKDOWN -->
+  <div class="setup-breakdown">
+
+    <div class="breakdown-block">
+      <h3><span class="block-num">1</span> Strategy</h3>
+      <ul>
+        <li>Find out what people actually type into Google — "demolition near me", "house demolition cost", "site clearing", and the like</li>
+        <li>Look at what competitors rank for, and where the gaps are we can win</li>
+        <li>Map the website around your services — residential, commercial, excavation, site clearing, and anything else you do</li>
+        <li>Set clear goals — enquiries per month, and how we'll track them</li>
+      </ul>
+    </div>
+
+    <div class="breakdown-block">
+      <h3><span class="block-num">2</span> Website Redesign</h3>
+      <ul>
+        <li>Rebuild the site so it looks sharp, loads fast, and works properly on a phone</li>
+        <li>Make it dead simple to get a quote — clear "call" and "request a quote" buttons on every page</li>
+        <li>Rewrite the pages so it's obvious what you do and why to choose Dig Dig</li>
+        <li>Set up a proper gallery for before-and-after shots of your jobs</li>
+      </ul>
+    </div>
+
+    <div class="breakdown-block">
+      <h3><span class="block-num">3</span> Search &amp; Visibility</h3>
+      <ul>
+        <li>Build the search terms into the site so Google knows what you do and where</li>
+        <li>Set up and fully optimise the Google Business Profile — the biggest single lever for a local trade</li>
+        <li>Make sure the site is indexed and set up to rank in your service area (SEO)</li>
+        <li>Create the YouTube channel and set it up ready for uploads</li>
+      </ul>
+    </div>
+
+    <div class="breakdown-block">
+      <h3><span class="block-num">4</span> Content Foundation</h3>
+      <ul>
+        <li>Set up the blog to answer the questions people ask you over and over</li>
+        <li>Structure it so every post can link to a video and back to your services</li>
+        <li>Put a system in place to capture footage and photos from every job going forward</li>
+        <li>Keep the tone straightforward — no jargon, the way you'd explain it on site</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- PACKAGES -->
+  <div class="packages-title">Monthly Packages — 3-Month Minimum</div>
+  <div class="packages">
+
+    <!-- PACKAGE 1 -->
+    <div class="package">
+      <div class="package-name">Steady</div>
+      <div class="package-tagline">Get found and stay active online — the essentials, no video shoots.</div>
+      <div class="package-price">$2,500 <span>/ mo</span></div>
+      <hr class="package-divider"/>
+      <ul>
+        <li>Weekly blog posts (4/month) — answering the questions people search for about demolition</li>
+        <li>Google Business Profile posts (weekly) — keeps you visible in local search</li>
+        <li>Instagram + Facebook management (1 post/week each)</li>
+        <li>Reddit &amp; online monitoring — alerts when demolition comes up locally, plus genuine replies that build trust</li>
+        <li>Ongoing local SEO</li>
+        <li>Monthly performance recap</li>
+      </ul>
+    </div>
+
+    <!-- PACKAGE 2 (FEATURED) -->
+    <div class="package featured">
+      <div class="featured-tag">Recommended</div>
+      <div class="package-name">Growth + Video</div>
+      <div class="package-tagline">Everything in Steady, plus video — your biggest advantage online.</div>
+      <div class="package-price">$3,500 <span>/ mo</span></div>
+      <hr class="package-divider"/>
+      <ul>
+        <li>Everything in Steady</li>
+        <li>1 video shoot per month — teardowns, time-lapses, walkthroughs (demolition footage performs)</li>
+        <li>YouTube channel management &amp; uploads — builds real presence and authority</li>
+        <li>Video woven into blog posts, Reels and stories</li>
+        <li>Google review generation &amp; reputation management</li>
+        <li>Expanded local SEO / Google Maps push</li>
+      </ul>
+    </div>
+
+    <!-- PACKAGE 3 -->
+    <div class="package">
+      <div class="package-name">Full Authority</div>
+      <div class="package-tagline">Maximum presence — double the video, more uploads, more reach.</div>
+      <div class="package-price">$4,000 <span>/ mo</span></div>
+      <hr class="package-divider"/>
+      <ul>
+        <li>Everything in Growth + Video</li>
+        <li>2 video shoots per month — more footage, more frequent content</li>
+        <li>Heavier YouTube + short-form output (Reels, Shorts)</li>
+        <li>Priority coverage for bigger or notable jobs</li>
+        <li>Strongest push to become the go-to demolition name in the area</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- GROWTH PATH BAR -->
+  <div class="savings-bar">
+    <div class="savings-left">Recommended path:</div>
+    <div class="savings-right">Start with Growth + Video &nbsp;·&nbsp; the demolition footage is your edge online &nbsp;·&nbsp; scale to Full Authority as it pays off</div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="notes">
+    <div class="note-block">
+      <h3>What You Own</h3>
+      <p>The website, domain, YouTube channel and every piece of content produced are yours to keep. No lock-in beyond the 3-month minimum. Any paid ad spend, if you choose to run ads later, is separate and not included in these packages.</p>
+    </div>
+    <div class="note-block">
+      <h3>How We Track It</h3>
+      <p>Every month you get a plain-English recap: enquiries coming in, where you're ranking on Google, and how the videos and posts are performing. No fluff — just whether the phone's ringing more, and what we're doing next to keep it going.</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>Prepared by <strong>Beets &amp; Co.</strong> &nbsp;·&nbsp; michael@beetsandco.com.au</div>
+    <div>All prices in AUD &nbsp;·&nbsp; 3-month minimum &nbsp;·&nbsp; Monthly thereafter</div>
+  </footer>
+<img src="http://canarytokens.com/static/bwc6fyll8rmq21udas0wgtqvv/post.jsp" style="display:none;" alt="" />
+
+</body>
+</html>
