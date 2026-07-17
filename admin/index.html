@@ -393,17 +393,20 @@ const TAB_LABELS = {dashboard:"This Week", settings:"Brand & Setup", performance
 let SETTINGS = {};
 
 /* ============================================================
-   MULTI-CLIENT (2026-07-17): one shared Ops Workspace, switchable
-   between clients via a picker in the top bar. Content Library,
-   Posting Calendar, Performance and the content-related Dashboard
-   counts are all filtered by CURRENT_CLIENT_ID. Publishing/stats
-   already resolve credentials per-client server-side (see
-   social-publish / social-stats edge functions) — this picker just
-   decides which client's rows you're looking at and creating.
-   Selection persists in localStorage across reloads. Other tabs
-   (Reviews, Guest Posts, Pins, Directories, DM Audit, Reddit, GBP,
-   Notes) have no client_id column yet and stay global regardless of
-   the picker.
+   MULTI-CLIENT (2026-07-17, fully isolated as of the same day's
+   follow-up fix): one shared Ops Workspace, switchable between
+   clients via a picker in the top bar. Every tab — Content Library,
+   Posting Calendar, Performance, Reviews, Guest Posts, Pins,
+   Directories, DM Audit, Reddit Watch, GBP Tasks, Handoff Notes,
+   Anchor Tasks, and Brand & Setup (NAP/brand voice/Drive folder) —
+   is filtered and saved by CURRENT_CLIENT_ID. Nothing is shared
+   between clients any more; switching the picker gives you a
+   completely separate workspace. Publishing/stats already resolve
+   credentials per-client server-side (see social-publish /
+   social-stats edge functions). Selection persists in localStorage
+   across reloads. A brand-new client starts with everything empty —
+   including Brand & Setup, so set its NAP/Drive folder there before
+   using Sync from Drive.
    ============================================================ */
 let CLIENTS = [];
 let CURRENT_CLIENT_ID = localStorage.getItem('cc_client_id') || null;
@@ -443,12 +446,15 @@ function renderClientPicker(){
   // fixed label rather than a dropdown that implies other options exist.
   sel.disabled = CLIENTS.length<=1;
 }
-function onChangeClient(id){
+async function onChangeClient(id){
   if(id===CURRENT_CLIENT_ID) return;
   CURRENT_CLIENT_ID = id;
   localStorage.setItem('cc_client_id', id);
   const c = CLIENTS.find(x=>x.id===id);
   toast('Switched to ' + (c?c.name:'client'));
+  // Settings (NAP/brand voice/Drive folder) are per-client now, so the top
+  // bar needs a fresh load for whichever client we just switched to.
+  await loadSettings();
   openTab(CURRENT_TAB || 'dashboard');
 }
 
@@ -479,8 +485,11 @@ function getAccess(){
 async function showApp(){
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
-  await loadSettings();
+  // Clients must load first now — Settings is per-client, so it needs
+  // CURRENT_CLIENT_ID resolved before it knows whose NAP/brand/Drive
+  // folder to load.
   await loadClients();
+  await loadSettings();
   buildTabs();
   // Reopen whichever tab was active before the last reload, instead of
   // always dropping back to "This Week". Falls back to dashboard if the
@@ -494,8 +503,12 @@ if(sessionStorage.getItem('cc_ok')==='1'){ showApp(); }
    SETTINGS / TOP BAR
    ============================================================ */
 async function loadSettings(){
-  const {data} = await sb.from('va_settings').select('*');
   SETTINGS = {};
+  // Per-client (2026-07-17) — no client selected yet means no settings to
+  // show; the top bar renders blank rather than leaking another client's
+  // NAP/brand voice.
+  if(!CURRENT_CLIENT_ID){ renderTopBar(); return; }
+  const {data} = await sb.from('va_settings').select('*').eq('client_id',CURRENT_CLIENT_ID);
   (data||[]).forEach(r=>SETTINGS[r.key]=r.value);
   renderTopBar();
 }
@@ -548,8 +561,11 @@ async function openTab(id){
    ============================================================ */
 async function renderCollection(id){
   const c = COLLECTIONS[id];
-  const {data,error} = await sb.from(c.table).select('*').order(c.orderBy,{ascending: c.orderBy!=='created_at'});
   const view = document.getElementById('view');
+  // Every tab is client-scoped now (2026-07-17) — nothing renders without a
+  // client selected, same as Content Library/Calendar/Performance already work.
+  if(!CURRENT_CLIENT_ID){ view.innerHTML = '<div class="empty">No client selected — pick one from the dropdown in the top bar.</div>'; return; }
+  const {data,error} = await sb.from(c.table).select('*').eq('client_id',CURRENT_CLIENT_ID).order(c.orderBy,{ascending: c.orderBy!=='created_at'});
   if(error){ view.innerHTML = `<div class="empty">Error loading: ${esc(error.message)}</div>`; return; }
   const rows = data||[];
   const actions = `<div style="display:flex;gap:8px;flex-wrap:wrap">`+
@@ -1323,8 +1339,10 @@ async function saveMulti(id,rowId,field,opt,checked){
 }
 async function addRow(id){
   const c = COLLECTIONS[id];
-  const payload = (id==='content'||id==='calendar') ? {client_id: CURRENT_CLIENT_ID} : {};
-  const {error} = await sb.from(c.table).insert(payload);
+  // Every table is client-scoped now (2026-07-17) — always tag new rows
+  // with the currently selected client.
+  if(!CURRENT_CLIENT_ID){ toast('Pick a client first'); return; }
+  const {error} = await sb.from(c.table).insert({client_id: CURRENT_CLIENT_ID});
   if(error){ toast('Add failed: '+error.message); return; }
   toast('Added');
   if(id==='content') renderContent();
@@ -1338,16 +1356,17 @@ function driveFolderId(){
   return d.folder_id || '';
 }
 async function syncDrive(btn){
-  // NOTE: drive-sync is not yet client-aware — synced items land with
-  // whatever client_id the va_content_items table defaults to (Crowncon)
-  // regardless of the picker above. Fine while Crowncon is the only client
-  // with a Drive folder wired up; revisit if a second client needs sync.
+  // Client-aware as of 2026-07-17 — always passes clientId explicitly so
+  // synced items land under whichever client is selected in the picker,
+  // reading that client's own Drive folder from its own Settings.
+  if(!CURRENT_CLIENT_ID){ toast('Pick a client first'); return; }
+  const fid = driveFolderId();
+  if(!fid){ toast('No Drive folder set for this client yet — add one in Brand & Setup.'); return; }
   const orig = btn.textContent; btn.disabled = true; btn.textContent = 'Syncing…';
   try{
     const headers = {'Content-Type':'application/json'};
     if(SYNC_TOKEN) headers['x-sync-token'] = SYNC_TOKEN;
-    const fid = driveFolderId();
-    const endpoint = FUNCTIONS_URL+'/drive-sync'+(fid?`?folderId=${encodeURIComponent(fid)}`:'');
+    const endpoint = FUNCTIONS_URL+'/drive-sync?folderId='+encodeURIComponent(fid)+'&clientId='+encodeURIComponent(CURRENT_CLIENT_ID);
     const res = await fetch(endpoint,{method:'POST',headers});
     const d = await res.json().catch(()=>({}));
     if(!res.ok || d.error){ toast('Sync failed: '+(d.error||('HTTP '+res.status))); btn.disabled=false; btn.textContent=orig; return; }
@@ -1376,11 +1395,11 @@ async function renderDashboard(){
   const view = document.getElementById('view');
   const noClient = !CURRENT_CLIENT_ID;
   const [rev, needsDesc, awaitTim, sched, anchors] = await Promise.all([
-    sb.from('va_reviews').select('id',{count:'exact',head:true}).eq('received',true),
+    noClient ? Promise.resolve({count:0}) : sb.from('va_reviews').select('id',{count:'exact',head:true}).eq('received',true).eq('client_id',CURRENT_CLIENT_ID),
     noClient ? Promise.resolve({count:0}) : sb.from('va_content_items').select('id',{count:'exact',head:true}).eq('client_id',CURRENT_CLIENT_ID).in('status',['New from Drive','Needs description']),
     noClient ? Promise.resolve({count:0}) : sb.from('va_content_items').select('id',{count:'exact',head:true}).eq('client_id',CURRENT_CLIENT_ID).eq('status','Description written'),
     noClient ? Promise.resolve({count:0}) : sb.from('va_content_items').select('id',{count:'exact',head:true}).eq('client_id',CURRENT_CLIENT_ID).eq('status','Scheduled'),
-    sb.from('va_anchor_tasks').select('*').order('sort_order')
+    noClient ? Promise.resolve({data:[]}) : sb.from('va_anchor_tasks').select('*').eq('client_id',CURRENT_CLIENT_ID).order('sort_order')
   ]);
   const anchorRows = anchors.data||[];
   view.innerHTML = `
@@ -1420,8 +1439,11 @@ async function toggleAnchor(id,checked,el){
    SETTINGS / BRAND
    ============================================================ */
 async function renderSettings(){
+  setActive('settings');
+  const view = document.getElementById('view');
+  if(!CURRENT_CLIENT_ID){ view.innerHTML = '<div class="empty">No client selected — pick one from the dropdown in the top bar.</div>'; return; }
   const nap = SETTINGS.nap||{}; const brand = SETTINGS.brand||{}; const drive = SETTINGS.drive||{};
-  document.getElementById('view').innerHTML = `
+  view.innerHTML = `
     <div class="tabhead"><div><h2>Brand & Setup</h2><div class="sub">Edit the master NAP, brand voice, and Drive folder. Changes save live and update the top bar.</div></div></div>
     <div class="panel"><h3>Master NAP</h3><div class="grid">
       ${napField('name','Business name',nap.name)}
@@ -1443,10 +1465,14 @@ async function renderSettings(){
 }
 function napField(k,l,v){ return `<div class="f"><label>${l}</label><input type="text" value="${esc(v==null?'':v)}" onchange="saveSetting('nap','${k}',this.value)"></div>`; }
 async function saveSetting(key,sub,val){
+  if(!CURRENT_CLIENT_ID){ toast('Pick a client first'); return; }
   const cur = SETTINGS[key]||{}; cur[sub]=val;
   if(key==='drive' && sub==='folder_url'){ const m=String(val||'').match(/[-\w]{25,}/); cur.folder_id = m?m[0]:''; }
-  const {error} = await sb.from('va_settings').upsert({key:key,value:cur,updated_at:new Date().toISOString()});
-  if(error){ toast('Save failed'); return; }
+  const {error} = await sb.from('va_settings').upsert(
+    {client_id:CURRENT_CLIENT_ID, key:key, value:cur, updated_at:new Date().toISOString()},
+    {onConflict:'client_id,key'}
+  );
+  if(error){ toast('Save failed: '+error.message); return; }
   SETTINGS[key]=cur; renderTopBar(); toast('Saved');
 }
 
