@@ -286,7 +286,7 @@ calendar: {
     fields:[
       {k:"client",l:"Client",t:"text"},
       {k:"project",l:"Project",t:"text"},
-      {k:"channel",l:"Channel",t:"select",o:["","SMS","Emails","In person","Other"]},
+      {k:"channel",l:"Channel",t:"select",o:["","SMS","Email","In person","Other"]},
       {k:"asked_date",l:"Asked",t:"date"},
       {k:"rating",l:"Rating",t:"select",o:["","1","2","3","4","5"]},
       {k:"reply_status",l:"Reply",t:"status",o:["None","Draft","Tim approved","Posted"]},
@@ -302,7 +302,7 @@ calendar: {
     orderBy:"created_at", newLabel:"+ Add guest post",
     fields:[
       {k:"site_name",l:"Site / publication",t:"text"},
-      {k:"status",l:"Status",t:"status",o:["Researched","Contacted","Negotiating","Agreed","Submitted","Published","Declined"]},
+      {k:"status",l:"Status",t:"status",o:["Contacted","Negotiating","Agreed","Submitted","Published","Declined"]},
       {k:"contact",l:"Contact name",t:"text"},
       {k:"contact_email",l:"Contact email",t:"email"},
       {k:"site_url",l:"Site URL",t:"url"},
@@ -482,7 +482,11 @@ async function showApp(){
   await loadSettings();
   await loadClients();
   buildTabs();
-  openTab('dashboard');
+  // Reopen whichever tab was active before the last reload, instead of
+  // always dropping back to "This Week". Falls back to dashboard if the
+  // saved value is missing or no longer a real tab.
+  const savedTab = localStorage.getItem('cc_active_tab');
+  openTab(TAB_ORDER.includes(savedTab) ? savedTab : 'dashboard');
 }
 if(sessionStorage.getItem('cc_ok')==='1'){ showApp(); }
 
@@ -527,6 +531,7 @@ function setActive(id){
 }
 async function openTab(id){
   CURRENT_TAB = id;
+  localStorage.setItem('cc_active_tab', id);
   setActive(id);
   const view = document.getElementById('view');
   view.innerHTML = '<div class="empty">Loading…</div>';
@@ -621,13 +626,25 @@ function publishBlockHTML(row){
     <div class="publish-row">
       <span class="pill status-${slug}">${esc(status)}</span>
       ${links?`<span class="publish-links">${links}</span>`:''}
-      <button class="btn-sm" onclick="publishSlot('${row.id}',this)">🚀 Publish now</button>
+      ${armed
+        ? `<span class="cref-note">⏰ Scheduled — will auto-publish on its own, no need to click Publish now</span>`
+        : `<button class="btn-sm" onclick="publishSlot('${row.id}',this)">🚀 Publish now</button>`}
       ${armed?`<button class="btn-sm" style="border-color:var(--bad);color:var(--bad)" onclick="cancelSlot('${row.id}',this)">🛑 Cancel schedule</button>`:''}
       ${hasIGMedia?`<button class="btn-sm" onclick="checkCollabStatus('${row.id}',this)">👥 Check collab status</button>`:''}
     </div>
     ${row.status==='Cancelled'?'<div class="cref-note" style="margin-top:6px">Cancelled — this post won’t auto-publish. Change its Status above to reschedule.</div>':''}
     ${row.publish_error?`<div class="publish-error">${esc(row.publish_error)}</div>`:''}
   </div>`;
+}
+// Re-renders just the publish block (status pill / Publish now / Cancel
+// schedule / links) for one calendar card in place, without a full
+// re-fetch. Needed anywhere a change affects `armed`/publish_status display
+// — e.g. the workflow Status dropdown — so the card reflects it immediately
+// instead of only after the next tab switch or page reload.
+function refreshPublishBlock(rowId){
+  const row = CALENDAR_ROWS.find(x=>x.id===rowId);
+  const el = document.getElementById('pub-'+rowId);
+  if(row && el) el.outerHTML = publishBlockHTML(row);
 }
 async function publishSlot(rowId,btn){
   if(!confirm('This publishes live to the connected accounts right now — no draft/undo. Continue?')) return;
@@ -802,10 +819,11 @@ function driveDownload(id){ return `https://drive.google.com/uc?export=download&
 function driveView(r){ return r.drive_link || (r.drive_file_id?`https://drive.google.com/file/d/${r.drive_file_id}/view`:null); }
 function linksHTML(r){
   const links=[];
+  links.push(`<a href="#" onclick="event.stopPropagation();event.preventDefault();openPreview('${r.id}')">👁 Preview</a>`);
   const v = driveView(r);
   if(v) links.push(`<a href="${esc(v)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Open in Drive</a>`);
   if(r.drive_file_id) links.push(`<a href="${driveDownload(r.drive_file_id)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">⬇ Download</a>`);
-  return links.length?`<div class="ccard-links">${links.join('')}</div>`:'';
+  return `<div class="ccard-links">${links.join('')}</div>`;
 }
 function tagsHTML(r){
   const pillar = r.pillar||'';
@@ -1285,11 +1303,12 @@ async function saveField(id,rowId,field,val){
   if(error){ toast('Save failed: '+error.message); return; }
   flash(rowId);
   if(id==='content'){ const i=CONTENT_ROWS.findIndex(x=>x.id===rowId); if(i>=0) CONTENT_ROWS[i][field]=val; updateContentCard(rowId); }
-  if(id==='calendar'){ 
-    const i=CALENDAR_ROWS.findIndex(x=>x.id===rowId); 
-    if(i>=0) CALENDAR_ROWS[i][field]=val; 
+  if(id==='calendar'){
+    const i=CALENDAR_ROWS.findIndex(x=>x.id===rowId);
+    if(i>=0) CALENDAR_ROWS[i][field]=val;
     if(field==='pillar') renderCref(rowId);
     if(field==='slot_date' || field==='slot_time' || field==='day_slot') { renderCalendarGrid(); }
+    if(field==='status') { refreshPublishBlock(rowId); }
   }
 }
 async function saveMulti(id,rowId,field,opt,checked){
