@@ -1135,14 +1135,33 @@ const DEMO = false;
   }
 
   // ── Performance tab ──────────────────────────────────────────────────────
-  // Reads public.va_post_performance — a view (latest snapshot per slot/platform,
-  // joined to va_calendar_slots for client_id/slot_date/caption) that lives in the
-  // same Supabase project. Built for the Ops Workspace's Instagram/Facebook/YouTube
-  // publishing + stats system (social-publish / social-stats edge functions).
-  // Scoped per-client via va_calendar_slots.client_id, so this is safe to reuse for
-  // any future client that gets their own Ops Workspace instance.
-  var PLATFORM_LABELS = { ig_feed:'IG Feed', ig_reel:'IG Reel', ig_trial_reel:'IG Trial Reel', fb_feed:'FB Feed', fb_reel:'FB Reel', yt_long:'YouTube', yt_short:'YT Short', ig_story:'IG Story', fb_story:'FB Story' };
+  // As of 2026-07-21, this reads LIVE data straight from Instagram/Facebook/
+  // YouTube via the list-posts edge function — NOT va_post_performance
+  // (which only ever showed posts scheduled/published through this portal's
+  // own calendar). Han's call: portal-tracked coverage was unreliable since
+  // plenty of posting happens straight from the phone app, outside the
+  // portal entirely. list-posts queries the platforms directly and is
+  // scoped by the client's `slug` (not client_id — no va_calendar_slots
+  // dependency at all), so it picks up every post regardless of how it
+  // went out, including brand-new ones the moment they're posted.
+  var PLATFORM_LABELS = { facebook:'Facebook', instagram:'Instagram', youtube:'YouTube', ig_feed:'IG Feed', ig_reel:'IG Reel', ig_trial_reel:'IG Trial Reel', fb_feed:'FB Feed', fb_reel:'FB Reel', yt_long:'YouTube', yt_short:'YT Short', ig_story:'IG Story', fb_story:'FB Story' };
   function platformLabel(k) { return PLATFORM_LABELS[k] || k; }
+  function isoDaysAgo(n) {
+    var d = new Date(); d.setDate(d.getDate() - n);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function monthLabel(key) {
+    var p = key.split('-'); var d = new Date(+p[0], +p[1] - 1, 1);
+    return d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  }
+
+  // Month filter + sort state for the Performance tab — client-side only,
+  // applied against the already-fetched PERF_ALL_ROWS so switching month/sort
+  // never needs another live platform fetch.
+  var PERF_ALL_ROWS = [], PERF_SINCE = null, PERF_END = null, PERF_WARNINGS = [];
+  var perfMonthFilter = 'all';
+  var perfSortField = 'date';
+  var PERF_SORT_LABELS = { date:'Date (newest first)', views:'Views', reach:'Reach', likes:'Likes', comments:'Comments', shares:'Shares' };
 
   // Date range (ISO start/end) for a retainer period tag {year,month}, derived
   // from the same contractPeriods() math the month lens already uses.
@@ -1163,47 +1182,107 @@ const DEMO = false;
     if (!root) return;
     var c = clientCache;
     var range = (viewPeriod && c.contract_start) ? performancePeriodRange(c.contract_start, viewPeriod) : null;
-    var query = '?client_id=eq.' + currentClientId + '&order=slot_date.desc';
-    if (range) query += '&slot_date=gte.' + range.startISO + '&slot_date=lte.' + range.endISO;
-    var rows = [];
-    try { rows = await db('va_post_performance', 'GET', null, query); }
-    catch (e) { root.innerHTML = '<div class="table-empty">Could not load performance data — this client may not have an Ops Workspace connected yet.</div>'; return; }
-    root.innerHTML = renderPerformanceHTML(rows, range);
+    var since = range ? range.startISO : isoDaysAgo(180);
+    var slug = c.slug;
+    if (!slug) { root.innerHTML = '<div class="table-empty">This client has no slug set — can\'t match it to a live social account.</div>'; return; }
+
+    root.innerHTML = '<div style="font-family:inherit,monospace;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted-2);padding:24px 0;">Loading live posts from Instagram, Facebook & YouTube…</div>';
+
+    var rows = []; var warnings = [];
+    try {
+      var res = await fetch(SUPABASE_URL + '/functions/v1/list-posts?since=' + encodeURIComponent(since) + '&clients=' + encodeURIComponent(slug), {
+        headers: { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY }
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      var entry = data.clients && data.clients[slug];
+      rows = (entry && entry.posts) || [];
+      warnings = (entry && entry.warnings) || [];
+    } catch (e) {
+      root.innerHTML = '<div class="table-empty">Could not load live platform data — ' + esc(e.message) + '</div>';
+      return;
+    }
+    PERF_ALL_ROWS = rows;
+    PERF_SINCE = since;
+    PERF_END = range ? range.endISO : 'today';
+    PERF_WARNINGS = warnings;
+    perfMonthFilter = 'all';
+    perfSortField = 'date';
+    renderPerformanceView();
   }
 
-  function renderPerformanceHTML(rows, range) {
-    var h = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">';
-    h += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);">' + (range ? (esc(range.startISO) + ' → ' + esc(range.endISO)) : 'All time') + '</div>';
-    h += '<button class="btn" onclick="BIZ.refreshPerformanceStats(this)">↻ Refresh stats</button>';
-    h += '</div>';
+  // Re-renders from the already-fetched PERF_ALL_ROWS — no network call, so
+  // switching the month/sort dropdowns is instant.
+  function renderPerformanceView() {
+    var root = document.getElementById('performance-root');
+    if (!root) return;
+    root.innerHTML = renderPerformanceHTML(PERF_ALL_ROWS, PERF_SINCE, PERF_END, PERF_WARNINGS);
+  }
 
-    if (!rows.length) { h += '<div class="table-empty">No published posts with stats in this period yet.</div>'; return h; }
+  function setPerfMonthFilter(v) { perfMonthFilter = v; renderPerformanceView(); }
+  function setPerfSortField(v) { perfSortField = v; renderPerformanceView(); }
+
+  function renderPerformanceHTML(allRows, sinceISO, endLabel, warnings) {
+    // Month options are derived from whatever's actually in the fetched
+    // range, not a fixed calendar list — a client with only 2 months of
+    // history shouldn't see 12 empty options.
+    var monthKeys = {};
+    allRows.forEach(function (r) { if (r.date) monthKeys[r.date.slice(0, 7)] = 1; });
+    var months = Object.keys(monthKeys).sort().reverse();
+
+    var rows = perfMonthFilter === 'all' ? allRows : allRows.filter(function (r) { return r.date && r.date.slice(0, 7) === perfMonthFilter; });
+
+    var sortField = perfSortField;
+    rows = rows.slice().sort(function (a, b) {
+      if (sortField === 'date') return (a.date || '') < (b.date || '') ? 1 : -1;
+      var av = a[sortField] == null ? -1 : a[sortField], bv = b[sortField] == null ? -1 : b[sortField];
+      return bv - av;
+    });
+
+    var h = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">';
+    h += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);">' + esc(sinceISO) + ' → ' + esc(endLabel) + ' · live from Instagram/Facebook/YouTube</div>';
+    h += '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">';
+    var selStyle = 'padding:7px 10px;border-radius:8px;border:1px solid var(--line,#ddd);background:var(--paper,#fff);font:inherit;font-size:13px;';
+    h += '<select style="' + selStyle + '" onchange="BIZ.setPerfMonthFilter(this.value)">';
+    h += '<option value="all"' + (perfMonthFilter === 'all' ? ' selected' : '') + '>All months</option>';
+    months.forEach(function (m) { h += '<option value="' + esc(m) + '"' + (perfMonthFilter === m ? ' selected' : '') + '>' + esc(monthLabel(m)) + '</option>'; });
+    h += '</select>';
+    h += '<select style="' + selStyle + '" onchange="BIZ.setPerfSortField(this.value)">';
+    Object.keys(PERF_SORT_LABELS).forEach(function (k) { h += '<option value="' + k + '"' + (perfSortField === k ? ' selected' : '') + '>Sort: ' + PERF_SORT_LABELS[k] + '</option>'; });
+    h += '</select>';
+    h += '<button class="btn" onclick="BIZ.refreshPerformanceStats(this)">↻ Refresh from platforms</button>';
+    h += '</div></div>';
+
+    if (warnings && warnings.length) {
+      h += '<div class="table-empty" style="text-align:left;margin-bottom:16px;">' + warnings.map(esc).join('<br>') + '</div>';
+    }
+
+    if (!rows.length) { h += '<div class="table-empty">No posts found on any connected platform in this period.</div>'; return h; }
 
     // Reach isn't available for every platform/post-type: YouTube has no
     // reach concept via this API, and Facebook Reels/videos lost their reach
     // metric when Meta deprecated it (only plain FB feed/photo/link posts
-    // still expose reach — fetchFBStats flags Reels with reach_unavailable
-    // in the row's raw JSON). This distinguishes "genuinely can't get this
-    // number" from "just hasn't been fetched yet" so the client sees "Not
+    // still expose reach). list-posts sets reach_unavailable directly on
+    // each row for exactly this reason — distinguishes "genuinely can't get
+    // this number" from "just came back null" so the client sees "Not
     // available" instead of a blank/zero that reads as zero reach.
-    function reachIsNA(r) {
-      return r.platform === 'yt_long' || r.platform === 'yt_short' || !!(r.raw && r.raw.reach_unavailable);
-    }
+    function reachIsNA(r) { return !!r.reach_unavailable; }
+    function n(v) { return v == null ? 0 : v; }
+    function cell(v) { return v == null ? '<span style="color:var(--muted);">—</span>' : v; }
 
     var totals = { likes: 0, comments: 0, shares: 0, views: 0, reach: 0 };
-    var seenSlots = {}; var byPlatform = {};
+    var byPlatform = {};
     rows.forEach(function (r) {
-      seenSlots[r.slot_id] = 1;
-      totals.likes += r.likes || 0; totals.comments += r.comments || 0;
-      totals.shares += r.shares || 0; totals.views += r.views || 0; totals.reach += r.reach || 0;
+      totals.likes += n(r.likes); totals.comments += n(r.comments);
+      totals.shares += n(r.shares); totals.views += n(r.views); totals.reach += n(r.reach);
       var p = byPlatform[r.platform] = byPlatform[r.platform] || { count: 0, likes: 0, comments: 0, shares: 0, views: 0, reach: 0, reachNAOnly: true };
-      p.count++; p.likes += r.likes || 0; p.comments += r.comments || 0; p.shares += r.shares || 0; p.views += r.views || 0; p.reach += r.reach || 0;
+      p.count++; p.likes += n(r.likes); p.comments += n(r.comments); p.shares += n(r.shares); p.views += n(r.views); p.reach += n(r.reach);
       if (!reachIsNA(r)) p.reachNAOnly = false;
     });
-    var postCount = Object.keys(seenSlots).length;
+    var postCount = rows.length;
 
     h += '<div class="mix-grid" style="margin-bottom:26px;">';
-    h += '<div class="mix-item total"><div class="mix-count">' + postCount + '</div><div class="mix-label">Posts Published</div></div>';
+    h += '<div class="mix-item total"><div class="mix-count">' + postCount + '</div><div class="mix-label">Posts</div></div>';
     h += '<div class="mix-item"><div class="mix-count">' + totals.likes + '</div><div class="mix-label">Likes</div></div>';
     h += '<div class="mix-item"><div class="mix-count">' + totals.comments + '</div><div class="mix-label">Comments</div></div>';
     h += '<div class="mix-item"><div class="mix-count">' + totals.shares + '</div><div class="mix-label">Shares</div></div>';
@@ -1220,12 +1299,13 @@ const DEMO = false;
     });
     h += '</tbody></table></div></div>';
 
-    h += '<div class="cal-sec"><div class="cal-sec-title">Posts</div><div class="table-card"><table class="data-table"><thead><tr><th>Date</th><th>Platform</th><th>Caption</th><th>Likes</th><th>Comments</th><th>Views</th><th>Reach</th></tr></thead><tbody>';
+    h += '<div class="cal-sec"><div class="cal-sec-title">Posts</div><div class="table-card"><table class="data-table"><thead><tr><th>Date</th><th>Platform</th><th>Type</th><th>Caption</th><th>Likes</th><th>Comments</th><th>Views</th><th>Reach</th><th>Link</th></tr></thead><tbody>';
     rows.forEach(function (r) {
       var cap = (r.caption || '').replace(/\s+/g, ' ').trim();
       if (cap.length > 60) cap = cap.slice(0, 60) + '…';
-      var reachCell = reachIsNA(r) ? naCell : (r.reach != null ? r.reach : 0);
-      h += '<tr><td class="narrow">' + esc(r.slot_date || '') + '</td><td class="narrow">' + esc(platformLabel(r.platform)) + '</td><td>' + esc(cap) + '</td><td>' + (r.likes || 0) + '</td><td>' + (r.comments || 0) + '</td><td>' + (r.views || 0) + '</td><td>' + reachCell + '</td></tr>';
+      var reachCell = reachIsNA(r) ? naCell : cell(r.reach);
+      var linkCell = r.permalink ? '<a href="' + esc(r.permalink) + '" target="_blank" rel="noopener">View</a>' : '';
+      h += '<tr><td class="narrow">' + esc(r.date || '') + '</td><td class="narrow">' + esc(platformLabel(r.platform)) + '</td><td class="narrow">' + esc(r.type || '') + '</td><td>' + esc(cap) + '</td><td>' + cell(r.likes) + '</td><td>' + cell(r.comments) + '</td><td>' + cell(r.views) + '</td><td>' + reachCell + '</td><td class="narrow">' + linkCell + '</td></tr>';
     });
     h += '</tbody></table></div></div>';
     return h;
@@ -1234,15 +1314,10 @@ const DEMO = false;
   async function refreshPerformanceStats(btn) {
     if (btn) { btn.disabled = true; btn.textContent = 'Refreshing…'; }
     try {
-      var res = await fetch(SUPABASE_URL + '/functions/v1/social-stats', {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': KEY, 'Authorization': 'Bearer ' + KEY },
-        body: JSON.stringify({ cron: true })
-      });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      toast('Stats refreshed');
       await renderPerformanceTab();
+      toast('Refreshed from live platforms');
     } catch (e) { toast('Refresh failed: ' + e.message, true); }
-    finally { if (btn) { btn.disabled = false; btn.textContent = '↻ Refresh stats'; } }
+    finally { if (btn) { btn.disabled = false; btn.textContent = '↻ Refresh from platforms'; } }
   }
 
   async function renderHistoryTab() {
@@ -1615,7 +1690,7 @@ async function boot(view, section) {
   try { await loadClients(); } catch (e) { toast('Failed to load clients', true); }
 }
 
-window.BIZ = Object.assign({ bizLock, bizUnlock }, { addRow, adminCalNav, adminCalNavReset, batchIgnore, batchSendEmails, clearSelection, closeMonth, closePostModal, copyLink, copySnapLink, createNewClient, delRow, deletePostModalForm, fillSnapLabel, filterClients, loadLeads, markContacted, markStatus, moveRow, onFieldInput, openPostModal, refreshPerformanceStats, renderLeadsTable, saveEmail, savePostModalForm, sendOutreachEmail, setViewPeriod, switchTab, toggleRow, toggleSelectAll, triggerScrape, updateRow });
+window.BIZ = Object.assign({ bizLock, bizUnlock }, { addRow, adminCalNav, adminCalNavReset, batchIgnore, batchSendEmails, clearSelection, closeMonth, closePostModal, copyLink, copySnapLink, createNewClient, delRow, deletePostModalForm, fillSnapLabel, filterClients, loadLeads, markContacted, markStatus, moveRow, onFieldInput, openPostModal, refreshPerformanceStats, renderLeadsTable, saveEmail, savePostModalForm, sendOutreachEmail, setPerfMonthFilter, setPerfSortField, setViewPeriod, switchTab, toggleRow, toggleSelectAll, triggerScrape, updateRow });
 
 window.BusinessModule = {
   async render(view, section) {

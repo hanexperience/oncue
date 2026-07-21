@@ -14,9 +14,9 @@
 <link rel="shortcut icon" href="../assets/favicon/favicon.ico">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700;800&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="admin/css/command.css"/>
-<link rel="stylesheet" href="admin/css/business.css"/>
-<link rel="stylesheet" href="admin/css/tax.css"/>
+<link rel="stylesheet" href="css/command.css"/>
+<link rel="stylesheet" href="css/business.css"/>
+<link rel="stylesheet" href="css/tax.css"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -147,6 +147,15 @@
   .pill.status-published{background:var(--good)}
   .pill.status-partial{background:var(--warn)}
   .pill.status-failed{background:var(--bad)}
+  .publish-plat-list{margin-top:8px;display:flex;flex-direction:column;gap:4px}
+  .publish-plat-row{display:flex;align-items:center;gap:8px;font-size:11.5px;padding:4px 8px;border-radius:6px;background:var(--paper2)}
+  .publish-plat-label{font-weight:600;min-width:92px}
+  .publish-plat-text{color:var(--muted);flex:1}
+  .publish-plat-row a{font-weight:600;white-space:nowrap}
+  .publish-plat-fail{background:rgba(168,84,63,.1)}
+  .publish-plat-fail .publish-plat-text{color:var(--bad);font-weight:600}
+  .publish-plat-ok{background:rgba(91,122,83,.1)}
+  .publish-plat-wait{background:rgba(184,134,59,.1)}
 
   /* Preview modal */
   .preview-modal{position:fixed;inset:0;background:rgba(38,37,34,.75);display:flex;align-items:center;justify-content:center;z-index:500;padding:20px}
@@ -236,9 +245,9 @@
   </div>
 </div>
 
-<script src="admin/js/workspace.js"></script>
-<script src="admin/js/tax.js"></script>
-<script src="admin/js/command.js"></script>
-<script src="admin/js/business.js"></script>
+<script src="js/workspace.js?v=20260721d"></script>
+<script src="js/tax.js?v=20260721d"></script>
+<script src="js/command.js?v=20260721d"></script>
+<script src="js/business.js?v=20260721d"></script>
 </body>
 </html>

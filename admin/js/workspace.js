@@ -153,7 +153,7 @@ calendar: {
     ]
   },
   reddit: {
-    table:"va_reddit_threads", title:"Reddit Watch",
+    table:"va_reddit_threads", title:"Reddit/Facebook Watch",
     sub:"Flag relevant threads — don't reply yourself. The reply goes out in Tim's voice.",
     orderBy:"created_at", newLabel:"+ Add thread",
     icon:"👽", titleKey:"url", subtitleKey:"handled_by", previewKey:"note", emptyTitle:"(no thread URL yet)",
@@ -699,7 +699,15 @@ function renderBlogCards(){
 }
 
 /* ---- Publish (Instagram / Facebook via social-publish Edge Function) ---- */
-const PUBLISH_KEY_LABELS = {ig_feed:'IG Feed', ig_reel:'IG Reel', ig_trial_reel:'IG Trial Reel', ig_story:'IG Story', fb_feed:'FB Feed', fb_story:'FB Story', fb_reel:'FB Reel', yt_long:'YouTube', yt_short:'YT Short'};
+const PUBLISH_KEY_LABELS = {ig_feed:'IG Feed', ig_reel:'IG Reel', ig_trial_reel:'IG Trial Reel', ig_story:'IG Story', fb_feed:'FB Feed', fb_story:'FB Story', fb_reel:'FB Reel', yt_long:'YouTube', yt_short:'YT Short', facebook:'Facebook', instagram:'Instagram', youtube:'YouTube'};
+// Maps the platform labels stored on va_calendar_slots.platforms back to the
+// platform_post_ids key the edge function writes results under — needed to
+// show a per-platform status line for exactly what's currently ticked.
+const PLATFORM_LABEL_TO_KEY = {
+  'IG feed':'ig_feed', 'IG Reel':'ig_reel', 'IG Trial Reel':'ig_trial_reel', 'IG Story':'ig_story',
+  'FB feed':'fb_feed', 'FB Story':'fb_story', 'FB Reel':'fb_reel',
+  'YT long-form':'yt_long', 'YT Short':'yt_short'
+};
 // Small icon per platform for the calendar's compact card view — lets you
 // tell at a glance what a post is going out to without reading text.
 const PLATFORM_ICONS = {
@@ -716,10 +724,39 @@ function publishBlockHTML(row){
   const status = row.publish_status || 'Not queued';
   const slug = status.toLowerCase().replace(/\s+/g,'-');
   const ids = row.platform_post_ids || {};
-  const links = Object.entries(ids)
-    .filter(([,v])=>v && v.permalink)
-    .map(([k,v])=>`<a href="${esc(v.permalink)}" target="_blank" rel="noopener">${esc(PUBLISH_KEY_LABELS[k]||k)} ↗</a>`)
-    .join(' · ');
+  const requested = Array.isArray(row.platforms) ? row.platforms : [];
+  const requestedKeys = new Set(requested.map(p=>PLATFORM_LABEL_TO_KEY[p]).filter(Boolean));
+
+  // Per-platform breakdown for everything currently ticked on this post —
+  // this is what makes a partial failure (e.g. FB Reel errors while IG
+  // succeeds) visible platform-by-platform instead of one aggregate pill
+  // that can otherwise read "Published" even when a ticked platform failed.
+  const platformRows = requested.map(label=>{
+    const key = PLATFORM_LABEL_TO_KEY[label];
+    const entry = key ? ids[key] : null;
+    let state, text;
+    if(entry && entry.error){ state='fail'; text = entry.error; }
+    else if(entry && entry.published_at){ state='ok'; text = 'Published'; }
+    else if(entry && entry.status==='processing'){ state='wait'; text = 'Still processing…'; }
+    else { state='wait'; text = 'Not attempted yet'; }
+    const dot = state==='ok'?'✅':state==='fail'?'❌':'⏳';
+    return `<div class="publish-plat-row publish-plat-${state}">
+      <span>${PLATFORM_ICONS[label]||'•'}</span>
+      <span class="publish-plat-label">${esc(label)}</span>
+      <span>${dot}</span>
+      <span class="publish-plat-text">${esc(text)}</span>
+      ${entry && entry.permalink ? `<a href="${esc(entry.permalink)}" target="_blank" rel="noopener">View ↗</a>` : ''}
+    </div>`;
+  }).join('');
+
+  // Leftover results for platforms no longer ticked — usually means a
+  // platform was unticked after a failed attempt. Surface it rather than
+  // silently dropping it, since the pill/rows above only reflect the
+  // currently-ticked platforms.
+  const orphanErrors = Object.entries(ids)
+    .filter(([k,v])=> v && v.error && !requestedKeys.has(k))
+    .map(([k,v])=>`${PUBLISH_KEY_LABELS[k]||k} (no longer ticked): ${v.error}`);
+
   // "Armed" = cron will pick this up and auto-publish it (see the
   // APPROVAL GATE in the social-publish edge function: only "Tim approved"
   // or "Scheduled" slots get auto-published). Only show Cancel while that's
@@ -729,15 +766,16 @@ function publishBlockHTML(row){
   return `<div class="publish-block" id="pub-${row.id}">
     <div class="publish-row">
       <span class="pill status-${slug}">${esc(status)}</span>
-      ${links?`<span class="publish-links">${links}</span>`:''}
       ${armed
         ? `<span class="cref-note">⏰ Scheduled — will auto-publish on its own, no need to click Publish now</span>`
         : `<button class="btn-sm" onclick="publishSlot('${row.id}',this)">🚀 Publish now</button>`}
       ${armed?`<button class="btn-sm" style="border-color:var(--bad);color:var(--bad)" onclick="cancelSlot('${row.id}',this)">🛑 Cancel schedule</button>`:''}
       ${hasIGMedia?`<button class="btn-sm" onclick="checkCollabStatus('${row.id}',this)">👥 Check collab status</button>`:''}
     </div>
+    ${requested.length ? `<div class="publish-plat-list">${platformRows}</div>` : ''}
     ${row.status==='Cancelled'?'<div class="cref-note" style="margin-top:6px">Cancelled — this post won’t auto-publish. Change its Status above to reschedule.</div>':''}
     ${row.publish_error?`<div class="publish-error">${esc(row.publish_error)}</div>`:''}
+    ${orphanErrors.length?`<div class="publish-error">${esc(orphanErrors.join(' | '))}</div>`:''}
   </div>`;
 }
 // Re-renders just the publish block (status pill / Publish now / Cancel
@@ -1257,12 +1295,30 @@ async function addNewSlotForSelectedDate() {
 }
 
 /* ============================================================
-   PERFORMANCE — stats for published posts (IG/FB likes+comments(+shares),
-   YouTube views+likes+comments). Pulled from va_post_stats snapshots that
-   the social-stats Edge Function writes (daily cron + manual refresh here).
+   PERFORMANCE — live Instagram/Facebook/YouTube posts + engagement stats,
+   pulled directly from the platforms via the list-posts Edge Function.
+   NOT sourced from va_calendar_slots/va_post_stats (portal-tracked-only,
+   the old approach) — this is deliberately independent so it also shows
+   posts made straight from the phone app, not just ones scheduled here.
+   Same source/reasoning as Business → Clients → Performance (js/business.js,
+   renderPerformanceTab) — added here 2026-07-21 so VAs and anyone in the
+   Workspace section (not just the owner-only Business section) see the
+   same reliable picture. See CLAUDE.md's list-posts entry for known gaps
+   (Crowncon FB likes/comments/shares permission issue, YouTube OAuth scope).
    ============================================================ */
 let PERF_ROWS = [];
+let PERF_ALL_POSTS = []; // raw, unfiltered fetch result — month filter is applied client-side against this
 let perfSort = {col:'date', dir:'desc'};
+let perfMonthFilter = 'all';
+let perfSinceLabel = '';
+let PERF_WARNINGS = [];
+const PERF_LOOKBACK_DAYS = 180;
+const PERF_SORT_LABELS = {date:'Date (newest first)', views:'Views', reach:'Reach', likes:'Likes', comments:'Comments', shares:'Shares'};
+
+function monthLabel(key){
+  const p = key.split('-'); const d = new Date(+p[0], +p[1]-1, 1);
+  return d.toLocaleString('en-US', {month:'long', year:'numeric'});
+}
 
 async function renderPerformance(){
   setActive('performance');
@@ -1270,87 +1326,106 @@ async function renderPerformance(){
   view.innerHTML = '<div class="empty">Loading…</div>';
   if(!CURRENT_CLIENT_ID){ view.innerHTML = '<div class="empty">No client selected — pick one from the dropdown in the top bar.</div>'; return; }
 
-  const { data: slots, error: slotErr } = await sb.from('va_calendar_slots')
-    .select('id, slot_date, caption, content_item_id, platform_post_ids')
-    .eq('publish_status','Published')
-    .eq('client_id',CURRENT_CLIENT_ID)
-    .order('slot_date',{ascending:false});
-  if(slotErr){ view.innerHTML = `<div class="empty">Error: ${esc(slotErr.message)}</div>`; return; }
+  const client = CLIENTS.find(c=>c.id===CURRENT_CLIENT_ID);
+  const slug = client && client.slug;
+  if(!slug){ view.innerHTML = '<div class="empty">This client has no slug set — can\'t match it to a live social account.</div>'; return; }
 
-  const rows = slots || [];
+  view.innerHTML = '<div class="empty">Loading live posts from Instagram, Facebook & YouTube…</div>';
+
+  const d = new Date(); d.setDate(d.getDate()-PERF_LOOKBACK_DAYS);
+  const since = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+
+  let posts = [], warnings = [];
+  try{
+    const res = await fetch(`${FUNCTIONS_URL}/list-posts?since=${encodeURIComponent(since)}&clients=${encodeURIComponent(slug)}`);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const d2 = await res.json();
+    const entry = d2.clients && d2.clients[slug];
+    posts = (entry && entry.posts) || [];
+    warnings = (entry && entry.warnings) || [];
+  }catch(e){
+    view.innerHTML = `<div class="empty">Could not load live platform data — ${esc(e.message)}</div>`;
+    return;
+  }
+
+  PERF_ALL_POSTS = posts;
+  PERF_WARNINGS = warnings;
+  perfSinceLabel = since;
+  perfMonthFilter = 'all';
+  perfSort = {col:'date', dir:'desc'};
+  renderPerformanceView();
+}
+
+// Rebuilds the whole tab from PERF_ALL_POSTS — no network call, so the
+// month/sort dropdowns are instant.
+function renderPerformanceView(){
+  const view = document.getElementById('view');
+  if(!view) return;
+  const warnings = PERF_WARNINGS || [];
+
+  const monthKeys = {};
+  PERF_ALL_POSTS.forEach(p=>{ if(p.date) monthKeys[p.date.slice(0,7)] = 1; });
+  const months = Object.keys(monthKeys).sort().reverse();
+
+  const selStyle = 'padding:7px 10px;border-radius:8px;border:1px solid var(--line,#ddd);background:var(--paper,#fff);font:inherit;font-size:13px;';
+
   view.innerHTML = `
     <div class="tabhead">
-      <div><h2>Performance</h2><div class="sub">Likes, comments, shares, views and reach for everything that's gone live. Refreshes automatically once a day, or refresh now.</div></div>
-      <button class="btn-add" onclick="refreshAllStats(this)">🔄 Refresh stats now</button>
+      <div><h2>Performance</h2><div class="sub">Likes, comments, shares, views and reach for everything live since ${esc(perfSinceLabel)} — pulled straight from Instagram, Facebook & YouTube, whether it was posted through this workspace or not.</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <select style="${selStyle}" onchange="setPerfMonthFilter(this.value)">
+          <option value="all"${perfMonthFilter==='all'?' selected':''}>All months</option>
+          ${months.map(m=>`<option value="${esc(m)}"${perfMonthFilter===m?' selected':''}>${esc(monthLabel(m))}</option>`).join('')}
+        </select>
+        <select style="${selStyle}" onchange="setPerfSortField(this.value)">
+          ${Object.keys(PERF_SORT_LABELS).map(k=>`<option value="${k}"${perfSort.col===k?' selected':''}>Sort: ${PERF_SORT_LABELS[k]}</option>`).join('')}
+        </select>
+        <button class="btn-add" onclick="refreshAllStats(this)">🔄 Refresh from platforms</button>
+      </div>
     </div>
     <div class="callout">📊 Instagram shows likes, comments, shares, views and reach (real Insights data). Facebook shows likes, comments, shares and views for everything — reach too, but only for plain feed/photo/link posts; Facebook Reels/videos show "Not available" for reach since Meta doesn't expose that metric for Reels anymore. YouTube shows views + likes + comments; reach is always "Not available" there since YouTube has no reach concept via this API.</div>
+    ${warnings.length?`<div class="callout">${warnings.map(esc).join('<br>')}</div>`:''}
     <div style="overflow-x:auto"><table id="perfTable" style="width:100%;border-collapse:collapse;font-size:13px">
       <thead><tr style="text-align:left;border-bottom:2px solid var(--line)">
         <th style="padding:8px 6px;cursor:pointer" onclick="setPerfSort('name')">Post</th>
         <th style="padding:8px 6px;cursor:pointer" onclick="setPerfSort('date')">Date</th>
         <th style="padding:8px 6px;cursor:pointer" onclick="setPerfSort('platform')">Platform</th>
+        <th style="padding:8px 6px;cursor:pointer" onclick="setPerfSort('type')">Type</th>
         <th style="padding:8px 6px;cursor:pointer;text-align:right" onclick="setPerfSort('likes')">Likes</th>
         <th style="padding:8px 6px;cursor:pointer;text-align:right" onclick="setPerfSort('comments')">Comments</th>
         <th style="padding:8px 6px;cursor:pointer;text-align:right" onclick="setPerfSort('shares')">Shares</th>
         <th style="padding:8px 6px;cursor:pointer;text-align:right" onclick="setPerfSort('views')">Views</th>
         <th style="padding:8px 6px;cursor:pointer;text-align:right" onclick="setPerfSort('reach')">Reach</th>
-        <th style="padding:8px 6px">Updated</th>
       </tr></thead>
       <tbody id="perfBody"></tbody>
     </table></div>`;
 
-  if(!rows.length){
-    document.getElementById('perfBody').innerHTML = `<tr><td colspan="9" class="empty" style="border:none">Nothing published yet.</td></tr>`;
+  const filtered = perfMonthFilter==='all' ? PERF_ALL_POSTS : PERF_ALL_POSTS.filter(p=>p.date && p.date.slice(0,7)===perfMonthFilter);
+
+  if(!filtered.length){
+    document.getElementById('perfBody').innerHTML = `<tr><td colspan="9" class="empty" style="border:none">No posts found on any connected platform in this period.</td></tr>`;
     return;
   }
 
-  const slotIds = rows.map(r=>r.id);
-  const contentIds = [...new Set(rows.map(r=>r.content_item_id).filter(Boolean))];
-
-  const [statsRes, contentRes] = await Promise.all([
-    sb.from('va_post_stats').select('*').in('slot_id', slotIds).order('fetched_at',{ascending:false}),
-    contentIds.length ? sb.from('va_content_items').select('id,name').in('id', contentIds) : Promise.resolve({data:[]})
-  ]);
-  const stats = statsRes.data || [];
-  const nameById = {}; (contentRes.data||[]).forEach(c=>nameById[c.id]=c.name);
-
-  const latest = {}; // "slotId|platform" -> most recent snapshot row
-  stats.forEach(s=>{ const k = s.slot_id+'|'+s.platform; if(!latest[k]) latest[k]=s; });
-
-  PERF_ROWS = [];
-  rows.forEach(slot=>{
-    const ids = slot.platform_post_ids || {};
-    Object.keys(ids).forEach(platform=>{
-      const entry = ids[platform];
-      if(!entry || entry.error) return; // only platforms that actually published
-      const snap = latest[slot.id+'|'+platform];
-      // Reach isn't available for every platform/post-type: YouTube has no
-      // reach concept via this API, and Facebook Reels/videos lost their
-      // reach metric when Meta deprecated it (only plain FB feed/photo/link
-      // posts still expose reach). reachNA distinguishes "genuinely can't
-      // get this number" from "just hasn't been fetched yet" so the table
-      // can show "Not available" instead of a blank/dash that reads as zero.
-      const reachNA = (platform==='yt_long' || platform==='yt_short')
-        || !!(snap && snap.raw && snap.raw.reach_unavailable);
-      PERF_ROWS.push({
-        slotId: slot.id,
-        name: nameById[slot.content_item_id] || slot.caption || '(untitled)',
-        date: slot.slot_date,
-        platform,
-        permalink: entry.permalink || null,
-        likes: snap ? snap.likes : null,
-        comments: snap ? snap.comments : null,
-        shares: snap ? snap.shares : null,
-        views: snap ? snap.views : null,
-        reach: snap ? snap.reach : null,
-        reachNA,
-        updated: snap ? snap.fetched_at : null,
-      });
-    });
+  PERF_ROWS = filtered.map(p=>{
+    let cap = (p.caption||'').replace(/\s+/g,' ').trim();
+    if(cap.length>60) cap = cap.slice(0,60)+'…';
+    return {
+      name: cap || '(no caption)',
+      date: p.date,
+      platform: p.platform,
+      type: p.type || '',
+      permalink: p.permalink || null,
+      likes: p.likes, comments: p.comments, shares: p.shares, views: p.views, reach: p.reach,
+      reachNA: !!p.reach_unavailable,
+    };
   });
 
   renderPerfRows();
 }
+
+function setPerfMonthFilter(v){ perfMonthFilter = v; renderPerformanceView(); }
+function setPerfSortField(v){ perfSort = {col:v, dir:'desc'}; renderPerformanceView(); }
 
 function setPerfSort(col){
   if(perfSort.col===col) perfSort.dir = perfSort.dir==='desc'?'asc':'desc';
@@ -1375,25 +1450,22 @@ function renderPerfRows(){
       <td style="padding:7px 6px">${esc(r.name)}</td>
       <td style="padding:7px 6px;color:var(--muted);font-size:12px">${r.date?fmtDate(r.date):''}</td>
       <td style="padding:7px 6px">${r.permalink?`<a href="${esc(r.permalink)}" target="_blank" rel="noopener">${esc(PUBLISH_KEY_LABELS[r.platform]||r.platform)} ↗</a>`:esc(PUBLISH_KEY_LABELS[r.platform]||r.platform)}</td>
+      <td style="padding:7px 6px;color:var(--muted);font-size:12px">${esc(r.type||'')}</td>
       <td style="padding:7px 6px;text-align:right">${r.likes!=null?r.likes.toLocaleString():'—'}</td>
       <td style="padding:7px 6px;text-align:right">${r.comments!=null?r.comments.toLocaleString():'—'}</td>
       <td style="padding:7px 6px;text-align:right">${r.shares!=null?r.shares.toLocaleString():'—'}</td>
       <td style="padding:7px 6px;text-align:right">${r.views!=null?r.views.toLocaleString():'—'}</td>
       <td style="padding:7px 6px;text-align:right">${r.reachNA?'<span style="color:var(--muted);font-style:italic">Not available</span>':(r.reach!=null?r.reach.toLocaleString():'—')}</td>
-      <td style="padding:7px 6px;font-size:11px;color:var(--muted)">${r.updated?fmtDate(r.updated):'Not fetched yet'}</td>
     </tr>`).join('');
 }
 
 async function refreshAllStats(btn){
   const orig = btn.textContent; btn.disabled=true; btn.textContent='Refreshing…';
   try{
-    const res = await fetch(FUNCTIONS_URL+'/social-stats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cron:true})});
-    const d = await res.json().catch(()=>({}));
-    btn.disabled=false; btn.textContent=orig;
-    if(!res.ok || d.error){ toast('Refresh failed: '+(d.error||('HTTP '+res.status))); return; }
-    toast(`Refreshed ${d.processed||0} post(s)`);
-    renderPerformance();
-  }catch(e){ btn.disabled=false; btn.textContent=orig; toast('Refresh error: '+e.message); }
+    await renderPerformance();
+    toast('Refreshed from live platforms');
+  }catch(e){ toast('Refresh error: '+e.message); }
+  finally{ btn.disabled=false; btn.textContent=orig; }
 }
 
 function crefInner(row){
