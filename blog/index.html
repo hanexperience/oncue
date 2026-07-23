@@ -65,6 +65,17 @@
       gtag('js', new Date());
       gtag('config', 'G-29SKC7VN4C');
     </script>
+<script>
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-ga-event]');
+  if (t && typeof gtag === 'function') {
+    gtag('event', t.getAttribute('data-ga-event'), {
+      event_category: 'engagement',
+      event_label: (t.textContent || '').trim()
+    });
+  }
+});
+</script>
   </head>
 <body>
 
@@ -82,7 +93,7 @@
       <a href="../index.html#journal">Journal</a>
     </nav>
     <div class="nav-cta">
-      <a href="../index.html#apply" class="btn btn-primary">Start a conversation
+      <a href="../index.html#apply" class="btn btn-primary" data-ga-event="start_conversation">Start a conversation
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
       <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -235,5 +246,5 @@
       </div>
       <div class="foot-col">
         <h5>Get in touch</h5>
-        <a href="../index.html#apply">Start a conversation</a>
+        <a href="../index.html#apply" data-ga-event="start_conversation">Start a conversation</a>
         <a href="mailto:hello@beetsandco.com.au">

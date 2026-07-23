@@ -162,6 +162,17 @@
   gtag('js', new Date());
   gtag('config', 'G-29SKC7VN4C');
 </script>
+<script>
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-ga-event]');
+  if (t && typeof gtag === 'function') {
+    gtag('event', t.getAttribute('data-ga-event'), {
+      event_category: 'engagement',
+      event_label: (t.textContent || '').trim()
+    });
+  }
+});
+</script>
 
 
 <style>
@@ -415,7 +426,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
       <a href="#model">Studio</a>
       <a href="#about">About</a>
       <a href="#journal">Journal</a>
-      <a href="#apply" class="btn btn-green">Start a conversation</a>
+      <a href="#apply" class="btn btn-green" data-ga-event="start_conversation">Start a conversation</a>
     </div>
     <button class="menu-btn" aria-expanded="false" aria-controls="mmenu" onclick="toggleMenu(this)">MENU</button>
   </div>
@@ -424,7 +435,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
     <a href="#model">Studio</a>
     <a href="#about">About</a>
     <a href="#journal">Journal</a>
-    <a href="#apply">Start a conversation</a>
+    <a href="#apply" data-ga-event="start_conversation">Start a conversation</a>
   </div>
 </nav>
 
@@ -439,7 +450,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
     <h1>Better jobs don't find you <span class="acc">by accident.</span></h1>
     <div class="hero-sub">
       <p>I'm <strong>Michael Beets</strong> — creative director and founder of Beets &amp; Co. I've led campaigns for <strong>Volvo, the Australian Defence Force and Nando's</strong>. Now I work with a handful of Melbourne trade businesses, applying the same thinking to the people who build real things.</p>
-      <a href="#apply" class="btn btn-amber">Start a conversation <span class="arrow">→</span></a>
+      <a href="#apply" class="btn btn-amber" data-ga-event="start_conversation">Start a conversation <span class="arrow">→</span></a>
     </div>
   </div>
   <div class="strip">
@@ -732,7 +743,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
       </div>
       <div>
         <h4>Get in touch</h4>
-        <a href="#apply">Start a conversation</a>
+        <a href="#apply" data-ga-event="start_conversation">Start a conversation</a>
         <a href="mailto:hello@beetsandco.com.au">hello@beetsandco.com.au</a>
         <a href="#top">Bayside and South East Melbourne · VIC</a>
       </div>
@@ -809,7 +820,7 @@ if (form) {
       body: new FormData(form),
       headers: { 'Accept': 'application/json' }
     }).then(function(r){
-      if (r.ok) { label.textContent = 'Message sent — thank you'; form.reset(); }
+      if (r.ok) { label.textContent = 'Message sent — thank you'; form.reset(); if (typeof gtag === 'function') { gtag('event', 'generate_lead', { event_category: 'contact_form', event_label: 'Contact form submission' }); } }
       else { alert('Something went wrong. Please email hello@beetsandco.com.au directly.'); }
     }).catch(function(){ alert('Something went wrong. Please email hello@beetsandco.com.au directly.'); });
   });
