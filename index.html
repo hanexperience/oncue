@@ -210,9 +210,20 @@ h1,h2,h3{font-family:var(--disp);color:var(--ink);letter-spacing:-.02em}
 /* ── Buttons ── */
 .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--bodyf);font-weight:600;font-size:15px;padding:15px 28px;border:1px solid transparent;cursor:pointer;transition:background .18s,border-color .18s,color .18s}
 .btn-amber{background:var(--amber);color:#1C1405;border-color:var(--amber)}
-.btn-amber:hover{background:#E8AC3F;border-color:#E8AC3F}
-.btn-green{background:var(--g900);color:var(--cream);border-color:var(--g900)}
-.btn-green:hover{background:var(--g800)}
+.btn-green {
+  background: var(--g900);
+  color: #E8AC3F; /* Updated text color */
+  border-color: var(--g900);
+}
+.btn.btn-green {
+  background: var(--g900);
+  color: #E8AC3F;
+  border-color: var(--g900);
+}
+
+.btn-green:hover {
+  background: var(--g800);
+}
 .arrow{display:inline-block;transition:transform .18s}
 .btn:hover .arrow,a:hover .arrow{transform:translate(2px,-1px)}
 
