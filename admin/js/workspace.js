@@ -98,7 +98,7 @@ calendar: {
     icon:"🔗", titleKey:"site_name", subtitleKey:"contact", previewKey:"notes",
     fields:[
       {k:"site_name",l:"Site / publication",t:"text"},
-      {k:"status",l:"Status",t:"status",o:["Contacted","Negotiating","Agreed","Submitted","Published","Declined"]},
+      {k:"status",l:"Status",t:"status",o:["Not Contacted","Contacted","Negotiating","Agreed","Submitted","Published","Declined"]},
       {k:"contact",l:"Contact name",t:"text"},
       {k:"contact_email",l:"Contact email",t:"email"},
       {k:"site_url",l:"Site URL",t:"url"},
