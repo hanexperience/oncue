@@ -26,6 +26,33 @@ const SYNC_TOKEN = "";
 const PLATFORMS = ["IG feed","IG Reel","IG Trial Reel","IG Story","YT long-form","YT Short","FB feed","FB Story","FB Reel"];
 const PILLARS = ["Dream","Craft","Proof","Process","Meet Tim","Knowledge","Background"];
 
+/* UTM Builder (2026-07-27) — config lives here so campaigns/audiences can be
+   edited without touching the render/generator logic below. */
+const UTM_CAMPAIGNS = [
+  { value:"kdr-custom-home", label:"KDR Custom Home" },
+  { value:"custom-builder-melbourne", label:"Custom Builder Melbourne" },
+  { value:"home-renovation", label:"Home Renovation" },
+  { value:"property-investment", label:"Property Investment" },
+  { value:"australian-building", label:"Australian Building" },
+  { value:"family-home-build", label:"Family Home Build" }
+];
+const UTM_SUBREDDITS = [
+  { value:"r_melbourne", label:"r/melbourne" },
+  { value:"r_ausproperty", label:"r/AusProperty" },
+  { value:"r_homeimprovement", label:"r/HomeImprovement" },
+  { value:"r_buildersau", label:"r/BuildersAustralia" },
+  { value:"r_australiahousing", label:"r/australia (Housing)" },
+  { value:"r_constructionau", label:"r/constructionau" },
+  { value:"reddit_ad", label:"Reddit Ad (Paid)" }
+];
+const UTM_FB_AUDIENCES = [
+  { value:"fb_melbourne", label:"Melbourne Area" },
+  { value:"fb_bayside", label:"Bayside Suburbs" },
+  { value:"fb_homeowners", label:"Homeowners 40-65" },
+  { value:"fb_custom", label:"Custom Audience" },
+  { value:"fb_lookalike", label:"Lookalike Audience" }
+];
+
 /* Collection definitions — each becomes a tab (except dashboard/settings) */
 const COLLECTIONS = {
   content: {
@@ -189,8 +216,8 @@ calendar: {
   }
 };
 
-const TAB_ORDER = ["dashboard","content","blog","calendar","performance","reviews","guest","pins","directories","dm","reddit","gbp","notes","settings"];
-const TAB_LABELS = {dashboard:"This Week", settings:"Brand & Setup", performance:"Performance"};
+const TAB_ORDER = ["dashboard","content","blog","calendar","performance","reviews","guest","pins","directories","dm","reddit","utm","gbp","notes","settings"];
+const TAB_LABELS = {dashboard:"This Week", settings:"Brand & Setup", performance:"Performance", utm:"UTM Builder"};
 
 /* ============================================================
    MODULE TABS (2026-07-18) — owner-only tabs served by external
@@ -266,7 +293,7 @@ async function loadClients(){
   // read), so a direct select from it silently returns zero rows rather
   // than an error. client_picker exposes only id+name and is safe for the
   // anon/publishable key this workspace runs on.
-  const {data,error} = await sb.from('client_picker').select('id,name,slug').order('name');
+  const {data,error} = await sb.from('client_picker').select('id,name,slug,base_url').order('name');
   if(error){ toast('Could not load clients: '+error.message); return; }
   const all = data || [];
   const access = getAccess();
@@ -435,7 +462,116 @@ async function openTab(id){
   if(id==='blog') return renderBlog();
   if(id==='calendar') return renderCalendar();
   if(id==='performance') return renderPerformance();
+  if(id==='utm') return renderUTMBuilder();
   return renderCollection(id);
+}
+
+/* ============================================================
+   UTM BUILDER (2026-07-27) — client-scoped like every other Workspace
+   tab: uses CLIENTS[current].base_url (from the client_picker view) so
+   the generated link always points at the right client's domain without
+   retyping it. Pure frontend string-building, no Supabase writes.
+   ============================================================ */
+function currentClientObj(){ return CLIENTS.find(c=>c.id===CURRENT_CLIENT_ID); }
+function utmAudienceOptions(platform){
+  return platform==='facebook' ? UTM_FB_AUDIENCES : UTM_SUBREDDITS;
+}
+async function renderUTMBuilder(){
+  const view = document.getElementById('view');
+  if(!CURRENT_CLIENT_ID){ view.innerHTML = '<div class="empty">No client selected — pick one from the dropdown in the top bar.</div>'; return; }
+  const client = currentClientObj();
+  const hasBaseUrl = client && client.base_url;
+  view.innerHTML =
+    `<div class="tabhead"><div><h2>UTM Builder</h2><div class="sub">Build a trackable Reddit/Facebook link for ${esc(client?client.name:'this client')} — pick the options below, then copy.</div></div></div>
+     ${hasBaseUrl?'':'<div class="callout">⚠️ No base URL set for this client yet — links will fall back to Crowncon\'s domain. Add one in the <code>clients.base_url</code> column.</div>'}
+     <div class="card">
+       <div class="grid">
+         <div class="f">
+           <label>Platform</label>
+           <select id="utm-platform" onchange="updateUTM()">
+             <option value="reddit">Reddit</option>
+             <option value="facebook">Facebook</option>
+           </select>
+         </div>
+         <div class="f">
+           <label>Medium</label>
+           <select id="utm-medium" onchange="updateUTM()">
+             <option value="organic">Organic</option>
+             <option value="cpc">CPC (Paid)</option>
+           </select>
+         </div>
+         <div class="f">
+           <label>Campaign</label>
+           <select id="utm-campaign" onchange="updateUTM()">
+             ${UTM_CAMPAIGNS.map(c=>`<option value="${c.value}">${esc(c.label)}</option>`).join('')}
+           </select>
+         </div>
+         <div class="f" id="utm-audience-group">
+           <label>Subreddit</label>
+           <select id="utm-audience" onchange="updateUTM()">
+             ${UTM_SUBREDDITS.map(a=>`<option value="${a.value}">${esc(a.label)}</option>`).join('')}
+           </select>
+         </div>
+         <div class="f full">
+           <label>Landing page (optional — path only, e.g. /contact)</label>
+           <input type="text" id="utm-landing" placeholder="Leave blank for homepage" oninput="updateUTM()">
+         </div>
+       </div>
+       <div class="utm-output" id="utm-output"></div>
+       <div style="display:flex;align-items:center;gap:10px">
+         <button class="btn-add" onclick="copyUTM()">Copy link</button>
+         <span class="utm-status" id="utm-status"></span>
+       </div>
+     </div>`;
+  updateUTM();
+}
+function updateUTM(){
+  const platformSel = document.getElementById('utm-platform');
+  if(!platformSel) return;
+  const platform = platformSel.value;
+  const medium = document.getElementById('utm-medium').value;
+  const campaign = document.getElementById('utm-campaign').value;
+  const landingRaw = document.getElementById('utm-landing').value.trim();
+
+  // Swap the audience dropdown's options (and label) if the platform changed
+  // — Reddit shows subreddits, Facebook shows saved audiences.
+  const group = document.getElementById('utm-audience-group');
+  const label = platform==='facebook' ? 'Facebook Audience' : 'Subreddit';
+  const opts = utmAudienceOptions(platform);
+  const existing = document.getElementById('utm-audience');
+  const wrongSet = !existing || existing.dataset.platform !== platform;
+  if(wrongSet){
+    group.innerHTML = `<label>${label}</label><select id="utm-audience" data-platform="${platform}" onchange="updateUTM()">${opts.map(a=>`<option value="${a.value}">${esc(a.label)}</option>`).join('')}</select>`;
+  }
+  const audience = document.getElementById('utm-audience').value;
+
+  const client = currentClientObj();
+  let baseUrl = (client && client.base_url) ? client.base_url : 'https://crowncon.com.au';
+  baseUrl = baseUrl.replace(/\/+$/,'');
+  let landing = landingRaw ? (landingRaw.startsWith('/') ? landingRaw : '/'+landingRaw) : '';
+  let url = baseUrl + landing;
+  const separator = url.includes('?') ? '&' : '?';
+  url += separator + 'utm_source=' + encodeURIComponent(platform)
+       + '&utm_medium=' + encodeURIComponent(medium)
+       + '&utm_campaign=' + encodeURIComponent(campaign)
+       + '&utm_content=' + encodeURIComponent(audience);
+
+  const output = document.getElementById('utm-output');
+  if(output){ output.textContent = url; output.classList.add('active'); }
+  const status = document.getElementById('utm-status');
+  if(status){ status.textContent = ''; status.classList.remove('copied'); }
+}
+function copyUTM(){
+  const output = document.getElementById('utm-output');
+  const url = output ? output.textContent : '';
+  if(!url) return;
+  navigator.clipboard.writeText(url).then(()=>{
+    const status = document.getElementById('utm-status');
+    if(!status) return;
+    status.textContent = '✓ Copied!';
+    status.classList.add('copied');
+    setTimeout(()=>{ status.textContent=''; status.classList.remove('copied'); }, 2000);
+  });
 }
 
 /* ============================================================
