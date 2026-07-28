@@ -251,9 +251,19 @@
   </div>
 </div>
 
-<script src="/admin/js/workspace.js?v=20260721e"></script>
-<script src="/admin/js/tax.js?v=20260721e"></script>
-<script src="/admin/js/command.js?v=20260721e"></script>
-<script src="/admin/js/business.js?v=20260721e"></script>
+<script>
+// Always-fresh cache-buster (2026-07-28): each of these was previously a
+// static ?v=YYYYMMDD string that had to be hand-bumped on every JS edit —
+// forgetting to bump it (as happened 2026-07-21→07-27) leaves browsers
+// silently running stale JS against a schema/UI that's since changed. Using
+// Date.now() means every full page load fetches the current file, no manual
+// step required, ever.
+(function(){
+  var v = Date.now();
+  ['workspace','tax','command','business'].forEach(function(name){
+    document.write('<script src="/admin/js/'+name+'.js?v='+v+'"><\/script>');
+  });
+})();
+</script>
 </body>
 </html>
