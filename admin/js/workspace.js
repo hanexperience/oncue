@@ -69,6 +69,8 @@ const COLLECTIONS = {
       {k:"drive_link",l:"Drive link",t:"url",full:true},
       {k:"platforms",l:"Platforms",t:"multi",o:PLATFORMS,full:true},
       {k:"collaborators",l:"IG Collaborators (usernames, comma-separated, max 3 — feed/Reel only)",t:"text",full:true},
+      {k:"tagged_accounts",l:"Tag accounts (usernames, comma-separated — @mention tag, no invite needed, feed/Reel only)",t:"text",full:true},
+      {k:"cover_image_url",l:"Cover image URL (Reels/YouTube — publicly accessible image link)",t:"url",full:true},
       {k:"description",l:"Description / caption (Beets writes)",t:"textarea",full:true}
     ]
   },
@@ -96,6 +98,8 @@ calendar: {
       {k:"content_item_id",l:"Assigned video / content",t:"content_ref",full:true},
       {k:"platforms",l:"Platforms",t:"multi",o:PLATFORMS,full:true},
       {k:"collaborators",l:"IG Collaborators (usernames, comma-separated, max 3 — overrides the content item's, feed/Reel only)",t:"text",full:true},
+      {k:"tagged_accounts",l:"Tag accounts (usernames, comma-separated — overrides the content item's, feed/Reel only)",t:"text",full:true},
+      {k:"cover_image_url",l:"Cover image URL (Reels/YouTube — overrides the content item's)",t:"url",full:true},
       {k:"caption",l:"Caption",t:"textarea",full:true},
       {k:"notes",l:"Notes",t:"text",full:true}
     ]
@@ -231,28 +235,45 @@ const MODULE_TABS = {
   clients:  { group:"Business", label:"Clients",   run:v=>window.BusinessModule.render(v,"clients") },
   leads:    { group:"Business", label:"Leads",     run:v=>window.BusinessModule.render(v,"leads") },
   projects: { group:"Command",  label:"Projects",  run:v=>window.CommandModule.render(v) },
-  tax:      { group:"Command",  label:"Tax / BAS", run:v=>window.CommandModule.renderTax(v) }
+  tax:      { group:"Command",  label:"Tax / BAS", run:v=>window.CommandModule.renderTax(v) },
+  // Tools (2026-07-28): unlike Business/Command, this is visible to VAs too
+  // — it's a standalone creative utility (Instagram grid layout planner),
+  // not client data that needs owner-only gating. ownerOnly:false is what
+  // exempts it from the owner-only checks in buildSections/switchSection/
+  // openTab below.
+  tools:    { group:"Tools",    label:"Grid Builder", ownerOnly:false, run:v=>renderGridBuilder(v) }
 };
-const MODULE_TAB_ORDER = ["clients","leads","projects","tax"];
+const MODULE_TAB_ORDER = ["clients","leads","projects","tax","tools"];
 function isOwner(){ return getAccess().role === "owner"; }
+
+// Tools → Grid Builder (2026-07-28): a self-contained single-file Instagram
+// grid layout tool (tools/grid-builder.html, deployed at /admin/tools/...).
+// It manages its own full-page layout (dark theme, own fonts/canvas), so it
+// is embedded via iframe rather than ported into this app's CSS/DOM the way
+// Business/Command were — far lower risk of style/handler collisions, and
+// the tool has no need to talk to Supabase or this app's state at all.
+function renderGridBuilder(view){
+  view.innerHTML = `<iframe src="/admin/tools/grid-builder.html" title="Grid Builder" style="width:100%;height:calc(100vh - 130px);border:none;display:block;background:#0C0C0C"></iframe>`;
+}
 
 /* ── Sections (2026-07-18) ──
    Top-level switcher in the header: Workspace (per-client tabs) |
-   Business | Command. The tab row only ever shows the active
-   section's tabs. VAs have no switcher — they live in Workspace. */
+   Business | Command | Tools. The tab row only ever shows the active
+   section's tabs. VAs get a trimmed switcher (Workspace + Tools only) —
+   Business/Command stay owner-only. */
 let CURRENT_SECTION = 'Workspace';
-const SECTION_DEFAULT_TAB = { Workspace:'dashboard', Business:'clients', Command:'projects' };
+const SECTION_DEFAULT_TAB = { Workspace:'dashboard', Business:'clients', Command:'projects', Tools:'tools' };
 function sectionOf(tab){ return MODULE_TABS[tab] ? MODULE_TABS[tab].group : 'Workspace'; }
 function buildSections(){
   const el = document.getElementById('sections');
   if(!el) return;
-  if(!isOwner()){ el.innerHTML=''; return; }
-  el.innerHTML = ['Workspace','Business','Command'].map(sec=>
+  const sections = isOwner() ? ['Workspace','Business','Command','Tools'] : ['Workspace','Tools'];
+  el.innerHTML = sections.map(sec=>
     `<button data-sec="${sec}" class="${sec===CURRENT_SECTION?'active':''}" onclick="switchSection('${sec}')">${sec}</button>`
   ).join('');
 }
 function switchSection(sec){
-  if(!isOwner() && sec!=='Workspace') return;
+  if(!isOwner() && sec!=='Workspace' && sec!=='Tools') return;
   CURRENT_SECTION = sec;
   buildSections();
   buildTabs();
@@ -367,7 +388,7 @@ async function showApp(){
   // Reopen whichever tab was active before the last reload — including its
   // section (Workspace / Business / Command). Falls back to This Week.
   const savedTab = localStorage.getItem('cc_active_tab');
-  const target = TAB_ORDER.includes(savedTab) || (MODULE_TABS[savedTab] && isOwner()) ? savedTab : 'dashboard';
+  const target = TAB_ORDER.includes(savedTab) || (MODULE_TABS[savedTab] && (MODULE_TABS[savedTab].ownerOnly!==false || isOwner())) ? savedTab : 'dashboard';
   CURRENT_SECTION = sectionOf(target);
   buildSections();
   buildTabs();
@@ -439,7 +460,7 @@ async function openTab(id){
   if(sec!==CURRENT_SECTION){ CURRENT_SECTION = sec; buildSections(); buildTabs(); }
   localStorage.setItem('cc_tab_'+sec, id);
   if(MODULE_TABS[id]){
-    if(!isOwner()){ toast('Owner access only'); return; }
+    if(MODULE_TABS[id].ownerOnly!==false && !isOwner()){ toast('Owner access only'); return; }
     CURRENT_TAB = id;
     localStorage.setItem('cc_active_tab', id);
     setActive(id);
