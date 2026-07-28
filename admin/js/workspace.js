@@ -70,7 +70,7 @@ const COLLECTIONS = {
       {k:"platforms",l:"Platforms",t:"multi",o:PLATFORMS,full:true},
       {k:"collaborators",l:"IG Collaborators (usernames, comma-separated, max 3 — feed/Reel only)",t:"text",full:true},
       {k:"tagged_accounts",l:"Tag accounts (usernames, comma-separated — @mention tag, no invite needed, feed/Reel only)",t:"text",full:true},
-      {k:"cover_image_url",l:"Cover image URL (Reels/YouTube — publicly accessible image link)",t:"url",full:true},
+      {k:"cover_image_url",l:"Cover image (Reels/YouTube — pick a synced photo, or paste an image URL)",t:"cover_ref",full:true},
       {k:"description",l:"Description / caption (Beets writes)",t:"textarea",full:true}
     ]
   },
@@ -99,7 +99,7 @@ calendar: {
       {k:"platforms",l:"Platforms",t:"multi",o:PLATFORMS,full:true},
       {k:"collaborators",l:"IG Collaborators (usernames, comma-separated, max 3 — overrides the content item's, feed/Reel only)",t:"text",full:true},
       {k:"tagged_accounts",l:"Tag accounts (usernames, comma-separated — overrides the content item's, feed/Reel only)",t:"text",full:true},
-      {k:"cover_image_url",l:"Cover image URL (Reels/YouTube — overrides the content item's)",t:"url",full:true},
+      {k:"cover_image_url",l:"Cover image (Reels/YouTube — pick a synced photo, or paste an image URL; overrides the content item's)",t:"cover_ref",full:true},
       {k:"caption",l:"Caption",t:"textarea",full:true},
       {k:"notes",l:"Notes",t:"text",full:true}
     ]
@@ -691,6 +691,8 @@ function fieldHTML(id,row,f){
     html += `</div>`;
   } else if(f.t==='content_ref'){
     html += `<div id="cref-${row.id}">${crefInner(row)}</div>`;
+  } else if(f.t==='cover_ref'){
+    html += `<div id="coverref-${id}-${row.id}">${coverRefInner(id,row)}</div>`;
   }
   html += `</div>`;
   return html;
@@ -1697,6 +1699,62 @@ async function assignCref(rowId,val){
   if(error){ toast('Save failed'); return; }
   const row = CALENDAR_ROWS.find(x=>x.id===rowId); if(row) row.content_item_id=v;
   flash(rowId); renderCref(rowId);
+}
+
+/* ---- Cover image picker (2026-07-28) ----
+   Lets Cover image (va_content_items.cover_image_url / va_calendar_slots.
+   cover_image_url) be picked from an already Drive-synced photo instead of
+   requiring a hand-typed URL every time. Reuses whichever content list is
+   already loaded for the tab that's open — CONTENT_ROWS on the Content
+   Library tab, CALENDAR_CONTENT on the Posting Calendar tab (same source
+   content_ref/crefInner above already reads) — so no extra fetch. Only
+   photo-type items are offered: a cover image needs to be a static image,
+   and video content items have no still frame this app can extract. */
+function coverRefSource(collId){ return collId==='content' ? CONTENT_ROWS : CALENDAR_CONTENT; }
+// Mirrors the exact media-URL resolution social-publish uses server-side
+// (item.storage_url, else the Drive direct-download link with confirm=t to
+// bypass Drive's virus-scan interstitial — see that function's header
+// comment) so a picked photo resolves to a URL Meta/YouTube can actually
+// fetch, not just one that opens fine in a browser tab.
+function resolveCoverUrl(ci){
+  return ci.storage_url || (ci.drive_file_id ? `https://drive.usercontent.google.com/download?id=${ci.drive_file_id}&export=download&confirm=t` : '');
+}
+function coverRefInner(collId,row){
+  const photos = coverRefSource(collId).filter(ci=>ci.type==='photo');
+  const val = row.cover_image_url || '';
+  // If the stored URL matches what a known synced photo resolves to, show
+  // that photo as selected in the dropdown rather than leaving it on
+  // "— none —" just because we store a resolved URL, not a content_item id.
+  const matched = photos.find(ci=>resolveCoverUrl(ci)===val && val);
+  let h = `<select onchange="assignCoverRef('${collId}','${row.id}',this.value)"><option value="">— none / custom URL below —</option>`;
+  photos.forEach(ci=>{ h += `<option value="${ci.id}" ${matched&&matched.id===ci.id?'selected':''}>${esc(ci.name||'(untitled photo)')}</option>`; });
+  h += `</select>`;
+  if(!photos.length) h += `<div class="cref-note">No synced photos yet for this client — sync from Drive on the Content Library tab, or paste an image URL below.</div>`;
+  h += `<input type="url" placeholder="or paste an image URL directly" value="${esc(val)}" oninput="queueSave('${collId}','${row.id}','cover_image_url',this.value)" style="margin-top:6px">`;
+  if(matched){
+    const th = matched.drive_file_id?`https://drive.google.com/thumbnail?id=${matched.drive_file_id}&sz=w320`:null;
+    h += `<div class="assigned">`;
+    if(th) h += `<img class="mini-thumb" src="${esc(th)}" referrerpolicy="no-referrer" onerror="this.remove()">`;
+    h += `<span>${esc(matched.name||'(untitled)')}</span></div>`;
+  }
+  return h;
+}
+async function assignCoverRef(collId,rowId,contentItemId){
+  let url = '';
+  if(contentItemId){
+    const ci = coverRefSource(collId).find(x=>x.id===contentItemId);
+    url = ci ? resolveCoverUrl(ci) : '';
+    if(!url){ toast('That photo has no usable file yet — check it synced correctly.'); return; }
+  }
+  const table = COLLECTIONS[collId].table;
+  const {error} = await sb.from(table).update({cover_image_url:url}).eq('id',rowId);
+  if(error){ toast('Save failed: '+error.message); return; }
+  const rows = collId==='content' ? CONTENT_ROWS : CALENDAR_ROWS;
+  const row = rows.find(x=>x.id===rowId);
+  if(row) row.cover_image_url = url;
+  flash(rowId);
+  const el = document.getElementById(`coverref-${collId}-${rowId}`);
+  if(el && row) el.innerHTML = coverRefInner(collId,row);
 }
 
 /* Saving */
