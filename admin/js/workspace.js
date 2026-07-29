@@ -1257,7 +1257,22 @@ function openPreview(id){
       ? `<img src="${esc(item.storage_url)}" referrerpolicy="no-referrer">`
       : `<video src="${esc(item.storage_url)}" controls autoplay></video>`;
   } else if(item.drive_file_id){
-    body.innerHTML = `<iframe src="https://drive.google.com/file/d/${esc(item.drive_file_id)}/preview" allow="autoplay" loading="lazy"></iframe>`;
+    // 2026-07-28: drive-sync only ever copies metadata (thumbnail/webViewLink),
+    // it never mirrors the actual bytes into storage_url — so every item
+    // without storage_url falls into this embedded-iframe branch. Google's
+    // /preview embed is noticeably less reliable than opening the file
+    // directly on drive.google.com (third-party-cookie blocking in Chrome is
+    // the most common cause of "Video unavailable" here even though the
+    // exact same file opens fine when the owner views it directly in Drive).
+    // Always show a direct-link fallback so a broken embed is a one-click
+    // workaround, not a dead end. Proper fix is the still-open "storage-
+    // mirroring" item in CLAUDE.md's known limitations.
+    body.innerHTML = `<div style="display:flex;flex-direction:column;width:100%;height:100%">
+      <iframe src="https://drive.google.com/file/d/${esc(item.drive_file_id)}/preview" allow="autoplay" loading="lazy" style="flex:1;width:100%;border:none"></iframe>
+      <div style="padding:10px 16px;background:#1c1a18;color:#cfc7b6;font-size:12px;text-align:center;flex-shrink:0">
+        Not loading? <a href="https://drive.google.com/file/d/${esc(item.drive_file_id)}/view" target="_blank" rel="noopener" style="color:#fff;font-weight:600">Open in Google Drive ↗</a>
+      </div>
+    </div>`;
   } else {
     body.innerHTML = `<div class="empty">No preview available — this item has no Drive file or storage URL yet.</div>`;
   }
@@ -1726,7 +1741,8 @@ function coverRefInner(collId,row){
   // that photo as selected in the dropdown rather than leaving it on
   // "— none —" just because we store a resolved URL, not a content_item id.
   const matched = photos.find(ci=>resolveCoverUrl(ci)===val && val);
-  let h = `<select onchange="assignCoverRef('${collId}','${row.id}',this.value)"><option value="">— none / custom URL below —</option>`;
+  let h = `<div class="cref-note">Only applies when the post is a video going out as a Reel (IG/FB) or to YouTube — a plain photo post has no separate cover, since the photo itself is the post and Instagram/Facebook don't accept a cover on a feed photo.</div>`;
+  h += `<select onchange="assignCoverRef('${collId}','${row.id}',this.value)"><option value="">— none / custom URL below —</option>`;
   photos.forEach(ci=>{ h += `<option value="${ci.id}" ${matched&&matched.id===ci.id?'selected':''}>${esc(ci.name||'(untitled photo)')}</option>`; });
   h += `</select>`;
   if(!photos.length) h += `<div class="cref-note">No synced photos yet for this client — sync from Drive on the Content Library tab, or paste an image URL below.</div>`;
