@@ -79,6 +79,16 @@
     border:1px solid var(--line);border-radius:5px;padding:8px 9px;font-family:inherit;font-size:13px;background:#fdfcf9;color:var(--ink);width:100%}
   .f textarea{resize:vertical;min-height:60px;line-height:1.45}
   .f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--accent)}
+  .f-hint{font-size:10.5px;color:var(--muted);line-height:1.4;margin-top:-1px}
+
+  /* Grouped field sections (calendar slot cards) — breaks a long flat field
+     list into labeled steps (Schedule/Content/Platforms/etc) so a card with
+     a dozen+ fields reads as a sequence rather than a wall of inputs. */
+  .field-section{padding-top:14px;margin-top:14px;border-top:1px solid var(--paper2)}
+  .field-section:first-child{padding-top:0;margin-top:0;border-top:none}
+  .field-section-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--accent-deep);font-weight:700;margin-bottom:9px}
+  .field-section .f[data-k="caption"] textarea{min-height:120px;font-size:13.5px;line-height:1.55}
+  .field-section .f[data-k="follow_up_comment"] textarea{min-height:70px}
   .checks{display:flex;flex-wrap:wrap;gap:8px 14px}
   .chk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-soft)}
   .chk input{width:15px;height:15px;accent-color:var(--accent)}

@@ -97,10 +97,10 @@ calendar: {
       {k:"status",l:"Status",t:"status",o:["Planned","Asset ready","Caption written","Tim approved","Scheduled","Posted","Cancelled"]},
       {k:"content_item_id",l:"Assigned video / content",t:"content_ref",full:true},
       {k:"platforms",l:"Platforms",t:"multi",o:PLATFORMS,full:true},
-      {k:"collaborators",l:"IG Collaborators (usernames, comma-separated, max 3 — overrides the content item's, feed/Reel only)",t:"text",full:true},
-      {k:"tagged_accounts",l:"Tag accounts (usernames, comma-separated — overrides the content item's, feed/Reel only)",t:"text",full:true},
-      {k:"cover_image_url",l:"Cover image (Reels/YouTube — pick a synced photo, or paste an image URL; overrides the content item's)",t:"cover_ref",full:true},
-      {k:"follow_up_comment",l:"Follow-up comment (auto-posted right after publish — IG feed/Reel/Trial Reel + FB feed/Reel only; not supported on Stories or YouTube)",t:"textarea",full:true},
+      {k:"collaborators",l:"IG Collaborators",h:"Usernames, comma-separated, max 3 — feed/Reel only, overrides the content item's",t:"text"},
+      {k:"tagged_accounts",l:"Tag accounts",h:"Usernames, comma-separated — feed/Reel only, overrides the content item's",t:"text"},
+      {k:"cover_image_url",l:"Cover image",h:"Reels/YouTube only — pick a synced photo or paste an image URL; overrides the content item's",t:"cover_ref",full:true},
+      {k:"follow_up_comment",l:"Follow-up comment",h:"Auto-posted right after publish — IG feed/Reel/Trial Reel + FB feed/Reel only",t:"textarea",full:true},
       {k:"caption",l:"Caption",t:"textarea",full:true},
       {k:"notes",l:"Notes",t:"text",full:true}
     ]
@@ -672,7 +672,7 @@ function renderCollCards(id){
 
 function fieldHTML(id,row,f){
   const val = row[f.k];
-  let html = `<div class="f ${f.full?'full':''}">`;
+  let html = `<div class="f ${f.full?'full':''}" data-k="${esc(f.k)}">`;
   if(f.t!=='bool') html += `<label>${f.l}</label>`;
   if(f.t==='text'||f.t==='url'||f.t==='email'||f.t==='number'||f.t==='date'||f.t==='time'){
     const it = f.t==='time'?'time':(f.t==='number'?'number':(f.t==='date'?'date':(f.t==='email'?'email':(f.t==='url'?'url':'text'))));
@@ -695,8 +695,33 @@ function fieldHTML(id,row,f){
   } else if(f.t==='cover_ref'){
     html += `<div id="coverref-${id}-${row.id}">${coverRefInner(id,row)}</div>`;
   }
+  if(f.h) html += `<div class="f-hint">${esc(f.h)}</div>`;
   html += `</div>`;
   return html;
+}
+// Groups a set of field keys into a titled section using the field defs
+// already declared on the collection (so labels/types/save logic stay
+// single-sourced in COLLECTIONS — this is purely a display grouping).
+function fieldSectionHTML(id,row,title,keys){
+  const c = COLLECTIONS[id];
+  const fields = keys.map(k=>c.fields.find(f=>f.k===k)).filter(Boolean);
+  if(!fields.length) return '';
+  return `<div class="field-section">
+    <div class="field-section-title">${esc(title)}</div>
+    <div class="grid">${fields.map(f=>fieldHTML(id,row,f)).join('')}</div>
+  </div>`;
+}
+// Calendar cards carry far more fields than any other tab (schedule,
+// content, platforms, collaborators/tags/cover, three text boxes) — shown
+// flat via fieldsGridHTML() this was a long undifferentiated list to scan.
+// Grouped into labeled sections instead so each part of setting up a post
+// (when, what, where, extras, wording) reads as its own step.
+function calendarFieldsHTML(row){
+  return fieldSectionHTML('calendar',row,'Schedule',['slot_date','slot_time','pillar','status'])
+    + fieldSectionHTML('calendar',row,'Content',['content_item_id'])
+    + fieldSectionHTML('calendar',row,'Platforms',['platforms'])
+    + fieldSectionHTML('calendar',row,'Tagging & cover',['collaborators','tagged_accounts','cover_image_url'])
+    + fieldSectionHTML('calendar',row,'Text',['follow_up_comment','caption','notes']);
 }
 function fieldsGridHTML(id,row){
   const c = COLLECTIONS[id];
@@ -1236,7 +1261,7 @@ function buildCalendarCard(row){
       </div>
     </div>
     <div class="ccard-body hidden">
-      ${fieldsGridHTML('calendar',row)}
+      ${calendarFieldsHTML(row)}
       ${publishBlockHTML(row)}
       <div class="card-foot"><span class="meta">${row.created_at?('Added '+fmtDate(row.created_at)):''}</span>
         <button class="btn-del" onclick="delRow('calendar','${row.id}',this)">Delete</button></div>
