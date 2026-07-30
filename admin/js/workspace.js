@@ -100,6 +100,7 @@ calendar: {
       {k:"collaborators",l:"IG Collaborators (usernames, comma-separated, max 3 — overrides the content item's, feed/Reel only)",t:"text",full:true},
       {k:"tagged_accounts",l:"Tag accounts (usernames, comma-separated — overrides the content item's, feed/Reel only)",t:"text",full:true},
       {k:"cover_image_url",l:"Cover image (Reels/YouTube — pick a synced photo, or paste an image URL; overrides the content item's)",t:"cover_ref",full:true},
+      {k:"follow_up_comment",l:"Follow-up comment (auto-posted right after publish — IG feed/Reel/Trial Reel + FB feed/Reel only; not supported on Stories or YouTube)",t:"textarea",full:true},
       {k:"caption",l:"Caption",t:"textarea",full:true},
       {k:"notes",l:"Notes",t:"text",full:true}
     ]
