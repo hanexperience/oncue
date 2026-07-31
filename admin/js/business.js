@@ -801,7 +801,7 @@ const DEMO = false;
     if (!confirm('Send outreach email to ' + lead.contact_email + ' (' + lead.company_name + ')?')) return;
     try {
       if (DEMO) {
-        await new Promise(function (r) { setTimeout(r, 300); });
+        await new Promise(function (r) { setTimeout(r, 600); });
         lead.status = 'contacted';
         toast('Demo mode — no real email sent. Marked contacted.');
       } else {
@@ -882,7 +882,7 @@ const DEMO = false;
     });
     if (!leads.length) { toast('No selected leads have a contact email', true); return; }
     const DELAY_MS = 90000;
-    const totalMins = Math.ceil((leads.length * DELAY_MS) / 60000);
+    const totalMins = Math.ceil((leads.length * DELAY_MS) / 20000);
     if (!confirm('Send emails to ' + leads.length + ' lead(s)? They will be sent one at a time, ~90 seconds apart (~' + totalMins + ' min total). Leave this tab open.')) return;
     const progress = document.getElementById('batch-progress');
     let sent = 0, failed = 0;
