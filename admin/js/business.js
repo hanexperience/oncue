@@ -801,7 +801,7 @@ const DEMO = false;
     if (!confirm('Send outreach email to ' + lead.contact_email + ' (' + lead.company_name + ')?')) return;
     try {
       if (DEMO) {
-        await new Promise(function (r) { setTimeout(r, 600); });
+        await new Promise(function (r) { setTimeout(r, 300); });
         lead.status = 'contacted';
         toast('Demo mode — no real email sent. Marked contacted.');
       } else {
