@@ -920,17 +920,20 @@ const DEMO = false;
       return selectedPlaceIds.has(r.place_id) && r.contact_email && r.status !== 'contacted' && r.status !== 'ignored';
     });
     if (!leads.length) { toast('No selected leads have a contact email', true); return; }
-    const DELAY_MS = 90000;
-    const totalMins = Math.ceil((leads.length * DELAY_MS) / 20000);
-    if (!confirm('Send emails to ' + leads.length + ' lead(s)? They will be sent one at a time, ~90 seconds apart (~' + totalMins + ' min total). Leave this tab open.')) return;
+    // Pacing between actual sends is handled server-side by the n8n "Lead Email Sender - Polling"
+    // workflow (one pending_emails row every ~15s), so we queue all rows immediately here rather
+    // than trickling them in with a browser-side timer — that used to require the tab to stay
+    // focused the whole time, and background-tab timer throttling made batches look like they
+    // silently stalled after a few sends.
+    if (!confirm('Queue emails for ' + leads.length + ' lead(s)? They\'ll be queued immediately and sent one at a time by the n8n workflow (~15s apart) — you can close this tab right after.')) return;
     const progress = document.getElementById('batch-progress');
     let sent = 0, failed = 0;
     for (let i = 0; i < leads.length; i++) {
       const lead = leads[i];
-      progress.textContent = 'Sending ' + (i + 1) + ' of ' + leads.length + '…';
+      progress.textContent = 'Queuing ' + (i + 1) + ' of ' + leads.length + '…';
       try {
         if (DEMO) {
-          await new Promise(function (r) { setTimeout(r, 800); });
+          await new Promise(function (r) { setTimeout(r, 300); });
           lead.status = 'contacted';
         } else {
           const res = await fetch(SUPABASE_URL_LEADS + '/rest/v1/pending_emails', {
@@ -942,16 +945,6 @@ const DEMO = false;
         }
         sent++;
         selectedPlaceIds.delete(lead.place_id);
-        if (i < leads.length - 1) {
-          let remaining = DELAY_MS / 1000;
-          await new Promise(function (resolve) {
-            const t = setInterval(function () {
-              remaining--;
-              progress.textContent = 'Sent ' + sent + ' — next in ' + remaining + 's…';
-              if (remaining <= 0) { clearInterval(t); resolve(); }
-            }, 1000);
-          });
-        }
       } catch (err) { failed++; console.error(err); }
     }
     progress.textContent = '';
