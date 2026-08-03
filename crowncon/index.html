@@ -51,6 +51,28 @@ document.addEventListener('click', function(e){
 });
 </script>
 
+<!-- Lead link click tracking -->
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var ref = params.get('ref');
+  if (!ref) return;
+
+  fetch('https://rrxveifshucpinajtkgf.supabase.co/rest/v1/link_clicks', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyeHZlaWZzaHVjcGluYWp0a2dmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMjQ2ODMsImV4cCI6MjA5NTcwMDY4M30.7ZhWD2gUO2aPZkRbmozLsyIsVX7VzoY5W9BxXb11ne8',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyeHZlaWZzaHVjcGluYWp0a2dmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMjQ2ODMsImV4cCI6MjA5NTcwMDY4M30.7ZhWD2gUO2aPZkRbmozLsyIsVX7VzoY5W9BxXb11ne8'
+    },
+    body: JSON.stringify({
+      ref_slug: ref,
+      user_agent: navigator.userAgent
+    })
+  }).catch(function () {}); // fail silently, don't block the page
+})();
+</script>
+
 <style>
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
