@@ -1,0 +1,427 @@
+{
+  "name": "Lead Email Sender - Polling (Beets & Co)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "73ea8f7a-f7be-4af0-aeca-f69ac8266199",
+      "name": "Every 15s",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://rrxveifshucpinajtkgf.supabase.co/rest/v1/pending_emails",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "eq.pending"
+            },
+            {
+              "name": "select",
+              "value": "*"
+            },
+            {
+              "name": "order",
+              "value": "created_at.asc"
+            },
+            {
+              "name": "limit",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a0057219-75a4-4901-be83-766e54f7529e",
+      "name": "Get Pending Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "po6xF7EAsYbmtpkR",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c703d842-cf86-43db-b219-b3349068549b",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "256a8d53-5aeb-4ca1-942e-8153307b6fdf",
+      "name": "Has Job?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "email_job_id",
+              "type": "number",
+              "value": "={{ $json.id }}",
+              "id": "9dc9afa0-649c-4b2b-b4f7-4291b2aea155"
+            },
+            {
+              "name": "place_id",
+              "type": "string",
+              "value": "={{ $json.place_id }}",
+              "id": "d557c2c0-b1e7-4a91-8e93-6fda6e19ca81"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f9dc490a-a375-4e30-9c2c-d8dc2ad93523",
+      "name": "Set Email Vars",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://rrxveifshucpinajtkgf.supabase.co/rest/v1/scraped_leads",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "place_id",
+              "value": "=eq.{{ $json.place_id }}"
+            },
+            {
+              "name": "select",
+              "value": "*"
+            },
+            {
+              "name": "limit",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2f38f15c-3fc2-4235-8f58-83f9b55b9a0a",
+      "name": "Get Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "po6xF7EAsYbmtpkR",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const lead = $json;\n\nconst address = lead.address || '';\nconst suburbMatch = address.match(/,\\s*([A-Za-z\\s]+?)\\s+VIC\\s+\\d{4}/i);\nconst suburb = suburbMatch ? suburbMatch[1].trim() : null;\n\n// Build a unique, readable ref slug from company name + short place_id suffix\nfunction slugify(str) {\n  return str\n    .toLowerCase()\n    .replace(/[^a-z0-9]+/g, '-')\n    .replace(/(^-|-$)/g, '');\n}\n\nconst baseSlug = slugify(lead.company_name || 'lead');\nconst shortId = (lead.place_id || '').slice(-6); // last 6 chars, guarantees uniqueness\nconst refSlug = `${baseSlug}-${shortId}`;\n\nconst trackingUrl = `https://beetsandco.com.au/crowncon/?ref=${refSlug}`;\n\nconst subject = `Saying hello, fellow local business`;\n\nconst SIGNATURE_HTML = `\n<div style=\"margin-top:18px;padding-top:10px;border-top:1px solid #e2e2e2;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#6b6b6b;line-height:1.5;\">\n<div style=\"color:#333;font-weight:bold;\">Michael Beets</div>\n<div>Beets &amp; Co. &mdash; Creative Director &amp; Founder</div>\n<div><a href=\"https://www.beetsandco.com.au/\" style=\"color:#6b6b6b;text-decoration:none;\">https://www.beetsandco.com.au/</a></div>\n<div>(+61) 0447542930</div>\n</div>`;\n\nconst body = `<p>Hi there,</p>\n<p>I'm Michael from Beets & Co.&mdash; and I take care of website, search rankings, and video content for companies in Bayside / South East Melbourne.</p>\n<p>One recent project worth a look: a full rebrand, website, video and content overhaul for Crowncon, a custom home builder in the area &mdash; <a href=\"${trackingUrl}\">beetsandco.com.au/crowncon</a></p>\n<p>What I focus on is giving businesses an actual voice through video and story, making sure they're seen across the web, and standing out rather than the generic, everything-looks-AI-generated feel most small business sites have now.</p>\n<p>If you're keen to have a chat, please let me know.</p>\n<p>Michael</p>\n${SIGNATURE_HTML}`;\n\nreturn [{\n  json: {\n    email_job_id: $('Set Email Vars').item.json.email_job_id,\n    place_id: lead.place_id,\n    contact_email: lead.contact_email,\n    company_name: lead.company_name,\n    ref_slug: refSlug,\n    suburb,\n    subject,\n    body\n  }\n}];"
+      },
+      "id": "15e740d1-c202-486a-a2dc-4e91c2425edc",
+      "name": "Build Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "\"Michael Beets\" <michael@beetsandco.com.au>",
+        "toEmail": "={{ $json.contact_email }}",
+        "subject": "={{ $json.subject }}",
+        "html": "={{ $json.body }}",
+        "options": {
+          "appendAttribution": false,
+          "bccEmail": "michael@beetsandco.com.au"
+        }
+      },
+      "id": "0033b3e6-7267-4114-9efa-25ad43603933",
+      "name": "Send an Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1328,
+        0
+      ],
+      "webhookId": "efc5cbac-9f9f-4a99-abe4-3f0f4cb37973",
+      "credentials": {
+        "smtp": {
+          "id": "WMZMa6jxdumxc3k5",
+          "name": "SMTP account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "https://rrxveifshucpinajtkgf.supabase.co/rest/v1/scraped_leads",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "place_id",
+              "value": "=eq.{{ $('Build Email').item.json.place_id }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "contacted"
+            },
+            {
+              "name": "draft_message",
+              "value": "={{ $('Build Email').item.json.body }}"
+            },
+            {
+              "name": "ref_slug",
+              "value": "={{ $('Build Email').item.json.ref_slug }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3663dbdd-14b4-4aa1-8d44-2e844af00be6",
+      "name": "Mark Lead Contacted",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1552,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "po6xF7EAsYbmtpkR",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "https://rrxveifshucpinajtkgf.supabase.co/rest/v1/pending_emails",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "=eq.{{ $('Build Email').item.json.email_job_id }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "sent"
+            },
+            {
+              "name": "updated_at",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "15fe27ff-bdec-4c77-971b-aad8f7c305fb",
+      "name": "Mark Email Sent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        0
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "po6xF7EAsYbmtpkR",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every 15s": {
+      "main": [
+        [
+          {
+            "node": "Get Pending Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Pending Email": {
+      "main": [
+        [
+          {
+            "node": "Has Job?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Job?": {
+      "main": [
+        [
+          {
+            "node": "Set Email Vars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Email Vars": {
+      "main": [
+        [
+          {
+            "node": "Get Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lead": {
+      "main": [
+        [
+          {
+            "node": "Build Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Email": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an Email": {
+      "main": [
+        [
+          {
+            "node": "Mark Lead Contacted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Lead Contacted": {
+      "main": [
+        [
+          {
+            "node": "Mark Email Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "a87079fb-78d7-40e5-b4ee-93213cfb18ed",
+  "meta": {
+    "instanceId": "08814786d143a8ac3447850f0e24612a3415938dfa3a8bfcb03e6bae1c8439bf"
+  },
+  "nodeGroups": [],
+  "id": "SV3ZuHb2yWDZhhbO",
+  "tags": []
+}
