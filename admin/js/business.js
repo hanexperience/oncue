@@ -17,6 +17,7 @@ const N8N_OUTREACH_URL = 'http://localhost:5678/webhook/lead-outreach-send'; // 
 let WEBHOOK_KEY = "asdfghjklasdfghjklas"; // ⚠️ replace with your real webhook secret from the n8n Header Auth credential
 let appView = 'clients';
 let allLeads = [];
+let clicksByRefSlug = {}; // ref_slug -> { count, first_clicked, last_clicked }
 let KEY = null; // gets overwritten by DEFAULT_GATE_KEY below once that's declared
 let currentClientId = null;
 let clientCache = {};
@@ -713,9 +714,27 @@ const DEMO = false;
     const tbody = document.getElementById('leads-tbody');
     try {
       allLeads = DEMO ? DEMO_DB.scraped_leads.slice() : await db('scraped_leads', 'GET', null, '?select=*&order=created_at.desc&limit=200');
+      await loadClicks();
       renderLeadsTable();
     } catch (err) {
-      tbody.innerHTML = '<tr><td colspan="11" style="color:var(--rust);">Failed to load leads: ' + esc(err.message) + '</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="12" style="color:var(--rust);">Failed to load leads: ' + esc(err.message) + '</td></tr>';
+    }
+  }
+
+  async function loadClicks() {
+    clicksByRefSlug = {};
+    if (DEMO) return;
+    try {
+      const rows = await db('link_clicks', 'GET', null, '?select=ref_slug,clicked_at&order=clicked_at.asc');
+      rows.forEach(function (r) {
+        if (!r.ref_slug) return;
+        if (!clicksByRefSlug[r.ref_slug]) clicksByRefSlug[r.ref_slug] = { count: 0, first_clicked: r.clicked_at, last_clicked: r.clicked_at };
+        const c = clicksByRefSlug[r.ref_slug];
+        c.count++;
+        c.last_clicked = r.clicked_at; // rows are ascending, so last write wins
+      });
+    } catch (e) {
+      console.error('Failed to load link_clicks', e); // non-fatal — leads still render without click data
     }
   }
 
@@ -725,6 +744,8 @@ const DEMO = false;
     const statusFilter = document.getElementById('lead-status-filter').value;
     const search = (document.getElementById('lead-search').value || '').toLowerCase();
     const sort = document.getElementById('lead-sort').value;
+    const openedFilterEl = document.getElementById('lead-opened-filter');
+    const openedFilter = openedFilterEl ? openedFilterEl.value : '';
 
     // Rebuild category dropdown from live data
     const catSelect = document.getElementById('lead-category-filter');
@@ -745,6 +766,9 @@ const DEMO = false;
     }
     if (categoryFilter) rows = rows.filter(function (r) { return (r.category || '') === categoryFilter; });
     if (search) rows = rows.filter(function (r) { return (r.company_name || '').toLowerCase().indexOf(search) > -1; });
+    if (openedFilter === 'opened') rows = rows.filter(function (r) { return !!clicksByRefSlug[r.ref_slug]; });
+    else if (openedFilter === 'not_opened') rows = rows.filter(function (r) { return !clicksByRefSlug[r.ref_slug]; });
+    else if (openedFilter === 'opened_no_followup') rows = rows.filter(function (r) { return !!clicksByRefSlug[r.ref_slug] && !r.followed_up; });
 
     if (sort === 'score_desc') rows.sort(function (a, b) { return (b.site_score || 0) - (a.site_score || 0); });
     else if (sort === 'name_asc') rows.sort(function (a, b) { return (a.company_name || '').localeCompare(b.company_name || ''); });
@@ -753,7 +777,7 @@ const DEMO = false;
     countEl.textContent = rows.length + ' lead' + (rows.length === 1 ? '' : 's');
 
     if (!rows.length) {
-      tbody.innerHTML = '<tr><td colspan="11" style="color:var(--muted-2);font-family:\'JetBrains Mono\',monospace;font-size:10px;text-transform:uppercase;padding:18px 10px;">No leads match</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="12" style="color:var(--muted-2);font-family:\'JetBrains Mono\',monospace;font-size:10px;text-transform:uppercase;padding:18px 10px;">No leads match</td></tr>';
       return;
     }
 
@@ -781,6 +805,21 @@ const DEMO = false;
         'onchange="BIZ.saveEmail(this)">' +
         '</td>';
       h += '<td style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:var(--muted);">' + (r.last_checked ? new Date(r.last_checked).toLocaleDateString() : '—') + '</td>';
+      const click = clicksByRefSlug[r.ref_slug];
+      if (click) {
+        const lastClickStr = new Date(click.last_clicked).toLocaleDateString() + (click.count > 1 ? ' (' + click.count + '×)' : '');
+        h += '<td>';
+        h += '<div style="font-size:11px;font-weight:600;color:var(--forest,#1A4D3C);">Opened ' + esc(lastClickStr) + '</div>';
+        if (r.followed_up) {
+          h += '<div style="font-size:10px;color:var(--muted);margin-top:2px;">✓ Followed up' + (r.followed_up_at ? ' ' + new Date(r.followed_up_at).toLocaleDateString() : '') + '</div>';
+          h += '<button class="btn" data-pid="' + esc(r.place_id) + '" onclick="BIZ.unmarkFollowedUp(this.dataset.pid)" style="margin-top:4px;font-size:10px;padding:3px 8px;">Undo</button>';
+        } else {
+          h += '<button class="btn solid" data-pid="' + esc(r.place_id) + '" onclick="BIZ.markFollowedUp(this.dataset.pid)" style="margin-top:4px;font-size:10px;padding:3px 8px;">Mark followed up</button>';
+        }
+        h += '</td>';
+      } else {
+        h += '<td style="color:var(--muted-2);font-size:11px;">Not opened</td>';
+      }
       let actions = '';
       if (status === 'ignored') {
         actions += '<button class="btn" data-pid="' + esc(r.place_id) + '" onclick="BIZ.markStatus(this.dataset.pid, \'new\')">Restore</button>';
@@ -955,6 +994,38 @@ const DEMO = false;
   }
 
   async function markContacted(placeId) { return markStatus(placeId, 'contacted'); }
+
+  async function markFollowedUp(placeId) {
+    try {
+      const payload = { followed_up: true, followed_up_at: new Date().toISOString() };
+      if (DEMO) {
+        const row = DEMO_DB.scraped_leads.find(function (r) { return r.place_id === placeId; });
+        if (row) Object.assign(row, payload);
+      } else {
+        await db('scraped_leads', 'PATCH', payload, '?place_id=eq.' + encodeURIComponent(placeId));
+      }
+      const lead = allLeads.find(function (r) { return r.place_id === placeId; });
+      if (lead) Object.assign(lead, payload);
+      toast('Marked followed up');
+      renderLeadsTable();
+    } catch (err) { toast('Update failed: ' + err.message, true); }
+  }
+
+  async function unmarkFollowedUp(placeId) {
+    try {
+      const payload = { followed_up: false, followed_up_at: null };
+      if (DEMO) {
+        const row = DEMO_DB.scraped_leads.find(function (r) { return r.place_id === placeId; });
+        if (row) Object.assign(row, payload);
+      } else {
+        await db('scraped_leads', 'PATCH', payload, '?place_id=eq.' + encodeURIComponent(placeId));
+      }
+      const lead = allLeads.find(function (r) { return r.place_id === placeId; });
+      if (lead) Object.assign(lead, payload);
+      toast('Follow-up cleared');
+      renderLeadsTable();
+    } catch (err) { toast('Update failed: ' + err.message, true); }
+  }
 
   
 
@@ -1608,6 +1679,12 @@ const BIZ_TEMPLATE = `<div class="biz-topbar">
     <select class="form-input" id="lead-category-filter" onchange="BIZ.renderLeadsTable()">
       <option value="">All categories</option>
     </select>
+    <select class="form-input" id="lead-opened-filter" onchange="BIZ.renderLeadsTable()">
+      <option value="">All leads (opened or not)</option>
+      <option value="opened">Opened link</option>
+      <option value="opened_no_followup">Opened — not followed up</option>
+      <option value="not_opened">Not opened</option>
+    </select>
     <input type="text" class="form-input" id="lead-search" placeholder="Search company…" oninput="BIZ.renderLeadsTable()">
     <select class="form-input" id="lead-sort" onchange="BIZ.renderLeadsTable()">
       <option value="created_desc">Newest first</option>
@@ -1631,9 +1708,9 @@ const BIZ_TEMPLATE = `<div class="biz-topbar">
       <thead><tr>
         <th style="width:32px;"><input type="checkbox" class="lead-check" id="select-all" onclick="BIZ.toggleSelectAll(this)" title="Select all"></th>
         <th>Company</th><th>Category</th><th>Postcode</th><th>Phone</th><th>Website</th>
-        <th>Status</th><th>Score</th><th>Email</th><th>Checked</th><th></th>
+        <th>Status</th><th>Score</th><th>Email</th><th>Checked</th><th>Opened</th><th></th>
       </tr></thead>
-      <tbody id="leads-tbody"><tr><td colspan="11" style="color:var(--muted-2);font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;padding:18px 10px;">No leads loaded yet</td></tr></tbody>
+      <tbody id="leads-tbody"><tr><td colspan="12" style="color:var(--muted-2);font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;padding:18px 10px;">No leads loaded yet</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -1690,7 +1767,7 @@ async function boot(view, section) {
   try { await loadClients(); } catch (e) { toast('Failed to load clients', true); }
 }
 
-window.BIZ = Object.assign({ bizLock, bizUnlock }, { addRow, adminCalNav, adminCalNavReset, batchIgnore, batchSendEmails, clearSelection, closeMonth, closePostModal, copyLink, copySnapLink, createNewClient, delRow, deletePostModalForm, fillSnapLabel, filterClients, loadLeads, markContacted, markStatus, moveRow, onFieldInput, openPostModal, refreshPerformanceStats, renderLeadsTable, saveEmail, savePostModalForm, sendOutreachEmail, setPerfMonthFilter, setPerfSortField, setViewPeriod, switchTab, toggleRow, toggleSelectAll, triggerScrape, updateRow });
+window.BIZ = Object.assign({ bizLock, bizUnlock }, { addRow, adminCalNav, adminCalNavReset, batchIgnore, batchSendEmails, clearSelection, closeMonth, closePostModal, copyLink, copySnapLink, createNewClient, delRow, deletePostModalForm, fillSnapLabel, filterClients, loadLeads, markContacted, markFollowedUp, markStatus, moveRow, onFieldInput, openPostModal, refreshPerformanceStats, renderLeadsTable, saveEmail, savePostModalForm, sendOutreachEmail, setPerfMonthFilter, setPerfSortField, setViewPeriod, switchTab, toggleRow, toggleSelectAll, triggerScrape, unmarkFollowedUp, updateRow });
 
 window.BusinessModule = {
   async render(view, section) {
