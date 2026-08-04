@@ -1647,7 +1647,12 @@ const BIZ_TEMPLATE = `<div class="biz-topbar">
         <datalist id="lead-category-suggestions">
           <option value="Builder"><option value="Contractor"><option value="Electrician"><option value="Plumber">
           <option value="Carpenter"><option value="Painter"><option value="Landscaper"><option value="Roofer">
+          <option value="Pool Builder"><option value="Renovation Specialist">
           <option value="Lawyer"><option value="Conveyancer"><option value="Accountant"><option value="Real Estate Agent">
+          <option value="Financial Planner"><option value="Mortgage Broker">
+          <option value="Dentist"><option value="Physiotherapist"><option value="Chiropractor"><option value="Veterinary Clinic">
+          <option value="Cafe"><option value="Restaurant"><option value="Day Spa"><option value="Boutique Retailer">
+          <option value="Property Manager"><option value="Building Inspector"><option value="Buyer's Agent">
         </datalist>
       </div>
       <div class="form-group">
