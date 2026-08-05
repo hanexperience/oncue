@@ -746,6 +746,8 @@ const DEMO = false;
     const sort = document.getElementById('lead-sort').value;
     const openedFilterEl = document.getElementById('lead-opened-filter');
     const openedFilter = openedFilterEl ? openedFilterEl.value : '';
+    const emailableFilterEl = document.getElementById('lead-emailable-filter');
+    const emailableFilter = emailableFilterEl ? emailableFilterEl.value : '';
 
     // Rebuild category dropdown from live data
     const catSelect = document.getElementById('lead-category-filter');
@@ -769,6 +771,12 @@ const DEMO = false;
     if (openedFilter === 'opened') rows = rows.filter(function (r) { return !!clicksByRefSlug[r.ref_slug]; });
     else if (openedFilter === 'not_opened') rows = rows.filter(function (r) { return !clicksByRefSlug[r.ref_slug]; });
     else if (openedFilter === 'opened_no_followup') rows = rows.filter(function (r) { return !!clicksByRefSlug[r.ref_slug] && !r.followed_up; });
+    if (emailableFilter === 'emailable') {
+      rows = rows.filter(function (r) {
+        const st = r.status || 'new';
+        return !!r.contact_email && st !== 'contacted' && st !== 'ignored';
+      });
+    }
 
     if (sort === 'score_desc') rows.sort(function (a, b) { return (b.site_score || 0) - (a.site_score || 0); });
     else if (sort === 'name_asc') rows.sort(function (a, b) { return (a.company_name || '').localeCompare(b.company_name || ''); });
@@ -1682,6 +1690,10 @@ const BIZ_TEMPLATE = `<div class="biz-topbar">
       <option value="opened">Opened link</option>
       <option value="opened_no_followup">Opened — not followed up</option>
       <option value="not_opened">Not opened</option>
+    </select>
+    <select class="form-input" id="lead-emailable-filter" onchange="BIZ.renderLeadsTable()">
+      <option value="">All leads (emailable or not)</option>
+      <option value="emailable">Can send email</option>
     </select>
     <input type="text" class="form-input" id="lead-search" placeholder="Search company…" oninput="BIZ.renderLeadsTable()">
     <select class="form-input" id="lead-sort" onchange="BIZ.renderLeadsTable()">
