@@ -776,6 +776,8 @@ const DEMO = false;
         const st = r.status || 'new';
         return !!r.contact_email && st !== 'contacted' && st !== 'ignored';
       });
+    } else if (emailableFilter === 'not_emailable') {
+      rows = rows.filter(function (r) { return !r.contact_email; });
     }
 
     if (sort === 'score_desc') rows.sort(function (a, b) { return (b.site_score || 0) - (a.site_score || 0); });
@@ -1694,6 +1696,7 @@ const BIZ_TEMPLATE = `<div class="biz-topbar">
     <select class="form-input" id="lead-emailable-filter" onchange="BIZ.renderLeadsTable()">
       <option value="">All leads (emailable or not)</option>
       <option value="emailable">Can send email</option>
+      <option value="not_emailable">Can't send email (no email)</option>
     </select>
     <input type="text" class="form-input" id="lead-search" placeholder="Search company…" oninput="BIZ.renderLeadsTable()">
     <select class="form-input" id="lead-sort" onchange="BIZ.renderLeadsTable()">
