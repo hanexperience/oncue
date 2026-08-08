@@ -1,13 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Instagram Grid Maker — Split Photos &amp; Design Your Feed | Beets &amp; Co</title>
+<meta name="description" content="Free online Instagram grid maker. Design a puzzle feed, split photos across tiles, add on-brand text and export ready-to-post images — no signup, no watermark.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://beetsandco.com.au/tools/instagram-grid-maker.html">
+<meta property="og:title" content="Free Instagram Grid Maker — Split Photos & Design Your Feed | Beets & Co">
+<meta property="og:description" content="Design a puzzle-style Instagram grid, split images across tiles, add text and export — free, no signup, no watermark.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://beetsandco.com.au/tools/instagram-grid-maker.html">
+<meta property="og:locale" content="en_AU">
+<meta property="og:image" content="https://beetsandco.com.au/images/beets.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://beetsandco.com.au/images/beets.webp">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Instagram Grid Maker",
+  "url": "https://beetsandco.com.au/tools/instagram-grid-maker.html",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "AUD"},
+  "publisher": {"@type": "Organization", "name": "Beets & Co", "url": "https://beetsandco.com.au"},
+  "description": "Free online Instagram grid maker — split photos across a 3x4 (or custom) grid, add text, and export ready-to-post tiles."
+}
+</script>
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon-16x16.png">
+<link rel="shortcut icon" href="../images/favicon/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400&family=Space+Grotesk:wght@300;400;500;600&family=Cormorant+Garamond:wght@300;400;500&family=Raleway:wght@200;300;400;500&family=Libre+Baskerville&display=swap" rel="stylesheet">
@@ -36,7 +59,6 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 header.top{padding:13px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;background:var(--bg2)}
 .beet{width:15px;height:15px;background:var(--accent);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;flex-shrink:0}
 header.top h1{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:500;letter-spacing:-.005em;cursor:pointer;white-space:nowrap;flex-shrink:0}
-.hdr-tag{color:var(--muted);font-size:11px}
 .hdr-sub{color:var(--muted);font-size:10.5px;margin-left:14px;font-variant-numeric:tabular-nums;display:none}
 @media(min-width:720px){.hdr-sub{display:inline}}
 .hdr-right{display:flex;align-items:center;gap:8px;margin-left:auto}
@@ -51,16 +73,15 @@ header.top h1{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weigh
   .ctrl.open{transform:translateX(0)}
 }
 .scrim{display:none}
-@media(max-width:900px){.scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50}}
+.scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50}
+@media(min-width:901px){.scrim.show{display:none}}
 /* ACCORDION */
 .acc{border:1px solid var(--border);border-radius:var(--r);background:var(--panel);overflow:hidden;flex-shrink:0}
-.acc::details-content{height:auto;block-size:auto;overflow:visible;content-visibility:visible;transition:none}
-.acc>summary{list-style:none;cursor:pointer;padding:12px 13px;display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--text);user-select:none}
-.acc>summary::-webkit-details-marker{display:none}
-.acc>summary .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
-.acc>summary .chev{margin-left:auto;flex-shrink:0;color:var(--muted);transition:transform .15s;font-size:10px}
-.acc[open]>summary .chev{transform:rotate(90deg)}
+.acc-summary{list-style:none;cursor:pointer;padding:12px 13px;display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--text);user-select:none}
+.acc-summary .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.acc-summary .chev{margin-left:auto;flex-shrink:0;color:var(--muted);transition:transform .15s;font-size:10px}
 .acc-body{padding:2px 13px 15px;display:flex;flex-direction:column;gap:12px}
+.acc-body.hidden{display:none}
 .tip{background:var(--accentDim);border:1px solid var(--accent);border-radius:var(--r);padding:10px 12px;font-size:11.5px;color:var(--text);display:flex;gap:8px;align-items:flex-start;line-height:1.55}
 .tip button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;margin-left:auto;line-height:1;flex-shrink:0}
 .ttip{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;border:1px solid var(--border);color:var(--muted);font-size:9px;cursor:help;margin-left:5px}
@@ -137,7 +158,8 @@ input[type=file]{display:none}
 .mclose{position:fixed;top:18px;right:20px;background:none;border:none;color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;font-family:inherit}
 .mclose:hover{color:var(--text)}
 </style>
-</helmet>
+</head>
+<body>
 
 <div class="fp" aria-hidden="true">
   <span style="font-family:'Inter';font-weight:200">x</span><span style="font-family:'Inter';font-weight:300">x</span><span style="font-family:'Inter';font-weight:400">x</span><span style="font-family:'Inter';font-weight:500">x</span>
@@ -148,9 +170,9 @@ input[type=file]{display:none}
   <span style="font-family:'Libre Baskerville';font-weight:400">x</span>
 </div>
 
-<sc-if value="{{isLanding}}" hint-placeholder-val="{{true}}">
-<section class="landing">
-  <div class="landing-mark"></div>
+<!-- LANDING -->
+<section class="landing" id="landingView">
+  <a href="../index.html" class="landing-mark" style="display:block;text-decoration:none" aria-label="Beets & Co home"></a>
   <h1>Grid Builder</h1>
   <p class="sub">Design multi-post Instagram grids, feed carousels and Reel covers — right in your browser. Pick a layout, drop in text and imagery per tile, export a ready-to-upload ZIP.</p>
   <div class="feat-row">
@@ -158,102 +180,92 @@ input[type=file]{display:none}
     <span class="feat-chip">Per-tile image control</span>
     <span class="feat-chip">Feed &amp; Reel-cover export</span>
   </div>
-  <button class="cta" onClick="{{h.enterApp}}">Open Grid Builder →</button>
+  <button class="cta" id="enterAppBtn">Open Grid Builder →</button>
   <p class="landing-foot">No account needed · everything runs locally in your browser</p>
 </section>
-</sc-if>
 
-<sc-if value="{{isApp}}" hint-placeholder-val="{{false}}">
-<div class="app">
+<!-- APP -->
+<div class="app" id="appView" style="display:none">
   <header class="top">
-    <button class="icon-btn menu-btn" onClick="{{h.toggleSidebar}}" title="Menu">☰</button>
-    <div class="beet" onClick="{{h.goHome}}" style="cursor:pointer"></div>
-    <h1 onClick="{{h.goHome}}">Grid Builder</h1>
+    <button class="icon-btn menu-btn" id="toggleSidebarBtn" title="Menu">☰</button>
+    <div class="beet" id="goHomeMark" style="cursor:pointer"></div>
+    <h1 id="goHomeTitle" style="cursor:pointer">Grid Builder</h1>
     <span class="hdr-sub" id="headerSub">3 × 4 · 12 tiles · 1080 × 1440 px</span>
     <div class="hdr-right">
-      <button class="icon-btn" onClick="{{h.toggleTheme}}" title="Toggle light/dark">{{themeIcon}}</button>
+      <button class="icon-btn" id="toggleThemeBtn" title="Toggle light/dark">☾</button>
     </div>
   </header>
 
   <div class="main">
-    <div class="{{sidebarClass}}" id="ctrlPanel">
+    <div class="ctrl" id="ctrlPanel">
 
-      <sc-if value="{{showTip}}" hint-placeholder-val="{{true}}">
-      <div class="tip">
+      <div class="tip" id="tipBox">
         <span>💡 Start with a <strong>Quick start</strong> preset, then adjust grid size and layers as you go. Everything updates live in the preview.</span>
-        <button onClick="{{h.dismissTip}}">✕</button>
+        <button id="dismissTipBtn">✕</button>
       </div>
-      </sc-if>
 
       <div class="acc">
-        <div class="acc-summary" onClick="{{h.toggleQuick}}"><span class="lbl">Quick start</span><span class="chev" style="transform:rotate({{chevQuick}}deg)">▸</span></div>
-        <sc-if value="{{sections.quick}}" hint-placeholder-val="{{true}}">
-        <div class="acc-body">
+        <div class="acc-summary" data-acc="quick"><span class="lbl">Quick start</span><span class="chev">▸</span></div>
+        <div class="acc-body" id="accBody_quick">
           <div class="presets">
-            <button class="prs" onClick="{{h.presetNew}}">New Agency</button>
-            <button class="prs" onClick="{{h.presetBusy}}">Too Busy</button>
-            <button class="prs" onClick="{{h.presetClear}}">Clear</button>
+            <button class="prs" id="presetNewBtn">New Agency</button>
+            <button class="prs" id="presetBusyBtn">Too Busy</button>
+            <button class="prs" id="presetClearBtn">Clear</button>
           </div>
         </div>
-        </sc-if>
       </div>
 
       <div class="acc">
-        <div class="acc-summary" onClick="{{h.toggleFormat}}"><span class="lbl">Format &amp; grid size</span><span class="chev" style="transform:rotate({{chevFormat}}deg)">▸</span></div>
-        <sc-if value="{{sections.format}}" hint-placeholder-val="{{true}}">
-        <div class="acc-body">
+        <div class="acc-summary" data-acc="format"><span class="lbl">Format &amp; grid size</span><span class="chev">▸</span></div>
+        <div class="acc-body" id="accBody_format">
           <div class="fmt-grid">
-            <button class="fmt-btn" id="fmt11" onClick="{{h.fmt11}}">
+            <button class="fmt-btn" id="fmt11">
               <span class="fmt-ratio">1 : 1</span><span class="fmt-px">1080 × 1080</span>
               <span class="fmt-note">Square — safe for all posts</span>
             </button>
-            <button class="fmt-btn" id="fmt45" onClick="{{h.fmt45}}">
+            <button class="fmt-btn" id="fmt45">
               <span class="fmt-ratio">4 : 5</span><span class="fmt-px">1080 × 1350</span>
               <span class="fmt-note">Portrait — standard feed</span>
             </button>
-            <button class="fmt-btn active" id="fmt34" onClick="{{h.fmt34}}">
+            <button class="fmt-btn active" id="fmt34">
               <span class="fmt-ratio">3 : 4</span><span class="fmt-px">1080 × 1440</span>
               <span class="fmt-note">Grid/banner — not for feed</span>
             </button>
           </div>
           <div class="row2">
             <div class="field"><label>Columns</label>
-              <select id="selCols" defaultValue="3" onChange="{{h.onCols}}">
-                <option>1</option><option>2</option><option value="3">3</option>
+              <select id="selCols">
+                <option>1</option><option>2</option><option value="3" selected>3</option>
                 <option>4</option><option>5</option><option>6</option>
               </select>
             </div>
             <div class="field"><label>Rows</label>
-              <select id="selRows" defaultValue="4" onChange="{{h.onRows}}">
+              <select id="selRows">
                 <option>1</option><option>2</option><option>3</option>
-                <option value="4">4</option><option>5</option>
+                <option value="4" selected>4</option><option>5</option>
                 <option>6</option><option>7</option><option>8</option>
               </select>
             </div>
           </div>
         </div>
-        </sc-if>
       </div>
 
       <div class="acc">
-        <div class="acc-summary" onClick="{{h.toggleText}}"><span class="lbl">Text</span><span class="chev" style="transform:rotate({{chevText}}deg)">▸</span></div>
-        <sc-if value="{{sections.text}}" hint-placeholder-val="{{true}}">
-        <div class="acc-body">
+        <div class="acc-summary" data-acc="text"><span class="lbl">Text</span><span class="chev">▸</span></div>
+        <div class="acc-body" id="accBody_text">
           <div id="lineInputs"></div>
           <div class="field">
             <label>Tagline — small text at base</label>
-            <input type="text" id="tagInput" onInput="{{h.onTagline}}">
+            <input type="text" id="tagInput">
           </div>
         </div>
-        </sc-if>
       </div>
 
       <div class="acc">
-        <div class="acc-summary" onClick="{{h.toggleTypo}}"><span class="lbl">Typography &amp; colour</span><span class="chev" style="transform:rotate({{chevTypo}}deg)">▸</span></div>
-        <sc-if value="{{sections.typo}}" hint-placeholder-val="{{false}}">
-        <div class="acc-body">
+        <div class="acc-summary" data-acc="typo"><span class="lbl">Typography &amp; colour</span><span class="chev">▸</span></div>
+        <div class="acc-body hidden" id="accBody_typo">
           <div class="field"><label>Font</label>
-            <select onChange="{{h.onFont}}">
+            <select id="fontSelect">
               <optgroup label="— Sans Serif">
                 <option value="Inter">Inter</option><option value="DM Sans">DM Sans</option>
                 <option value="Space Grotesk">Space Grotesk</option><option value="Raleway">Raleway</option>
@@ -266,52 +278,48 @@ input[type=file]{display:none}
           </div>
           <div class="row2">
             <div class="field"><label>Weight</label>
-              <select defaultValue="300" onChange="{{h.onWeight}}">
-                <option value="200">200 Thin</option><option value="300">300 Light</option>
+              <select id="weightSelect">
+                <option value="200">200 Thin</option><option value="300" selected>300 Light</option>
                 <option value="400">400 Regular</option><option value="500">500 Medium</option>
               </select>
             </div>
             <div class="field"><label>Case</label>
-              <select defaultValue="upper" onChange="{{h.onCase}}">
-                <option value="upper">UPPER</option><option value="as-is">As typed</option><option value="lower">lower</option>
+              <select id="caseSelect">
+                <option value="upper" selected>UPPER</option><option value="as-is">As typed</option><option value="lower">lower</option>
               </select>
             </div>
           </div>
           <div class="field"><label>Letter spacing</label>
-            <div class="rr"><input type="range" min="-5" max="80" step="1" defaultValue="6" onInput="{{h.onLS}}"><span class="rv" id="lsv">6px</span></div>
+            <div class="rr"><input type="range" min="-5" max="80" step="1" value="6" id="lsRange"><span class="rv" id="lsv">6px</span></div>
           </div>
           <div class="field"><label>Vertical nudge</label>
-            <div class="rr"><input type="range" min="-300" max="300" step="10" defaultValue="0" onInput="{{h.onNudge}}"><span class="rv" id="tnv">0px</span></div>
+            <div class="rr"><input type="range" min="-300" max="300" step="10" value="0" id="nudgeRange"><span class="rv" id="tnv">0px</span></div>
           </div>
-          <div class="cr"><label>Text colour</label><input type="color" defaultValue="#FFFFFF" onInput="{{h.onTextColor}}"></div>
-          <div class="cr"><label>Tagline colour</label><input type="color" defaultValue="#444444" onInput="{{h.onTaglineColor}}"></div>
+          <div class="cr"><label>Text colour</label><input type="color" value="#FFFFFF" id="textColorInput"></div>
+          <div class="cr"><label>Tagline colour</label><input type="color" value="#444444" id="taglineColorInput"></div>
         </div>
-        </sc-if>
       </div>
 
       <div class="acc">
-        <div class="acc-summary" onClick="{{h.toggleLayers}}"><span class="lbl">Background layers</span><span class="chev" style="transform:rotate({{chevLayers}}deg)">▸</span></div>
-        <sc-if value="{{sections.layers}}" hint-placeholder-val="{{false}}">
-        <div class="acc-body">
-          <button class="btn-add" onClick="{{h.addLayer}}">+ Add image layer</button>
+        <div class="acc-summary" data-acc="layers"><span class="lbl">Background layers</span><span class="chev">▸</span></div>
+        <div class="acc-body hidden" id="accBody_layers">
+          <button class="btn-add" id="addLayerBtn">+ Add image layer</button>
           <div class="layers-panel" id="layersPanel"></div>
           <div class="lc-base">
             <span>Base colour</span>
-            <input type="color" id="bgColorPicker" defaultValue="#000000" onInput="{{h.onBgColor}}">
+            <input type="color" id="bgColorPicker" value="#000000">
           </div>
         </div>
-        </sc-if>
       </div>
 
       <div class="acc">
-        <div class="acc-summary" onClick="{{h.toggleExport}}"><span class="lbl">Export</span><span class="chev" style="transform:rotate({{chevExport}}deg)">▸</span></div>
-        <sc-if value="{{sections.exportSec}}" hint-placeholder-val="{{true}}">
-        <div class="acc-body">
+        <div class="acc-summary" data-acc="exportSec"><span class="lbl">Export</span><span class="chev">▸</span></div>
+        <div class="acc-body" id="accBody_exportSec">
           <div class="field">
             <label>Export mode <span class="ttip" title="Standard tiles are the exact tile size. Reel covers pad to 1080×1920 so Instagram's top-crop lands on your tile.">?</span></label>
             <div class="mtog">
-              <button class="mbtn active" id="expStd" onClick="{{h.setExpStd}}">Standard tiles</button>
-              <button class="mbtn" id="expReel" onClick="{{h.setExpReel}}">Reel covers</button>
+              <button class="mbtn active" id="expStd">Standard tiles</button>
+              <button class="mbtn" id="expReel">Reel covers</button>
             </div>
           </div>
           <div id="expStdInfo" style="background:var(--panelAlt);border:1px solid var(--border);border-radius:var(--r);padding:9px 10px;font-size:10.5px;color:var(--muted);line-height:1.6">
@@ -320,49 +328,48 @@ input[type=file]{display:none}
           <div id="expReelInfo" style="display:none;background:var(--panelAlt);border:1px solid var(--border);border-radius:var(--r);padding:9px 10px;font-size:10.5px;color:var(--muted);line-height:1.6">
             Exports at <strong style="color:var(--accent)">1080 × 1920</strong> — your tile sits flush at the top, with <strong id="reelPad" style="color:var(--accent)">480px</strong> of your base colour padded at the bottom. Instagram crops Reel covers from the <em>top</em>, so this lands exactly on your tile in the grid.
           </div>
-          <button class="btn" id="dlBtn" onClick="{{h.downloadZip}}">↓ &nbsp;<span id="dlLabel">Download 12 tiles as ZIP</span></button>
+          <button class="btn" id="dlBtn">↓ &nbsp;<span id="dlLabel">Download 12 tiles as ZIP</span></button>
           <p class="status" id="dlStatus"></p>
           <p class="hint" id="expHint">Post 01 → last, then reorder via <em>Edit Profile → Reorder Grid</em>. For 3:4 tiles, tap the expand (⤢) icon during iPhone upload to avoid cropping.</p>
         </div>
-        </sc-if>
       </div>
 
     </div>
-    <div class="{{scrimClass}}" onClick="{{h.closeSidebar}}"></div>
+    <div class="scrim" id="scrim"></div>
 
     <div class="preview">
       <div class="ptop">
         <span class="plabel">Grid preview — click any tile to zoom</span>
         <span class="tinfo" id="tileInfo"></span>
       </div>
-      <canvas id="gridPreview" onClick="{{h.onGridClick}}"></canvas>
+      <canvas id="gridPreview"></canvas>
       <p class="status" id="previewStatus">Loading fonts…</p>
     </div>
   </div>
 
-  <input type="file" id="sharedFileInput" accept="image/*" onChange="{{h.sharedFileChange}}">
+  <input type="file" id="sharedFileInput" accept="image/*">
 
-  <div class="modal" id="modal" onClick="{{h.closeModalOverlay}}">
-    <button class="mclose" onClick="{{h.closeModalBtn}}">✕ &nbsp;Close</button>
+  <div class="modal" id="modal">
+    <button class="mclose" id="modalCloseBtn">✕ &nbsp;Close</button>
     <div class="modal-inner">
       <canvas id="tileZoom"></canvas>
       <p class="mmeta" id="modalMeta"></p>
     </div>
   </div>
 </div>
-</sc-if>
 
-</x-dc>
-<script type="text/x-dc" data-dc-script>
-class Component extends DCLogic {
-  state = { view: 'landing', theme: 'dark', sidebarOpen: false, showTip: true,
-    sections: { quick: true, format: true, text: true, typo: false, layers: false, exportSec: true } };
+<script>
+(function(){
+  var state = {
+    view: 'landing', theme: 'dark', sidebarOpen: false, showTip: true,
+    sections: { quick: true, format: true, text: true, typo: false, layers: false, exportSec: true }
+  };
 
-  COLS = 3; ROWS = 4; GAP = 3; TW = 1080;
-  layerSeq = 0; pendingUpload = null; exportMode = 'standard'; renderTimer = null;
-  pScale = 1; pTW = 0; pTH = 0;
+  var COLS = 3, ROWS = 4, GAP = 3, TW = 1080;
+  var layerSeq = 0, pendingUpload = null, exportMode = 'standard', renderTimer = null;
+  var pScale = 1, pTW = 0, pTH = 0;
 
-  S = {
+  var S = {
     lines: ['NEW AGENCY.', 'FOCUSED ON', 'OUR CLIENTS.', 'WATCH THIS SPACE.'],
     tagline: 'GET IN TOUCH · LINK IN BIO',
     font: 'Inter', fontWeight: '300', textCase: 'upper',
@@ -370,510 +377,542 @@ class Component extends DCLogic {
     textColor: '#FFFFFF', taglineColor: '#444444',
     bgColor: '#000000',
     tileFormat: '3:4',
-    layers: [],
+    layers: []
   };
 
-  PRESETS = {
+  var PRESETS = {
     new: { lines: ['NEW AGENCY.', 'FOCUSED ON', 'OUR CLIENTS.', 'WATCH THIS SPACE.'], tagline: 'GET IN TOUCH · LINK IN BIO' },
     busy: { lines: ['TOO BUSY', 'WORKING FOR', 'CLIENTS TO FILM', '"GOTCHA" ADS.'], tagline: 'LOOK AROUND. THEN GET IN TOUCH.' },
-    blank: { lines: ['', '', '', ''], tagline: '' },
+    blank: { lines: ['', '', '', ''], tagline: '' }
   };
 
-  componentDidMount() {
-    window.__gb = this;
-    document.documentElement.setAttribute('data-theme', this.state.theme);
-    if (this.state.view === 'app') this.initApp();
-  }
+  function $(id){ return document.getElementById(id); }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.view !== 'app' && this.state.view === 'app') this.initApp();
-    if (prevState.theme !== this.state.theme) document.documentElement.setAttribute('data-theme', this.state.theme);
-    if (!prevState.sections.text && this.state.sections.text) {
-      this.renderLineInputs();
-      const tagInput = document.getElementById('tagInput');
-      if (tagInput) tagInput.value = this.S.tagline;
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // ── VIEW / THEME / SIDEBAR ──────────────────────────────────────────────
+  function enterApp(){
+    state.view = 'app';
+    $('landingView').style.display = 'none';
+    $('appView').style.display = 'flex';
+    initApp();
+  }
+  function goHome(){
+    state.view = 'landing';
+    $('appView').style.display = 'none';
+    $('landingView').style.display = 'flex';
+  }
+  function toggleTheme(){
+    state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', state.theme);
+    $('toggleThemeBtn').textContent = state.theme === 'dark' ? '☾' : '☀';
+  }
+  function toggleSidebar(){
+    state.sidebarOpen = !state.sidebarOpen;
+    $('ctrlPanel').classList.toggle('open', state.sidebarOpen);
+    $('scrim').classList.toggle('show', state.sidebarOpen);
+  }
+  function closeSidebar(){
+    state.sidebarOpen = false;
+    $('ctrlPanel').classList.remove('open');
+    $('scrim').classList.remove('show');
+  }
+  function dismissTip(){
+    state.showTip = false;
+    $('tipBox').style.display = 'none';
+  }
+  function toggleAcc(key){
+    state.sections[key] = !state.sections[key];
+    var body = $('accBody_' + key);
+    var summary = document.querySelector('[data-acc="' + key + '"]');
+    body.classList.toggle('hidden', !state.sections[key]);
+    summary.querySelector('.chev').style.transform = state.sections[key] ? 'rotate(90deg)' : 'rotate(0deg)';
+    if (key === 'text' && state.sections.text) {
+      renderLineInputs();
+      $('tagInput').value = S.tagline;
     }
-    if (!prevState.sections.layers && this.state.sections.layers) this.renderLayersPanel();
+    if (key === 'layers' && state.sections.layers) renderLayersPanel();
   }
 
-  initApp() {
-    this.renderLineInputs();
-    this.renderLayersPanel();
-    const tagInput = document.getElementById('tagInput');
-    if (tagInput) tagInput.value = this.S.tagline;
-    this.updateMeta();
-    document.fonts.ready.then(() => {
-      const ps = document.getElementById('previewStatus');
-      if (ps) ps.textContent = '';
-      this.render();
+  function initApp(){
+    renderLineInputs();
+    renderLayersPanel();
+    $('tagInput').value = S.tagline;
+    updateMeta();
+    document.fonts.ready.then(function(){
+      var ps = $('previewStatus'); if (ps) ps.textContent = '';
+      render();
     });
-    if (!this._resizeBound) { window.addEventListener('resize', () => this.schedule()); this._resizeBound = true; }
+    if (!window.__gbResizeBound) { window.addEventListener('resize', schedule); window.__gbResizeBound = true; }
   }
 
-  applyPreset(k) {
-    const p = this.PRESETS[k];
-    this.S.lines = Array.from({ length: this.ROWS }, (_, i) => p.lines[i] ?? '');
-    this.S.tagline = p.tagline;
-    const tagInput = document.getElementById('tagInput');
+  function applyPreset(k){
+    var p = PRESETS[k];
+    S.lines = Array.from({ length: ROWS }, function(_, i){ return p.lines[i] != null ? p.lines[i] : ''; });
+    S.tagline = p.tagline;
+    var tagInput = $('tagInput');
     if (tagInput) tagInput.value = p.tagline;
-    this.renderLineInputs(); this.schedule();
+    renderLineInputs(); schedule();
   }
 
-  getTH() { return this.S.tileFormat === '1:1' ? 1080 : this.S.tileFormat === '4:5' ? 1350 : 1440; }
+  function getTH(){ return S.tileFormat === '1:1' ? 1080 : S.tileFormat === '4:5' ? 1350 : 1440; }
 
-  setFormat(f) {
-    this.S.tileFormat = f;
-    const set = (id, on) => { const el = document.getElementById(id); if (el) el.classList.toggle('active', on); };
+  function setFormat(f){
+    S.tileFormat = f;
+    var set = function(id, on){ var el = $(id); if (el) el.classList.toggle('active', on); };
     set('fmt11', f === '1:1'); set('fmt45', f === '4:5'); set('fmt34', f === '3:4');
-    this.updateMeta(); this.schedule();
+    updateMeta(); schedule();
   }
 
-  updateGrid(cols, rows) {
-    this.COLS = cols; this.ROWS = rows;
-    while (this.S.lines.length < this.ROWS) this.S.lines.push('');
-    this.S.lines.length = this.ROWS;
-    this.renderLineInputs(); this.renderAllLayerTileGrids(); this.updateMeta(); this.schedule();
+  function updateGrid(cols, rows){
+    COLS = cols; ROWS = rows;
+    while (S.lines.length < ROWS) S.lines.push('');
+    S.lines.length = ROWS;
+    renderLineInputs(); renderAllLayerTileGrids(); updateMeta(); schedule();
   }
 
-  updateMeta() {
-    const TH = this.getTH(), total = this.COLS * this.ROWS;
-    const hs = document.getElementById('headerSub');
-    if (hs) hs.textContent = `${this.COLS} × ${this.ROWS} · ${total} tiles · 1080 × ${TH}px`;
-    const dl = document.getElementById('dlLabel');
-    if (dl) dl.textContent = `Download ${total} tiles as ZIP`;
-    this.updateExportDims();
+  function updateMeta(){
+    var TH = getTH(), total = COLS * ROWS;
+    var hs = $('headerSub');
+    if (hs) hs.textContent = COLS + ' × ' + ROWS + ' · ' + total + ' tiles · 1080 × ' + TH + 'px';
+    var dl = $('dlLabel');
+    if (dl) dl.textContent = 'Download ' + total + ' tiles as ZIP';
+    updateExportDims();
   }
 
-  esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-
-  renderLineInputs() {
-    const c = document.getElementById('lineInputs');
+  function renderLineInputs(){
+    var c = $('lineInputs');
     if (!c) return;
     c.innerHTML = '';
-    this.S.lines.forEach((v, i) => {
-      const sfx = i === 0 ? ' — top' : i === this.ROWS - 1 ? ' — bottom' : '';
-      c.insertAdjacentHTML('beforeend',
-        `<div class="field" style="margin-bottom:6px"><label>Row ${i + 1}${sfx}</label>
-         <input type="text" value="${this.esc(v)}" oninput="window.__gb.S.lines[${i}]=this.value;window.__gb.schedule()"></div>`);
+    S.lines.forEach(function(v, i){
+      var sfx = i === 0 ? ' — top' : i === ROWS - 1 ? ' — bottom' : '';
+      var wrap = document.createElement('div');
+      wrap.className = 'field'; wrap.style.marginBottom = '6px';
+      wrap.innerHTML = '<label>Row ' + (i + 1) + sfx + '</label><input type="text" value="' + esc(v) + '">';
+      var input = wrap.querySelector('input');
+      input.addEventListener('input', function(){ S.lines[i] = this.value; schedule(); });
+      c.appendChild(wrap);
     });
   }
 
-  addLayer() {
-    const id = 'layer_' + (this.layerSeq++);
-    this.S.layers.push({ id, img: null, tileImgs: {}, mode: 'global', opacity: 1, blendMode: 'source-over', fit: 'cover' });
-    this.renderLayersPanel(); this.schedule();
+  // ── LAYERS ───────────────────────────────────────────────────────────────
+  function addLayer(){
+    var id = 'layer_' + (layerSeq++);
+    S.layers.push({ id: id, img: null, tileImgs: {}, mode: 'global', opacity: 1, blendMode: 'source-over', fit: 'cover' });
+    renderLayersPanel(); schedule();
   }
-  removeLayer(id) { this.S.layers = this.S.layers.filter(l => l.id !== id); this.renderLayersPanel(); this.schedule(); }
-  setLayerMode(id, mode) {
-    const l = this.S.layers.find(x => x.id === id); if (!l) return;
+  function removeLayer(id){ S.layers = S.layers.filter(function(l){ return l.id !== id; }); renderLayersPanel(); schedule(); }
+  function setLayerMode(id, mode){
+    var l = S.layers.find(function(x){ return x.id === id; }); if (!l) return;
     l.mode = mode;
-    const gl = document.getElementById('lgl_' + id), pt = document.getElementById('lpt_' + id);
+    var gl = $('lgl_' + id), pt = $('lpt_' + id);
     if (gl) gl.style.display = mode === 'global' ? 'flex' : 'none';
     if (pt) pt.style.display = mode === 'per-tile' ? 'block' : 'none';
-    document.querySelectorAll(`.lmb_${id}`).forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
-    this.schedule();
+    document.querySelectorAll('.lmb_' + id).forEach(function(b){ b.classList.toggle('active', b.dataset.mode === mode); });
+    schedule();
   }
-  setLayerProp(id, prop, val) { const l = this.S.layers.find(x => x.id === id); if (!l) return; l[prop] = val; this.schedule(); }
-  clearLayerImg(id) {
-    const l = this.S.layers.find(x => x.id === id); if (!l) return;
+  function setLayerProp(id, prop, val){ var l = S.layers.find(function(x){ return x.id === id; }); if (!l) return; l[prop] = val; schedule(); }
+  function clearLayerImg(id){
+    var l = S.layers.find(function(x){ return x.id === id; }); if (!l) return;
     l.img = null;
-    const th = document.getElementById('lth_' + id); if (th) th.style.display = 'none';
-    const fz = document.getElementById('lfz_' + id); if (fz) fz.textContent = '⊕  Upload image';
-    this.schedule();
+    var th = $('lth_' + id); if (th) th.style.display = 'none';
+    var fz = $('lfz_' + id); if (fz) fz.textContent = '⊕  Upload image';
+    schedule();
   }
-  clearLayerTile(id, key) {
-    const l = this.S.layers.find(x => x.id === id); if (!l) return;
-    delete l.tileImgs[key]; this.renderLayerTileGrid(id); this.schedule();
+  function clearLayerTile(id, key){
+    var l = S.layers.find(function(x){ return x.id === id; }); if (!l) return;
+    delete l.tileImgs[key]; renderLayerTileGrid(id); schedule();
   }
 
-  renderLayersPanel() {
-    const panel = document.getElementById('layersPanel');
+  function renderLayersPanel(){
+    var panel = $('layersPanel');
     if (!panel) return;
     panel.innerHTML = '';
-    [...this.S.layers].reverse().forEach((layer, di) => {
-      const n = this.S.layers.length - di;
-      panel.appendChild(this.buildLayerCard(layer, n));
+    S.layers.slice().reverse().forEach(function(layer, di){
+      var n = S.layers.length - di;
+      panel.appendChild(buildLayerCard(layer, n));
     });
   }
 
-  buildLayerCard(layer, n) {
-    const self = this;
-    const d = document.createElement('div');
+  function buildLayerCard(layer, n){
+    var d = document.createElement('div');
     d.className = 'layer-card'; d.id = 'lcard_' + layer.id;
 
-    const blendOpts = ['Normal|source-over', 'Multiply|multiply', 'Screen|screen', 'Overlay|overlay', 'Soft Light|soft-light', 'Darken|darken', 'Lighten|lighten']
-      .map(o => { const [l, v] = o.split('|'); return `<option value="${v}"${layer.blendMode === v ? ' selected' : ''}>${l}</option>`; }).join('');
-    const fitOpts = ['Cover|cover', 'Contain|contain', 'Stretch|stretch', 'Center|center']
-      .map(o => { const [l, v] = o.split('|'); return `<option value="${v}"${layer.fit === v ? ' selected' : ''}>${l}</option>`; }).join('');
+    var blendOpts = ['Normal|source-over', 'Multiply|multiply', 'Screen|screen', 'Overlay|overlay', 'Soft Light|soft-light', 'Darken|darken', 'Lighten|lighten']
+      .map(function(o){ var parts = o.split('|'); return '<option value="' + parts[1] + '"' + (layer.blendMode === parts[1] ? ' selected' : '') + '>' + parts[0] + '</option>'; }).join('');
+    var fitOpts = ['Cover|cover', 'Contain|contain', 'Stretch|stretch', 'Center|center']
+      .map(function(o){ var parts = o.split('|'); return '<option value="' + parts[1] + '"' + (layer.fit === parts[1] ? ' selected' : '') + '>' + parts[0] + '</option>'; }).join('');
 
-    const isGlobal = layer.mode === 'global';
-    const hasImg = !!layer.img;
+    var isGlobal = layer.mode === 'global';
+    var hasImg = !!layer.img;
 
-    d.innerHTML = `
-      <div class="lc-head">
-        <span class="lc-badge">Layer ${n}</span>
-        <div class="mtog" style="flex:1;margin:0 8px">
-          <button class="mbtn lmb_${layer.id}${isGlobal ? ' active' : ''}" data-mode="global" onclick="window.__gb.setLayerMode('${layer.id}','global')">Global</button>
-          <button class="mbtn lmb_${layer.id}${!isGlobal ? ' active' : ''}" data-mode="per-tile" onclick="window.__gb.setLayerMode('${layer.id}','per-tile')">Per tile</button>
-        </div>
-        <button class="lc-rm" onclick="window.__gb.removeLayer('${layer.id}')" title="Remove layer">✕</button>
-      </div>
-      <div class="lc-body">
-        <div id="lgl_${layer.id}" style="display:${isGlobal ? 'flex' : 'none'};flex-direction:column;gap:7px">
-          <label class="fz" id="lfz_${layer.id}" for="lfi_${layer.id}">${hasImg ? '⊕  Change image' : '⊕  Upload image'}</label>
-          <input type="file" id="lfi_${layer.id}" accept="image/*">
-          ${hasImg ? `<img id="lth_${layer.id}" class="img-thumb-sm" style="display:block;aspect-ratio:auto" src="">` : `<img id="lth_${layer.id}" class="img-thumb-sm">`}
-          ${hasImg ? `<button class="btn btn-g" onclick="window.__gb.clearLayerImg('${layer.id}')" style="padding:6px 10px;font-size:10px">Remove image</button>` : ''}
-        </div>
-        <div id="lpt_${layer.id}" style="display:${!isGlobal ? 'block' : 'none'}">
-          <div class="tile-grid" id="ltg_${layer.id}" style="grid-template-columns:repeat(${this.COLS},1fr)"></div>
-        </div>
-        <div class="field"><label>Opacity <span class="ttip" title="How visible this layer is over the ones beneath it.">?</span></label>
-          <div class="rr">
-            <input type="range" min="0" max="100" step="5" value="${Math.round(layer.opacity * 100)}" id="lop_${layer.id}"
-              oninput="window.__gb.setLayerProp('${layer.id}','opacity',this.value/100);document.getElementById('lopv_${layer.id}').textContent=this.value+'%'">
-            <span class="rv" id="lopv_${layer.id}">${Math.round(layer.opacity * 100)}%</span>
-          </div>
-        </div>
-        <div class="row2">
-          <div class="field"><label>Blend</label>
-            <select onchange="window.__gb.setLayerProp('${layer.id}','blendMode',this.value)">${blendOpts}</select>
-          </div>
-          <div class="field"><label>Fit</label>
-            <select onchange="window.__gb.setLayerProp('${layer.id}','fit',this.value)">${fitOpts}</select>
-          </div>
-        </div>
-      </div>`;
+    d.innerHTML =
+      '<div class="lc-head">' +
+        '<span class="lc-badge">Layer ' + n + '</span>' +
+        '<div class="mtog" style="flex:1;margin:0 8px">' +
+          '<button class="mbtn lmb_' + layer.id + (isGlobal ? ' active' : '') + '" data-mode="global">Global</button>' +
+          '<button class="mbtn lmb_' + layer.id + (!isGlobal ? ' active' : '') + '" data-mode="per-tile">Per tile</button>' +
+        '</div>' +
+        '<button class="lc-rm" data-rm="' + layer.id + '" title="Remove layer">✕</button>' +
+      '</div>' +
+      '<div class="lc-body">' +
+        '<div id="lgl_' + layer.id + '" style="display:' + (isGlobal ? 'flex' : 'none') + ';flex-direction:column;gap:7px">' +
+          '<label class="fz" id="lfz_' + layer.id + '" for="lfi_' + layer.id + '">' + (hasImg ? '⊕  Change image' : '⊕  Upload image') + '</label>' +
+          '<input type="file" id="lfi_' + layer.id + '" accept="image/*">' +
+          (hasImg ? '<img id="lth_' + layer.id + '" class="img-thumb-sm" style="display:block;aspect-ratio:auto" src="">' : '<img id="lth_' + layer.id + '" class="img-thumb-sm">') +
+          (hasImg ? '<button class="btn btn-g" data-clearimg="' + layer.id + '" style="padding:6px 10px;font-size:10px">Remove image</button>' : '') +
+        '</div>' +
+        '<div id="lpt_' + layer.id + '" style="display:' + (!isGlobal ? 'block' : 'none') + '">' +
+          '<div class="tile-grid" id="ltg_' + layer.id + '" style="grid-template-columns:repeat(' + COLS + ',1fr)"></div>' +
+        '</div>' +
+        '<div class="field"><label>Opacity <span class="ttip" title="How visible this layer is over the ones beneath it.">?</span></label>' +
+          '<div class="rr">' +
+            '<input type="range" min="0" max="100" step="5" value="' + Math.round(layer.opacity * 100) + '" id="lop_' + layer.id + '">' +
+            '<span class="rv" id="lopv_' + layer.id + '">' + Math.round(layer.opacity * 100) + '%</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="row2">' +
+          '<div class="field"><label>Blend</label><select id="lblend_' + layer.id + '">' + blendOpts + '</select></div>' +
+          '<div class="field"><label>Fit</label><select id="lfit_' + layer.id + '">' + fitOpts + '</select></div>' +
+        '</div>' +
+      '</div>';
 
-    const fi = d.querySelector(`#lfi_${layer.id}`);
-    if (fi) fi.addEventListener('change', function () {
+    d.querySelectorAll('.lmb_' + layer.id).forEach(function(b){
+      b.addEventListener('click', function(){ setLayerMode(layer.id, this.dataset.mode); });
+    });
+    var rmBtn = d.querySelector('[data-rm="' + layer.id + '"]');
+    if (rmBtn) rmBtn.addEventListener('click', function(){ removeLayer(layer.id); });
+    var clearBtn = d.querySelector('[data-clearimg="' + layer.id + '"]');
+    if (clearBtn) clearBtn.addEventListener('click', function(){ clearLayerImg(layer.id); });
+    var opRange = d.querySelector('#lop_' + layer.id);
+    if (opRange) opRange.addEventListener('input', function(){
+      setLayerProp(layer.id, 'opacity', this.value / 100);
+      $('lopv_' + layer.id).textContent = this.value + '%';
+    });
+    var blendSel = d.querySelector('#lblend_' + layer.id);
+    if (blendSel) blendSel.addEventListener('change', function(){ setLayerProp(layer.id, 'blendMode', this.value); });
+    var fitSel = d.querySelector('#lfit_' + layer.id);
+    if (fitSel) fitSel.addEventListener('change', function(){ setLayerProp(layer.id, 'fit', this.value); });
+
+    var fi = d.querySelector('#lfi_' + layer.id);
+    if (fi) fi.addEventListener('change', function(){
       if (!this.files[0]) return;
-      self.pendingUpload = { layerId: layer.id, type: 'global' };
-      const dt = new DataTransfer(); dt.items.add(this.files[0]);
-      const shared = document.getElementById('sharedFileInput');
+      pendingUpload = { layerId: layer.id, type: 'global' };
+      var dt = new DataTransfer(); dt.items.add(this.files[0]);
+      var shared = $('sharedFileInput');
       shared.files = dt.files;
       shared.dispatchEvent(new Event('change'));
       this.value = '';
     });
 
-    const tg = d.querySelector(`#ltg_${layer.id}`);
-    if (tg) this.renderLayerTileGridEl(layer.id, tg);
+    var tg = d.querySelector('#ltg_' + layer.id);
+    if (tg) renderLayerTileGridEl(layer.id, tg);
     return d;
   }
 
-  renderLayerTileGrid(id) { const el = document.getElementById('ltg_' + id); if (el) this.renderLayerTileGridEl(id, el); }
+  function renderLayerTileGrid(id){ var el = $('ltg_' + id); if (el) renderLayerTileGridEl(id, el); }
 
-  renderLayerTileGridEl(id, grid) {
-    const layer = this.S.layers.find(l => l.id === id); if (!layer) return;
-    grid.style.gridTemplateColumns = `repeat(${this.COLS},1fr)`;
+  function renderLayerTileGridEl(id, grid){
+    var layer = S.layers.find(function(l){ return l.id === id; }); if (!layer) return;
+    grid.style.gridTemplateColumns = 'repeat(' + COLS + ',1fr)';
     grid.innerHTML = '';
-    for (let r = 0; r < this.ROWS; r++) {
-      for (let c = 0; c < this.COLS; c++) {
-        const key = `${r}-${c}`;
-        const img = layer.tileImgs[key];
-        const n = r * this.COLS + c + 1;
-        const cell = document.createElement('div');
-        cell.className = 'tile-cell';
-        if (img) {
-          const cv = document.createElement('canvas');
-          cv.width = 60; cv.height = 80;
-          const ctx = cv.getContext('2d');
-          const s = Math.max(60 / img.width, 80 / img.height);
-          ctx.drawImage(img, (60 - img.width * s) / 2, (80 - img.height * s) / 2, img.width * s, img.height * s);
-          cell.appendChild(cv);
-          const rm = document.createElement('button');
-          rm.className = 'tile-rm'; rm.textContent = '×';
-          rm.onclick = e => { e.stopPropagation(); this.clearLayerTile(id, key); };
-          cell.appendChild(rm);
-        } else {
-          cell.innerHTML = `<span class="tile-plus">+</span><span class="tile-num">${n}</span>`;
-        }
-        cell.addEventListener('click', () => {
-          this.pendingUpload = { layerId: id, r, c, type: 'tile' };
-          document.getElementById('sharedFileInput').click();
-        });
-        cell.addEventListener('dragover', e => { e.preventDefault(); cell.classList.add('drag-over'); });
-        cell.addEventListener('dragleave', () => cell.classList.remove('drag-over'));
-        cell.addEventListener('drop', e => {
-          e.preventDefault(); cell.classList.remove('drag-over');
-          const f = e.dataTransfer.files[0];
-          if (f && f.type.startsWith('image/')) {
-            this.pendingUpload = { layerId: id, r, c, type: 'tile' };
-            const dt = new DataTransfer(); dt.items.add(f);
-            const sh = document.getElementById('sharedFileInput');
-            sh.files = dt.files; sh.dispatchEvent(new Event('change'));
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        (function(r, c){
+          var key = r + '-' + c;
+          var img = layer.tileImgs[key];
+          var n = r * COLS + c + 1;
+          var cell = document.createElement('div');
+          cell.className = 'tile-cell';
+          if (img) {
+            var cv = document.createElement('canvas');
+            cv.width = 60; cv.height = 80;
+            var ctx = cv.getContext('2d');
+            var s = Math.max(60 / img.width, 80 / img.height);
+            ctx.drawImage(img, (60 - img.width * s) / 2, (80 - img.height * s) / 2, img.width * s, img.height * s);
+            cell.appendChild(cv);
+            var rm = document.createElement('button');
+            rm.className = 'tile-rm'; rm.textContent = '×';
+            rm.onclick = function(e){ e.stopPropagation(); clearLayerTile(id, key); };
+            cell.appendChild(rm);
+          } else {
+            cell.innerHTML = '<span class="tile-plus">+</span><span class="tile-num">' + n + '</span>';
           }
-        });
-        grid.appendChild(cell);
+          cell.addEventListener('click', function(){
+            pendingUpload = { layerId: id, r: r, c: c, type: 'tile' };
+            $('sharedFileInput').click();
+          });
+          cell.addEventListener('dragover', function(e){ e.preventDefault(); cell.classList.add('drag-over'); });
+          cell.addEventListener('dragleave', function(){ cell.classList.remove('drag-over'); });
+          cell.addEventListener('drop', function(e){
+            e.preventDefault(); cell.classList.remove('drag-over');
+            var f = e.dataTransfer.files[0];
+            if (f && f.type.startsWith('image/')) {
+              pendingUpload = { layerId: id, r: r, c: c, type: 'tile' };
+              var dt = new DataTransfer(); dt.items.add(f);
+              var sh = $('sharedFileInput');
+              sh.files = dt.files; sh.dispatchEvent(new Event('change'));
+            }
+          });
+          grid.appendChild(cell);
+        })(r, c);
       }
     }
   }
 
-  renderAllLayerTileGrids() { this.S.layers.forEach(l => this.renderLayerTileGrid(l.id)); }
+  function renderAllLayerTileGrids(){ S.layers.forEach(function(l){ renderLayerTileGrid(l.id); }); }
 
-  sharedFileChange(e) {
-    const file = e.target.files[0];
-    if (!file || !this.pendingUpload) return;
+  function sharedFileChange(e){
+    var file = e.target.files[0];
+    if (!file || !pendingUpload) return;
     e.target.value = '';
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      const layer = this.S.layers.find(l => l.id === this.pendingUpload.layerId);
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function(){
+      var layer = S.layers.find(function(l){ return l.id === pendingUpload.layerId; });
       if (!layer) return;
-      if (this.pendingUpload.type === 'global') {
+      if (pendingUpload.type === 'global') {
         layer.img = img;
-        const th = document.getElementById('lth_' + layer.id);
+        var th = $('lth_' + layer.id);
         if (th) { th.src = url; th.style.display = 'block'; }
-        const fz = document.getElementById('lfz_' + layer.id);
+        var fz = $('lfz_' + layer.id);
         if (fz) fz.textContent = '⊕  Change image';
       } else {
-        layer.tileImgs[`${this.pendingUpload.r}-${this.pendingUpload.c}`] = img;
-        this.renderLayerTileGrid(layer.id);
+        layer.tileImgs[pendingUpload.r + '-' + pendingUpload.c] = img;
+        renderLayerTileGrid(layer.id);
       }
-      this.schedule();
-      this.pendingUpload = null;
+      schedule();
+      pendingUpload = null;
     };
     img.src = url;
   }
 
-  applyCase(t) { if (this.S.textCase === 'upper') return t.toUpperCase(); if (this.S.textCase === 'lower') return t.toLowerCase(); return t; }
+  // ── DRAW ─────────────────────────────────────────────────────────────────
+  function applyCase(t){ if (S.textCase === 'upper') return t.toUpperCase(); if (S.textCase === 'lower') return t.toLowerCase(); return t; }
 
-  fitSize(ctx, text, maxW) {
-    let lo = 40, hi = 1200;
+  function fitSize(ctx, text, maxW){
+    var lo = 40, hi = 1200;
     while (hi - lo > 3) {
-      const mid = (lo + hi) >> 1;
-      ctx.font = `${this.S.fontWeight} ${mid}px "${this.S.font}"`;
-      if ('letterSpacing' in ctx) ctx.letterSpacing = this.S.ls + 'px';
+      var mid = (lo + hi) >> 1;
+      ctx.font = S.fontWeight + ' ' + mid + 'px "' + S.font + '"';
+      if ('letterSpacing' in ctx) ctx.letterSpacing = S.ls + 'px';
       ctx.measureText(text).width <= maxW ? (lo = mid) : (hi = mid);
     }
     return lo;
   }
 
-  drawLayerImg(ctx, img, x, y, w, h, fit, opacity, blendMode) {
+  function drawLayerImg(ctx, img, x, y, w, h, fit, opacity, blendMode){
     ctx.globalAlpha = opacity; ctx.globalCompositeOperation = blendMode;
-    let dx = x, dy = y, dw = w, dh = h;
-    if (fit === 'cover') { const s = Math.max(w / img.width, h / img.height); dw = img.width * s; dh = img.height * s; dx = x + (w - dw) / 2; dy = y + (h - dh) / 2; }
-    else if (fit === 'contain') { const s = Math.min(w / img.width, h / img.height); dw = img.width * s; dh = img.height * s; dx = x + (w - dw) / 2; dy = y + (h - dh) / 2; }
+    var dx = x, dy = y, dw = w, dh = h;
+    if (fit === 'cover') { var s1 = Math.max(w / img.width, h / img.height); dw = img.width * s1; dh = img.height * s1; dx = x + (w - dw) / 2; dy = y + (h - dh) / 2; }
+    else if (fit === 'contain') { var s2 = Math.min(w / img.width, h / img.height); dw = img.width * s2; dh = img.height * s2; dx = x + (w - dw) / 2; dy = y + (h - dh) / 2; }
     else if (fit === 'center') { dw = img.width; dh = img.height; dx = x + (w - dw) / 2; dy = y + (h - dh) / 2; }
     ctx.drawImage(img, dx, dy, dw, dh);
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   }
 
-  drawTile(ctx, col, row, scale) {
-    const TH = this.getTH(), FW = this.TW * this.COLS, FH = TH * this.ROWS;
-    ctx.save(); ctx.scale(scale, scale); ctx.translate(-col * this.TW, -row * TH);
-    const margin = Math.max(160, FW * 0.08);
-    const maxTW = FW - margin * 2;
+  function drawTile(ctx, col, row, scale){
+    var TH = getTH(), FW = TW * COLS, FH = TH * ROWS;
+    ctx.save(); ctx.scale(scale, scale); ctx.translate(-col * TW, -row * TH);
+    var margin = Math.max(160, FW * 0.08);
+    var maxTW = FW - margin * 2;
 
-    ctx.fillStyle = this.S.bgColor; ctx.fillRect(0, 0, FW, FH);
+    ctx.fillStyle = S.bgColor; ctx.fillRect(0, 0, FW, FH);
 
-    for (const layer of this.S.layers) {
+    S.layers.forEach(function(layer){
       if (layer.mode === 'global') {
-        if (!layer.img) continue;
-        this.drawLayerImg(ctx, layer.img, 0, 0, FW, FH, layer.fit, layer.opacity, layer.blendMode);
+        if (!layer.img) return;
+        drawLayerImg(ctx, layer.img, 0, 0, FW, FH, layer.fit, layer.opacity, layer.blendMode);
       } else {
-        for (let r = 0; r < this.ROWS; r++) {
-          for (let c = 0; c < this.COLS; c++) {
-            const img = layer.tileImgs[`${r}-${c}`];
+        for (var r = 0; r < ROWS; r++) {
+          for (var c = 0; c < COLS; c++) {
+            var img = layer.tileImgs[r + '-' + c];
             if (!img) continue;
             ctx.save();
-            ctx.beginPath(); ctx.rect(c * this.TW, r * TH, this.TW, TH); ctx.clip();
-            this.drawLayerImg(ctx, img, c * this.TW, r * TH, this.TW, TH, layer.fit, layer.opacity, layer.blendMode);
+            ctx.beginPath(); ctx.rect(c * TW, r * TH, TW, TH); ctx.clip();
+            drawLayerImg(ctx, img, c * TW, r * TH, TW, TH, layer.fit, layer.opacity, layer.blendMode);
             ctx.restore();
           }
         }
       }
-    }
+    });
 
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = this.S.textColor;
-    this.S.lines.forEach((raw, i) => {
-      const line = this.applyCase(raw.trim()); if (!line) return;
-      const cy = TH * i + TH / 2 + this.S.nudge;
-      const sz = this.fitSize(ctx, line, maxTW);
-      ctx.font = `${this.S.fontWeight} ${sz}px "${this.S.font}"`;
-      if ('letterSpacing' in ctx) ctx.letterSpacing = this.S.ls + 'px';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = S.textColor;
+    S.lines.forEach(function(raw, i){
+      var line = applyCase(raw.trim()); if (!line) return;
+      var cy = TH * i + TH / 2 + S.nudge;
+      var sz = fitSize(ctx, line, maxTW);
+      ctx.font = S.fontWeight + ' ' + sz + 'px "' + S.font + '"';
+      if ('letterSpacing' in ctx) ctx.letterSpacing = S.ls + 'px';
       ctx.fillText(line, FW / 2, cy);
     });
 
-    const tag = this.applyCase(this.S.tagline.trim());
+    var tag = applyCase(S.tagline.trim());
     if (tag) {
-      ctx.font = `300 38px "${this.S.font}"`;
+      ctx.font = '300 38px "' + S.font + '"';
       if ('letterSpacing' in ctx) ctx.letterSpacing = '8px';
-      ctx.fillStyle = this.S.taglineColor;
+      ctx.fillStyle = S.taglineColor;
       ctx.fillText(tag, FW / 2, FH - 100);
     }
     ctx.restore();
   }
 
-  schedule() { clearTimeout(this.renderTimer); this.renderTimer = setTimeout(() => this.render(), 60); }
+  function schedule(){ clearTimeout(renderTimer); renderTimer = setTimeout(render, 60); }
 
-  render() {
-    const TH = this.getTH(), FW = this.TW * this.COLS, FH = TH * this.ROWS;
-    const cv = document.getElementById('gridPreview');
+  function render(){
+    var TH = getTH(), FW = TW * COLS, FH = TH * ROWS;
+    var cv = $('gridPreview');
     if (!cv) return;
-    const con = cv.parentElement;
-    const maxW = con.clientWidth - 40, maxH = con.clientHeight - 60;
-    this.pScale = Math.min(maxW / FW, maxH / FH);
-    this.pTW = Math.round(this.TW * this.pScale); this.pTH = Math.round(TH * this.pScale);
-    const cW = this.pTW * this.COLS + this.GAP * (this.COLS - 1), cH = this.pTH * this.ROWS + this.GAP * (this.ROWS - 1);
+    var con = cv.parentElement;
+    var maxW = con.clientWidth - 40, maxH = con.clientHeight - 60;
+    pScale = Math.min(maxW / FW, maxH / FH);
+    pTW = Math.round(TW * pScale); pTH = Math.round(TH * pScale);
+    var cW = pTW * COLS + GAP * (COLS - 1), cH = pTH * ROWS + GAP * (ROWS - 1);
     cv.width = cW; cv.height = cH; cv.style.width = cW + 'px'; cv.style.height = cH + 'px';
-    const ctx = cv.getContext('2d');
+    var ctx = cv.getContext('2d');
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-    for (let r = 0; r < this.ROWS; r++) for (let c = 0; c < this.COLS; c++) {
-      const oc = new OffscreenCanvas(this.pTW, this.pTH);
-      const otx = oc.getContext('2d');
-      otx.imageSmoothingEnabled = true; otx.imageSmoothingQuality = 'high';
-      this.drawTile(otx, c, r, this.pScale);
-      ctx.drawImage(oc, c * (this.pTW + this.GAP), r * (this.pTH + this.GAP));
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        var oc = new OffscreenCanvas(pTW, pTH);
+        var otx = oc.getContext('2d');
+        otx.imageSmoothingEnabled = true; otx.imageSmoothingQuality = 'high';
+        drawTile(otx, c, r, pScale);
+        ctx.drawImage(oc, c * (pTW + GAP), r * (pTH + GAP));
+      }
     }
-    const ps = document.getElementById('previewStatus'); if (ps) ps.textContent = '';
-    const ti = document.getElementById('tileInfo'); if (ti) ti.textContent = `${this.COLS}×${this.ROWS} · ${this.pTW}×${this.pTH}px tiles · ${(this.pScale * 100).toFixed(0)}% preview`;
+    var ps = $('previewStatus'); if (ps) ps.textContent = '';
+    var ti = $('tileInfo'); if (ti) ti.textContent = COLS + '×' + ROWS + ' · ' + pTW + '×' + pTH + 'px tiles · ' + (pScale * 100).toFixed(0) + '% preview';
   }
 
-  onGridClick(e) {
-    const cv = document.getElementById('gridPreview');
-    const rect = cv.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (cv.width / rect.width);
-    const y = (e.clientY - rect.top) * (cv.height / rect.height);
-    const c = Math.floor(x / (this.pTW + this.GAP)), r = Math.floor(y / (this.pTH + this.GAP));
-    if (c < 0 || c >= this.COLS || r < 0 || r >= this.ROWS) return;
-    const zs = 0.5; const TH = this.getTH();
-    const zc = document.getElementById('tileZoom');
-    zc.width = Math.round(this.TW * zs); zc.height = Math.round(TH * zs);
+  function onGridClick(e){
+    var cv = $('gridPreview');
+    var rect = cv.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (cv.width / rect.width);
+    var y = (e.clientY - rect.top) * (cv.height / rect.height);
+    var c = Math.floor(x / (pTW + GAP)), r = Math.floor(y / (pTH + GAP));
+    if (c < 0 || c >= COLS || r < 0 || r >= ROWS) return;
+    var zs = 0.5; var TH = getTH();
+    var zc = $('tileZoom');
+    zc.width = Math.round(TW * zs); zc.height = Math.round(TH * zs);
     zc.style.width = zc.width + 'px'; zc.style.height = zc.height + 'px';
-    const ctx = zc.getContext('2d');
+    var ctx = zc.getContext('2d');
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-    this.drawTile(ctx, c, r, zs);
-    const n = r * this.COLS + c + 1;
-    document.getElementById('modalMeta').textContent = `post_${String(n).padStart(2, '0')} · col ${c + 1}/${this.COLS} · row ${r + 1}/${this.ROWS} · click outside to close`;
-    document.getElementById('modal').classList.add('open');
+    drawTile(ctx, c, r, zs);
+    var n = r * COLS + c + 1;
+    $('modalMeta').textContent = 'post_' + String(n).padStart(2, '0') + ' · col ' + (c + 1) + '/' + COLS + ' · row ' + (r + 1) + '/' + ROWS + ' · click outside to close';
+    $('modal').classList.add('open');
   }
-  closeModal(e) {
-    if (!e || e.target === document.getElementById('modal') || (e.currentTarget && e.currentTarget.classList && e.currentTarget.classList.contains('mclose')))
-      document.getElementById('modal').classList.remove('open');
-  }
+  function closeModal(){ $('modal').classList.remove('open'); }
 
-  setExportMode(mode) {
-    this.exportMode = mode;
-    document.getElementById('expStd').classList.toggle('active', mode === 'standard');
-    document.getElementById('expReel').classList.toggle('active', mode === 'reel');
-    document.getElementById('expStdInfo').style.display = mode === 'standard' ? 'block' : 'none';
-    document.getElementById('expReelInfo').style.display = mode === 'reel' ? 'block' : 'none';
-    const hint = document.getElementById('expHint');
+  function setExportMode(mode){
+    exportMode = mode;
+    $('expStd').classList.toggle('active', mode === 'standard');
+    $('expReel').classList.toggle('active', mode === 'reel');
+    $('expStdInfo').style.display = mode === 'standard' ? 'block' : 'none';
+    $('expReelInfo').style.display = mode === 'reel' ? 'block' : 'none';
+    var hint = $('expHint');
     if (mode === 'reel') hint.innerHTML = 'Upload each file as a <em>Reel cover</em> in Instagram. The bottom padding is invisible — Instagram crops it away to show your tile perfectly in the grid.';
     else hint.innerHTML = 'Post 01 → last, then reorder via <em>Edit Profile → Reorder Grid</em>. For 3:4 tiles, tap the expand (⤢) icon during iPhone upload to avoid cropping.';
-    this.updateExportDims();
+    updateExportDims();
   }
 
-  updateExportDims() {
-    const TH = this.getTH(); const pad = (1920 - TH) / 2;
-    const a = document.getElementById('expDimsStd'); if (a) a.textContent = `1080 × ${TH}`;
-    const b = document.getElementById('reelPad'); if (b) b.textContent = `${Math.round(pad * 2)}px`;
+  function updateExportDims(){
+    var TH = getTH(); var pad = (1920 - TH) / 2;
+    var a = $('expDimsStd'); if (a) a.textContent = '1080 × ' + TH;
+    var b = $('reelPad'); if (b) b.textContent = Math.round(pad * 2) + 'px';
   }
 
-  async downloadZip() {
-    const btn = document.getElementById('dlBtn'), stat = document.getElementById('dlStatus');
+  async function downloadZip(){
+    var btn = $('dlBtn'), stat = $('dlStatus');
     btn.disabled = true;
-    const zip = new JSZip(), total = this.COLS * this.ROWS, TH = this.getTH();
-    const isReel = this.exportMode === 'reel'; const REEL_H = 1920; const reelPad = 0;
+    var zip = new JSZip(), total = COLS * ROWS, TH = getTH();
+    var isReel = exportMode === 'reel'; var REEL_H = 1920; var reelPad = 0;
 
-    for (let r = 0; r < this.ROWS; r++) for (let c = 0; c < this.COLS; c++) {
-      const n = r * this.COLS + c + 1;
-      stat.textContent = `Generating tile ${n} of ${total}${isReel ? ' (Reel cover)' : ''}…`;
-      if (isReel) {
-        const tileCv = new OffscreenCanvas(this.TW, TH);
-        const tileCtx = tileCv.getContext('2d');
-        tileCtx.imageSmoothingEnabled = true; tileCtx.imageSmoothingQuality = 'high';
-        this.drawTile(tileCtx, c, r, 1);
-        const reelCv = new OffscreenCanvas(this.TW, REEL_H);
-        const reelCtx = reelCv.getContext('2d');
-        reelCtx.imageSmoothingEnabled = true; reelCtx.imageSmoothingQuality = 'high';
-        reelCtx.fillStyle = this.S.bgColor; reelCtx.fillRect(0, 0, this.TW, REEL_H);
-        reelCtx.drawImage(tileCv, 0, reelPad);
-        const blob = await reelCv.convertToBlob({ type: 'image/jpeg', quality: 0.95 });
-        zip.file(`reel_cover_${String(n).padStart(2, '0')}.jpg`, await blob.arrayBuffer());
-      } else {
-        const oc = new OffscreenCanvas(this.TW, TH);
-        const ctx = oc.getContext('2d');
-        ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-        this.drawTile(ctx, c, r, 1);
-        const blob = await oc.convertToBlob({ type: 'image/jpeg', quality: 0.95 });
-        zip.file(`post_${String(n).padStart(2, '0')}.jpg`, await blob.arrayBuffer());
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        var n = r * COLS + c + 1;
+        stat.textContent = 'Generating tile ' + n + ' of ' + total + (isReel ? ' (Reel cover)' : '') + '…';
+        if (isReel) {
+          var tileCv = new OffscreenCanvas(TW, TH);
+          var tileCtx = tileCv.getContext('2d');
+          tileCtx.imageSmoothingEnabled = true; tileCtx.imageSmoothingQuality = 'high';
+          drawTile(tileCtx, c, r, 1);
+          var reelCv = new OffscreenCanvas(TW, REEL_H);
+          var reelCtx = reelCv.getContext('2d');
+          reelCtx.imageSmoothingEnabled = true; reelCtx.imageSmoothingQuality = 'high';
+          reelCtx.fillStyle = S.bgColor; reelCtx.fillRect(0, 0, TW, REEL_H);
+          reelCtx.drawImage(tileCv, 0, reelPad);
+          var blob1 = await reelCv.convertToBlob({ type: 'image/jpeg', quality: 0.95 });
+          zip.file('reel_cover_' + String(n).padStart(2, '0') + '.jpg', await blob1.arrayBuffer());
+        } else {
+          var oc = new OffscreenCanvas(TW, TH);
+          var ctx = oc.getContext('2d');
+          ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+          drawTile(ctx, c, r, 1);
+          var blob2 = await oc.convertToBlob({ type: 'image/jpeg', quality: 0.95 });
+          zip.file('post_' + String(n).padStart(2, '0') + '.jpg', await blob2.arrayBuffer());
+        }
+        await new Promise(function(res){ setTimeout(res, 0); });
       }
-      await new Promise(res => setTimeout(res, 0));
     }
     stat.textContent = 'Compressing…';
-    const suffix = isReel ? 'reel_covers' : this.S.tileFormat.replace(':', 'x');
-    const out = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 3 } });
-    const url = URL.createObjectURL(out);
-    const a = Object.assign(document.createElement('a'), { href: url, download: `gridbuilder_${this.COLS}x${this.ROWS}_${suffix}.zip` });
+    var suffix = isReel ? 'reel_covers' : S.tileFormat.replace(':', 'x');
+    var out = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 3 } });
+    var url = URL.createObjectURL(out);
+    var a = Object.assign(document.createElement('a'), { href: url, download: 'gridbuilder_' + COLS + 'x' + ROWS + '_' + suffix + '.zip' });
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-    stat.textContent = `✓ ${total} ${isReel ? 'Reel covers' : 'tiles'} downloaded.`;
+    stat.textContent = '✓ ' + total + ' ' + (isReel ? 'Reel covers' : 'tiles') + ' downloaded.';
     btn.disabled = false;
   }
 
-  handlers() {
-    const self = this;
-    return {
-      enterApp: () => self.setState({ view: 'app' }, () => self.initApp()),
-      goHome: () => self.setState({ view: 'landing' }),
-      toggleTheme: () => self.setState(s => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
-      toggleSidebar: () => self.setState(s => ({ sidebarOpen: !s.sidebarOpen })),
-      closeSidebar: () => self.setState({ sidebarOpen: false }),
-      dismissTip: () => self.setState({ showTip: false }),
-      toggleQuick: () => self.setState(s => ({ sections: { ...s.sections, quick: !s.sections.quick } })),
-      toggleFormat: () => self.setState(s => ({ sections: { ...s.sections, format: !s.sections.format } })),
-      toggleText: () => self.setState(s => ({ sections: { ...s.sections, text: !s.sections.text } })),
-      toggleTypo: () => self.setState(s => ({ sections: { ...s.sections, typo: !s.sections.typo } })),
-      toggleLayers: () => self.setState(s => ({ sections: { ...s.sections, layers: !s.sections.layers } })),
-      toggleExport: () => self.setState(s => ({ sections: { ...s.sections, exportSec: !s.sections.exportSec } })),
-      presetNew: () => self.applyPreset('new'),
-      presetBusy: () => self.applyPreset('busy'),
-      presetClear: () => self.applyPreset('blank'),
-      fmt11: () => self.setFormat('1:1'),
-      fmt45: () => self.setFormat('4:5'),
-      fmt34: () => self.setFormat('3:4'),
-      onCols: (e) => self.updateGrid(+e.target.value, self.ROWS),
-      onRows: (e) => self.updateGrid(self.COLS, +e.target.value),
-      onTagline: (e) => { self.S.tagline = e.target.value; self.schedule(); },
-      onFont: (e) => { self.S.font = e.target.value; self.schedule(); },
-      onWeight: (e) => { self.S.fontWeight = e.target.value; self.schedule(); },
-      onCase: (e) => { self.S.textCase = e.target.value; self.schedule(); },
-      onLS: (e) => { self.S.ls = +e.target.value; const el = document.getElementById('lsv'); if (el) el.textContent = e.target.value + 'px'; self.schedule(); },
-      onNudge: (e) => { self.S.nudge = +e.target.value; const el = document.getElementById('tnv'); if (el) el.textContent = e.target.value + 'px'; self.schedule(); },
-      onTextColor: (e) => { self.S.textColor = e.target.value; self.schedule(); },
-      onTaglineColor: (e) => { self.S.taglineColor = e.target.value; self.schedule(); },
-      onBgColor: (e) => { self.S.bgColor = e.target.value; self.schedule(); },
-      addLayer: () => self.addLayer(),
-      setExpStd: () => self.setExportMode('standard'),
-      setExpReel: () => self.setExportMode('reel'),
-      downloadZip: () => self.downloadZip(),
-      onGridClick: (e) => self.onGridClick(e),
-      closeModalOverlay: (e) => self.closeModal(e),
-      closeModalBtn: (e) => self.closeModal(e),
-      sharedFileChange: (e) => self.sharedFileChange(e),
-    };
-  }
+  // ── WIRE UP ──────────────────────────────────────────────────────────────
+  $('enterAppBtn').addEventListener('click', enterApp);
+  $('goHomeMark').addEventListener('click', goHome);
+  $('goHomeTitle').addEventListener('click', goHome);
+  $('toggleThemeBtn').addEventListener('click', toggleTheme);
+  $('toggleSidebarBtn').addEventListener('click', toggleSidebar);
+  $('scrim').addEventListener('click', closeSidebar);
+  $('dismissTipBtn').addEventListener('click', dismissTip);
 
-  renderVals() {
-    const isLanding = this.state.view === 'landing', isApp = this.state.view === 'app';
-    return {
-      isLanding, isApp,
-      themeIcon: this.state.theme === 'dark' ? '☾' : '☀',
-      sidebarClass: this.state.sidebarOpen ? 'ctrl open' : 'ctrl',
-      scrimClass: this.state.sidebarOpen ? 'scrim show' : 'scrim',
-      showTip: this.state.showTip,
-      sections: this.state.sections,
-      chevQuick: this.state.sections.quick ? 90 : 0,
-      chevFormat: this.state.sections.format ? 90 : 0,
-      chevText: this.state.sections.text ? 90 : 0,
-      chevTypo: this.state.sections.typo ? 90 : 0,
-      chevLayers: this.state.sections.layers ? 90 : 0,
-      chevExport: this.state.sections.exportSec ? 90 : 0,
-      h: this.handlers(),
-    };
-  }
-}
+  document.querySelectorAll('[data-acc]').forEach(function(el){
+    el.addEventListener('click', function(){ toggleAcc(this.dataset.acc); });
+  });
+
+  $('presetNewBtn').addEventListener('click', function(){ applyPreset('new'); });
+  $('presetBusyBtn').addEventListener('click', function(){ applyPreset('busy'); });
+  $('presetClearBtn').addEventListener('click', function(){ applyPreset('blank'); });
+
+  $('fmt11').addEventListener('click', function(){ setFormat('1:1'); });
+  $('fmt45').addEventListener('click', function(){ setFormat('4:5'); });
+  $('fmt34').addEventListener('click', function(){ setFormat('3:4'); });
+
+  $('selCols').addEventListener('change', function(){ updateGrid(+this.value, ROWS); });
+  $('selRows').addEventListener('change', function(){ updateGrid(COLS, +this.value); });
+
+  $('tagInput').addEventListener('input', function(){ S.tagline = this.value; schedule(); });
+  $('fontSelect').addEventListener('change', function(){ S.font = this.value; schedule(); });
+  $('weightSelect').addEventListener('change', function(){ S.fontWeight = this.value; schedule(); });
+  $('caseSelect').addEventListener('change', function(){ S.textCase = this.value; schedule(); });
+  $('lsRange').addEventListener('input', function(){ S.ls = +this.value; $('lsv').textContent = this.value + 'px'; schedule(); });
+  $('nudgeRange').addEventListener('input', function(){ S.nudge = +this.value; $('tnv').textContent = this.value + 'px'; schedule(); });
+  $('textColorInput').addEventListener('input', function(){ S.textColor = this.value; schedule(); });
+  $('taglineColorInput').addEventListener('input', function(){ S.taglineColor = this.value; schedule(); });
+  $('bgColorPicker').addEventListener('input', function(){ S.bgColor = this.value; schedule(); });
+
+  $('addLayerBtn').addEventListener('click', addLayer);
+
+  $('expStd').addEventListener('click', function(){ setExportMode('standard'); });
+  $('expReel').addEventListener('click', function(){ setExportMode('reel'); });
+  $('dlBtn').addEventListener('click', downloadZip);
+
+  $('gridPreview').addEventListener('click', onGridClick);
+  $('modal').addEventListener('click', function(e){ if (e.target === this) closeModal(); });
+  $('modalCloseBtn').addEventListener('click', closeModal);
+
+  $('sharedFileInput').addEventListener('change', sharedFileChange);
+
+  document.documentElement.setAttribute('data-theme', state.theme);
+})();
 </script>
 </body>
 </html>
