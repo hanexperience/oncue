@@ -130,7 +130,7 @@ calendar: {
     icon:"🔗", titleKey:"site_name", subtitleKey:"contact", previewKey:"notes",
     fields:[
       {k:"site_name",l:"Site / publication",t:"text"},
-      {k:"status",l:"Status",t:"status",o:["Not Contacted","Contacted","Negotiating","Agreed","Submitted","Published","Declined"]},
+      {k:"status",l:"Status",t:"status",o:["Contacted","Negotiating","Agreed","Submitted","Published","Declined"]},
       {k:"contact",l:"Contact name",t:"text"},
       {k:"contact_email",l:"Contact email",t:"email"},
       {k:"site_url",l:"Site URL",t:"url"},
@@ -237,6 +237,12 @@ const MODULE_TABS = {
   leads:    { group:"Business", label:"Leads",     run:v=>window.BusinessModule.render(v,"leads") },
   projects: { group:"Command",  label:"Projects",  run:v=>window.CommandModule.render(v) },
   tax:      { group:"Command",  label:"Tax / BAS", run:v=>window.CommandModule.renderTax(v) },
+  // SEO (2026-08-11): per-client keyword/rank/AI-visibility strategy, replacing
+  // the per-client Keyword Tracker spreadsheets. Sits in Command by choice even
+  // though it IS client-scoped — so it carries its own client dropdown rather
+  // than reading the header picker, which Command hides. Owner-only like the
+  // rest of Command.
+  seo:      { group:"Command",  label:"SEO",       run:v=>window.SeoModule.render(v) },
   // Tools (2026-07-28): unlike Business/Command, this is visible to VAs too
   // — it's a standalone creative utility (Instagram grid layout planner),
   // not client data that needs owner-only gating. ownerOnly:false is what
@@ -244,7 +250,7 @@ const MODULE_TABS = {
   // openTab below.
   tools:    { group:"Tools",    label:"Grid Builder", ownerOnly:false, run:v=>renderGridBuilder(v) }
 };
-const MODULE_TAB_ORDER = ["clients","leads","projects","tax","tools"];
+const MODULE_TAB_ORDER = ["clients","leads","projects","tax","seo","tools"];
 function isOwner(){ return getAccess().role === "owner"; }
 
 // Tools → Grid Builder (2026-07-28): a self-contained single-file Instagram
