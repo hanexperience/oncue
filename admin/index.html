@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="/admin/css/command.css"/>
 <link rel="stylesheet" href="/admin/css/business.css"/>
 <link rel="stylesheet" href="/admin/css/tax.css"/>
+<link rel="stylesheet" href="/admin/css/seo.css"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -271,7 +272,7 @@
 // step required, ever.
 (function(){
   var v = Date.now();
-  ['workspace','tax','command','business'].forEach(function(name){
+  ['workspace','tax','command','business','seo'].forEach(function(name){
     document.write('<script src="/admin/js/'+name+'.js?v='+v+'"><\/script>');
   });
 })();
