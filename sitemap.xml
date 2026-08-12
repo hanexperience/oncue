@@ -9,6 +9,14 @@
     <priority>1.0</priority>
   </url>
 
+  <!-- Legal -->
+  <url>
+    <loc>https://beetsandco.com.au/privacy.html</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
   <!-- Blog listing -->
   <url>
     <loc>https://beetsandco.com.au/blog/</loc>
