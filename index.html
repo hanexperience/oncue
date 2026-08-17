@@ -199,6 +199,9 @@ document.addEventListener('click', function(e){
       event_label: (t.textContent || '').trim()
     });
   }
+  if (t && t.getAttribute('data-ga-event') === 'start_conversation' && typeof fbq === 'function') {
+    fbq('trackCustom', 'StartConversationClick');
+  }
 });
 </script>
 
