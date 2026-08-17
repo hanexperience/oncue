@@ -132,7 +132,7 @@
       "name": "What does a branding and website project cost?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Projects start from $3,500 AUD. A full brand + website package typically sits between $7,000–$20,000 depending on scope. Fixed pricing — no timesheet surprises."
+        "text": "Every project is scoped individually — branding, website and local SEO can be combined into one fixed-price package built around what you need. Fixed pricing — no timesheet surprises."
       }
     },
     {
@@ -171,6 +171,25 @@
   gtag('js', new Date());
   gtag('config', 'G-29SKC7VN4C');
 </script>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1787784152664522');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1787784152664522&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
 <script>
 document.addEventListener('click', function(e){
   var t = e.target.closest('[data-ga-event]');
@@ -829,7 +848,7 @@ if (form) {
       body: new FormData(form),
       headers: { 'Accept': 'application/json' }
     }).then(function(r){
-      if (r.ok) { label.textContent = 'Message sent — thank you'; form.reset(); if (typeof gtag === 'function') { gtag('event', 'generate_lead', { event_category: 'contact_form', event_label: 'Contact form submission' }); } }
+      if (r.ok) { label.textContent = 'Message sent — thank you'; form.reset(); if (typeof gtag === 'function') { gtag('event', 'generate_lead', { event_category: 'contact_form', event_label: 'Contact form submission' }); } if (typeof fbq === 'function') { fbq('track', 'Lead'); } }
       else { alert('Something went wrong. Please email hello@beetsandco.com.au directly.'); }
     }).catch(function(){ alert('Something went wrong. Please email hello@beetsandco.com.au directly.'); });
   });
