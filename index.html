@@ -129,7 +129,7 @@
     },
     {
       "@type": "Question",
-      "name": "What does a branding and website project cost?",
+      "name": "How is a branding and website project priced?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Every project is scoped individually — branding, website and local SEO can be combined into one fixed-price package built around what you need. Fixed pricing — no timesheet surprises."
@@ -416,6 +416,29 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
 .foot-bot .soc a{color:var(--green-mut);margin-left:22px}
 .foot-bot .soc a:hover{color:var(--cream)}
 
+/* ── Pain points ── */
+.pains{display:grid;grid-template-columns:1fr 1fr;gap:0 44px;margin-top:56px}
+.pain{padding:28px 0;border-top:1px solid var(--line);position:relative}
+.pain::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--amber)}
+.pain h3{font-family:var(--disp);font-size:20px;font-weight:650;line-height:1.3;color:var(--ink);margin-bottom:9px}
+.pain p{font-size:15.5px;margin-bottom:14px}
+.pain a{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber-deep);border-bottom:1px solid rgba(169,118,27,.35);padding-bottom:3px}
+.pain a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+.pains-foot{margin-top:46px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.pains-foot p{font-size:17px;max-width:46ch;color:var(--ink)}
+
+/* ── FAQ ── */
+.faq{margin-top:52px;max-width:80ch}
+.faq details{border-top:1px solid var(--line);position:relative}
+.faq details::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--tick)}
+.faq details:last-of-type{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:26px 44px 26px 0;font-family:var(--disp);font-size:19px;font-weight:650;color:var(--ink);position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:6px;top:23px;font-family:var(--mono);font-size:20px;color:var(--amber-deep)}
+.faq details[open] summary::after{content:"\2013"}
+.faq summary:hover{color:var(--g800)}
+.faq .ans{padding:0 44px 28px 0;font-size:16px;max-width:66ch}
+
 /* ── Reveal ── */
 .rv{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
 .rv.in{opacity:1;transform:none}
@@ -430,6 +453,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   .svc-tag{padding-top:0}
   .post{grid-template-columns:1fr;gap:8px}
   .post .go{display:none}
+  .pains{grid-template-columns:1fr;gap:0}
 }
 @media(max-width:760px){
   .hero .rule .lbl:last-of-type{display:none}
@@ -443,6 +467,8 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   .foot-grid{grid-template-columns:1fr 1fr}
   section{padding:80px 0}
   .timeline{grid-template-columns:1fr}
+  .pains-foot .btn{width:100%;justify-content:center}
+  .faq summary{font-size:17.5px}
 }
 </style>
 </head>
@@ -453,18 +479,21 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   <div class="bar">
     <a href="#top" class="wordmark">Beets <em>&amp;</em> Co</a>
     <div class="navlinks">
+      <a href="#services">Services</a>
       <a href="#crowncon">Work</a>
       <a href="#model">Studio</a>
       <a href="#about">About</a>
-      <a href="#journal">Journal</a>
+      <a href="#faq">FAQ</a>
       <a href="#apply" class="btn btn-green" data-ga-event="start_conversation">Start a conversation</a>
     </div>
     <button class="menu-btn" aria-expanded="false" aria-controls="mmenu" onclick="toggleMenu(this)">MENU</button>
   </div>
   <div class="mobile-menu" id="mmenu">
+    <a href="#services">Services</a>
     <a href="#crowncon">Work</a>
     <a href="#model">Studio</a>
     <a href="#about">About</a>
+    <a href="#faq">FAQ</a>
     <a href="#journal">Journal</a>
     <a href="#apply" data-ga-event="start_conversation">Start a conversation</a>
   </div>
@@ -480,7 +509,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
     </div>
     <h1>Better jobs don't find you <span class="acc">by accident.</span></h1>
     <div class="hero-sub">
-      <p>I'm <strong>Michael Beets</strong> — creative director and founder of Beets &amp; Co. I've led campaigns for <strong>Volvo, the Australian Defence Force and Nando's</strong>. Now I work with a handful of Melbourne trade businesses, applying the same thinking to the people who build real things.</p>
+      <p>You do good work. The jobs coming through the door don't reflect it. I build the <strong>brand, website and local search presence</strong> that gets Melbourne trade businesses found by the customers worth having — and I build it myself, start to finish. Ten years leading creative for <strong>Volvo, the Australian Defence Force and Nando's</strong> before this.</p>
       <a href="#apply" class="btn btn-amber" data-ga-event="start_conversation">Start a conversation <span class="arrow">→</span></a>
     </div>
   </div>
@@ -499,6 +528,51 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
     <p>Volvo — Australian Defence Force — Hugo Wines — Aptamil — Nando's — Melbourne Design Week — Venice · Cannes</p>
   </div>
 </div>
+
+<!-- ══ PAIN POINTS ══ -->
+<section id="problems" style="background:var(--paper2)">
+  <div class="wrap">
+    <div class="rule rv"><span class="lbl">Sound familiar?</span><span class="ln"></span></div>
+    <h2 class="sec-h rv">If one of these is costing you jobs, that's the bit I fix.</h2>
+    <p class="lede rv">Most trade businesses I meet aren't short on skill. They're short on the thing that makes the right customer choose them before they've met.</p>
+    <div class="pains rv">
+      <div class="pain">
+        <h3>"I'm the best on the job and the third result on Google."</h3>
+        <p>Someone searches your trade in your suburb. Three competitors doing worse work than you appear above you — and they get the call.</p>
+        <a href="seo-for-tradies.html">Local SEO &amp; website →</a>
+      </div>
+      <div class="pain">
+        <h3>"The leads coming in are price shoppers."</h3>
+        <p>When nothing about your brand signals quality, you end up competing on the only thing left — being the cheapest quote in the pile.</p>
+        <a href="branding-for-tradies.html">Brand &amp; identity →</a>
+      </div>
+      <div class="pain">
+        <h3>"Word of mouth went quiet and there's no plan B."</h3>
+        <p>Referrals are brilliant until a slow quarter. Then you find out nothing else was bringing work through the door.</p>
+        <a href="digital-marketing-for-tradies.html">Marketing &amp; growth →</a>
+      </div>
+      <div class="pain">
+        <h3>"My website looks worse than my work."</h3>
+        <p>Ten years of beautiful builds, represented by a template site and a stock photo of someone else's kitchen. It undersells you before you speak.</p>
+        <a href="tradie-website-design.html">Website design →</a>
+      </div>
+      <div class="pain">
+        <h3>"Enquiries come in at 8pm and I answer Tuesday."</h3>
+        <p>By then they've booked whoever picked up first. The job wasn't lost on price — it was lost on silence.</p>
+        <a href="ai-automation-for-tradies.html">AI &amp; automation →</a>
+      </div>
+      <div class="pain">
+        <h3>"I've paid an agency before and got a report, not a phone call."</h3>
+        <p>Rankings went up. Impressions went up. The phone didn't. You never spoke to the person actually doing the work.</p>
+        <a href="#model">How I work differently →</a>
+      </div>
+    </div>
+    <div class="pains-foot rv">
+      <p>If you recognised two or more of those, there's a fix — and it's usually one connected job, not five separate ones.</p>
+      <a href="#apply" class="btn btn-green" data-ga-event="start_conversation">Tell me which one's hurting <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
 
 <!-- ══ FEATURED WORK ══ -->
 <section id="crowncon">
@@ -699,6 +773,36 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   </div>
 </section>
 
+<!-- ══ FAQ ══ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="rule rv"><span class="lbl">Questions</span><span class="ln"></span></div>
+    <h2 class="sec-h rv">The things people ask before they call.</h2>
+    <div class="faq rv">
+      <details>
+        <summary>How many clients do you take on each year?</summary>
+        <div class="ans">I work with a small number of clients at a time — so every client gets a senior partner, not a junior. You get direct access to me across strategy, design, copy and production, plus a strong network of specialists I bring in for the right parts of the job.</div>
+      </details>
+      <details>
+        <summary>What areas of Melbourne do you work with?</summary>
+        <div class="ans">I'm based in South East Melbourne and primarily work with local businesses across the Bayside corridor — Chelsea, Bonbeach, Mordialloc, Seaford, Edithvale, Aspendale — and broader Greater Melbourne.</div>
+      </details>
+      <details>
+        <summary>How is a branding and website project priced?</summary>
+        <div class="ans">Every project is scoped individually — branding, website and local SEO can be combined into one fixed-price package built around what you need. Fixed pricing — no timesheet surprises.</div>
+      </details>
+      <details>
+        <summary>How long does a project take?</summary>
+        <div class="ans">Most projects go from first call to a live brand and website in 2–6 weeks.</div>
+      </details>
+      <details>
+        <summary>Do you do video and content as well as branding?</summary>
+        <div class="ans">Yes — I've led creative across campaigns and content for brands including Volvo, Australian Defence Force and Nando's. Video and content is where I'm genuinely different to most branding studios. Brand films, testimonials and social cut-downs made to sell, not just to look good.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
 <!-- ══ CONTACT ══ -->
 <section id="apply" class="contact on-green">
   <div class="wrap">
@@ -770,6 +874,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
         <a href="#model">The model</a>
         <a href="#services">What I do</a>
         <a href="#crowncon">Case study</a>
+        <a href="#faq">FAQ</a>
         <a href="#journal">Journal</a>
       </div>
       <div>
