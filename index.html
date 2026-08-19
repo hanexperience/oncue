@@ -330,6 +330,12 @@ section{padding:110px 0}
 .stat::before{left:0}.stat::after{right:0}
 .stat b{display:block;font-family:var(--disp);font-weight:800;font-size:clamp(38px,4.6vw,58px);color:var(--ink);line-height:1;letter-spacing:-.02em}
 .stat span{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-top:10px}
+.ai-note{margin-top:46px;padding:28px 32px;border-radius:14px;background:var(--paper2);border:1px solid var(--line);border-left:3px solid var(--amber)}
+.ai-note .ai-lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber-deep);display:block;margin-bottom:14px}
+.ai-note p{margin:0;font-size:16.5px;line-height:1.65;color:var(--body-c);max-width:70ch}
+.ai-note p b{color:var(--ink);font-weight:600}
+.ai-note .stamp{display:block;margin-top:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+@media(max-width:640px){.ai-note{padding:22px 20px;margin-top:34px}}
 
 /* ── Model (green) ── */
 .on-green{background:var(--g900);color:var(--green-mut)}
@@ -601,6 +607,11 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
       <div class="stat"><b data-count="99" data-sfx="%">0%</b><span>Site health score</span></div>
       <div class="stat"><b data-count="39" data-sfx="">0</b><span>Keywords tracked from day one</span></div>
       <div class="stat"><b data-count="100" data-sfx="%">0%</b><span>AI search health</span></div>
+    </div>
+    <div class="ai-note rv">
+      <span class="ai-lbl">And in AI search</span>
+      <p>Ask <b>ChatGPT</b> or <b>Gemini</b> for a custom home builder in south east Melbourne and <b>Crowncon comes up in the recommendations</b> — the exact market they're going after. More buyers now start there instead of Google, and the work that got them found in one is what got them found in the other.</p>
+      <span class="stamp">Checked August 2026 · results move</span>
     </div>
   </div>
 </section>
