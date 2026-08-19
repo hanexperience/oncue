@@ -228,7 +228,8 @@ document.addEventListener('click', function(e){
   --w:1160px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{overflow-x:clip}
 body{font-family:var(--bodyf);background:var(--paper);color:var(--body-c);font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
 img,video{display:block;max-width:100%}
 a{color:var(--g800);text-decoration:none}
@@ -269,6 +270,25 @@ h1,h2,h3{font-family:var(--disp);color:var(--ink);letter-spacing:-.02em}
 .arrow{display:inline-block;transition:transform .18s}
 .btn:hover .arrow,a:hover .arrow{transform:translate(2px,-1px)}
 
+/* ── Announcement bar ── */
+.announce{background:var(--amber);color:#1C1405;position:relative;z-index:60;transition:background .18s}
+.announce a{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
+  max-width:var(--w);margin:0 auto;padding:11px 28px;color:#1C1405;text-align:center}
+.announce .an-tag{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  background:#1C1405;color:var(--amber);padding:3px 9px;flex:none}
+.announce .an-txt{font-family:var(--bodyf);font-size:14.5px;font-weight:600;line-height:1.35}
+.announce .an-go{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;flex:none}
+.announce .an-short{display:none}
+.announce:hover{background:#E8AC3F}
+@media(max-width:640px){
+  .announce a{gap:9px;padding:10px 18px}
+  .announce .an-txt{font-size:13.5px}
+  .announce .an-go{display:none}
+  .announce .an-long{display:none}
+  .announce .an-short{display:inline}
+  .announce .an-tag{font-size:9.5px;padding:3px 7px}
+}
+
 /* ── Nav ── */
 nav.top{position:sticky;top:0;z-index:50;background:rgba(250,249,245,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 nav.top .bar{max-width:var(--w);margin:0 auto;padding:0 28px;height:68px;display:flex;align-items:center;justify-content:space-between}
@@ -278,6 +298,10 @@ nav.top .bar{max-width:var(--w);margin:0 auto;padding:0 28px;height:68px;display
 .navlinks a{font-weight:500;font-size:15px;color:var(--body-c)}
 .navlinks a:hover{color:var(--ink)}
 .navlinks .btn{padding:11px 20px;font-size:14px}
+.navlinks a.nav-flag{display:inline-flex;align-items:center;gap:7px;font-weight:600;color:var(--amber-deep)}
+.navlinks a.nav-flag::before{content:"";width:7px;height:7px;background:var(--amber);border-radius:50%;flex:none}
+.navlinks a.nav-flag:hover{color:var(--ink)}
+.mobile-menu a.nav-flag{color:var(--amber-deep);font-weight:600}
 .menu-btn{display:none;background:none;border:1px solid var(--line);padding:9px 13px;font-family:var(--mono);font-size:11px;letter-spacing:.15em;cursor:pointer;color:var(--ink)}
 .mobile-menu{display:none;border-bottom:1px solid var(--line);background:var(--paper)}
 .mobile-menu.open{display:block}
@@ -291,6 +315,10 @@ nav.top .bar{max-width:var(--w);margin:0 auto;padding:0 28px;height:68px;display
 .hero-sub{display:flex;gap:48px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin:44px 0 64px}
 .hero-sub p{max-width:56ch;font-size:17.5px;color:var(--green-mut)}
 .hero-sub p strong{color:var(--cream);font-weight:600}
+.hero-cta{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.hero-cta .btn-ghost-cream{background:transparent;color:var(--cream);border-color:rgba(239,237,226,.4)}
+.hero-cta .btn-ghost-cream:hover{background:rgba(239,237,226,.08);border-color:var(--cream)}
+.hero-cta .cta-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--green-mut)}
 .strip{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:var(--g900)}
 .strip figure{aspect-ratio:3/4;overflow:hidden;margin:0}
 .strip img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
@@ -339,21 +367,22 @@ section{padding:110px 0}
 
 /* ── Model (green) ── */
 .on-green{background:var(--g900);color:var(--green-mut)}
-.claims{margin-top:60px}
-.claim{display:grid;grid-template-columns:1fr 1.25fr;gap:40px;padding:30px 0;border-top:1px solid var(--line-dark);position:relative}
-.claim::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--amber)}
-.claim:last-child{border-bottom:1px solid var(--line-dark)}
-.claim h3{font-size:22px;font-weight:650;color:var(--cream)}
-.claim p{font-size:16px}
+.claims{display:grid;grid-template-columns:repeat(3,1fr);gap:0 44px;margin-top:52px;border-top:1px solid var(--line-dark)}
+.claim{position:relative;padding:22px 0 0}
+.claim::before{content:"";position:absolute;top:-1px;left:0;width:2px;height:10px;background:var(--amber)}
+.claim h3{font-size:20px;font-weight:650;color:var(--cream);line-height:1.2}
+.claim p{font-size:15.5px;margin-top:10px}
 
 /* ── Services ── */
-.svc{margin-top:60px}
-.svc-row{display:grid;grid-template-columns:130px 1fr 1.35fr;gap:36px;padding:32px 0;border-top:1px solid var(--line);position:relative}
-.svc-row::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--tick)}
-.svc-row:last-child{border-bottom:1px solid var(--line)}
-.svc-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber-deep);padding-top:7px}
-.svc-row h3{font-size:24px;font-weight:650}
-.svc-row p{font-size:16px}
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:0 44px;margin-top:56px;border-top:1px solid var(--line)}
+.svc-row{position:relative;padding:24px 0 30px}
+.svc-row::before{content:"";position:absolute;top:-1px;left:0;width:2px;height:10px;background:var(--amber)}
+.svc-row:nth-child(n+4){border-top:1px solid var(--line)}
+.svc-tag{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber-deep)}
+.svc-row h3{font-size:21px;font-weight:650;margin:10px 0 8px;line-height:1.2}
+.svc-row h3 a{color:var(--ink)}
+.svc-row h3 a:hover{color:var(--g800)}
+.svc-row p{font-size:15.5px;max-width:34ch}
 
 /* ── About ── */
 .about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;align-items:start}
@@ -373,21 +402,8 @@ section{padding:110px 0}
 .stage{position:relative;padding-top:26px}
 .stage::before{content:"";position:absolute;top:-5px;left:0;width:1px;height:10px;background:var(--tick)}
 .stage .n{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--amber-deep)}
-.stage h3{font-size:21px;font-weight:650;margin:8px 0 10px}
-.stage p{font-size:14.5px}
-.stage .wk{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:14px}
-
-/* ── Journal ── */
-.posts{margin-top:56px}
-.post{display:grid;grid-template-columns:190px 1fr auto;gap:34px;align-items:start;padding:30px 0;border-top:1px solid var(--line);position:relative}
-.post::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--tick)}
-.post:last-child{border-bottom:1px solid var(--line)}
-.post .meta{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber-deep);padding-top:6px}
-.post h3{font-size:21px;font-weight:650}
-.post h3 a{color:var(--ink)}
-.post h3 a:hover{color:var(--g800)}
-.post p{font-size:15px;margin-top:6px;max-width:60ch}
-.post .go{font-size:20px;color:var(--g800);padding-top:4px}
+.stage h3{font-size:20px;font-weight:650;margin:8px 0 0}
+.stage .wk{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px}
 
 /* ── Contact ── */
 .contact{background:var(--g950);color:var(--green-mut)}
@@ -422,16 +438,34 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
 .foot-bot .soc a{color:var(--green-mut);margin-left:22px}
 .foot-bot .soc a:hover{color:var(--cream)}
 
-/* ── Pain points ── */
-.pains{display:grid;grid-template-columns:1fr 1fr;gap:0 44px;margin-top:56px}
-.pain{padding:28px 0;border-top:1px solid var(--line);position:relative}
-.pain::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--amber)}
-.pain h3{font-family:var(--disp);font-size:20px;font-weight:650;line-height:1.3;color:var(--ink);margin-bottom:9px}
-.pain p{font-size:15.5px;margin-bottom:14px}
-.pain a{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber-deep);border-bottom:1px solid rgba(169,118,27,.35);padding-bottom:3px}
-.pain a:hover{color:var(--ink);border-bottom-color:var(--ink)}
-.pains-foot{margin-top:46px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-.pains-foot p{font-size:17px;max-width:46ch;color:var(--ink)}
+/* ── Walk-In Check (second hero) ── */
+.wcheck{background:var(--g950);color:var(--green-mut);padding:96px 0}
+.wcheck h2{font-family:var(--disp);font-size:clamp(38px,5.4vw,68px);font-weight:800;line-height:1;color:var(--cream);max-width:16ch}
+.wcheck h2 .acc{color:var(--amber)}
+.wcheck .w-sub{font-size:18px;max-width:52ch;margin-top:26px}
+.wcheck .w-sub b{color:var(--cream);font-weight:600}
+.wcheck .w-top{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:end}
+.wcheck .w-act{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.wcheck .w-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(159,179,165,.75)}
+.doorstrip{display:grid;grid-template-columns:repeat(9,1fr);gap:0;margin-top:58px;border-top:1px solid var(--line-dark)}
+.doorstrip .d{position:relative;padding:20px 12px 0 0}
+.doorstrip .d::before{content:"";position:absolute;top:-1px;left:0;width:2px;height:9px;background:var(--amber)}
+.doorstrip .d i{display:block;font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:rgba(159,179,165,.65)}
+.doorstrip .d span{display:block;font-family:var(--disp);font-size:15px;font-weight:650;color:var(--cream);line-height:1.15;margin-top:7px}
+@media(max-width:980px){
+  .wcheck{padding:72px 0}
+  .wcheck .w-top{grid-template-columns:1fr;gap:34px;align-items:start}
+  .doorstrip{grid-template-columns:repeat(3,1fr);gap:0 18px}
+  .doorstrip .d{padding:16px 0 16px 0;border-top:1px solid var(--line-dark)}
+  .doorstrip .d:nth-child(-n+3){border-top:0}
+}
+@media(max-width:560px){
+  .doorstrip{grid-template-columns:repeat(2,1fr)}
+  .doorstrip .d:nth-child(-n+3){border-top:1px solid var(--line-dark)}
+  .doorstrip .d:nth-child(-n+2){border-top:0}
+  .wcheck .w-act{width:100%;align-items:stretch}
+  .wcheck .w-act .btn{width:100%;justify-content:center}
+}
 
 /* ── FAQ ── */
 .faq{margin-top:52px;max-width:80ch}
@@ -455,15 +489,20 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   .case,.about-grid,.contact-grid{grid-template-columns:1fr;gap:44px}
   .timeline{grid-template-columns:repeat(2,1fr)}
   .timeline::after{display:none}
-  .claim,.svc-row{grid-template-columns:1fr;gap:10px}
-  .svc-tag{padding-top:0}
-  .post{grid-template-columns:1fr;gap:8px}
-  .post .go{display:none}
-  .pains{grid-template-columns:1fr;gap:0}
+  .claims{grid-template-columns:1fr;gap:0}
+  .claim{padding:20px 0;border-top:1px solid var(--line-dark)}
+  .claim:first-child{border-top:0}
+  .svc{grid-template-columns:repeat(2,1fr)}
+  .svc-row:nth-child(n+3){border-top:1px solid var(--line)}
 }
 @media(max-width:760px){
+  .rule{flex-wrap:wrap;gap:10px 12px;margin-bottom:26px}
+  .rule .lbl{white-space:normal;font-size:10px;letter-spacing:.18em}
+  .rule .ln{min-width:20px}
+  .hero .rule{margin-bottom:30px}
   .hero .rule .lbl:last-of-type{display:none}
   .hero-sub .btn{width:100%;justify-content:center}
+  .hero-cta{width:100%;align-items:stretch}
   .navlinks{display:none}
   .menu-btn{display:block}
   .strip{grid-template-columns:repeat(2,1fr)}
@@ -472,13 +511,24 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   .f-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr 1fr}
   section{padding:80px 0}
-  .timeline{grid-template-columns:1fr}
-  .pains-foot .btn{width:100%;justify-content:center}
+  .timeline{grid-template-columns:repeat(2,1fr);gap:0 24px}
+  .stage{padding:18px 0}
+  .svc{grid-template-columns:1fr}
+  .svc-row:nth-child(n+2){border-top:1px solid var(--line)}
   .faq summary{font-size:17.5px}
 }
 </style>
 </head>
 <body>
+
+<!-- ══ ANNOUNCEMENT BAR ══ -->
+<div class="announce">
+  <a href="walk-in-ready.html" data-ga-event="walk_in_ready_announce">
+    <span class="an-tag">Free · 3 minutes</span>
+    <span class="an-txt"><span class="an-long">Is your business walk-in ready? Take the Walk-In Check.</span><span class="an-short">Is your business walk-in ready?</span></span>
+    <span class="an-go">Start →</span>
+  </a>
+</div>
 
 <!-- ══ NAV ══ -->
 <nav class="top" aria-label="Main">
@@ -490,6 +540,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
       <a href="#model">Studio</a>
       <a href="#about">About</a>
       <a href="#faq">FAQ</a>
+      <a href="walk-in-ready.html" class="nav-flag" data-ga-event="walk_in_ready_nav">Free check</a>
       <a href="#apply" class="btn btn-green" data-ga-event="start_conversation">Start a conversation</a>
     </div>
     <button class="menu-btn" aria-expanded="false" aria-controls="mmenu" onclick="toggleMenu(this)">MENU</button>
@@ -500,7 +551,8 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
     <a href="#model">Studio</a>
     <a href="#about">About</a>
     <a href="#faq">FAQ</a>
-    <a href="#journal">Journal</a>
+    <a href="blog/">Journal</a>
+    <a href="walk-in-ready.html" class="nav-flag" data-ga-event="walk_in_ready_nav">Free check — is your business walk-in ready?</a>
     <a href="#apply" data-ga-event="start_conversation">Start a conversation</a>
   </div>
 </nav>
@@ -516,7 +568,11 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
     <h1>Better jobs don't find you <span class="acc">by accident.</span></h1>
     <div class="hero-sub">
       <p>You do good work. The jobs coming through the door don't reflect it. I build the <strong>brand, website and local search presence</strong> that gets Melbourne trade businesses found by the customers worth having — and I build it myself, start to finish. Ten years leading creative production for brands like <strong>Volvo, the Australian Defence Force and Nando's</strong> before this.</p>
-      <a href="#apply" class="btn btn-amber" data-ga-event="start_conversation">Start a conversation <span class="arrow">→</span></a>
+      <div class="hero-cta">
+        <a href="#apply" class="btn btn-amber" data-ga-event="start_conversation">Start a conversation <span class="arrow">→</span></a>
+        <a href="walk-in-ready.html" class="btn btn-ghost-cream" data-ga-event="walk_in_ready_hero">Take the free Walk-In Check <span class="arrow">→</span></a>
+        <span class="cta-note">Nine questions · Three minutes · No cost</span>
+      </div>
     </div>
   </div>
   <div class="strip">
@@ -535,47 +591,30 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   </div>
 </div>
 
-<!-- ══ PAIN POINTS ══ -->
-<section id="problems" style="background:var(--paper2)">
+<!-- ══ WALK-IN CHECK (second hero) ══ -->
+<section class="wcheck" id="walk-in-check">
   <div class="wrap">
-    <div class="rule rv"><span class="lbl">Sound familiar?</span><span class="ln"></span></div>
-    <h2 class="sec-h rv">If one of these is costing you jobs, that's the bit I fix.</h2>
-    <p class="lede rv">Most trade businesses I meet aren't short on skill. They're short on the thing that makes the right customer choose them before they've met.</p>
-    <div class="pains rv">
-      <div class="pain">
-        <h3>"I'm the best on the job and the third result on Google."</h3>
-        <p>Someone searches your trade in your suburb. Three competitors doing worse work than you appear above you — and they get the call.</p>
-        <a href="seo-for-tradies.html">Local SEO &amp; website →</a>
+    <div class="rule rv"><span class="lbl">The Walk-In Check</span><span class="ln"></span><span class="lbl">Free · 3 minutes</span></div>
+    <div class="w-top">
+      <div class="rv">
+        <h2>Is your business <span class="acc">walk-in ready?</span></h2>
+        <p class="w-sub">A customer about to spend real money doesn't check one place before they call you. They check <b>nine</b>. Most Melbourne trade businesses show up properly in three — and never find out which six let them down.</p>
       </div>
-      <div class="pain">
-        <h3>"The leads coming in are price shoppers."</h3>
-        <p>When nothing about your brand signals quality, you end up competing on the only thing left — being the cheapest quote in the pile.</p>
-        <a href="branding-for-tradies.html">Brand &amp; identity →</a>
-      </div>
-      <div class="pain">
-        <h3>"Word of mouth went quiet and there's no plan B."</h3>
-        <p>Referrals are brilliant until a slow quarter. Then you find out nothing else was bringing work through the door.</p>
-        <a href="digital-marketing-for-tradies.html">Marketing &amp; growth →</a>
-      </div>
-      <div class="pain">
-        <h3>"My website looks worse than my work."</h3>
-        <p>Ten years of beautiful builds, represented by a template site and a stock photo of someone else's kitchen. It undersells you before you speak.</p>
-        <a href="tradie-website-design.html">Website design →</a>
-      </div>
-      <div class="pain">
-        <h3>"Enquiries come in at 8pm and I answer Tuesday."</h3>
-        <p>By then they've booked whoever picked up first. The job wasn't lost on price — it was lost on silence.</p>
-        <a href="ai-automation-for-tradies.html">AI &amp; automation →</a>
-      </div>
-      <div class="pain">
-        <h3>"I've paid an agency before and got a report, not a phone call."</h3>
-        <p>Rankings went up. Impressions went up. The phone didn't. You never spoke to the person actually doing the work.</p>
-        <a href="#model">How I work differently →</a>
+      <div class="w-act rv">
+        <a href="walk-in-ready.html" class="btn btn-amber" data-ga-event="walk_in_ready_hero2">Take the Walk-In Check <span class="arrow">→</span></a>
+        <span class="w-note">Nine questions · Three minutes · Free audit for Melbourne businesses</span>
       </div>
     </div>
-    <div class="pains-foot rv">
-      <p>If you recognised two or more of those, there's a fix — and it's usually one connected job, not five separate ones.</p>
-      <a href="#apply" class="btn btn-green" data-ga-event="start_conversation">Tell me which one's hurting <span class="arrow">→</span></a>
+    <div class="doorstrip rv">
+      <div class="d"><i>01</i><span>Search</span></div>
+      <div class="d"><i>02</i><span>Map</span></div>
+      <div class="d"><i>03</i><span>Reviews</span></div>
+      <div class="d"><i>04</i><span>Listings</span></div>
+      <div class="d"><i>05</i><span>Feed</span></div>
+      <div class="d"><i>06</i><span>Video</span></div>
+      <div class="d"><i>07</i><span>The room</span></div>
+      <div class="d"><i>08</i><span>Press</span></div>
+      <div class="d"><i>09</i><span>Replies</span></div>
     </div>
   </div>
 </section>
@@ -621,19 +660,18 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   <div class="wrap">
     <div class="rule rv"><span class="lbl">The model</span><span class="ln"></span></div>
     <h2 class="sec-h rv">I work with a few businesses — not a roomful.</h2>
-    <p class="lede rv">Agencies grow by adding clients. I grow by going deeper. I keep the roster small so each client gets a senior partner who knows their world, answers their calls, and treats the work like it has my name on it — because it does.</p>
     <div class="claims rv">
       <div class="claim">
         <h3>You get me, not a junior</h3>
-        <p>The person you meet in the first call is the person doing the strategy, the design and the words — not managing someone else doing it.</p>
+        <p>The person you meet in the first call does the strategy, the design and the words.</p>
       </div>
       <div class="claim">
-        <h3>I learn your business, not just your brief</h3>
-        <p>The jobs you want more of. The customers worth having. The marketing gets sharper because I actually understand what you do.</p>
+        <h3>I learn your business</h3>
+        <p>The jobs you want more of, and the customers worth having. Not just the brief.</p>
       </div>
       <div class="claim">
-        <h3>Small roster — by design</h3>
-        <p>Most agencies spread across twenty accounts. I work with a few at a time. You get a senior partner who picks up the phone, not a ticket number.</p>
+        <h3>Small roster, by design</h3>
+        <p>A senior partner who picks up the phone — not a ticket number in a queue of twenty.</p>
       </div>
     </div>
   </div>
@@ -644,32 +682,37 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   <div class="wrap">
     <div class="rule rv"><span class="lbl">What I do</span><span class="ln"></span></div>
     <h2 class="sec-h rv">Melbourne's branding agency for trades &amp; operators.</h2>
-    <p class="lede rv">One connected system — brand, website, SEO, video, automation — so every touchpoint pulls in the same direction. Not a logo guy, a web person and someone's nephew who "does reels."</p>
+    <p class="lede rv">One connected system, built by one person — so brand, website, search and video all pull the same way.</p>
     <div class="svc rv">
       <div class="svc-row">
         <span class="svc-tag">Foundation</span>
-        <h3><a href="branding-for-tradies.html" style="color:inherit">Brand &amp; Identity</a></h3>
-        <p>A complete identity — logo, colour, type, voice — that looks right on a ute, a tender document and an Instagram grid. Built to be used, not just admired.</p>
+        <h3><a href="branding-for-tradies.html">Brand &amp; Identity</a></h3>
+        <p>Logo, colour, type and voice that look right on a ute and a tender document.</p>
       </div>
       <div class="svc-row">
         <span class="svc-tag">Foundation</span>
-        <h3><a href="tradie-website-design.html" style="color:inherit">Website &amp; SEO</a></h3>
-        <p>Fast, clear websites built to rank locally and turn visitors into callers. Local SEO and structured data built in from day one — not bolted on later.</p>
+        <h3><a href="tradie-website-design.html">Website Design</a></h3>
+        <p>Fast, clear tradie websites built to turn visitors into callers.</p>
+      </div>
+      <div class="svc-row">
+        <span class="svc-tag">Foundation</span>
+        <h3><a href="seo-for-tradies.html">Local SEO</a></h3>
+        <p>Ranking in the Melbourne suburbs where the jobs you want actually are.</p>
       </div>
       <div class="svc-row">
         <span class="svc-tag">Growth</span>
-        <h3><a href="digital-marketing-for-tradies.html" style="color:inherit">Marketing &amp; Growth</a></h3>
-        <p>Local search, ads, email and content aimed at the postcodes and jobs you actually want. Reported on revenue and calls — not likes.</p>
+        <h3><a href="digital-marketing-for-tradies.html">Marketing &amp; Growth</a></h3>
+        <p>Search, ads, email and content — reported on calls, not likes.</p>
       </div>
       <div class="svc-row">
         <span class="svc-tag">My craft</span>
-        <h3><a href="video-production-for-tradies-melbourne.html" style="color:inherit">Video &amp; Content</a></h3>
-        <p>Brand films, site walk-throughs, testimonials and social cut-downs shot with a director's eye — made to convert, not to collect awards.</p>
+        <h3><a href="video-production-for-tradies-melbourne.html">Video &amp; Content</a></h3>
+        <p>Brand films, walk-throughs and testimonials shot with a director's eye.</p>
       </div>
       <div class="svc-row">
         <span class="svc-tag">Edge</span>
-        <h3><a href="ai-automation-for-tradies.html" style="color:inherit">AI &amp; Automation</a></h3>
-        <p>A smart assistant trained on your pricing, services and FAQs — capturing and qualifying leads around the clock, then handing the hot ones to you.</p>
+        <h3><a href="ai-automation-for-tradies.html">AI &amp; Automation</a></h3>
+        <p>An assistant trained on your pricing and services, catching leads at 9pm.</p>
       </div>
     </div>
   </div>
@@ -709,77 +752,14 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
 <section id="process">
   <div class="wrap">
     <div class="rule rv"><span class="lbl">How it works</span><span class="ln"></span></div>
-    <h2 class="sec-h rv">A clear path from first call to live.</h2>
-    <p class="lede rv">Short, accountable stages with fixed scope and fixed quotes. Most projects go live in two to six weeks.</p>
+    <h2 class="sec-h rv">First call to live in two to six weeks.</h2>
+    <p class="lede rv">Fixed scope, fixed quote, five short stages.</p>
     <div class="timeline rv">
-      <div class="stage">
-        <span class="n">01</span>
-        <h3>Discover</h3>
-        <p>A working session to map your customers, your competition and the one bottleneck costing you jobs.</p>
-        <span class="wk">Week 1</span>
-      </div>
-      <div class="stage">
-        <span class="n">02</span>
-        <h3>Shape</h3>
-        <p>Positioning, message and a fixed plan of what to build first. One clear direction — not five moodboards.</p>
-        <span class="wk">Week 1</span>
-      </div>
-      <div class="stage">
-        <span class="n">03</span>
-        <h3>Make</h3>
-        <p>Identity, website, films and content, designed and built together so every piece belongs.</p>
-        <span class="wk">Week 2–4</span>
-      </div>
-      <div class="stage">
-        <span class="n">04</span>
-        <h3>Launch</h3>
-        <p>Go live, train your team, wire up the dashboards. You see leads and calls from day one.</p>
-        <span class="wk">Week 5–6</span>
-      </div>
-      <div class="stage">
-        <span class="n">05</span>
-        <h3>Grow</h3>
-        <p>An ongoing partner for content, campaigns and the next move — for the few who stay on.</p>
-        <span class="wk">Ongoing</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ JOURNAL ══ -->
-<section id="journal" style="background:var(--paper2)">
-  <div class="wrap">
-    <div class="rule rv">
-      <span class="lbl">Journal</span>
-      <span class="ln"></span>
-      <a class="side" href="blog/">View all articles →</a>
-    </div>
-    <h2 class="sec-h rv">Straight talk, no fluff.</h2>
-    <div class="posts rv">
-      <a class="post" href="blog/branding-bayside-trade-businesses.html">
-        <span class="meta">Branding · 6 min</span>
-        <div>
-          <h3>More than a logo: what your business actually needs</h3>
-          <p>Most local businesses have a logo. Few have a brand. The practical difference — and why the gap is costing you jobs.</p>
-        </div>
-        <span class="go">↗</span>
-      </a>
-      <a class="post" href="blog/web-design-bayside-melbourne-tradies.html">
-        <span class="meta">Web Design · 5 min</span>
-        <div>
-          <h3>Why most local websites lose the job before the call</h3>
-          <p>What a Bayside business website needs to win trust in the first seven seconds — and rank in your suburb.</p>
-        </div>
-        <span class="go">↗</span>
-      </a>
-      <a class="post" href="blog/local-seo-melbourne-trade-businesses.html">
-        <span class="meta">SEO · 7 min</span>
-        <div>
-          <h3>Local SEO that actually works in Melbourne</h3>
-          <p>Google Business Profile, reviews, on-page signals and suburb content — what moves the needle and what doesn't.</p>
-        </div>
-        <span class="go">↗</span>
-      </a>
+      <div class="stage"><span class="n">01</span><h3>Discover</h3><span class="wk">Week 1</span></div>
+      <div class="stage"><span class="n">02</span><h3>Shape</h3><span class="wk">Week 1</span></div>
+      <div class="stage"><span class="n">03</span><h3>Make</h3><span class="wk">Week 2–4</span></div>
+      <div class="stage"><span class="n">04</span><h3>Launch</h3><span class="wk">Week 5–6</span></div>
+      <div class="stage"><span class="n">05</span><h3>Grow</h3><span class="wk">Ongoing</span></div>
     </div>
   </div>
 </section>
@@ -886,7 +866,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
         <a href="#services">What I do</a>
         <a href="#crowncon">Case study</a>
         <a href="#faq">FAQ</a>
-        <a href="#journal">Journal</a>
+        <a href="blog/">Journal</a>
       </div>
       <div>
         <h4>Get in touch</h4>

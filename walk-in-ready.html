@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The Walk-In Check — Is Your Melbourne Business Walk-In Ready? · Beets &amp; Co</title>
+<meta name="description" content="Nine questions, three minutes. Find out what a customer sees when they look your business up tonight — and which doors are shut. Free check from Beets &amp; Co, Bayside Melbourne."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://beetsandco.com.au/walk-in-ready.html"/>
+
+<meta property="og:title" content="Is your business walk-in ready?"/>
+<meta property="og:description" content="Nine places a customer checks before they call you. Most trades show up in three. Three-minute check, free."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://beetsandco.com.au/walk-in-ready.html"/>
+<meta property="og:image" content="https://beetsandco.com.au/images/beets.webp"/>
+<meta property="og:locale" content="en_AU"/>
+<meta property="og:site_name" content="Beets &amp; Co"/>
+<meta name="twitter:card" content="summary_large_image"/>
+
+<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+<link rel="shortcut icon" href="images/favicon/favicon.ico">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<style>
+/* ════════════════════════════════════════════════════════════════
+   BEETS & CO — WALK-IN READY / THE NINE DOORS CHECK
+   Inherits the studio system: green-dominant, architectural
+   dimension line, mono only where a measurement is real.
+   The progress indicator IS the dimension line — the check is
+   literally a measurement, so the device earns its keep.
+   ════════════════════════════════════════════════════════════════ */
+:root{
+  --g950:#0C231B; --g900:#123528; --g800:#1B4634;
+  --paper:#FAF9F5; --paper2:#F0EEE5;
+  --ink:#151810; --body-c:#3C4237; --muted:#6A7160;
+  --line:#DCDACF; --tick:#B8B5A6;
+  --cream:#EFEDE2; --green-mut:#9FB3A5; --line-dark:rgba(239,237,226,.18);
+  --amber:#D99B2B; --amber-deep:#A9761B;
+  --disp:'Bricolage Grotesque',sans-serif;
+  --bodyf:'Archivo',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --w:1160px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--bodyf);background:var(--paper);color:var(--body-c);font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:var(--g800);text-decoration:none}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 28px}
+.wrap-n{max-width:860px;margin:0 auto;padding:0 28px}
+h1,h2,h3{font-family:var(--disp);color:var(--ink);letter-spacing:-.02em}
+::selection{background:var(--amber);color:var(--g950)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+/* ── Dimension rule ── */
+.rule{display:flex;align-items:center;gap:14px;color:var(--muted);margin-bottom:34px}
+.rule::before,.rule::after{content:"";width:1px;height:10px;background:var(--tick);flex:none}
+.rule .ln{flex:1;height:1px;background:var(--line)}
+.rule .lbl{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap}
+.on-green .rule{color:var(--green-mut)}
+.on-green .rule::before,.on-green .rule::after{background:rgba(239,237,226,.4)}
+.on-green .rule .ln{background:var(--line-dark)}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--bodyf);font-weight:600;font-size:15px;padding:15px 28px;border:1px solid transparent;cursor:pointer;transition:background .18s,border-color .18s,color .18s}
+.btn-amber{background:var(--amber);color:#1C1405;border-color:var(--amber)}
+.btn-amber:hover{background:#E8AC3F}
+.btn-green{background:var(--g900);color:#E8AC3F;border-color:var(--g900)}
+.btn-green:hover{background:var(--g800)}
+.btn-ghost{background:transparent;color:var(--cream);border-color:rgba(239,237,226,.35)}
+.btn-ghost:hover{border-color:var(--amber);color:var(--amber)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.arrow{display:inline-block;transition:transform .18s}
+.btn:hover .arrow{transform:translate(2px,-1px)}
+
+/* ── Nav ── */
+nav.top{position:sticky;top:0;z-index:50;background:rgba(250,249,245,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.top .bar{max-width:var(--w);margin:0 auto;padding:0 28px;height:68px;display:flex;align-items:center;justify-content:space-between}
+.wordmark{font-family:var(--disp);font-weight:700;font-size:21px;color:var(--ink);letter-spacing:-.01em}
+.wordmark em{font-style:normal;color:var(--amber-deep)}
+.navlinks{display:flex;align-items:center;gap:30px}
+.navlinks a{font-weight:500;font-size:15px;color:var(--body-c)}
+.navlinks a:hover{color:var(--ink)}
+.navlinks .btn{padding:11px 20px;font-size:14px}
+@media(max-width:760px){.navlinks a:not(.btn){display:none}}
+html{overflow-x:clip}body{overflow-x:clip}
+@media(max-width:760px){
+  .rule{flex-wrap:wrap;gap:10px 12px}
+  .rule .lbl{white-space:normal;font-size:10px;letter-spacing:.18em}
+  .rule .ln{min-width:20px}
+}
+
+/* ── Hero ── */
+.hero{background:var(--g900);color:var(--cream);padding:76px 0 84px}
+.hero h1{font-size:clamp(42px,6.6vw,88px);font-weight:800;line-height:.98;color:var(--cream);max-width:16ch}
+.hero h1 .acc{color:var(--amber)}
+.hero-sub{display:flex;gap:48px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-top:40px}
+.hero-sub p{max-width:54ch;font-size:17.5px;color:var(--green-mut)}
+.hero-sub p strong{color:var(--cream);font-weight:600}
+.hero-meta{display:flex;gap:34px;flex-wrap:wrap;margin-top:44px;padding-top:26px;border-top:1px solid var(--line-dark)}
+.hero-meta span{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--green-mut)}
+.hero-meta span b{color:var(--amber);font-weight:500}
+
+section{padding:96px 0}
+.sec-h{font-size:clamp(30px,4.2vw,50px);font-weight:700;line-height:1.06;max-width:22ch;margin-bottom:22px}
+.on-green .sec-h{color:var(--cream)}
+.lede{max-width:62ch;font-size:17.5px}
+.on-green .lede{color:var(--green-mut)}
+
+/* ── The nine doors list ── */
+.doors{margin-top:56px}
+.door-row{display:grid;grid-template-columns:56px 210px 1fr;gap:30px;padding:26px 0;border-top:1px solid var(--line);position:relative;align-items:baseline}
+.door-row::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--tick)}
+.door-row:last-child{border-bottom:1px solid var(--line)}
+.door-n{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--amber-deep)}
+.door-row h3{font-size:21px;font-weight:650}
+.door-row p{font-size:16px}
+.door-row.bonus{border-top:1px solid var(--line);background:var(--paper2);margin-top:0;padding:26px 20px;grid-template-columns:56px 210px 1fr}
+.door-row.bonus::before{background:var(--amber)}
+
+/* ── Check shell ── */
+.check{background:var(--g900);color:var(--green-mut);padding:0}
+.check-inner{max-width:860px;margin:0 auto;padding:86px 28px 96px;min-height:70vh;display:flex;flex-direction:column;justify-content:center}
+.screen{display:none;animation:fadein .4s ease both}
+.screen.on{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* progress = dimension line */
+.prog{display:flex;align-items:center;gap:14px;margin-bottom:52px;color:var(--green-mut)}
+.prog::before,.prog::after{content:"";width:1px;height:10px;background:rgba(239,237,226,.4);flex:none}
+.prog .track{flex:1;height:1px;background:var(--line-dark);position:relative}
+.prog .fill{position:absolute;left:0;top:0;height:1px;background:var(--amber);transition:width .35s cubic-bezier(.6,0,.2,1)}
+.prog .fill::after{content:"";position:absolute;right:0;top:-5px;width:1px;height:10px;background:var(--amber)}
+.prog .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}
+
+.q-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:16px;display:block}
+.q-h{font-family:var(--disp);font-size:clamp(26px,3.6vw,40px);font-weight:700;line-height:1.14;color:var(--cream);max-width:20ch;letter-spacing:-.02em}
+.q-sub{margin-top:16px;font-size:16.5px;max-width:56ch;color:var(--green-mut)}
+.opts{margin-top:44px;display:grid;gap:12px}
+.opt{display:flex;align-items:flex-start;gap:16px;width:100%;text-align:left;background:transparent;border:1px solid rgba(239,237,226,.22);color:var(--cream);font-family:var(--bodyf);font-size:16.5px;line-height:1.5;padding:20px 22px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--amber);background:rgba(217,155,43,.07)}
+.opt .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--amber);padding-top:4px;flex:none}
+.opt.sel{border-color:var(--amber);background:rgba(217,155,43,.12)}
+.q-nav{margin-top:34px;display:flex;align-items:center;gap:22px}
+.q-back{background:none;border:0;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--green-mut);cursor:pointer;padding:6px 0}
+.q-back:hover{color:var(--cream)}
+.q-back[hidden]{display:none}
+
+/* ── Gate form ── */
+.gate-h{font-family:var(--disp);font-size:clamp(28px,3.8vw,42px);font-weight:700;line-height:1.1;color:var(--cream);letter-spacing:-.02em;max-width:18ch}
+.gate-p{margin-top:16px;max-width:54ch}
+.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px 26px;margin-top:44px}
+.f-field{display:flex;flex-direction:column}
+.f-field.full{grid-column:1/-1}
+.f-field label{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--green-mut);margin-bottom:10px}
+.f-field input,.f-field select{font-family:var(--bodyf);font-size:16px;color:var(--cream);background:transparent;border:0;border-bottom:1px solid rgba(239,237,226,.28);padding:8px 2px 10px;transition:border-color .15s;border-radius:0;appearance:none;-webkit-appearance:none}
+.f-field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239FB3A5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 4px center}
+.f-field select option{color:var(--ink);background:var(--paper)}
+.f-field input:focus,.f-field select:focus{border-bottom-color:var(--amber);outline:none}
+.f-field ::placeholder{color:rgba(159,179,165,.55)}
+.f-sub{grid-column:1/-1;margin-top:6px}
+.f-sub .btn{width:100%;justify-content:center;font-size:16px;padding:17px}
+.f-micro{grid-column:1/-1;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(159,179,165,.7);text-align:center;line-height:1.9}
+.f-err{grid-column:1/-1;font-size:14px;color:var(--amber);display:none}
+.f-err.on{display:block}
+
+/* ── Result ── */
+.res-top{display:grid;grid-template-columns:auto 1fr;gap:46px;align-items:end;padding-bottom:34px;border-bottom:1px solid var(--line-dark);position:relative}
+.res-top::after{content:"";position:absolute;bottom:-5px;left:0;width:1px;height:10px;background:var(--amber)}
+.res-score{font-family:var(--disp);font-weight:800;font-size:clamp(76px,13vw,148px);line-height:.82;color:var(--amber);letter-spacing:-.04em}
+.res-score small{font-size:.26em;color:var(--green-mut);font-weight:600;letter-spacing:0;margin-left:4px}
+.res-band{font-family:var(--disp);font-size:clamp(24px,3.4vw,36px);font-weight:700;color:var(--cream);line-height:1.1;letter-spacing:-.02em}
+.res-band-p{margin-top:14px;max-width:52ch;font-size:16.5px}
+
+.doorstrip{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;margin-top:44px}
+.dcell{border:1px solid var(--line-dark);padding:14px 10px 16px;text-align:center;background:rgba(239,237,226,.03)}
+.dcell .ic{width:22px;height:30px;margin:0 auto 12px;position:relative;border:1px solid var(--green-mut);border-right-width:2px}
+.dcell .ic::after{content:"";position:absolute;right:3px;top:13px;width:3px;height:3px;border-radius:50%;background:var(--green-mut)}
+.dcell.open .ic{border-color:var(--amber);background:linear-gradient(105deg,transparent 48%,rgba(217,155,43,.28) 48%)}
+.dcell.open .ic::after{background:var(--amber)}
+.dcell.part .ic{border-color:var(--cream);opacity:.75}
+.dcell.part .ic::after{background:var(--cream)}
+.dcell.shut{opacity:.4}
+.dcell .nm{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-mut);line-height:1.4}
+.dcell.open .nm{color:var(--amber)}
+.strip-key{display:flex;gap:24px;flex-wrap:wrap;margin-top:16px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(159,179,165,.75)}
+@media(max-width:760px){.doorstrip{grid-template-columns:repeat(3,1fr)}}
+
+.fix{margin-top:64px}
+.fix-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:26px}
+.fix-item{padding:28px 0;border-top:1px solid var(--line-dark);position:relative}
+.fix-item::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--amber)}
+.fix-item:last-child{border-bottom:1px solid var(--line-dark)}
+.fix-item h3{font-size:21px;font-weight:650;color:var(--cream);margin-bottom:14px}
+.fix-line{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:7px 0;font-size:15.5px}
+.fix-line dt{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(159,179,165,.75);padding-top:5px}
+.fix-line dd{color:var(--green-mut)}
+.fix-line.act dd{color:var(--cream)}
+@media(max-width:640px){.fix-line{grid-template-columns:1fr;gap:4px}}
+
+.good,.ai-note{margin-top:44px;padding:26px 30px;border:1px solid var(--line-dark);border-left:3px solid var(--amber);background:rgba(239,237,226,.04)}
+.good .lbl,.ai-note .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:12px}
+.good p,.ai-note p{font-size:16px;max-width:66ch}
+.good p b,.ai-note p b{color:var(--cream);font-weight:600}
+
+/* ── Gate teaser ── */
+.gate-flag{margin-top:34px;padding:22px 26px;background:rgba(217,155,43,.1);border:1px solid rgba(217,155,43,.45);border-left:3px solid var(--amber)}
+.gate-flag .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:10px}
+.gate-flag p{font-size:16px;max-width:62ch;color:var(--green-mut)}
+.gate-flag p b{color:var(--cream);font-weight:600}
+
+/* ── The offer, hero treatment — amber on green so it can't be scrolled past ── */
+.offer-hero{margin-top:46px;padding:42px 40px;background:var(--amber);color:#2A1D05;position:relative;box-shadow:0 18px 44px rgba(12,35,27,.4)}
+.offer-flag{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);background:var(--g950);padding:7px 13px;margin-bottom:22px}
+.offer-hero h3{font-family:var(--disp);font-size:clamp(25px,3.4vw,38px);font-weight:800;color:#1C1405;line-height:1.08;letter-spacing:-.025em;max-width:19ch}
+.offer-hero p{margin-top:16px;max-width:58ch;font-size:16.5px;color:#3A2A0A}
+.offer-hero p b{color:#1C1405;font-weight:700}
+.offer-hero .catch{margin-top:18px;padding-left:18px;border-left:2px solid #1C1405;font-size:15.5px}
+.offer-hero .cta{margin-top:30px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.offer-hero .cta .btn{background:var(--g950);color:var(--amber);border-color:var(--g950)}
+.offer-hero .cta .btn:hover{background:var(--g900)}
+.offer-hero .micro{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(28,20,5,.62)}
+
+.audit-form{display:none;margin-top:30px;padding-top:28px;border-top:1px solid rgba(28,20,5,.25)}
+.audit-form.on{display:block}
+.af-h{font-family:var(--disp);font-weight:700;font-size:19px;color:#1C1405;margin-bottom:20px!important;margin-top:0!important}
+.af-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px 26px}
+.audit-form .f-field label{color:rgba(28,20,5,.7)}
+.audit-form .f-field input{color:#1C1405;border-bottom-color:rgba(28,20,5,.3)}
+.audit-form .f-field input:focus{border-bottom-color:#1C1405}
+.audit-form .f-field ::placeholder{color:rgba(28,20,5,.4)}
+.af-sub{grid-column:1/-1}
+.af-sub .btn{background:var(--g950);color:var(--amber);border-color:var(--g950);width:100%;justify-content:center;padding:16px}
+.af-sub .btn:hover{background:var(--g900)}
+@media(max-width:640px){.af-grid{grid-template-columns:1fr}}
+
+.offer-done{display:none;margin-top:28px;padding:22px 24px;border:1px solid #1C1405;background:rgba(28,20,5,.08)}
+.offer-done.on{display:block}
+.offer-done p{margin:0!important;color:#1C1405;font-size:16px;max-width:60ch}
+.offer-done p a{color:#1C1405;border-bottom:1px solid rgba(28,20,5,.4)}
+
+.offer-again{margin-top:56px;padding:28px 30px;border:1px solid var(--line-dark);border-left:3px solid var(--amber);background:rgba(239,237,226,.04);display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap}
+.offer-again p{font-size:16px;max-width:44ch}
+.offer-again p b{color:var(--cream);font-weight:600}
+.offer-again.hide{display:none}
+
+.res-foot{margin-top:52px;display:flex;gap:26px;flex-wrap:wrap;align-items:center}
+@media(max-width:640px){.offer-hero{padding:30px 22px}.res-top{grid-template-columns:1fr;gap:20px}}
+
+/* ── Footer ── */
+footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--line-dark);padding:64px 0 34px}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:44px}
+.foot-grid h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(159,179,165,.7);font-weight:500;margin-bottom:16px}
+.foot-grid a{display:block;color:var(--green-mut);padding:4px 0;font-size:15px}
+.foot-grid a:hover{color:var(--cream)}
+.foot-grid .wordmark{color:var(--cream);margin-bottom:14px}
+.foot-grid .blurb{font-size:15px;max-width:34ch}
+.foot-bot{border-top:1px solid var(--line-dark);margin-top:48px;padding-top:24px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:rgba(159,179,165,.7)}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}.door-row,.door-row.bonus{grid-template-columns:40px 1fr;gap:14px}.door-row p{grid-column:2}section{padding:74px 0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav class="top" aria-label="Main">
+  <div class="bar">
+    <a href="/" class="wordmark">Beets <em>&amp;</em> Co</a>
+    <div class="navlinks">
+      <a href="/#services">Services</a>
+      <a href="/#crowncon">Work</a>
+      <a href="/#about">About</a>
+      <a href="#check" class="btn btn-green">Take the Walk-In Check</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<header class="hero on-green">
+  <div class="wrap">
+    <div class="rule">
+      <span class="lbl">The Walk-In Check</span>
+      <span class="ln"></span>
+      <span class="lbl">Free · 3 minutes</span>
+    </div>
+    <h1>Is your business <span class="acc">walk-in ready?</span></h1>
+    <div class="hero-sub">
+      <p>A customer about to spend real money doesn't check one place before they call you. They check <strong>nine</strong>. Most trade businesses show up properly in three — and never find out which six let them down. Nine questions, three minutes, and you'll know exactly what someone sees when they look you up tonight.</p>
+      <a href="#check" class="btn btn-amber">Start the check <span class="arrow">→</span></a>
+    </div>
+    <div class="hero-meta">
+      <span><b>9</b> &nbsp;questions</span>
+      <span><b>3</b> &nbsp;minutes</span>
+      <span><b>0</b> &nbsp;cost</span>
+      <span>No email until the end</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ THE NINE DOORS ══ -->
+<section id="doors">
+  <div class="wrap">
+    <div class="rule"><span class="lbl">The nine doors</span><span class="ln"></span></div>
+    <h2 class="sec-h">Every one of these is a way in. Or a way past you.</h2>
+    <p class="lede">This isn't a framework I invented for a landing page. It's the checklist I run for clients every week — the same nine columns, tracked job by job. I've just made it public so you can score yourself against it.</p>
+
+    <div class="doors">
+      <div class="door-row"><span class="door-n">01</span><h3>The Search Door</h3><p>You come up when someone types what you do plus their suburb. Not your business name — the job.</p></div>
+      <div class="door-row"><span class="door-n">02</span><h3>The Map Door</h3><p>Your Google Business Profile: the box with the map, the photos and the reviews. Complete, and actually alive.</p></div>
+      <div class="door-row"><span class="door-n">03</span><h3>The Word-of-Mouth Door</h3><p>Recent Google reviews — and replies underneath them. The only thing on this list a stranger trusts more than your own website.</p></div>
+      <div class="door-row"><span class="door-n">04</span><h3>The Listings Door</h3><p>Your name, address and phone number, matching everywhere they appear. Old numbers cost jobs quietly.</p></div>
+      <div class="door-row"><span class="door-n">05</span><h3>The Feed Door</h3><p>Instagram and Facebook showing recent, finished work. Proof you're busy, without having to say it.</p></div>
+      <div class="door-row"><span class="door-n">06</span><h3>The Watch Door</h3><p>Video. Where people go to research before they commit to something expensive — and where almost no trade shows up.</p></div>
+      <div class="door-row"><span class="door-n">07</span><h3>The Room Door</h3><p>The conversations you're not in. Local Facebook groups and Reddit threads where someone asks for a recommendation.</p></div>
+      <div class="door-row"><span class="door-n">08</span><h3>The Press Door</h3><p>Being mentioned by people who already have trust — local papers, industry sites, other people's blogs.</p></div>
+      <div class="door-row"><span class="door-n">09</span><h3>The Answer Door</h3><p>What happens after they message you. The one nearly everybody skips, and the cheapest one to fix.</p></div>
+      <div class="door-row bonus"><span class="door-n">+</span><h3>The AI Door</h3><p>Whether ChatGPT and Google's AI name you when someone asks them for a recommendation. Not scored — but you'll get a read on it at the end.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ THE CHECK ══ -->
+<div class="check on-green" id="check">
+  <div class="check-inner">
+
+    <!-- INTRO -->
+    <div class="screen on" id="s-intro">
+      <div class="rule"><span class="lbl">The check</span><span class="ln"></span><span class="lbl">00 / 09</span></div>
+      <h2 class="sec-h">Nine questions. Answer them honestly — nobody's watching.</h2>
+      <p class="lede">There are no trick questions and no wrong answers, and I'm not going to ask for your email until you've seen all nine. Have your phone handy for a couple of them.</p>
+      <div style="margin-top:40px"><button class="btn btn-amber" onclick="startCheck()">Begin <span class="arrow">→</span></button></div>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="screen" id="s-q">
+      <div class="prog"><span class="track"><span class="fill" id="pfill" style="width:0"></span></span><span class="lbl" id="plbl">01 / 09</span></div>
+      <span class="q-tag" id="qtag">The Search Door</span>
+      <h2 class="q-h" id="qh"></h2>
+      <p class="q-sub" id="qsub"></p>
+      <div class="opts" id="qopts"></div>
+      <div class="q-nav"><button class="q-back" id="qback" onclick="goBack()">← Back</button></div>
+    </div>
+
+    <!-- GATE -->
+    <div class="screen" id="s-gate">
+      <div class="prog"><span class="track"><span class="fill" style="width:100%"></span></span><span class="lbl">09 / 09 — done</span></div>
+      <h2 class="gate-h">That's the nine. Where should I send it?</h2>
+      <p class="gate-p lede">Two boxes and your score's on the next screen — with the doors costing you the most and what to do about them first.</p>
+
+      <div class="gate-flag">
+        <span class="lbl">Melbourne businesses</span>
+        <p><b>Everyone who finishes the check can claim a free audit.</b> Not the self-scored version — me going through your actual Google profile, rankings, listings and competitors by hand, and sending back what I'd fix first. Details on the next screen.</p>
+      </div>
+
+      <form class="f-grid" id="gate-form" autocomplete="on">
+        <div class="f-field"><label for="g-biz">Business name</label><input id="g-biz" name="business" type="text" autocomplete="organization" required/></div>
+        <div class="f-field"><label for="g-email">Email</label><input id="g-email" name="email" type="email" autocomplete="email" required/></div>
+        <p class="f-err" id="gate-err"></p>
+        <div class="f-sub"><button type="submit" class="btn btn-amber" id="gate-btn"><span id="gate-lbl">Show me my score</span> <span class="arrow">→</span></button></div>
+        <p class="f-micro">That's all I need · No newsletter · No passing your details on</p>
+      </form>
+    </div>
+
+    <!-- RESULT -->
+    <div class="screen" id="s-res">
+      <div class="rule"><span class="lbl">Your result</span><span class="ln"></span><span class="lbl" id="res-biz"></span></div>
+      <div class="res-top">
+        <div class="res-score" id="res-score">0<small>/100</small></div>
+        <div>
+          <div class="res-band" id="res-band"></div>
+          <p class="res-band-p" id="res-band-p"></p>
+        </div>
+      </div>
+
+      <!-- ══ THE OFFER — first thing after the number ══ -->
+      <div class="offer-hero" id="offer">
+        <div class="offer-flag">Limited · Melbourne businesses only</div>
+        <h3>You've scored yourself. Now let me actually go and look.</h3>
+        <p>Free, for anyone who finishes this check: I go through your <b>real</b> Google profile, your rankings, your listings, your socials and your three closest competitors — by hand, not by tool — and send you back what I found and what I'd fix first.</p>
+        <p class="catch" id="offer-catch"><b>Melbourne only, and only a handful a month.</b> I work across Bayside and the south east, and an audit's only worth doing if I know the market you're competing in.</p>
+        <div class="cta">
+          <button class="btn btn-amber" id="offer-btn" onclick="openAudit()">Claim my free audit <span class="arrow">→</span></button>
+          <span class="micro">No obligation · Not a sales call</span>
+        </div>
+
+        <form class="audit-form" id="audit-form">
+          <p class="af-h">Last bit — so I know where to look.</p>
+          <div class="af-grid">
+            <div class="f-field"><label for="a-name">Your name</label><input id="a-name" type="text" autocomplete="name" required/></div>
+            <div class="f-field"><label for="a-suburb">Suburb you work in</label><input id="a-suburb" type="text" placeholder="e.g. Mordialloc" required/></div>
+            <div class="f-field"><label for="a-trade">What do you do?</label><input id="a-trade" type="text" placeholder="e.g. Custom home builder"/></div>
+            <div class="f-field"><label for="a-phone">Phone <span style="text-transform:none;letter-spacing:0">(optional)</span></label><input id="a-phone" type="tel" autocomplete="tel"/></div>
+            <div class="af-sub"><button type="submit" class="btn btn-amber" id="audit-btn"><span id="audit-lbl">Send it through</span> <span class="arrow">→</span></button></div>
+          </div>
+        </form>
+
+        <div class="offer-done" id="offer-done"><p><b>Done — that's with me.</b> I'll come back to you within a couple of business days with what I find. If it's urgent, email me direct at <a href="mailto:hello@beetsandco.com.au">hello@beetsandco.com.au</a>.</p></div>
+      </div>
+
+      <div class="rule" style="margin:64px 0 0"><span class="lbl">Your nine doors</span><span class="ln"></span></div>
+      <div class="doorstrip" id="strip"></div>
+      <div class="strip-key">
+        <span>▮ Open</span><span>▮ Half open</span><span>▮ Shut</span>
+      </div>
+
+      <div class="fix">
+        <p class="fix-h">The three costing you the most</p>
+        <div id="fixlist"></div>
+      </div>
+
+      <div class="good" id="goodbox">
+        <span class="lbl">Credit where it's due</span>
+        <p id="goodtext"></p>
+      </div>
+
+      <div class="ai-note" id="aibox">
+        <span class="lbl">The AI door</span>
+        <p id="aitext"></p>
+      </div>
+
+      <!-- Second, quieter ask — for anyone who read the whole thing first -->
+      <div class="offer-again" id="offer-again">
+        <p>Still want someone to go and look properly? <b>The free Melbourne audit is up the top</b> — takes ten seconds to claim.</p>
+        <button class="btn btn-green" onclick="document.getElementById('offer').scrollIntoView({block:'center'});openAudit()">Claim the free audit <span class="arrow">→</span></button>
+      </div>
+
+      <div class="res-foot">
+        <a href="/" class="btn btn-ghost">Back to the studio <span class="arrow">→</span></a>
+        <span class="micro" style="font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(159,179,165,.7)">Walk-In Ready · Beets &amp; Co</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="wordmark">Beets <em>&amp;</em> Co</div>
+        <p class="blurb">A founder-led brand, web and story studio in Bayside Melbourne — for local businesses ready to become the obvious choice.</p>
+      </div>
+      <div>
+        <h4>Studio</h4>
+        <a href="/#model">The model</a>
+        <a href="/#services">What I do</a>
+        <a href="/#crowncon">Case study</a>
+        <a href="/#faq">FAQ</a>
+      </div>
+      <div>
+        <h4>Get in touch</h4>
+        <a href="/#apply">Start a conversation</a>
+        <a href="mailto:hello@beetsandco.com.au">hello@beetsandco.com.au</a>
+        <a href="/">Bayside and South East Melbourne · VIC</a>
+      </div>
+    </div>
+    <div class="foot-bot">© 2026 Beets &amp; Co · Melbourne, VIC, Australia</div>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   WALK-IN READY — THE NINE DOORS CHECK
+   ═══════════════════════════════════════════════════════════════ */
+
+var SUPA_URL = 'https://rrxveifshucpinajtkgf.supabase.co';
+var SUPA_KEY = 'sb_publishable_548FF3LDIHbz55iHtylFZw_HKBW06Aj';
+
+/* Weighting: the four doors where the money actually is get 1.5x.
+   Max raw = 90, normalised to 100. */
+var DOORS = [
+  {
+    id:'search', n:'01', name:'The Search Door', short:'Search', w:1.5,
+    q:'Type what you do plus your suburb into Google. Where are you?',
+    sub:'Not your business name — the job. "Custom builder Brighton", "electrician Frankston".',
+    opts:[
+      {t:'First page, near the top', v:10},
+      {t:'Somewhere on page one or two', v:5},
+      {t:"Nowhere — or I haven't looked", v:0}
+    ],
+    good:"you're showing up when people search for the job, not just your name — that's the hardest door to open and you've done it",
+    r5:{
+      what:"You're findable, but you're not the first thing people see.",
+      cost:"Position four gets a fraction of the clicks position one does. You're paying the cost of being in the race without the benefit of leading it.",
+      act:"Pick the three suburbs you actually want work in and check where you rank in each. The gap between them tells you where the easy wins are."
+    },
+    r0:{
+      what:"When someone searches for your trade in your area, you don't come up.",
+      cost:"Every one of those searches is somebody with money ready to spend, and they're all landing on a competitor. This isn't lost leads — it's leads you never knew existed.",
+      act:"Search your trade plus your three main suburbs and write down who's above you. That list is your real competition, and it's usually not who you think."
+    }
+  },
+  {
+    id:'map', n:'02', name:'The Map Door', short:'Map', w:1.5,
+    q:'Your Google Business Profile — the box with the map, photos and reviews.',
+    sub:"It's the panel that shows up on the right of Google, or at the top on a phone.",
+    opts:[
+      {t:'Fully filled out, and we post updates to it', v:10},
+      {t:"It exists and it's mostly right", v:5},
+      {t:"Haven't touched it since setup — or not sure we have one", v:0}
+    ],
+    good:"your Google profile is complete and active, which is the single highest-leverage free thing a local business can do",
+    r5:{
+      what:"The profile's there, but it's sitting still.",
+      cost:"Google favours profiles that show signs of life. A dormant listing quietly slides down the map results while an active competitor climbs past it.",
+      act:"Add photos of your last three jobs and post one update. Ten minutes, and it's the closest thing to free ranking there is."
+    },
+    r0:{
+      what:"Your Google Business Profile is unclaimed, incomplete, or you're not sure it exists.",
+      cost:"For a local trade this is the most valuable free real estate on the internet, and right now it's working against you — or working for whoever claimed it.",
+      act:"Search your business name on Google. If a profile appears that you don't control, claim it today. If nothing appears, create one — it takes twenty minutes."
+    }
+  },
+  {
+    id:'reviews', n:'03', name:'The Word-of-Mouth Door', short:'Reviews', w:1.5,
+    q:'When did you last get a Google review?',
+    sub:'And be honest about the replies — most people are not.',
+    opts:[
+      {t:'In the last month, and we reply to every one', v:10},
+      {t:'Sometime this year', v:5},
+      {t:"Couldn't tell you — a few old ones", v:0}
+    ],
+    good:"you've got recent reviews and you reply to them — a stranger trusts that more than anything you could say about yourself",
+    r5:{
+      what:"Reviews come in, but not steadily, and they're not being replied to.",
+      cost:"A profile whose last review is eight months old reads as \"quiet lately\". Unanswered reviews read as \"doesn't care\". Neither is true of you, but that's what it looks like.",
+      act:"Reply to every review you've got, even the old ones. Then text your last three happy customers with a direct link."
+    },
+    r0:{
+      what:"Reviews aren't part of how you work — they turn up by accident or not at all.",
+      cost:"This is the one that decides it. Two builders, same price, same work: the one with 40 recent reviews gets the call and it isn't close.",
+      act:"Ask the next customer who says something nice to put it in a Google review, and send them the link while they're still standing there. Then do it every single time."
+    }
+  },
+  {
+    id:'listings', n:'04', name:'The Listings Door', short:'Listings', w:1,
+    q:'Your details on directory sites — do they all match?',
+    sub:'Yellow Pages, hipages, Truelocal, Yelp, industry bodies, that site someone signed you up to in 2019.',
+    opts:[
+      {t:"Yes, we've checked and they're consistent", v:10},
+      {t:'Probably mostly right', v:5},
+      {t:"No idea what's out there", v:0}
+    ],
+    good:"your details are consistent across directories, which quietly props up everything else you do in search",
+    r5:{
+      what:"Probably mostly right is the answer almost everyone gives, and it's usually optimistic.",
+      cost:"Every mismatch — an old mobile, a previous address, a business name with and without Pty Ltd — makes Google a little less confident it knows who you are. That confidence is what ranking is made of.",
+      act:"Search your business name in quotes and go through the first two pages. You'll find at least one listing you'd forgotten about."
+    },
+    r0:{
+      what:"You don't know what's listed about you or whether any of it is current.",
+      cost:"Old phone numbers on live directory pages are the quietest way to lose a job — the customer doesn't tell you they couldn't get through, they just call the next name.",
+      act:"Google your business name in quotes. Fix the wrong ones, starting with anything showing a number that no longer reaches you."
+    }
+  },
+  {
+    id:'feed', n:'05', name:'The Feed Door', short:'Feed', w:1,
+    q:'Your Instagram or Facebook — when did you last post finished work?',
+    sub:'Finished work. Not a meme, not a job ad, not a happy new year post.',
+    opts:[
+      {t:'This week, and we post consistently', v:10},
+      {t:'Within the last month or so', v:5},
+      {t:"Can't remember — we don't really use it", v:0}
+    ],
+    good:"your socials show recent finished work, which does the job of proving you're busy without you having to claim it",
+    r5:{
+      what:"You post, but in bursts — busy month, then nothing.",
+      cost:"Someone checking you out at 9pm scrolls until they hit a gap. A three-month hole reads as \"maybe they've wound down\", which is the last thing you want in the head of a person about to spend big.",
+      act:"Photograph every job as you finish it, even badly. A folder of raw photos is worth more than a plan you don't stick to."
+    },
+    r0:{
+      what:"Your socials are either dormant or don't exist.",
+      cost:"You do good work and there's no evidence of it anywhere a customer will look. They're not doubting you — they just have nothing to go on, so they go with the bloke who does.",
+      act:"Post three finished jobs this week. No captions to agonise over — what it was, where it was, done."
+    }
+  },
+  {
+    id:'watch', n:'06', name:'The Watch Door', short:'Watch', w:1,
+    q:'Video — walkthroughs, before-and-afters, you talking about a job.',
+    sub:'Phone footage counts. Nobody expects a film crew.',
+    opts:[
+      {t:'Yes, we post video regularly', v:10},
+      {t:"We've done a few", v:5},
+      {t:'None', v:0}
+    ],
+    good:"you're using video, which almost nobody in the trades is doing properly — it's the biggest gap in your industry and you're on the right side of it",
+    r5:{
+      what:"You've dipped into video but it isn't a habit.",
+      cost:"Video is where someone decides whether they'd want you in their house for three months. A couple of old clips don't get you there.",
+      act:"Film sixty seconds on your next site — walk through it, say what you did and why. One take, no editing."
+    },
+    r0:{
+      what:"There's no video of you or your work anywhere.",
+      cost:"People researching a big spend watch before they read. It's also the fastest way to be trusted before you've met, because they've already heard how you talk about the work.",
+      act:"Next job you finish, walk through it with your phone and talk for a minute. That's it. That's the whole thing."
+    }
+  },
+  {
+    id:'room', n:'07', name:'The Room Door', short:'Room', w:1,
+    q:'Someone asks for a recommendation for your trade in a local Facebook group. What happens?',
+    sub:'It happens more than you think, most weeks, in groups you may not be in.',
+    opts:[
+      {t:"We'd see it and we'd be mentioned", v:10},
+      {t:'We might get mentioned by a past customer', v:5},
+      {t:"We wouldn't know it happened", v:0}
+    ],
+    good:"you're in the rooms where recommendations get made, which is word of mouth working while you sleep",
+    r5:{
+      what:"You get mentioned sometimes, but you're not there to see it or build on it.",
+      cost:"A recommendation with nobody backing it up gets buried under three other names. Being present turns one mention into the obvious choice in that thread.",
+      act:"Join the two or three biggest local community groups in your area. Don't sell — just be there and be useful."
+    },
+    r0:{
+      what:"Conversations about your trade are happening locally and you're not in any of them.",
+      cost:"These threads are the highest-intent leads that exist — someone actively asking for a name, with their neighbours vouching. They're free, and they're going to whoever showed up.",
+      act:"Find your two biggest local Facebook groups and join them this week. Answer one question without pitching. That's the whole first step."
+    }
+  },
+  {
+    id:'press', n:'08', name:'The Press Door', short:'Press', w:1,
+    q:'Been written about, interviewed, or linked to in the last year?',
+    sub:'Local paper, industry site, a supplier’s blog, an award listing, a podcast.',
+    opts:[
+      {t:'Yes, more than once', v:10},
+      {t:'Once, or something small', v:5},
+      {t:'Never', v:0}
+    ],
+    good:"other people with credibility have pointed at you, which does more for both trust and search than anything you can publish yourself",
+    r5:{
+      what:"You've had a mention, but it isn't something you're actively working on.",
+      cost:"One mention is a nice thing that happened. A pattern of them is what makes you look like the established name in your area rather than one of the options.",
+      act:"Pick the best job you did this year and offer it to one local publication or industry site as a story. Worst case, nothing happens."
+    },
+    r0:{
+      what:"Nobody outside your own channels has ever pointed at your business.",
+      cost:"Everything a customer can find about you is written by you. That's fine, but it carries less weight than one line in a local paper — and search engines weigh it the same way.",
+      act:"Write down the three best jobs you've ever done. That's your pitch to a local publication, and it's already finished."
+    }
+  },
+  {
+    id:'answer', n:'09', name:'The Answer Door', short:'Answer', w:1.5,
+    q:'Someone messages you on Facebook at 7pm on a Tuesday. When do they hear back?',
+    sub:"The honest answer, not the one you'd like to be true.",
+    opts:[
+      {t:'Within the hour', v:10},
+      {t:'Next business day', v:5},
+      {t:'Honestly? Depends if I see it', v:0}
+    ],
+    good:"you answer fast, and that alone beats a lot of businesses with far bigger marketing budgets than yours",
+    r5:{
+      what:"Enquiries get answered — tomorrow.",
+      cost:"People asking about a big job ask three businesses at once. The first useful reply usually wins. Not the best tradie. The first one.",
+      act:"Set an auto-reply on Facebook and Instagram that says when you'll get back to them and gives your mobile for anything urgent. Ten minutes, costs nothing."
+    },
+    r0:{
+      what:"Messages land outside work hours and sit until you next happen to open the app.",
+      cost:"This is the most expensive door on the list and the cheapest to fix. You're not losing these jobs on price or on quality — you're losing them on silence, and you never find out it happened.",
+      act:"Turn on auto-replies today on every channel, with your mobile number in them. Then set one time each evening to clear messages."
+    }
+  }
+];
+
+var BANDS = [
+  {min:81, name:'Walk-in ready', p:"You're doing more than almost anyone in your trade. You don't need the basics explained to you. What's left are the doors nobody in your industry has opened yet — and that's where the jobs everyone else can't reach come from."},
+  {min:61, name:'Nearly there', p:"You're ahead of most businesses doing what you do. The doors still shut aren't about getting more work — they're about getting better work, from customers who chose you before they called."},
+  {min:36, name:'Half open', p:"People can find you. They're just not always choosing you. This is the most common result and the most expensive one, because you're already paying for the attention and losing it at the last step."},
+  {min:0,  name:'Not ready yet', p:"Right now you're running on word of mouth and luck. That's not a criticism — it's how nearly every trade starts. But it means every job depends on somebody already knowing your name. The first three fixes below are cheap and fast."}
+];
+
+var AI_TEXT = {
+  yes:"You've checked, and you come up. That puts you in a very small group — most trades haven't thought to look. Worth checking again in a few months, because these answers move around a lot more than Google's do.",
+  no:"You've checked and you're not there. Good news: almost nobody in your trade is either, so this is wide open. AI tools lean heavily on your Google profile, your reviews and what other sites say about you — which means the doors above are what fix this one.",
+  never:"Worth doing tonight: open ChatGPT and ask it to recommend a business like yours in your suburb, and see whose names come back. More people start there every month, and the businesses showing up in those answers are the ones already doing well on the doors above."
+};
+
+var answers = {};   // id -> value
+var aiAnswer = null;
+var step = 0;
+var submissionId = null;
+
+function $(id){ return document.getElementById(id); }
+function show(id){
+  ['s-intro','s-q','s-gate','s-res'].forEach(function(s){ $(s).classList.toggle('on', s===id); });
+}
+function pad(n){ return n<10 ? '0'+n : ''+n; }
+
+function startCheck(){
+  step = 0;
+  show('s-q');
+  renderQ();
+  $('check').scrollIntoView({block:'start'});
+}
+
+function renderQ(){
+  var d = DOORS[step];
+  $('qtag').textContent = d.name;
+  $('qh').textContent = d.q;
+  $('qsub').textContent = d.sub;
+  $('plbl').textContent = pad(step+1) + ' / 09';
+  $('pfill').style.width = ((step)/9*100) + '%';
+  $('qback').hidden = (step === 0);
+
+  var box = $('qopts');
+  box.innerHTML = '';
+  d.opts.forEach(function(o, i){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'opt' + (answers[d.id] === o.v ? ' sel' : '');
+    b.innerHTML = '<span class="k">' + String.fromCharCode(65+i) + '</span><span>' + o.t + '</span>';
+    b.onclick = function(){ pick(d.id, o.v); };
+    box.appendChild(b);
+  });
+}
+
+function pick(id, v){
+  answers[id] = v;
+  if (step < DOORS.length - 1) { step++; renderQ(); }
+  else { renderAiQ(); }
+}
+
+function renderAiQ(){
+  $('qtag').textContent = 'The AI Door — bonus, not scored';
+  $('qh').textContent = 'Have you ever asked ChatGPT to recommend a business like yours in your area?';
+  $('qsub').textContent = "Just to see whether it says your name. This one doesn't affect your score.";
+  $('plbl').textContent = '09 / 09 — bonus';
+  $('pfill').style.width = '100%';
+  $('qback').hidden = false;
+  step = DOORS.length;
+
+  var box = $('qopts');
+  box.innerHTML = '';
+  [{t:'Yes — and we come up', v:'yes'},{t:"Yes — and we don't", v:'no'},{t:'Never thought to', v:'never'}]
+  .forEach(function(o, i){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'opt';
+    b.innerHTML = '<span class="k">' + String.fromCharCode(65+i) + '</span><span>' + o.t + '</span>';
+    b.onclick = function(){ aiAnswer = o.v; show('s-gate'); $('check').scrollIntoView({block:'start'}); };
+    box.appendChild(b);
+  });
+}
+
+function goBack(){
+  if (step > 0) { step--; renderQ(); }
+}
+
+/* ── Scoring ── */
+function calc(){
+  var raw = 0, max = 0;
+  DOORS.forEach(function(d){
+    raw += (answers[d.id] || 0) * d.w;
+    max += 10 * d.w;
+  });
+  var score = Math.round(raw / max * 100);
+  var band = BANDS.find(function(b){ return score >= b.min; });
+
+  // Rank shut doors by how much they're costing: weight x shortfall.
+  // Ties break on how fast the door is to fix — on an all-zero result every
+  // 1.5x door ties, and the useful advice is "do the free ten-minute one
+  // first", not "do them in the order I listed them".
+  var FIXABILITY = {answer:5, map:4, reviews:3, feed:2, listings:2, search:1, room:1, watch:0, press:0};
+  var shut = DOORS
+    .filter(function(d){ return (answers[d.id] || 0) < 10; })
+    .map(function(d){ return {d:d, cost:(10 - (answers[d.id] || 0)) * d.w}; })
+    .sort(function(a,b){ return (b.cost - a.cost) || (FIXABILITY[b.d.id] - FIXABILITY[a.d.id]); })
+    .slice(0,3);
+
+  // Best-scoring door, for the credit line. Ties break by weight.
+  var best = DOORS.slice().sort(function(a,b){
+    var av = answers[a.id] || 0, bv = answers[b.id] || 0;
+    return bv - av || b.w - a.w;
+  })[0];
+
+  return {score:score, band:band, shut:shut, best:best};
+}
+
+function renderResult(r, bizName){
+  $('res-biz').textContent = bizName || 'Walk-In Ready';
+  $('res-score').innerHTML = r.score + '<small>/100</small>';
+  $('res-band').textContent = r.band.name;
+  $('res-band-p').textContent = r.band.p;
+
+  // door strip
+  var strip = $('strip'); strip.innerHTML = '';
+  DOORS.forEach(function(d){
+    var v = answers[d.id] || 0;
+    var cls = v === 10 ? 'open' : (v === 5 ? 'part' : 'shut');
+    var cell = document.createElement('div');
+    cell.className = 'dcell ' + cls;
+    cell.innerHTML = '<div class="ic"></div><div class="nm">' + d.short + '</div>';
+    cell.title = d.name + ' — ' + (v===10?'open':v===5?'half open':'shut');
+    strip.appendChild(cell);
+  });
+
+  // three most expensive
+  var fl = $('fixlist'); fl.innerHTML = '';
+  r.shut.forEach(function(item){
+    var d = item.d;
+    var rep = (answers[d.id] === 5) ? d.r5 : d.r0;
+    var el = document.createElement('div');
+    el.className = 'fix-item';
+    el.innerHTML =
+      '<h3>' + d.name + '</h3>' +
+      '<dl>' +
+      '<div class="fix-line"><dt>What’s happening</dt><dd>' + rep.what + '</dd></div>' +
+      '<div class="fix-line"><dt>What it costs you</dt><dd>' + rep.cost + '</dd></div>' +
+      '<div class="fix-line act"><dt>Do this week</dt><dd>' + rep.act + '</dd></div>' +
+      '</dl>';
+    fl.appendChild(el);
+  });
+
+  // credit
+  if ((answers[r.best.id] || 0) > 0) {
+    $('goodtext').innerHTML = 'Before the list above lands too hard — <b>' + r.best.name.replace('The ','the ') + '</b> is working. Specifically, ' + r.best.good + '. That is genuinely further than most get.';
+    $('goodbox').style.display = '';
+  } else {
+    $('goodtext').innerHTML = "Nothing scored above zero, which sounds brutal but isn't. It means <b>everything on this list is still available to you</b> — and the three fixes above are the cheapest wins you'll ever get.";
+    $('goodbox').style.display = '';
+  }
+
+  // AI
+  $('aitext').textContent = AI_TEXT[aiAnswer] || AI_TEXT.never;
+
+  show('s-res');
+  $('check').scrollIntoView({block:'start'});
+}
+
+/* ── Submit ── */
+$('gate-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  var btn = $('gate-btn'), lbl = $('gate-lbl'), err = $('gate-err');
+  err.classList.remove('on');
+  btn.disabled = true; lbl.textContent = 'Working out your score…';
+
+  var r = calc();
+  var doorScores = {}; DOORS.forEach(function(d){ doorScores[d.id] = answers[d.id] || 0; });
+
+  submissionId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : null;
+
+  var params = new URLSearchParams(location.search);
+  var utm = {};
+  ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid','gclid'].forEach(function(k){
+    if (params.get(k)) utm[k] = params.get(k);
+  });
+
+  var row = {
+    business_name: $('g-biz').value.trim(),
+    email: $('g-email').value.trim(),
+    answers: Object.assign({}, doorScores, {ai_door: aiAnswer}),
+    door_scores: doorScores,
+    score: r.score,
+    band: r.band.name,
+    weakest_doors: r.shut.map(function(s){ return s.d.name; }),
+    utm: utm,
+    referrer: document.referrer || null,
+    user_agent: navigator.userAgent
+  };
+  if (submissionId) row.id = submissionId;
+
+  // Nobody waits on a spinner to find out their own score. The result is
+  // already computed client-side, so the save must never be able to block it:
+  // whichever happens first — the write finishing or 4 seconds — we render.
+  var shown = false;
+  function reveal(){
+    if (shown) return;
+    shown = true;
+    btn.disabled = false; lbl.textContent = 'Show me my score';
+    renderResult(r, row.business_name);
+  }
+  function saveFailed(){
+    // The row didn't land, so the audit button has nothing to flag. Swap it
+    // for the one thing that still works: emailing me.
+    $('offer-btn').style.display = 'none';
+    $('offer').querySelector('.micro').innerHTML =
+      'Melbourne only · email <a href="mailto:hello@beetsandco.com.au" style="color:#1C1405;border-bottom:1px solid rgba(28,20,5,.4)">hello@beetsandco.com.au</a> to claim yours';
+    $('offer-again').classList.add('hide');
+    submissionId = null;
+  }
+
+  var timer = setTimeout(reveal, 4000);
+
+  fetch(SUPA_URL + '/rest/v1/wir_submissions', {
+    method: 'POST',
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify(row)
+  })
+  .then(function(res){
+    if (!res.ok) return res.text().then(function(t){ throw new Error(t); });
+    clearTimeout(timer); reveal();
+  })
+  .catch(function(){
+    clearTimeout(timer);
+    saveFailed();
+    reveal();
+  });
+});
+
+/* The audit ask sits behind the button, not in the gate form. Anyone who gets
+   here has already seen their score and wants the thing — so four fields at
+   this point cost far less than two extra fields did at the gate. */
+function openAudit(){
+  var f = $('audit-form');
+  if (f.classList.contains('on')) return;
+  f.classList.add('on');
+  $('offer-btn').style.display = 'none';
+  $('offer-again').classList.add('hide');
+  var n = $('a-name'); if (n) n.focus({preventScroll:true});
+}
+
+$('audit-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  var btn = $('audit-btn'), lbl = $('audit-lbl');
+  btn.disabled = true; lbl.textContent = 'Sending…';
+
+  // Same rule as the gate: a request that hangs must never leave someone
+  // staring at "Sending…". Confirm on whichever lands first.
+  var done = false;
+  function finish(){
+    if (done) return;
+    done = true;
+    clearTimeout(t);
+    $('audit-form').classList.remove('on');
+    $('offer-done').classList.add('on');
+    $('offer-again').classList.add('hide');
+  }
+  var t = setTimeout(finish, 4000);
+  if (!submissionId) { finish(); return; }
+
+  fetch(SUPA_URL + '/rest/v1/rpc/wir_request_audit', {
+    method: 'POST',
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      p_id: submissionId,
+      p_suburb: $('a-suburb').value.trim(),
+      p_phone: $('a-phone').value.trim(),
+      p_trade: $('a-trade').value.trim(),
+      p_name: $('a-name').value.trim()
+    })
+  })
+  .then(finish)
+  .catch(finish);   // Confirm either way — chasing them for a retry loses the lead.
+});
+</script>
+</body>
+</html>

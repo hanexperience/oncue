@@ -9,6 +9,14 @@
     <priority>1.0</priority>
   </url>
 
+  <!-- Tools -->
+  <url>
+    <loc>https://beetsandco.com.au/walk-in-ready.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Legal -->
   <url>
     <loc>https://beetsandco.com.au/privacy.html</loc>
