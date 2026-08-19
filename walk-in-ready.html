@@ -89,10 +89,12 @@ nav.top .bar{max-width:var(--w);margin:0 auto;padding:0 28px;height:68px;display
 .navlinks .btn{padding:11px 20px;font-size:14px}
 @media(max-width:760px){.navlinks a:not(.btn){display:none}}
 html{overflow-x:clip}body{overflow-x:clip}
+#check,#doors,#offer{scroll-margin-top:84px}
 @media(max-width:760px){
   .rule{flex-wrap:wrap;gap:10px 12px}
   .rule .lbl{white-space:normal;font-size:10px;letter-spacing:.18em}
   .rule .ln{min-width:20px}
+  .rule::after{display:none}
 }
 
 /* ── Hero ── */
@@ -114,6 +116,9 @@ section{padding:96px 0}
 
 /* ── The nine doors list ── */
 .doors{margin-top:56px}
+.doors-foot{margin-top:48px;display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.doors-foot p{font-size:17px;color:var(--ink);max-width:40ch}
+@media(max-width:640px){.doors-foot{gap:20px}.doors-foot .btn{width:100%;justify-content:center}}
 .door-row{display:grid;grid-template-columns:56px 210px 1fr;gap:30px;padding:26px 0;border-top:1px solid var(--line);position:relative;align-items:baseline}
 .door-row::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--tick)}
 .door-row:last-child{border-bottom:1px solid var(--line)}
@@ -124,7 +129,8 @@ section{padding:96px 0}
 .door-row.bonus::before{background:var(--amber)}
 
 /* ── Check shell ── */
-.check{background:var(--g900);color:var(--green-mut);padding:0}
+.check{background:var(--g900);color:var(--green-mut);padding:0;display:none}
+.check.live{display:block}
 .check-inner{max-width:860px;margin:0 auto;padding:86px 28px 96px;min-height:70vh;display:flex;flex-direction:column;justify-content:center}
 .screen{display:none;animation:fadein .4s ease both}
 .screen.on{display:block}
@@ -275,7 +281,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
       <a href="/#services">Services</a>
       <a href="/#crowncon">Work</a>
       <a href="/#about">About</a>
-      <a href="#check" class="btn btn-green">Take the Walk-In Check</a>
+      <button class="btn btn-green" onclick="startCheck()">Take the Walk-In Check</button>
     </div>
   </div>
 </nav>
@@ -290,8 +296,8 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
     </div>
     <h1>Is your business <span class="acc">walk-in ready?</span></h1>
     <div class="hero-sub">
-      <p>A customer about to spend real money doesn't check one place before they call you. They check <strong>nine</strong>. Most trade businesses show up properly in three — and never find out which six let them down. Nine questions, three minutes, and you'll know exactly what someone sees when they look you up tonight.</p>
-      <a href="#check" class="btn btn-amber">Start the check <span class="arrow">→</span></a>
+      <p><strong>Nine questions. Answer them honestly — nobody's watching.</strong> There are no trick questions and no wrong answers, and I'm not going to ask for your email until you've seen all nine. Have your phone handy for a couple of them.</p>
+      <button class="btn btn-amber" onclick="startCheck()">Start the check <span class="arrow">→</span></button>
     </div>
     <div class="hero-meta">
       <span><b>9</b> &nbsp;questions</span>
@@ -321,20 +327,16 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
       <div class="door-row"><span class="door-n">09</span><h3>The Answer Door</h3><p>What happens after they message you. The one nearly everybody skips, and the cheapest one to fix.</p></div>
       <div class="door-row bonus"><span class="door-n">+</span><h3>The AI Door</h3><p>Whether ChatGPT and Google's AI name you when someone asks them for a recommendation. Not scored — but you'll get a read on it at the end.</p></div>
     </div>
+    <div class="doors-foot">
+      <p>Three minutes and you'll know which of the nine are shut.</p>
+      <button class="btn btn-amber" onclick="startCheck()">Start the check <span class="arrow">→</span></button>
+    </div>
   </div>
 </section>
 
 <!-- ══ THE CHECK ══ -->
 <div class="check on-green" id="check">
   <div class="check-inner">
-
-    <!-- INTRO -->
-    <div class="screen on" id="s-intro">
-      <div class="rule"><span class="lbl">The check</span><span class="ln"></span><span class="lbl">00 / 09</span></div>
-      <h2 class="sec-h">Nine questions. Answer them honestly — nobody's watching.</h2>
-      <p class="lede">There are no trick questions and no wrong answers, and I'm not going to ask for your email until you've seen all nine. Have your phone handy for a couple of them.</p>
-      <div style="margin-top:40px"><button class="btn btn-amber" onclick="startCheck()">Begin <span class="arrow">→</span></button></div>
-    </div>
 
     <!-- QUESTIONS -->
     <div class="screen" id="s-q">
@@ -686,12 +688,13 @@ var submissionId = null;
 
 function $(id){ return document.getElementById(id); }
 function show(id){
-  ['s-intro','s-q','s-gate','s-res'].forEach(function(s){ $(s).classList.toggle('on', s===id); });
+  ['s-q','s-gate','s-res'].forEach(function(s){ $(s).classList.toggle('on', s===id); });
 }
 function pad(n){ return n<10 ? '0'+n : ''+n; }
 
 function startCheck(){
   step = 0;
+  $('check').classList.add('live');
   show('s-q');
   renderQ();
   $('check').scrollIntoView({block:'start'});

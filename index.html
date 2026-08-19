@@ -229,6 +229,8 @@ document.addEventListener('click', function(e){
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;overflow-x:clip}
+/* in-page anchors clear the sticky nav */
+#top,#walkin,#crowncon,#model,#services,#about,#process,#faq,#apply{scroll-margin-top:84px}
 body{overflow-x:clip}
 body{font-family:var(--bodyf);background:var(--paper);color:var(--body-c);font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
 img,video{display:block;max-width:100%}
@@ -499,6 +501,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   .rule{flex-wrap:wrap;gap:10px 12px;margin-bottom:26px}
   .rule .lbl{white-space:normal;font-size:10px;letter-spacing:.18em}
   .rule .ln{min-width:20px}
+  .rule::after{display:none}
   .hero .rule{margin-bottom:30px}
   .hero .rule .lbl:last-of-type{display:none}
   .hero-sub .btn{width:100%;justify-content:center}
@@ -592,7 +595,7 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
 </div>
 
 <!-- ══ WALK-IN CHECK (second hero) ══ -->
-<section class="wcheck" id="walk-in-check">
+<section class="wcheck" id="walkin">
   <div class="wrap">
     <div class="rule rv"><span class="lbl">The Walk-In Check</span><span class="ln"></span><span class="lbl">Free · 3 minutes</span></div>
     <div class="w-top">
