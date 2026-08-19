@@ -17,6 +17,33 @@
 <meta property="og:site_name" content="Beets &amp; Co"/>
 <meta name="twitter:card" content="summary_large_image"/>
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-29SKC7VN4C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-29SKC7VN4C');
+</script>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1787784152664522');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1787784152664522&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
 <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
@@ -900,6 +927,8 @@ $('gate-form').addEventListener('submit', function(e){
   .then(function(res){
     if (!res.ok) return res.text().then(function(t){ throw new Error(t); });
     clearTimeout(timer); reveal();
+    if (typeof fbq === 'function') { fbq('track', 'Lead', { content_name: 'Walk-In Ready Check', score: r.score }); }
+    if (typeof gtag === 'function') { gtag('event', 'generate_lead', { event_category: 'walk_in_ready', event_label: 'Check completed', value: r.score }); }
   })
   .catch(function(){
     clearTimeout(timer);
@@ -935,6 +964,8 @@ $('audit-form').addEventListener('submit', function(e){
     $('audit-form').classList.remove('on');
     $('offer-done').classList.add('on');
     $('offer-again').classList.add('hide');
+    if (typeof fbq === 'function') { fbq('trackCustom', 'AuditRequested'); }
+    if (typeof gtag === 'function') { gtag('event', 'audit_requested', { event_category: 'walk_in_ready', event_label: 'Audit requested' }); }
   }
   var t = setTimeout(finish, 4000);
   if (!submissionId) { finish(); return; }
