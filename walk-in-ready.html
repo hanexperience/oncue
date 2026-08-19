@@ -725,6 +725,8 @@ function startCheck(){
   show('s-q');
   renderQ();
   $('check').scrollIntoView({block:'start'});
+  if (typeof fbq === 'function') { fbq('trackCustom', 'CheckStarted'); }
+  if (typeof gtag === 'function') { gtag('event', 'check_started', { event_category: 'walk_in_ready', event_label: 'Check started' }); }
 }
 
 function renderQ(){
