@@ -63,6 +63,7 @@ const COLLECTIONS = {
       {k:"name",l:"Name / file",t:"text",full:true},
       {k:"status",l:"Status",t:"status",o:["New from Drive","Needs description","Description written","Tim approved","Scheduled","Posted"]},
       {k:"type",l:"Type",t:"select",o:["video","photo","carousel"]},
+      {k:"carousel_urls",l:"Carousel URLs (one image/video URL per line, 2-10 — only used when Type = carousel, IG feed only)",t:"urllist",full:true},
       {k:"aspect_ratio",l:"Aspect",t:"select",o:["9:16","16:9","4:5","1:1"]},
       {k:"dimensions",l:"Dimensions (auto)",t:"text"},
       {k:"pillar",l:"Pillar",t:"select",o:PILLARS},
@@ -696,6 +697,15 @@ function fieldHTML(id,row,f){
     html += `<div class="checks">`;
     f.o.forEach(o=>{ html += `<label class="chk"><input type="checkbox" ${arr.includes(o)?'checked':''} onchange="saveMulti('${id}','${row.id}','${f.k}','${esc(o)}',this.checked)"> ${esc(o)}</label>`; });
     html += `</div>`;
+  } else if(f.t==='urllist'){
+    // Carousel media (2026-08-24) — jsonb array of direct image/video URLs,
+    // edited as one URL per line rather than the checkbox-list 'multi'
+    // pattern (that's for a fixed option set; this is free-form URLs).
+    // saveUrlList() below splits/filters lines into a real array before it
+    // ever reaches queueSave/saveField, since a jsonb column must get an
+    // actual array, not the raw newline-joined string.
+    const arr = Array.isArray(val)?val:[];
+    html += `<textarea placeholder="One image or video URL per line — 2 to 10 items" oninput="saveUrlList('${id}','${row.id}','${f.k}',this.value)">${esc(arr.join('\n'))}</textarea>`;
   } else if(f.t==='content_ref'){
     html += `<div id="cref-${row.id}">${crefInner(row)}</div>`;
   } else if(f.t==='cover_ref'){
@@ -1825,6 +1835,14 @@ function queueSave(id,rowId,field,val){
   // stale value out of COLL_ROWS mid-debounce.
   if(COLL_ROWS[id]){ const i=COLL_ROWS[id].findIndex(x=>x.id===rowId); if(i>=0) COLL_ROWS[id][i][field]=val; }
   saveTimers[key] = setTimeout(()=>saveField(id,rowId,field,val),700);
+}
+// Carousel URLs textarea (2026-08-24) — one URL per line in the UI, but the
+// underlying column (va_content_items.carousel_urls) is jsonb and must
+// receive a real array. Splits/trims/drops-blanks then hands off to the
+// normal queueSave/saveField debounce path exactly like every other field.
+function saveUrlList(id,rowId,field,text){
+  const arr = String(text||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  queueSave(id,rowId,field,arr);
 }
 async function saveField(id,rowId,field,val){
   const c = COLLECTIONS[id];
