@@ -216,8 +216,7 @@ calendar: {
       // 'week' field (which has messy legacy values like "Last week" or
       // "3 months ago") rather than replacing it, so existing notes on
       // past tasks aren't lost.
-      {k:"scheduled_date",l:"Scheduled date",t:"date"},
-      {k:"week",l:"Week (old notes)",t:"text"},
+      {k:"scheduled_date",l:"Date",t:"date"},
       {k:"notes",l:"Notes",t:"text",full:true}
     ]
   },
