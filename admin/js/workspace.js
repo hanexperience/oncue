@@ -195,7 +195,8 @@ calendar: {
       {k:"status",l:"Status",t:"status",o:["Flagged","Reply drafted","Posted","Skip"]},
       {k:"handled_by",l:"Handled by",t:"text"},
       {k:"thread_date",l:"Date",t:"date"},
-      {k:"note",l:"Why relevant",t:"textarea",full:true}
+      {k:"note",l:"Why relevant",t:"textarea",full:true},
+      {k:"response",l:"Drafted response",t:"textarea",full:true}
     ]
   },
   gbp: {
