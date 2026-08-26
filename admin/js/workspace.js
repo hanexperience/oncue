@@ -203,11 +203,21 @@ calendar: {
     table:"va_gbp_tasks", title:"GBP Tasks",
     sub:"Google Business Profile: weekly posts, fresh photos (from Tim), Q&A, review replies.",
     orderBy:"created_at", newLabel:"+ Add GBP task",
-    icon:"📍", titleKey:"task_type", subtitleKey:"week", previewKey:"notes", emptyTitle:"(task type not set)",
+    // New tasks default to Type=Post (2026-08-26) — Post is by far the most
+    // common GBP task and was previously left blank until someone picked a
+    // value, which is why older rows can have task_type==="".
+    defaults:{task_type:"Post"},
+    icon:"📍", titleKey:"task_type", subtitleKey:"scheduled_date", previewKey:"notes", emptyTitle:"(task type not set)",
     fields:[
       {k:"task_type",l:"Type",t:"select",o:["Post","Photos","Q&A","Review reply"]},
       {k:"status",l:"Status",t:"status",o:["To do","Done"]},
-      {k:"week",l:"Week",t:"text"},
+      // scheduled_date (2026-08-26) is the real calendar picker for
+      // assigning a task to a date — added alongside the older free-text
+      // 'week' field (which has messy legacy values like "Last week" or
+      // "3 months ago") rather than replacing it, so existing notes on
+      // past tasks aren't lost.
+      {k:"scheduled_date",l:"Scheduled date",t:"date"},
+      {k:"week",l:"Week (old notes)",t:"text"},
       {k:"notes",l:"Notes",t:"text",full:true}
     ]
   },
@@ -776,6 +786,12 @@ function buildCard(id,row){
   const subtitleVal = c.subtitleKey ? row[c.subtitleKey] : null;
   const previewVal = c.previewKey ? row[c.previewKey] : null;
   const preview = previewVal ? `<div class="desc-prev">${esc(String(previewVal).length>140 ? String(previewVal).slice(0,140)+'…' : String(previewVal))}</div>` : '';
+  // Any 'url' field with a value gets a click-to-open link right on the
+  // collapsed card header (same "↗ Open" pattern buildBlogCard uses for
+  // row.url) so threads/links can be opened straight from the list —
+  // no need to expand the card just to copy/paste the URL out of an input.
+  const urlField = c.fields.find(f=>f.t==='url' && row[f.k]);
+  const openLink = urlField ? `<div class="ccard-links"><a href="${esc(row[urlField.k])}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Open link</a></div>` : '';
   card.innerHTML = `
     <div class="ccard-head" onclick="toggleContent(this)">
       <div class="thumb-ph" style="width:56px;height:56px" title="${esc(c.title)}">${c.icon||'📋'}</div>
@@ -786,6 +802,7 @@ function buildCard(id,row){
           ${subtitleVal?`<span class="ar">${esc(String(subtitleVal))}</span>`:''}
         </div>
         ${preview}
+        ${openLink}
       </div>
       <button class="expand-btn toggle-arrow">▸</button>
     </div>
@@ -1900,9 +1917,11 @@ async function saveMulti(id,rowId,field,opt,checked){
 async function addRow(id){
   const c = COLLECTIONS[id];
   // Every table is client-scoped now (2026-07-17) — always tag new rows
-  // with the currently selected client.
+  // with the currently selected client. A collection can also declare
+  // `defaults` (e.g. GBP Tasks defaulting task_type to "Post") so new rows
+  // don't start with a blank value the user has to remember to set.
   if(!CURRENT_CLIENT_ID){ toast('Pick a client first'); return; }
-  const {error} = await sb.from(c.table).insert({client_id: CURRENT_CLIENT_ID});
+  const {error} = await sb.from(c.table).insert({client_id: CURRENT_CLIENT_ID, ...(c.defaults||{})});
   if(error){ toast('Add failed: '+error.message); return; }
   toast('Added');
   if(id==='content') renderContent();
