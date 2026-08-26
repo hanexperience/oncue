@@ -45,21 +45,61 @@
   }
   function round2(n) { return Math.round(n * 100) / 100; }
 
+  // Add n calendar months to an ISO date, clamping to the last day of the target month
+  function addMonthsClamped(iso, n) {
+    const [y, m, day] = iso.split('-').map(Number);
+    const d = new Date(y, (m - 1) + n, 1);
+    const daysInMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+    d.setDate(Math.min(day, daysInMonth));
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  // FY label for an arbitrary ISO date (same rule as currentFY: FY starts 1 Jul)
+  function fyForDate(iso) { const m = Number(iso.slice(5, 7)); const y = Number(iso.slice(0, 4)); const start = m >= 7 ? y : y - 1; return start + '-' + String(start + 1).slice(2); }
+
   // ── State ────────────────────────────────────────────────────────────
-  const S = { entities: [], invoices: [], expenses: [], wages: [], bas: [], current: null, loaded: false };
+  const S = { entities: [], invoices: [], expenses: [], wages: [], bas: [], recurring: [], current: null, loaded: false };
 
   // ── Load ─────────────────────────────────────────────────────────────
   async function load() {
-    const [entities, invoices, expenses, wages, bas] = await Promise.all([
+    const [entities, invoices, expenses, wages, bas, recurring] = await Promise.all([
       sbApi('tax_entities', '?order=sort.asc'),
       sbApi('tax_invoices', '?fy=eq.' + FY + '&order=issue_date.desc.nullslast'),
       sbApi('tax_expenses', '?fy=eq.' + FY + '&order=expense_date.desc.nullslast'),
       sbApi('tax_wages', '?fy=eq.' + FY + '&order=pay_date.desc.nullslast'),
-      sbApi('tax_bas_periods', '?fy=eq.' + FY + '&order=period_start.asc')
+      sbApi('tax_bas_periods', '?fy=eq.' + FY + '&order=period_start.asc'),
+      sbApi('tax_recurring_expenses', '?active=eq.true&order=next_run.asc')
     ]);
-    S.entities = entities || []; S.invoices = invoices || []; S.expenses = expenses || []; S.wages = wages || []; S.bas = bas || [];
+    S.entities = entities || []; S.invoices = invoices || []; S.expenses = expenses || []; S.wages = wages || []; S.bas = bas || []; S.recurring = recurring || [];
     if (!S.current) S.current = S.entities.length ? S.entities[0].id : null;
     S.loaded = true;
+
+    // Auto-generate any recurring expenses that have come due since we last looked
+    try {
+      const changed = await generateDueRecurring();
+      if (changed) S.expenses = await sbApi('tax_expenses', '?fy=eq.' + FY + '&order=expense_date.desc.nullslast');
+    } catch (e) { /* non-fatal — don't block the page on this */ }
+  }
+
+  // Creates real tax_expenses rows for any active recurring template whose next_run has arrived,
+  // catching up on more than one missed month if the portal wasn't opened for a while.
+  async function generateDueRecurring() {
+    const today = todayISO();
+    const due = S.recurring.filter(r => r.active && r.next_run <= today);
+    if (!due.length) return false;
+    let created = false;
+    for (const r of due) {
+      let guard = 0;
+      while (r.next_run <= today && guard < 24) {
+        guard++;
+        const g = splitGst(r.amount, r.includes_gst, true);
+        const expRow = { entity_id: r.entity_id, description: r.description, category: r.category, expense_date: r.next_run, amount_ex_gst: g.ex, gst_amount: g.gst, deductible: r.deductible, fy: fyForDate(r.next_run), recurring_id: r.id };
+        await sbApi('tax_expenses', '', 'POST', expRow);
+        created = true;
+        r.next_run = addMonthsClamped(r.next_run, 1);
+      }
+      await sbApi('tax_recurring_expenses', '?id=eq.' + r.id, 'PATCH', { next_run: r.next_run });
+    }
+    return created;
   }
 
   // ── Scope helpers (single entity or 'all') ───────────────────────────
@@ -262,7 +302,7 @@
     if (!rows.length) body += '<tr><td colspan="7" class="tx-empty">No expenses logged this FY.</td></tr>';
     rows.forEach(e => {
       body += '<tr>' +
-        '<td><b>' + esc2(e.description || '—') + '</b>' + (e.deductible ? '' : ' <span class="tx-chip">non-deductible</span>') + '</td>' +
+        '<td><b>' + esc2(e.description || '—') + '</b>' + (e.deductible ? '' : ' <span class="tx-chip">non-deductible</span>') + (e.recurring_id ? ' <span class="tx-chip recur" title="Repeats monthly — click to stop future ones" onclick="Tax.stopRecurring(' + e.recurring_id + ')">🔁 monthly</span>' : '') + '</td>' +
         (S.current === 'all' ? '<td class="muted">' + esc2(entName(e.entity_id)) + '</td>' : '') +
         '<td class="muted">' + esc2(e.category || '—') + '</td>' +
         '<td class="muted">' + fmtD(e.expense_date) + '</td>' +
@@ -284,6 +324,7 @@
       '<input class="tx-in sm" id="ne-amt" type="number" step="0.01" placeholder="Total $"/>' +
       '<label class="tx-check"><input type="checkbox" id="ne-gst" checked/> incl. GST</label>' +
       '<label class="tx-check"><input type="checkbox" id="ne-ded" checked/> deductible</label>' +
+      '<label class="tx-check"><input type="checkbox" id="ne-recur"/> 🔁 repeats monthly</label>' +
       '<button class="tx-btn solid" onclick="Tax.addExpense()">+ Add</button>' +
       '</div>';
   }
@@ -359,10 +400,27 @@
       const entity = pickEntity('ne-ent'); const amt = val('ne-amt');
       if (!num(amt)) return notify('Enter an amount', true);
       const g = splitGst(amt, checked('ne-gst'), true);
-      const row = { entity_id: entity, description: val('ne-desc') || null, category: val('ne-cat') || null, expense_date: val('ne-date') || todayISO(), amount_ex_gst: g.ex, gst_amount: g.gst, deductible: checked('ne-ded'), fy: FY };
-      try { await sbApi('tax_expenses', '', 'POST', row); notify('Expense added'); await reloadAndRender(); } catch (e) { notify('Failed: ' + e.message, true); }
+      const expDate = val('ne-date') || todayISO();
+      const isRecurring = checked('ne-recur');
+      const desc = val('ne-desc') || null, cat = val('ne-cat') || null, ded = checked('ne-ded');
+      const row = { entity_id: entity, description: desc, category: cat, expense_date: expDate, amount_ex_gst: g.ex, gst_amount: g.gst, deductible: ded, fy: FY };
+      try {
+        if (isRecurring) {
+          const day = Number(expDate.slice(8, 10));
+          const recRow = { entity_id: entity, description: desc, category: cat, amount: num(amt), includes_gst: checked('ne-gst'), deductible: ded, day_of_month: day, next_run: addMonthsClamped(expDate, 1), active: true };
+          const createdRec = await sbApi('tax_recurring_expenses', '', 'POST', recRow);
+          if (createdRec && createdRec[0]) row.recurring_id = createdRec[0].id;
+        }
+        await sbApi('tax_expenses', '', 'POST', row);
+        notify(isRecurring ? 'Expense added — will repeat monthly' : 'Expense added');
+        await reloadAndRender();
+      } catch (e) { notify('Failed: ' + e.message, true); }
     },
     async delExpense(id) { try { await sbApi('tax_expenses', '?id=eq.' + id, 'DELETE'); S.expenses = S.expenses.filter(x => x.id !== id); render(); notify('Expense deleted'); } catch (e) { notify('Failed: ' + e.message, true); } },
+    async stopRecurring(id) {
+      if (!confirm('Stop this recurring expense? Past entries stay — future ones will no longer be added automatically.')) return;
+      try { await sbApi('tax_recurring_expenses', '?id=eq.' + id, 'PATCH', { active: false }); S.recurring = S.recurring.filter(r => r.id !== id); render(); notify('Recurring expense stopped'); } catch (e) { notify('Failed: ' + e.message, true); }
+    },
 
     async addWage() {
       const entity = pickEntity('nw-ent');

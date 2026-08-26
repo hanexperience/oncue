@@ -54,6 +54,8 @@
 .tx-chip.paid, .tx-chip.lodged { background: var(--green-tint); border-color: var(--green-tint); color: var(--green); }
 .tx-chip.open, .tx-chip.sent { background: var(--blue-tint); border-color: var(--blue-tint); color: var(--blue); }
 .tx-chip.draft { background: var(--paper-2); }
+.tx-chip.recur { background: var(--blue-tint); border-color: var(--blue-tint); color: var(--blue); cursor: pointer; margin-left: 4px; }
+.tx-chip.recur:hover { opacity: .8; }
 
 /* Tables */
 .tx-table-wrap { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--surface); }
