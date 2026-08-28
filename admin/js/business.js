@@ -713,7 +713,7 @@ const DEMO = false;
   async function loadLeads() {
     const tbody = document.getElementById('leads-tbody');
     try {
-      allLeads = DEMO ? DEMO_DB.scraped_leads.slice() : await db('scraped_leads', 'GET', null, '?select=*&order=created_at.desc&limit=200');
+      allLeads = DEMO ? DEMO_DB.scraped_leads.slice() : await db('scraped_leads', 'GET', null, '?select=*&order=created_at.desc&limit=8000');
       await loadClicks();
       renderLeadsTable();
     } catch (err) {
