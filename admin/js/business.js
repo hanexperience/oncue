@@ -801,7 +801,7 @@ const DEMO = false;
       h += '<td><input type="checkbox" class="lead-check" data-pid="' + esc(r.place_id) + '" onchange="BIZ.toggleRow(this)"' + (isChecked ? ' checked' : '') + '></td>';
       h += '<td><strong>' + esc(r.company_name) + '</strong></td>';
       h += '<td style="color:var(--muted)">' + esc(r.category || '') + '</td>';
-      h += '<td>' + esc(r.postcode || '') + '</td>';
+      h += '<td>' + esc(r.suburb || '') + '</td>';
       h += '<td style="font-family:\'JetBrains Mono\',monospace;font-size:11px;">' + esc(r.phone || '') + '</td>';
       h += '<td>' + website + '</td>';
       h += '<td><span class="status-pill ' + esc(status) + '">' + esc(status.replace('_', ' ')) + '</span></td>';
@@ -1720,7 +1720,7 @@ const BIZ_TEMPLATE = `<div class="biz-topbar">
     <table class="data-table">
       <thead><tr>
         <th style="width:32px;"><input type="checkbox" class="lead-check" id="select-all" onclick="BIZ.toggleSelectAll(this)" title="Select all"></th>
-        <th>Company</th><th>Category</th><th>Postcode</th><th>Phone</th><th>Website</th>
+        <th>Company</th><th>Category</th><th>Suburb</th><th>Phone</th><th>Website</th>
         <th>Status</th><th>Score</th><th>Email</th><th>Checked</th><th>Opened</th><th></th>
       </tr></thead>
       <tbody id="leads-tbody"><tr><td colspan="12" style="color:var(--muted-2);font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;padding:18px 10px;">No leads loaded yet</td></tr></tbody>
