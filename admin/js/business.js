@@ -713,7 +713,24 @@ const DEMO = false;
   async function loadLeads() {
     const tbody = document.getElementById('leads-tbody');
     try {
-      allLeads = DEMO ? DEMO_DB.scraped_leads.slice() : await db('scraped_leads', 'GET', null, '?select=*&order=created_at.desc&limit=8000');
+      if (DEMO) {
+        allLeads = DEMO_DB.scraped_leads.slice();
+      } else {
+        // Supabase/PostgREST caps any single request at 1000 rows regardless of
+        // the limit= we ask for, so we page through with offset/limit until a
+        // short page tells us we've reached the end. This is what actually
+        // guarantees every lead loads, not just whichever 1000 sort to the top.
+        allLeads = [];
+        const pageSize = 1000;
+        let offset = 0;
+        for (;;) {
+          const page = await db('scraped_leads', 'GET', null,
+            '?select=*&order=created_at.desc&offset=' + offset + '&limit=' + pageSize);
+          allLeads = allLeads.concat(page);
+          if (page.length < pageSize) break;
+          offset += pageSize;
+        }
+      }
       await loadClicks();
       renderLeadsTable();
     } catch (err) {
