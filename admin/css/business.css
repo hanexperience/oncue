@@ -236,6 +236,16 @@
 
 .biz-root .data-table td.cell-saved input, .biz-root .data-table td.cell-saved select { border-color: var(--green); box-shadow: 0 0 0 2px var(--green-tint); }
 
+/* Leads table only: clip long company names / website URLs instead of
+   wrapping or stretching the row — full text still available via title
+   tooltip on hover. Scoped to .leads-layout so the Clients table (different
+   column needs) is untouched. */
+.biz-root .leads-layout .data-table { table-layout: fixed; }
+.biz-root .leads-layout .data-table td { max-width: 0; } /* required for table-layout:fixed truncation to work per-column */
+.biz-root .leads-layout .cell-trunc { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.biz-root #leads-tbody td:nth-child(2) { width: 190px; } /* Company */
+.biz-root #leads-tbody td:nth-child(5) { width: 170px; } /* Website */
+
 
     /* ── Nav toggle (Clients / Leads) ── */
 .biz-root .nav-toggle { display: flex; gap: 6px; margin-left: 6px; }

@@ -812,11 +812,11 @@ const DEMO = false;
     rows.forEach(function (r) {
       const status = r.status || 'new';
       const websiteOk = r.website && r.website !== 'No Website';
-      const website = websiteOk ? '<a href="' + esc(r.website) + '" target="_blank" rel="noopener">' + esc(r.website.replace(/^https?:\/\//, '').replace(/\/$/, '')) + '</a>' : '<span style="color:var(--muted-2)">none</span>';
+      const website = websiteOk ? '<a class="cell-trunc" title="' + esc(r.website) + '" href="' + esc(r.website) + '" target="_blank" rel="noopener">' + esc(r.website.replace(/^https?:\/\//, '').replace(/\/$/, '')) + '</a>' : '<span style="color:var(--muted-2)">none</span>';
       const isChecked = selectedPlaceIds.has(r.place_id);
       h += '<tr>';
       h += '<td><input type="checkbox" class="lead-check" data-pid="' + esc(r.place_id) + '" onchange="BIZ.toggleRow(this)"' + (isChecked ? ' checked' : '') + '></td>';
-      h += '<td><strong>' + esc(r.company_name) + '</strong></td>';
+      h += '<td><strong class="cell-trunc" title="' + esc(r.company_name) + '">' + esc(r.company_name) + '</strong></td>';
       h += '<td style="color:var(--muted)">' + esc(r.category || '') + '</td>';
       h += '<td>' + esc(r.suburb || '') + '</td>';
       h += '<td style="font-family:\'JetBrains Mono\',monospace;font-size:11px;">' + esc(r.phone || '') + '</td>';
