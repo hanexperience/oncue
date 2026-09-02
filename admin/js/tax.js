@@ -27,6 +27,10 @@
   function currentFY() { const d = new Date(); const y = d.getFullYear(); const start = d.getMonth() >= 6 ? y : y - 1; return start + '-' + String(start + 1).slice(2); }
   const FY = currentFY();
   const fyLabel = 'FY' + FY;
+  // ATO concessional (before-tax) super contributions cap by financial year — indexed periodically.
+  // Source: ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds/contributions-caps
+  const CONCESSIONAL_CAP = { '2023-24': 27500, '2024-25': 30000, '2025-26': 30000, '2026-27': 32500 };
+  function concessionalCap() { return CONCESSIONAL_CAP[FY] || 30000; }
 
   function todayISO() { const d = new Date(); d.setHours(0, 0, 0, 0); return d.toISOString().slice(0, 10); }
   function daysTo(iso) { if (!iso) return null; const n = new Date(); n.setHours(0, 0, 0, 0); const d = new Date(iso); d.setHours(0, 0, 0, 0); return Math.round((d - n) / 86400000); }
@@ -57,7 +61,7 @@
   function fyForDate(iso) { const m = Number(iso.slice(5, 7)); const y = Number(iso.slice(0, 4)); const start = m >= 7 ? y : y - 1; return start + '-' + String(start + 1).slice(2); }
 
   // ── State ────────────────────────────────────────────────────────────
-  const S = { entities: [], invoices: [], expenses: [], wages: [], bas: [], recurring: [], current: null, loaded: false };
+  const S = { entities: [], invoices: [], expenses: [], wages: [], bas: [], recurring: [], current: null, loaded: false, editInv: null, editExp: null, editWage: null };
 
   // ── Load ─────────────────────────────────────────────────────────────
   async function load() {
@@ -123,15 +127,25 @@
     const gstCredits = exp.reduce((s, e) => s + num(e.gst_amount), 0);
     const netIncome = incomeEx - expEx;
 
-    // Reserve: per-entity reserve_pct applied to that entity's net income
-    let reserve = 0;
+    // Reserve: per-entity reserve_pct applied to that entity's net income.
+    // Sole-trader entities also get personal deductible super contributions (capped at the
+    // concessional cap) subtracted first — that's a real reduction in taxable income under
+    // s290-170 ATO rules, once a notice of intent has been lodged and acknowledged.
+    let reserve = 0, superDeduction = 0;
     entIds().forEach(id => {
       const ent = S.entities.find(e => e.id === id); if (!ent) return;
       const ip = S.invoices.filter(i => i.entity_id === id && i.status === 'paid').reduce((s, i) => s + num(i.amount_ex_gst), 0);
       const ep = S.expenses.filter(e => e.entity_id === id && e.deductible).reduce((s, e) => s + num(e.amount_ex_gst), 0);
-      reserve += Math.max(ip - ep, 0) * (num(ent.reserve_pct) / 100);
+      let taxable = Math.max(ip - ep, 0);
+      if (ent.entity_type === 'sole_trader') {
+        const superPaid = S.wages.filter(w => w.entity_id === id).reduce((s, w) => s + num(w.super_amt), 0);
+        const ded = Math.min(superPaid, concessionalCap());
+        taxable = Math.max(taxable - ded, 0);
+        superDeduction += ded;
+      }
+      reserve += taxable * (num(ent.reserve_pct) / 100);
     });
-    return { incomeEx, gstCollected, outstanding, overdueCount, expEx, gstCredits, netIncome, reserve };
+    return { incomeEx, gstCollected, outstanding, overdueCount, expEx, gstCredits, netIncome, reserve, superDeduction };
   }
 
   // GST for one BAS period (cash basis): collected on paid invoices, credits on expenses in range
@@ -183,8 +197,10 @@
 
   function cards(s) {
     const gstOwing = s.gstCollected - s.gstCredits;
+    const reserveSub = 'Recommended income-tax reserve on ' + money(s.netIncome) + ' net (paid) income this FY' +
+      (s.superDeduction > 0 ? ' · ' + money(s.superDeduction) + ' already deducted for personal super contributions' : '');
     return '<div class="tx-cards">' +
-      card('hero', 'Set aside for tax', money(s.reserve), 'Recommended income-tax reserve on ' + money(s.netIncome) + ' net (paid) income this FY') +
+      card('hero', 'Set aside for tax', money(s.reserve), reserveSub) +
       card('', 'Income (paid)', money(s.incomeEx), 'ex-GST · ' + money(s.outstanding) + ' still outstanding') +
       card('', 'GST position (FY)', money(gstOwing), (gstOwing >= 0 ? 'owed to ATO' : 'refund') + ' · ' + money(s.gstCollected) + ' collected − ' + money(s.gstCredits) + ' credits', gstOwing >= 0 ? 'pos' : 'neg') +
       card('', 'Deductible expenses', money(s.expEx), 'ex-GST this FY' + (s.overdueCount ? ' · ' + s.overdueCount + ' invoice(s) overdue' : '')) +
@@ -262,6 +278,7 @@
       '<th>Client / #</th>' + (S.current === 'all' ? '<th>Entity</th>' : '') + '<th>Issued</th><th>Due</th><th class="num">Ex-GST</th><th class="num">GST</th><th class="num">Total</th><th>Status</th><th></th></tr></thead><tbody>';
     if (!rows.length) body += '<tr><td colspan="9" class="tx-empty">No invoices yet this FY.</td></tr>';
     rows.forEach(i => {
+      if (S.editInv === i.id) { body += invoiceEditRow(i); return; }
       const overdue = isOverdueInv(i);
       const total = num(i.amount_ex_gst) + num(i.gst_amount);
       const statusChip = overdue ? '<span class="tx-chip overdue">overdue</span>' : '<span class="tx-chip ' + i.status + '">' + i.status + '</span>';
@@ -275,11 +292,25 @@
         '<td class="num"><b>' + money2(total) + '</b></td>' +
         '<td>' + statusChip + '</td>' +
         '<td class="num">' + (i.status !== 'paid' ? '<button class="tx-btn mini" onclick="Tax.markPaid(' + i.id + ')">Mark paid</button> ' : '') +
+        '<button class="tx-btn mini" onclick="Tax.editInvoice(' + i.id + ')">✎</button> ' +
         '<button class="tx-btn mini danger" onclick="Tax.delInvoice(' + i.id + ')">✕</button></td>' +
         '</tr>';
     });
     body += '</tbody></table>' + invoiceAddRow() + '</div>';
-    return section('Invoices', 'ex-GST + GST · mark paid to count toward BAS/reserve', body);
+    return section('Invoices', 'ex-GST + GST · mark paid to count toward BAS/reserve · ✎ to edit', body);
+  }
+  function invoiceEditRow(i) {
+    return '<tr class="tx-editrow"><td colspan="20"><div class="tx-addrow">' + (S.current === 'all' ? entSelect('ei-ent-' + i.id) : '') +
+      '<input class="tx-in md" id="ei-client-' + i.id + '" placeholder="Client" value="' + esc2(i.client || '') + '"/>' +
+      '<input class="tx-in sm" id="ei-num-' + i.id + '" placeholder="Inv #" value="' + esc2(i.invoice_number || '') + '"/>' +
+      '<input class="tx-in md" id="ei-issue-' + i.id + '" type="date" title="Issue date" value="' + esc2(i.issue_date || '') + '"/>' +
+      '<input class="tx-in md" id="ei-due-' + i.id + '" type="date" title="Due date" value="' + esc2(i.due_date || '') + '"/>' +
+      '<input class="tx-in sm" id="ei-exgst-' + i.id + '" type="number" step="0.01" placeholder="Ex-GST $" value="' + num(i.amount_ex_gst) + '"/>' +
+      '<input class="tx-in sm" id="ei-gst-' + i.id + '" type="number" step="0.01" placeholder="GST $" value="' + num(i.gst_amount) + '"/>' +
+      '<select class="tx-in sm" id="ei-status-' + i.id + '">' + ['sent', 'draft', 'paid'].map(o => '<option value="' + o + '"' + (o === i.status ? ' selected' : '') + '>' + o.charAt(0).toUpperCase() + o.slice(1) + '</option>').join('') + '</select>' +
+      '<button class="tx-btn solid" onclick="Tax.saveInvoice(' + i.id + ')">Save</button>' +
+      '<button class="tx-btn" onclick="Tax.cancelEdit()">Cancel</button>' +
+      '</div></td></tr>';
   }
   function invoiceAddRow() {
     const entSel = S.current === 'all' ? entSelect('ni-ent') : '';
@@ -302,6 +333,7 @@
       '<th>Description</th>' + (S.current === 'all' ? '<th>Entity</th>' : '') + '<th>Category</th><th>Date</th><th class="num">Ex-GST</th><th class="num">GST</th><th></th></tr></thead><tbody>';
     if (!rows.length) body += '<tr><td colspan="7" class="tx-empty">No expenses logged this FY.</td></tr>';
     rows.forEach(e => {
+      if (S.editExp === e.id) { body += expenseEditRow(e); return; }
       body += '<tr>' +
         '<td><b>' + esc2(e.description || '—') + '</b>' + (e.deductible ? '' : ' <span class="tx-chip">non-deductible</span>') + (e.recurring_id ? ' <span class="tx-chip recur" title="Repeats monthly — click to stop future ones" onclick="Tax.stopRecurring(' + e.recurring_id + ')">🔁 monthly</span>' : '') + '</td>' +
         (S.current === 'all' ? '<td class="muted">' + esc2(entName(e.entity_id)) + '</td>' : '') +
@@ -309,11 +341,23 @@
         '<td class="muted">' + fmtD(e.expense_date) + '</td>' +
         '<td class="num">' + money2(e.amount_ex_gst) + '</td>' +
         '<td class="num">' + money2(e.gst_amount) + '</td>' +
-        '<td class="num"><button class="tx-btn mini danger" onclick="Tax.delExpense(' + e.id + ')">✕</button></td>' +
+        '<td class="num"><button class="tx-btn mini" onclick="Tax.editExpense(' + e.id + ')">✎</button> <button class="tx-btn mini danger" onclick="Tax.delExpense(' + e.id + ')">✕</button></td>' +
         '</tr>';
     });
     body += '</tbody></table>' + expenseAddRow() + '</div>';
-    return section('Expenses', 'drives GST credits + deductions', body);
+    return section('Expenses', 'drives GST credits + deductions · ✎ to edit', body);
+  }
+  function expenseEditRow(e) {
+    return '<tr class="tx-editrow"><td colspan="20"><div class="tx-addrow">' + (S.current === 'all' ? entSelect('ee-ent-' + e.id) : '') +
+      '<input class="tx-in grow" id="ee-desc-' + e.id + '" placeholder="Description" value="' + esc2(e.description || '') + '"/>' +
+      '<input class="tx-in md" id="ee-cat-' + e.id + '" placeholder="Category" list="tx-cat-list" value="' + esc2(e.category || '') + '"/>' +
+      '<input class="tx-in md" id="ee-date-' + e.id + '" type="date" value="' + esc2(e.expense_date || '') + '"/>' +
+      '<input class="tx-in sm" id="ee-exgst-' + e.id + '" type="number" step="0.01" placeholder="Ex-GST $" value="' + num(e.amount_ex_gst) + '"/>' +
+      '<input class="tx-in sm" id="ee-gst-' + e.id + '" type="number" step="0.01" placeholder="GST $" value="' + num(e.gst_amount) + '"/>' +
+      '<label class="tx-check"><input type="checkbox" id="ee-ded-' + e.id + '"' + (e.deductible ? ' checked' : '') + '/> deductible</label>' +
+      '<button class="tx-btn solid" onclick="Tax.saveExpense(' + e.id + ')">Save</button>' +
+      '<button class="tx-btn" onclick="Tax.cancelEdit()">Cancel</button>' +
+      '</div></td></tr>';
   }
   function expenseAddRow() {
     const entSel = S.current === 'all' ? entSelect('ne-ent') : '';
@@ -338,6 +382,7 @@
       '<th>Date</th>' + (S.current === 'all' ? '<th>Entity</th>' : '') + '<th>Note</th><th class="num">Gross</th><th class="num">PAYG w/h</th><th class="num">Super</th><th></th></tr></thead><tbody>';
     if (!rows.length) body += '<tr><td colspan="7" class="tx-empty">No wage/drawing runs logged. Variable pay — add each run as it happens.</td></tr>';
     rows.forEach(w => {
+      if (S.editWage === w.id) { body += wageEditRow(w); return; }
       body += '<tr>' +
         '<td class="muted">' + fmtD(w.pay_date) + '</td>' +
         (S.current === 'all' ? '<td class="muted">' + esc2(entName(w.entity_id)) + '</td>' : '') +
@@ -345,12 +390,23 @@
         '<td class="num">' + money2(w.gross) + '</td>' +
         '<td class="num">' + money2(w.paygw) + '</td>' +
         '<td class="num">' + money2(w.super_amt) + '</td>' +
-        '<td class="num"><button class="tx-btn mini danger" onclick="Tax.delWage(' + w.id + ')">✕</button></td>' +
+        '<td class="num"><button class="tx-btn mini" onclick="Tax.editWage(' + w.id + ')">✎</button> <button class="tx-btn mini danger" onclick="Tax.delWage(' + w.id + ')">✕</button></td>' +
         '</tr>';
     });
     if (rows.length) body += '<tr><td class="muted" ' + (S.current === 'all' ? 'colspan="3"' : 'colspan="2"') + '><b>Total</b></td><td class="num"><b>' + money2(totG) + '</b></td><td class="num"><b>' + money2(totP) + '</b></td><td class="num"><b>' + money2(totS) + '</b></td><td></td></tr>';
     body += '</tbody></table>' + wageAddRow() + '</div>';
-    return section('Director pay / drawings', 'variable — log each run manually', body);
+    return section('Director pay / drawings', 'variable — log each run manually · ✎ to edit', body);
+  }
+  function wageEditRow(w) {
+    return '<tr class="tx-editrow"><td colspan="20"><div class="tx-addrow">' + (S.current === 'all' ? entSelect('ew-ent-' + w.id) : '') +
+      '<input class="tx-in md" id="ew-date-' + w.id + '" type="date" value="' + esc2(w.pay_date || '') + '"/>' +
+      '<input class="tx-in grow" id="ew-note-' + w.id + '" placeholder="Note (optional)" value="' + esc2(w.notes || '') + '"/>' +
+      '<input class="tx-in sm" id="ew-gross-' + w.id + '" type="number" step="0.01" placeholder="Gross $" value="' + num(w.gross) + '"/>' +
+      '<input class="tx-in sm" id="ew-payg-' + w.id + '" type="number" step="0.01" placeholder="PAYG $" value="' + num(w.paygw) + '"/>' +
+      '<input class="tx-in sm" id="ew-super-' + w.id + '" type="number" step="0.01" placeholder="Super $" value="' + num(w.super_amt) + '"/>' +
+      '<button class="tx-btn solid" onclick="Tax.saveWage(' + w.id + ')">Save</button>' +
+      '<button class="tx-btn" onclick="Tax.cancelEdit()">Cancel</button>' +
+      '</div></td></tr>';
   }
   function wageAddRow() {
     const entSel = S.current === 'all' ? entSelect('nw-ent') : '';
@@ -365,40 +421,50 @@
   }
 
   // ── Super contributions ──────────────────────────────────────────────
+  // Income base for the super target differs by entity type:
+  //  - sole trader (Beets & Co): no compulsory SG on yourself — the meaningful base is
+  //    invoiced income you've actually been paid, since that's what a personal deductible
+  //    contribution is calculated against.
+  //  - company (Here & Now): SG is a legal obligation on wages paid to a director/employee,
+  //    so the base stays gross wages from Director pay / drawings.
   function defaultSuperRate(ent) { return (ent && ent.super_rate_pct != null && ent.super_rate_pct !== '') ? num(ent.super_rate_pct) : 12; }
   function monthLabel(ym) { const parts = ym.split('-').map(Number); return new Date(parts[0], parts[1] - 1, 1).toLocaleDateString('en-AU', { month: 'short', year: 'numeric' }); }
+  function isSoleTrader(ent) { return ent && ent.entity_type === 'sole_trader'; }
+  function superBaseRows(id) {
+    const ent = S.entities.find(e => e.id === id);
+    if (isSoleTrader(ent)) return S.invoices.filter(i => i.entity_id === id && i.status === 'paid').map(i => ({ date: i.paid_date, amt: num(i.amount_ex_gst) }));
+    return S.wages.filter(w => w.entity_id === id).map(w => ({ date: w.pay_date, amt: num(w.gross) }));
+  }
+  function superBaseLabel(ent) { return isSoleTrader(ent) ? 'income invoiced & paid' : 'gross wages'; }
 
   function superSection() {
     const ids = entIds();
-    let totGross = 0, totPaid = 0, totReq = 0;
+    let totBase = 0, totPaid = 0, totReq = 0;
     ids.forEach(id => {
       const ent = S.entities.find(e => e.id === id);
       const rate = defaultSuperRate(ent);
-      const rows = S.wages.filter(w => w.entity_id === id);
-      const gross = rows.reduce((s, w) => s + num(w.gross), 0);
-      const paid = rows.reduce((s, w) => s + num(w.super_amt), 0);
-      totGross += gross; totPaid += paid; totReq += round2(gross * rate / 100);
+      const base = superBaseRows(id).reduce((s, r) => s + r.amt, 0);
+      const paid = S.wages.filter(w => w.entity_id === id).reduce((s, w) => s + num(w.super_amt), 0);
+      totBase += base; totPaid += paid; totReq += round2(base * rate / 100);
     });
     const variance = round2(totPaid - totReq);
-    const rateNote = ids.length > 1 ? 'at each entity\'s target rate' : defaultSuperRate(S.entities.find(e => e.id === ids[0])) + '% of gross wages logged';
+    const mixedBase = ids.length > 1 && new Set(ids.map(id => superBaseLabel(S.entities.find(e => e.id === id)))).size > 1;
+    const baseLabel = mixedBase ? 'income base' : superBaseLabel(S.entities.find(e => e.id === ids[0]));
+    const rateNote = ids.length > 1 ? 'at each entity\'s target rate' : defaultSuperRate(S.entities.find(e => e.id === ids[0])) + '% of ' + baseLabel;
 
     const cardsHtml = '<div class="tx-cards">' +
       card('', 'Super paid (FY)', money(totPaid), 'actual payments logged in Director pay / drawings below') +
-      card('', 'Super required (FY)', money(totReq), rateNote + ' · ' + money(totGross) + ' gross wages') +
+      card('', 'Super required (FY)', money(totReq), rateNote + ' · ' + money(totBase) + ' ' + baseLabel) +
       card('', variance >= 0 ? 'Ahead' : 'Behind target', money(Math.abs(variance)), variance >= 0 ? 'paid more than the target so far' : 'still needed to hit the target', variance >= 0 ? 'neg' : 'pos') +
       '</div>';
 
-    // Monthly breakdown, grouped by pay month
+    // Monthly breakdown — base rows keyed by their own date (invoice paid_date for sole
+    // traders, wage pay_date for companies), super paid always keyed by wage pay_date.
     const monthly = {};
+    function bucket(key, id) { monthly[key] = monthly[key] || {}; monthly[key][id] = monthly[key][id] || { base: 0, paid: 0 }; return monthly[key][id]; }
     ids.forEach(id => {
-      S.wages.filter(w => w.entity_id === id).forEach(w => {
-        if (!w.pay_date) return;
-        const key = w.pay_date.slice(0, 7);
-        monthly[key] = monthly[key] || {};
-        monthly[key][id] = monthly[key][id] || { gross: 0, paid: 0 };
-        monthly[key][id].gross += num(w.gross);
-        monthly[key][id].paid += num(w.super_amt);
-      });
+      superBaseRows(id).forEach(r => { if (r.date) bucket(r.date.slice(0, 7), id).base += r.amt; });
+      S.wages.filter(w => w.entity_id === id).forEach(w => { if (w.pay_date) bucket(w.pay_date.slice(0, 7), id).paid += num(w.super_amt); });
     });
     const months = Object.keys(monthly).sort();
     let rowsHtml = '';
@@ -407,26 +473,51 @@
         const m = monthly[mo][id]; if (!m) return;
         const ent = S.entities.find(e => e.id === id);
         const rate = defaultSuperRate(ent);
-        const req = round2(m.gross * rate / 100);
+        const req = round2(m.base * rate / 100);
         const varc = round2(m.paid - req);
         rowsHtml += '<tr>' +
           '<td class="muted">' + monthLabel(mo) + '</td>' +
           (ids.length > 1 ? '<td class="muted">' + esc2(entName(id)) + '</td>' : '') +
-          '<td class="num">' + money2(m.gross) + '</td>' +
+          '<td class="num">' + money2(m.base) + '</td>' +
           '<td class="num">' + money2(req) + '</td>' +
           '<td class="num">' + money2(m.paid) + '</td>' +
           '<td class="num ' + (varc < 0 ? 'neg-behind' : 'pos-ahead') + '">' + money2(varc) + '</td>' +
           '</tr>';
       });
     });
-    if (!rowsHtml) rowsHtml = '<tr><td colspan="' + (ids.length > 1 ? 6 : 5) + '" class="tx-empty">No pay runs logged yet — add gross wages in Director pay / drawings below and super targets will show here.</td></tr>';
+    if (!rowsHtml) rowsHtml = '<tr><td colspan="' + (ids.length > 1 ? 6 : 5) + '" class="tx-empty">Nothing logged yet — paid invoices (sole trader) or gross wages (company) will show here once entered.</td></tr>';
 
     const table = '<div class="tx-table-wrap"><table class="tx-table"><thead><tr>' +
-      '<th>Month</th>' + (ids.length > 1 ? '<th>Entity</th>' : '') + '<th class="num">Gross wages</th><th class="num">Super required</th><th class="num">Super paid</th><th class="num">Variance</th>' +
+      '<th>Month</th>' + (ids.length > 1 ? '<th>Entity</th>' : '') + '<th class="num">' + (mixedBase ? 'Income base' : (baseLabel === 'gross wages' ? 'Gross wages' : 'Income paid')) + '</th><th class="num">Super required</th><th class="num">Super paid</th><th class="num">Variance</th>' +
       '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
 
-    const body = cardsHtml + superRatesRow() + table;
-    return section('Super contributions', 'target = gross wages logged below × rate, per entity — set aside monthly to stay on track', body);
+    const body = cardsHtml + superTaxNote(ids) + superRatesRow() + table;
+    return section('Super contributions', 'Beets & Co target = invoiced income you\'ve been paid × rate (sole trader, no compulsory SG on yourself) · Here & Now target = gross wages × rate (company SG obligation)', body);
+  }
+
+  // Personal deductible super contributions (sole trader entities only): taxed at a flat 15%
+  // inside the fund instead of your income-tax reserve rate, up to the concessional cap —
+  // and only once a notice of intent to claim has been lodged with and acknowledged by the fund.
+  function superTaxNote(ids) {
+    const soleIds = ids.filter(id => isSoleTrader(S.entities.find(e => e.id === id)));
+    if (!soleIds.length) return '';
+    const cap = concessionalCap();
+    let html = soleIds.map(id => {
+      const ent = S.entities.find(e => e.id === id);
+      const paid = S.wages.filter(w => w.entity_id === id).reduce((s, w) => s + num(w.super_amt), 0);
+      const capped = Math.min(paid, cap);
+      const over = round2(Math.max(paid - cap, 0));
+      const marginal = num(ent.reserve_pct);
+      const saved = marginal > 15 ? round2(capped * (marginal - 15) / 100) : 0;
+      return '<div class="tx-action"><span class="tx-action-ic">🏦</span><div>' +
+        '<b>' + esc2(ent.name) + '</b> — as a sole trader you can claim personal super contributions as a tax deduction (lodge a "notice of intent to claim a deduction" with your fund and get it acknowledged before you lodge your return). ' +
+        'Inside the fund, deductible contributions are taxed at a flat <b>15%</b> — not your ~' + (marginal || '—') + '% reserve rate — so this genuinely lowers what you owe, up to the cap. ' +
+        money(capped) + ' of ' + money(paid) + ' contributed this ' + fyLabel + ' counts toward the ' + money(cap) + ' concessional cap' +
+        (over > 0 ? ' (' + money(over) + ' is over the cap — excess isn\'t concessional and gets taxed at your marginal rate instead, so it\'s worth pulling contributions back under the cap where you can)' : '') + '.' +
+        (saved > 0 ? ' Estimated tax saved so far this FY: <b>' + money(saved) + '</b> — already reflected in the “Set aside for tax” card above.' : '') +
+        '</div></div>';
+    }).join('');
+    return '<div class="tx-actions" style="margin:0 0 14px;">' + html + '</div>';
   }
 
   function superRatesRow() {
@@ -469,6 +560,21 @@
     },
     async delInvoice(id) { try { await sbApi('tax_invoices', '?id=eq.' + id, 'DELETE'); S.invoices = S.invoices.filter(x => x.id !== id); render(); notify('Invoice deleted'); } catch (e) { notify('Failed: ' + e.message, true); } },
 
+    cancelEdit() { S.editInv = null; S.editExp = null; S.editWage = null; render(); },
+    editInvoice(id) { S.editInv = id; S.editExp = null; S.editWage = null; render(); },
+    async saveInvoice(id) {
+      const entity = S.current === 'all' ? (val('ei-ent-' + id) || (S.entities[0] && S.entities[0].id)) : S.current;
+      const status = val('ei-status-' + id) || 'sent';
+      const existing = S.invoices.find(x => x.id === id) || {};
+      const patch = {
+        entity_id: entity, client: val('ei-client-' + id) || null, invoice_number: val('ei-num-' + id) || null,
+        issue_date: val('ei-issue-' + id) || null, due_date: val('ei-due-' + id) || null,
+        amount_ex_gst: round2(num(val('ei-exgst-' + id))), gst_amount: round2(num(val('ei-gst-' + id))),
+        status, paid_date: status === 'paid' ? (existing.paid_date || todayISO()) : null
+      };
+      try { await sbApi('tax_invoices', '?id=eq.' + id, 'PATCH', patch); notify('Invoice updated'); S.editInv = null; await reloadAndRender(); } catch (e) { notify('Failed: ' + e.message, true); }
+    },
+
     async addExpense() {
       const entity = pickEntity('ne-ent'); const amt = val('ne-amt');
       if (!num(amt)) return notify('Enter an amount', true);
@@ -490,6 +596,17 @@
       } catch (e) { notify('Failed: ' + e.message, true); }
     },
     async delExpense(id) { try { await sbApi('tax_expenses', '?id=eq.' + id, 'DELETE'); S.expenses = S.expenses.filter(x => x.id !== id); render(); notify('Expense deleted'); } catch (e) { notify('Failed: ' + e.message, true); } },
+
+    editExpense(id) { S.editExp = id; S.editInv = null; S.editWage = null; render(); },
+    async saveExpense(id) {
+      const entity = S.current === 'all' ? (val('ee-ent-' + id) || (S.entities[0] && S.entities[0].id)) : S.current;
+      const patch = {
+        entity_id: entity, description: val('ee-desc-' + id) || null, category: val('ee-cat-' + id) || null,
+        expense_date: val('ee-date-' + id) || null, amount_ex_gst: round2(num(val('ee-exgst-' + id))),
+        gst_amount: round2(num(val('ee-gst-' + id))), deductible: checked('ee-ded-' + id)
+      };
+      try { await sbApi('tax_expenses', '?id=eq.' + id, 'PATCH', patch); notify('Expense updated'); S.editExp = null; await reloadAndRender(); } catch (e) { notify('Failed: ' + e.message, true); }
+    },
     async stopRecurring(id) {
       if (!confirm('Stop this recurring expense? Past entries stay — future ones will no longer be added automatically.')) return;
       try { await sbApi('tax_recurring_expenses', '?id=eq.' + id, 'PATCH', { active: false }); S.recurring = S.recurring.filter(r => r.id !== id); render(); notify('Recurring expense stopped'); } catch (e) { notify('Failed: ' + e.message, true); }
@@ -502,6 +619,16 @@
       try { await sbApi('tax_wages', '', 'POST', row); notify('Pay run added'); await reloadAndRender(); } catch (e) { notify('Failed: ' + e.message, true); }
     },
     async delWage(id) { try { await sbApi('tax_wages', '?id=eq.' + id, 'DELETE'); S.wages = S.wages.filter(x => x.id !== id); render(); notify('Deleted'); } catch (e) { notify('Failed: ' + e.message, true); } },
+
+    editWage(id) { S.editWage = id; S.editInv = null; S.editExp = null; render(); },
+    async saveWage(id) {
+      const entity = S.current === 'all' ? (val('ew-ent-' + id) || (S.entities[0] && S.entities[0].id)) : S.current;
+      const patch = {
+        entity_id: entity, pay_date: val('ew-date-' + id) || null, notes: val('ew-note-' + id) || null,
+        gross: round2(num(val('ew-gross-' + id))), paygw: round2(num(val('ew-payg-' + id))), super_amt: round2(num(val('ew-super-' + id)))
+      };
+      try { await sbApi('tax_wages', '?id=eq.' + id, 'PATCH', patch); notify('Pay run updated'); S.editWage = null; await reloadAndRender(); } catch (e) { notify('Failed: ' + e.message, true); }
+    },
 
     async setBasStatus(id, status) {
       const patch = { status, lodged_date: (status === 'lodged' || status === 'paid') ? todayISO() : null };
