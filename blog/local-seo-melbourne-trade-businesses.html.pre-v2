@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="an ln init xn Cn Br kn In capture Fn nn calculateEventProperties On register register_once register_for_session unregister unregister_for_session Ln getFeatureFlag getFeatureFlagPayload getFeatureFlagResult getAllFeatureFlags isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Dn identify setPersonProperties unsetPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset shutdown setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty An Rn createPersonProfile setInternalOrTestUser $n yn jn opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Tn debug Ur Rt getPageViewId captureTraceFeedback captureTraceMetric pn".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_x9qBCQJXRmXWkGYen6VuX5Dppb2UTLF5rfYPnLAFZp65', {
+        api_host: 'https://us.i.posthog.com',
+        defaults: '2026-05-30',
+        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+    })
+    </script>
+
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Local SEO for Melbourne Trade Businesses | Beets &amp; Co</title>
+<meta name="description" content="A practical guide to local SEO for Melbourne trade businesses. Get your Google Business Profile right, build suburb-specific pages, and rank where it counts."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://beetsandco.com.au/blog/local-seo-melbourne-trade-businesses.html"/>
+<meta property="og:title" content="Local SEO for Melbourne Trade Businesses | Beets &amp; Co"/>
+<meta property="og:description" content="Practical local SEO: Google Business Profile, on-page optimisation, suburb landing pages, and citations — for Melbourne tradies."/>
+<meta property="og:type" content="article"/>
+<meta property="og:url" content="https://beetsandco.com.au/blog/local-seo-melbourne-trade-businesses.html"/>
+<meta property="og:locale" content="en_AU"/>
+<meta property="og:image" content="https://beetsandco.com.au/images/beets.webp"/>
+<meta property="og:image:alt" content="Michael Beets — Founder &amp; Director, Beets &amp; Co"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://beetsandco.com.au/images/beets.webp"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Local SEO for Melbourne Trade Businesses",
+  "description": "A practical guide to local SEO for Melbourne trade businesses — GBP, on-page SEO, suburb pages, reviews and citations.",
+  "author": {"@type": "Person", "name": "Michael Beets"},
+  "publisher": {"@type": "Organization", "name": "Beets & Co", "url": "https://beetsandco.com.au"},
+  "datePublished": "2025-07-01",
+  "dateModified": "2026-06-22",
+  "url": "https://beetsandco.com.au/blog/local-seo-melbourne-trade-businesses.html",
+  "keywords": ["local SEO Melbourne tradies", "Google Business Profile Melbourne", "local SEO trade business", "tradie SEO Melbourne", "suburb SEO Melbourne"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://beetsandco.com.au/"},
+    {"@type": "ListItem", "position": 2, "name": "Journal", "item": "https://beetsandco.com.au/blog/"},
+    {"@type": "ListItem", "position": 3, "name": "Local SEO for Melbourne Trade Businesses", "item": "https://beetsandco.com.au/blog/local-seo-melbourne-trade-businesses.html"}
+  ]
+}
+</script>
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon-16x16.png">
+<link rel="manifest" href="../images/favicon/site.webmanifest">
+<link rel="shortcut icon" href="../images/favicon/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#FBFBF9;color:#1C1B17;font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-size:17px;line-height:1.6}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+p{margin:0}
+h2,h3{margin:0}
+::selection{background:#C24B33;color:#fff}
+.bc-nav-link{transition:color .2s}
+.bc-nav-link:hover{color:#1C1B17}
+.bc-footer-link{transition:color .2s}
+.bc-footer-link:hover{color:#E6D9C2}
+.bc-cta-arrow{transition:gap .2s}
+.bc-cta-arrow:hover{gap:18px !important}
+@media(max-width:900px){
+  .bc-two-col{grid-template-columns:1fr !important}
+  .bc-three-col{grid-template-columns:1fr !important}
+  .bc-nav-links{display:none}
+}
+@media(max-width:640px){
+  [style*="padding:0 40px"]{padding-left:20px!important;padding-right:20px!important}
+}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-29SKC7VN4C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-29SKC7VN4C');
+</script>
+<script>
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-ga-event]');
+  if (t && typeof gtag === 'function') {
+    gtag('event', t.getAttribute('data-ga-event'), {
+      event_category: 'engagement',
+      event_label: (t.textContent || '').trim()
+    });
+  }
+});
+</script>
+<style>@media(max-width:900px){.bc-nav-links{display:none !important}.bc-menu-btn{display:flex !important}}</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header style="position:sticky;top:0;z-index:90;background:rgba(251,251,249,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(28,27,23,.10)">
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <a href="../index.html" style="font-family:'Archivo';font-weight:800;font-size:21px;letter-spacing:-.03em;display:flex;align-items:center;gap:1px">Beets <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33;padding:0 3px">&amp;</span> Co</a>
+    <nav class="bc-nav-links" style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;justify-content:flex-end">
+      <a href="../index.html#crowncon" class="bc-nav-link" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(28,27,23,.62)">Work</a>
+      <a href="../index.html#services" class="bc-nav-link" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(28,27,23,.62)">Studio</a>
+      <a href="../index.html#about" class="bc-nav-link" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(28,27,23,.62)">About</a>
+      <a href="../index.html#apply" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#C24B33;display:inline-flex;align-items:center;gap:7px;border-bottom:1.5px solid #C24B33;padding-bottom:3px">Get in touch
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+      </a>
+    </nav>
+    <button id="bc-menu-btn" class="bc-menu-btn" onclick="bcToggleMenu()" aria-label="Open menu" style="display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;margin:-8px;flex-shrink:0">
+      <span style="display:block;width:24px;height:2px;background:#1C1B17;transition:transform .25s,opacity .25s;transform-origin:center"></span>
+      <span style="display:block;width:24px;height:2px;background:#1C1B17;transition:opacity .25s"></span>
+      <span style="display:block;width:16px;height:2px;background:#1C1B17;transition:transform .25s,width .25s;transform-origin:center"></span>
+    </button>
+  </div>
+</header>
+<div id="bc-mobile-menu" style="display:none;position:fixed;top:73px;left:0;right:0;bottom:0;z-index:98;background:#FBFBF9;overflow-y:auto">
+  <div style="padding:40px 32px 48px">
+    <nav style="display:flex;flex-direction:column">
+      <a href="../index.html#crowncon" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Work</a>
+      <a href="../index.html#services" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Studio</a>
+      <a href="../index.html#about" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">About</a>
+      <a href="/blog/" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Journal</a>
+      <a href="../index.html#apply" onclick="bcCloseMenu()" style="font-family:'Archivo';font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#C24B33;display:inline-flex;align-items:center;gap:12px;padding:24px 0 0" data-ga-event="start_conversation">Start a conversation <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+    </nav>
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(28,27,23,.1)">
+      <a href="mailto:michael@beetsandco.com.au" style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,27,23,.45)">michael@beetsandco.com.au</a>
+    </div>
+  </div>
+</div>
+
+<!-- POST HERO -->
+<section style="padding:64px 0 72px">
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:#C24B33;padding:6px 11px">SEO</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,27,23,.5)">7 min read · Greater Melbourne</span>
+    </div>
+    <h1 style="font-family:'Archivo';font-weight:800;font-size:clamp(38px,6.6vw,98px);line-height:.92;letter-spacing:-.04em;margin:28px 0 0;max-width:18ch">Local SEO that <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">actually works.</span></h1>
+    <p style="max-width:62ch;font-size:20px;line-height:1.55;color:#46443c;margin:30px 0 0">A practical guide to ranking in your Melbourne suburbs — covering Google Business Profile, on-page SEO, reviews as a ranking signal, and the citation directories that actually matter.</p>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:36px;padding-top:26px;border-top:1px solid rgba(28,27,23,.14)">
+      <span style="width:44px;height:44px;border-radius:50%;background:#123528;color:#E6D9C2;display:grid;place-items:center;font-family:'Archivo';font-weight:800;font-size:17px">M</span>
+      <div>
+        <div style="font-family:'Archivo';font-weight:700;font-size:15.5px">Michael Beets</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:rgba(28,27,23,.5);margin-top:3px">Founder &amp; Director, Beets &amp; Co</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ARTICLE BODY -->
+<article style="padding:30px 0 40px;border-top:1px solid rgba(28,27,23,.14)">
+  <div style="max-width:760px;margin:0 auto;padding:60px 40px 0">
+
+    <p style="font-size:18px;line-height:1.75;color:#46443c">Most Melbourne tradies know they should be doing SEO. They've heard it matters. They might even be paying for it. But few understand what actually drives rankings for a local service business — and why so much of what's sold as "SEO" doesn't move the needle.</p>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">Local SEO is different from general SEO. You're not trying to rank globally — you're trying to be the first plumber, builder, or electrician that appears when someone in Cheltenham or Mordialloc types "near me." That has a specific set of levers. Here's what they are.</p>
+
+    <p style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;font-size:clamp(23px,2.8vw,32px);line-height:1.4;color:#1C1B17;margin:44px 0;border-left:2px solid #C24B33;padding-left:26px">Local SEO is about <span style="color:#C24B33">being found</span> when someone in your suburb is ready to spend money — not just about ranking for broad keywords.</p>
+
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.6vw,46px);line-height:1.02;letter-spacing:-.035em;margin:56px 0 0">Google Business <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">Profile</span></h2>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">Your Google Business Profile is the single most important local SEO asset you have. It's the listing that appears in Google Maps and the local pack — above the regular organic results. Most tradies set it up once and ignore it. That's a significant missed opportunity.</p>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">Six things that matter on your GBP:</p>
+    <div style="margin-top:24px;border-top:1px solid rgba(28,27,23,.12)">
+      <div style="padding:22px 0;border-bottom:1px solid rgba(28,27,23,.08)"><b style="font-weight:700;color:#1C1B17;display:block;margin-bottom:6px">Primary category</b><span style="font-size:16px;line-height:1.6;color:#46443c">This is the most important field. Pick the most specific relevant category — "Plumber" is better than "Tradesperson", "Custom Home Builder" is better than "General Contractor". Add secondary categories where genuinely relevant.</span></div>
+      <div style="padding:22px 0;border-bottom:1px solid rgba(28,27,23,.08)"><b style="font-weight:700;color:#1C1B17;display:block;margin-bottom:6px">Service area</b><span style="font-size:16px;line-height:1.6;color:#46443c">Add every suburb where you actually work. For Melbourne tradies this might be 10–20 suburbs across Bayside, the south-east, or wherever you operate. Don't add suburbs you don't serve — it dilutes your signals.</span></div>
+      <div style="padding:22px 0;border-bottom:1px solid rgba(28,27,23,.08)"><b style="font-weight:700;color:#1C1B17;display:block;margin-bottom:6px">Business description</b><span style="font-size:16px;line-height:1.6;color:#46443c">Write 200–300 words. Include your main services, the Melbourne suburbs you serve, and a few specific details about your work. Don't keyword-stuff — write it to be read by a real person.</span></div>
+      <div style="padding:22px 0;border-bottom:1px solid rgba(28,27,23,.08)"><b style="font-weight:700;color:#1C1B17;display:block;margin-bottom:6px">Photos</b><span style="font-size:16px;line-height:1.6;color:#46443c">Upload real job photos regularly — completed work, the team, the vehicle. Profiles with photos get significantly more clicks and direction requests. Aim for 20+ photos over time.</span></div>
+      <div style="padding:22px 0;border-bottom:1px solid rgba(28,27,23,.08)"><b style="font-weight:700;color:#1C1B17;display:block;margin-bottom:6px">Posts</b><span style="font-size:16px;line-height:1.6;color:#46443c">Post at least fortnightly. Job completions, seasonal tips, service announcements. Active profiles rank better than dormant ones — it signals to Google that you're an operating business.</span></div>
+      <div style="padding:22px 0;border-bottom:1px solid rgba(28,27,23,.08)"><b style="font-weight:700;color:#1C1B17;display:block;margin-bottom:6px">Reviews</b><span style="font-size:16px;line-height:1.6;color:#46443c">Reviews are a direct ranking signal in local SEO. Volume, recency, and owner response rate all matter. 40+ reviews with regular new additions puts you ahead of most Melbourne trade competitors.</span></div>
+    </div>
+
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.6vw,46px);line-height:1.02;letter-spacing:-.035em;margin:56px 0 0">On-page SEO: <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">five essentials</span></h2>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">Your website and your GBP need to work together. Google looks for consistency between them. Here's what to get right on the website side:</p>
+    <div style="margin-top:24px;border-top:1px solid rgba(28,27,23,.12)">
+      <div style="padding:28px 0;border-bottom:1px solid rgba(28,27,23,.08);display:grid;grid-template-columns:52px 1fr;gap:20px">
+        <div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:rgba(28,27,23,.3);padding-top:4px">01</div>
+        <div>
+          <h4 style="font-family:'Archivo';font-weight:700;font-size:19px;letter-spacing:-.02em;margin:0 0 10px">Title tag that includes your service and location</h4>
+          <p style="font-size:17px;line-height:1.7;color:#46443c">Format: "[Service] [Suburb/City] | [Business Name]". Example: "Plumber Cheltenham | South East Plumbing." This is still one of the highest-weight on-page signals for local search.</p>
+        </div>
+      </div>
+      <div style="padding:28px 0;border-bottom:1px solid rgba(28,27,23,.08);display:grid;grid-template-columns:52px 1fr;gap:20px">
+        <div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:rgba(28,27,23,.3);padding-top:4px">02</div>
+        <div>
+          <h4 style="font-family:'Archivo';font-weight:700;font-size:19px;letter-spacing:-.02em;margin:0 0 10px">H1 that mirrors your title tag</h4>
+          <p style="font-size:17px;line-height:1.7;color:#46443c">Don't be clever with the H1. It should clearly state what you do and where. "Plumber in Cheltenham &amp; Mentone — No-Callout-Fee." Clarity beats creativity here.</p>
+        </div>
+      </div>
+      <div style="padding:28px 0;border-bottom:1px solid rgba(28,27,23,.08);display:grid;grid-template-columns:52px 1fr;gap:20px">
+        <div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:rgba(28,27,23,.3);padding-top:4px">03</div>
+        <div>
+          <h4 style="font-family:'Archivo';font-weight:700;font-size:19px;letter-spacing:-.02em;margin:0 0 10px">Service area copy on every relevant page</h4>
+          <p style="font-size:17px;line-height:1.7;color:#46443c">Mention your suburbs naturally in the page body. "We work across Cheltenham, Mentone, Parkdale, Mordialloc, and surrounding Bayside suburbs." Not forced — written for the reader who wants to know if you service their area.</p>
+        </div>
+      </div>
+      <div style="padding:28px 0;border-bottom:1px solid rgba(28,27,23,.08);display:grid;grid-template-columns:52px 1fr;gap:20px">
+        <div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:rgba(28,27,23,.3);padding-top:4px">04</div>
+        <div>
+          <h4 style="font-family:'Archivo';font-weight:700;font-size:19px;letter-spacing:-.02em;margin:0 0 10px">LocalBusiness schema markup</h4>
+          <p style="font-size:17px;line-height:1.7;color:#46443c">Structured data tells Google explicitly what your business is, where it operates, and what services it offers. Use the LocalBusiness schema (or a more specific type like Plumber, ElectricalContractor) on your homepage and any key service pages.</p>
+        </div>
+      </div>
+      <div style="padding:28px 0;border-bottom:1px solid rgba(28,27,23,.08);display:grid;grid-template-columns:52px 1fr;gap:20px">
+        <div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:rgba(28,27,23,.3);padding-top:4px">05</div>
+        <div>
+          <h4 style="font-family:'Archivo';font-weight:700;font-size:19px;letter-spacing:-.02em;margin:0 0 10px">NAP consistency</h4>
+          <p style="font-size:17px;line-height:1.7;color:#46443c">Your Name, Address, and Phone number should be identical — character for character — across your website, GBP, and every directory listing. "St" vs "Street" is enough to introduce inconsistency. Pick one format and use it everywhere.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.6vw,46px);line-height:1.02;letter-spacing:-.035em;margin:56px 0 0">Reviews as a <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">ranking signal</span></h2>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">Google has confirmed reviews as a local ranking factor. Volume, velocity, and recency all play a role. A Melbourne plumber with 60 reviews and 3 new ones per month will outrank an equally well-optimised competitor with 15 reviews and no new ones coming in.</p>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">Owner responses also matter — they signal an engaged, active business. Set a reminder to check and respond to reviews weekly. It takes 10 minutes and signals activity to Google.</p>
+
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.6vw,46px);line-height:1.02;letter-spacing:-.035em;margin:56px 0 0">Citations: the <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">directories that matter</span></h2>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">Citations are mentions of your business (name, address, phone) on other websites. They're a local ranking factor — but not all citations are equal. For Melbourne tradies, the ones that move the needle are:</p>
+    <div style="margin-top:24px;background:#F0E9DB;padding:28px 32px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 40px">
+        <span style="font-size:16px;color:#1C1B17;line-height:1.5;display:flex;gap:10px;align-items:baseline"><span style="color:#C24B33;font-weight:700">→</span> Yellow Pages (yellowpages.com.au)</span>
+        <span style="font-size:16px;color:#1C1B17;line-height:1.5;display:flex;gap:10px;align-items:baseline"><span style="color:#C24B33;font-weight:700">→</span> True Local</span>
+        <span style="font-size:16px;color:#1C1B17;line-height:1.5;display:flex;gap:10px;align-items:baseline"><span style="color:#C24B33;font-weight:700">→</span> Hipages</span>
+        <span style="font-size:16px;color:#1C1B17;line-height:1.5;display:flex;gap:10px;align-items:baseline"><span style="color:#C24B33;font-weight:700">→</span> ServiceSeeking</span>
+        <span style="font-size:16px;color:#1C1B17;line-height:1.5;display:flex;gap:10px;align-items:baseline"><span style="color:#C24B33;font-weight:700">→</span> Bing Places</span>
+        <span style="font-size:16px;color:#1C1B17;line-height:1.5;display:flex;gap:10px;align-items:baseline"><span style="color:#C24B33;font-weight:700">→</span> Apple Maps</span>
+        <span style="font-size:16px;color:#1C1B17;line-height:1.5;display:flex;gap:10px;align-items:baseline"><span style="color:#C24B33;font-weight:700">→</span> Facebook Business</span>
+        <span style="font-size:16px;color:#1C1B17;line-height:1.5;display:flex;gap:10px;align-items:baseline"><span style="color:#C24B33;font-weight:700">→</span> Industry directories (Master Builders, HIA)</span>
+      </div>
+    </div>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">The priority isn't to be listed everywhere — it's to ensure the major directories have your correct, consistent information. Check each listing at least once a year for accuracy.</p>
+
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.6vw,46px);line-height:1.02;letter-spacing:-.035em;margin:56px 0 0">The Bayside <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#C24B33">opportunity</span></h2>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">The Bayside corridor — Chelsea, Bonbeach, Carrum, Edithvale, Aspendale, Mordialloc, Mentone, Cheltenham — is an affluent, high-density residential area with enormous demand for trade services and relatively thin local SEO competition. Most tradespeople in this area haven't invested in local SEO at all.</p>
+    <p style="font-size:18px;line-height:1.75;color:#46443c;margin-top:22px">That's an open door. A trade business with a well-optimised GBP, a fast website with suburb-specific pages, and 30+ Google reviews is likely to dominate the local pack in most of these suburbs within 3–6 months — against competitors who are barely trying.</p>
+
+  </div>
+</article>
+
+<!-- CTA -->
+<section style="background:#123528;color:#F4F1E8;padding:110px 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.6)"><span style="color:#E6D9C2">▸</span> &nbsp;Work with me</span>
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(40px,6vw,86px);line-height:.9;letter-spacing:-.045em;margin:24px 0 0">Ready to <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">rank locally.</span></h2>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:36px;margin-top:40px;padding-top:36px;border-top:1px solid rgba(244,241,232,.2)">
+      <p style="max-width:54ch;font-size:18px;line-height:1.6;color:rgba(244,241,232,.72)">I build complete local SEO systems for Melbourne trade businesses — GBP optimisation, website, reviews, schema, citations. Fixed project price. Let's make your phone ring.</p>
+      <a href="../index.html#apply" class="bc-cta-arrow" style="font-family:'Archivo';font-weight:700;font-size:clamp(20px,2.2vw,28px);letter-spacing:-.02em;display:inline-flex;align-items:center;gap:12px;white-space:nowrap;color:#F4F1E8">Get in touch
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#E6D9C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- RELATED -->
+<section style="padding:100px 0">
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)">More from the journal</span>
+    <div style="margin-top:36px;border-top:1px solid rgba(28,27,23,.16)">
+      <a href="web-design-bayside-melbourne-tradies.html" style="display:grid;grid-template-columns:180px minmax(0,1fr) 36px;gap:28px;align-items:baseline;padding:30px 8px;border-bottom:1px solid rgba(28,27,23,.16);transition:padding .25s" onmouseover="this.style.paddingLeft='18px'" onmouseout="this.style.paddingLeft='8px'">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#C24B33">Web Design</span>
+        <h3 style="font-family:'Archivo';font-weight:700;font-size:clamp(19px,2vw,27px);letter-spacing:-.025em;line-height:1.1;margin:0">What Bayside tradie websites actually need</h3>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1C1B17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="justify-self:end"><path d="M7 17L17 7M9 7h8v8"/></svg>
+      </a>
+      <a href="google-reviews-melbourne-trade-business.html" style="display:grid;grid-template-columns:180px minmax(0,1fr) 36px;gap:28px;align-items:baseline;padding:30px 8px;border-bottom:1px solid rgba(28,27,23,.16);transition:padding .25s" onmouseover="this.style.paddingLeft='18px'" onmouseout="this.style.paddingLeft='8px'">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#C24B33">Reviews</span>
+        <h3 style="font-family:'Archivo';font-weight:700;font-size:clamp(19px,2vw,27px);letter-spacing:-.025em;line-height:1.1;margin:0">A five-step system for getting more Google reviews</h3>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1C1B17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="justify-self:end"><path d="M7 17L17 7M9 7h8v8"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#16140E;color:#F4F1E8;padding:80px 0 40px">
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <div class="bc-two-col" style="display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:48px;padding-bottom:44px;border-bottom:1px solid rgba(244,241,232,.16)">
+      <div>
+        <a href="../index.html" style="font-family:'Archivo';font-weight:800;font-size:28px;letter-spacing:-.03em">Beets <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">&amp;</span> Co</a>
+        <p style="max-width:38ch;font-size:15px;line-height:1.6;color:rgba(244,241,232,.66);margin:18px 0 0">A founder-led brand, web and story studio in Bayside Melbourne — for local businesses ready to become the obvious choice.</p>
+      </div>
+      <div>
+        <h5 style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,241,232,.5);margin:0 0 18px;font-weight:400">Studio</h5>
+        <a href="../index.html#services" class="bc-footer-link" style="display:block;font-size:15px;margin-bottom:12px;color:rgba(244,241,232,.85)">What I do</a>
+        <a href="../index.html#crowncon" class="bc-footer-link" style="display:block;font-size:15px;margin-bottom:12px;color:rgba(244,241,232,.85)">Case study</a>
+        <a href="/blog/" class="bc-footer-link" style="display:block;font-size:15px;margin-bottom:12px;color:rgba(244,241,232,.85)">Journal</a>
+      </div>
+      <div>
+        <h5 style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,241,232,.5);margin:0 0 18px;font-weight:400">Get in touch</h5>
+        <a href="../index.html#apply" class="bc-footer-link" style="display:block;font-size:15px;margin-bottom:12px;color:rgba(244,241,232,.85)" data-ga-event="start_conversation">Start a conversation</a>
+        <a href="mailto:michael@beetsandco.com.au" class="bc-footer-link" style="display:block;font-size:15px;margin-bottom:12px;color:rgba(244,241,232,.85)">michael@beetsandco.com.au</a>
+        <span style="display:block;font-size:15px;color:rgba(244,241,232,.5)">Bayside, Melbourne · VIC</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-top:26px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;color:rgba(244,241,232,.5)">
+      <span>© 2026 Beets &amp; Co · Melbourne, VIC, Australia</span>
+      <div style="display:flex;gap:20px">
+        <a href="https://www.instagram.com/beetsandco" target="_blank" rel="noopener" class="bc-footer-link">Instagram</a>
+        <a href="https://www.linkedin.com/company/beetsandco" target="_blank" rel="noopener" class="bc-footer-link">LinkedIn</a>
+        <a href="mailto:michael@beetsandco.com.au" class="bc-footer-link">Email</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleLseoVideo(){
+  var video=document.getElementById('lseoVideo');
+  var btn=document.getElementById('lseoPlayBtn');
+  if(video.paused){video.play();btn.style.display='none';}
+  else{video.pause();btn.style.display='flex';}
+  video.addEventListener('ended',function(){btn.style.display='flex';},{once:true});
+}
+</script>
+<script>
+function bcToggleMenu(){
+  var m=document.getElementById('bc-mobile-menu'),b=document.getElementById('bc-menu-btn'),s=b.querySelectorAll('span'),o=m.style.display==='block';
+  m.style.display=o?'none':'block';
+  document.body.style.overflow=o?'':'hidden';
+  s[0].style.transform=o?'':'translateY(7px) rotate(45deg)';
+  s[1].style.opacity=o?'':'0';
+  s[2].style.transform=o?'':'translateY(-7px) rotate(-45deg)';
+  s[2].style.width=o?'':'24px';
+}
+function bcCloseMenu(){
+  var m=document.getElementById('bc-mobile-menu'),b=document.getElementById('bc-menu-btn'),s=b?b.querySelectorAll('span'):[];
+  m.style.display='none';document.body.style.overflow='';
+  if(s.length){s[0].style.transform='';s[1].style.opacity='';s[2].style.transform='';s[2].style.width='';}
+}
+</script>
+</body>
+</html>

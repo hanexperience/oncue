@@ -1,0 +1,517 @@
+<title>Beets &amp; Co — Soil Line Draft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,800&family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --soil:#0B0D0A;
+  --soil-2:#12150F;
+  --paper:#F2EFE6;
+  --paper-2:#E9E4D6;
+  --stone:#C3BAA5;
+  --stone-dim:rgba(195,186,165,.52);
+  --beet:#C96C8C;
+  --beet-deep:#6E1B36;
+  --clay:#C24B33;
+  --forest:#1A4D3C;
+  --rule:rgba(242,239,230,.16);
+  --rule-2:rgba(242,239,230,.08);
+
+  --grot:"Bricolage Grotesque","Hanken Grotesk",system-ui,sans-serif;
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+
+  --pad:clamp(18px,3.4vw,44px);
+  --gutter:clamp(20px,4vw,56px);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--soil);color:var(--paper);
+  font-family:var(--body);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+h1,h2,h3{margin:0;font-family:var(--grot);font-weight:600;letter-spacing:-.035em;line-height:.9}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:1.5px solid var(--beet);outline-offset:4px}
+.serif{font-family:var(--serif);font-weight:400;font-style:normal;letter-spacing:-.02em}
+.serif-i{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.02em}
+.light{font-weight:300}
+.beet{color:var(--beet)}
+.stone{color:var(--stone)}
+
+/* ── top meta bar ─────────────────────────────────────────── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding:16px var(--pad);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--stone-dim);mix-blend-mode:normal;
+}
+.topbar .mark{display:flex;align-items:center;gap:9px;color:var(--paper);justify-self:start}
+.topbar .mark svg{width:17px;height:22px;display:block}
+.topbar .mark b{font-family:var(--grot);font-size:12.5px;letter-spacing:-.01em;text-transform:none;font-weight:600}
+.topbar .meta{justify-self:center;text-align:center}
+.topbar .contact{justify-self:end;color:var(--paper);border-bottom:1px solid var(--rule);padding-bottom:2px}
+.topbar .contact:hover{border-color:var(--beet);color:var(--beet)}
+
+/* ── marquee ──────────────────────────────────────────────── */
+.ticker{
+  position:relative;margin-top:112px;padding:9px 0;
+  border-top:1px solid var(--rule-2);border-bottom:1px solid var(--rule-2);
+  overflow:hidden;white-space:nowrap;
+}
+.ticker .run{display:inline-flex;gap:0;animation:slide 38s linear infinite}
+.ticker span{
+  font-size:12.5px;color:var(--stone-dim);padding-right:38px;
+  font-weight:500;letter-spacing:.01em;
+}
+.ticker span::after{content:"•";padding-left:38px;opacity:.5}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── reveal ───────────────────────────────────────────────── */
+.rv{display:inline-block;overflow:hidden;vertical-align:bottom}
+.rv > i{
+  display:inline-block;font-style:inherit;
+  transform:translateY(105%);opacity:0;
+  transition:transform .82s cubic-bezier(.16,.84,.28,1), opacity .6s ease;
+}
+.on .rv > i{transform:translateY(0);opacity:1}
+.fade{opacity:0;transform:translateY(16px);transition:opacity .7s ease .1s, transform .7s cubic-bezier(.16,.84,.28,1) .1s}
+.on .fade{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .rv > i,.fade{transform:none!important;opacity:1!important;transition:none!important}
+  .ticker .run{animation:none}
+}
+
+/* ── hero ─────────────────────────────────────────────────── */
+.hero{padding:clamp(46px,8vw,110px) var(--pad) clamp(40px,6vw,80px)}
+.hero h1{
+  font-size:clamp(52px,11.4vw,182px);line-height:.86;letter-spacing:-.045em;
+  font-weight:600;text-wrap:balance;
+}
+.hero h1 .row{display:block}
+.hero h1 .row.push{padding-left:clamp(0px,12vw,220px)}
+.hero h1 .row.push2{padding-left:clamp(0px,5vw,90px)}
+.hero-foot{
+  display:grid;grid-template-columns:1.1fr .9fr;gap:var(--gutter);
+  margin-top:clamp(40px,6vw,88px);align-items:end;
+}
+.hero-foot p{font-size:clamp(16px,1.5vw,19px);color:var(--stone);max-width:46ch;line-height:1.5}
+.hero-foot .side{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--stone-dim);display:flex;flex-direction:column;gap:6px;justify-self:end;text-align:right;
+}
+
+/* ── soil line ────────────────────────────────────────────── */
+.soilline{position:relative;height:0;border-top:1px solid var(--rule)}
+.soilline::after{
+  content:"";position:absolute;left:0;right:0;top:0;height:9px;
+  background:repeating-linear-gradient(90deg,var(--stone) 0 1.5px,transparent 1.5px 11px);
+  opacity:.34;
+}
+
+/* ── sections ─────────────────────────────────────────────── */
+section{padding:clamp(72px,11vw,170px) var(--pad)}
+.eyebrow{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--stone-dim);display:block;margin-bottom:clamp(28px,4vw,54px);
+}
+.big{
+  font-family:var(--grot);font-weight:600;letter-spacing:-.04em;line-height:.92;
+  font-size:clamp(38px,7.4vw,116px);text-wrap:balance;
+}
+.mid{
+  font-family:var(--grot);font-weight:600;letter-spacing:-.03em;line-height:1;
+  font-size:clamp(30px,4.6vw,64px);
+}
+
+/* ── numbered rows (services) ─────────────────────────────── */
+.rows{border-top:1px solid var(--rule-2)}
+.row-item{
+  display:grid;grid-template-columns:56px 1fr minmax(0,42%);gap:clamp(12px,2.4vw,32px);
+  padding:clamp(20px,2.6vw,32px) 0;border-bottom:1px solid var(--rule-2);
+  align-items:baseline;transition:padding-left .45s cubic-bezier(.16,.84,.28,1);
+}
+.row-item:hover{padding-left:14px}
+.row-item .num{
+  font-family:var(--mono);font-size:11px;color:var(--stone-dim);letter-spacing:.06em;
+  font-variant-numeric:tabular-nums;
+}
+.row-item h3{
+  font-size:clamp(24px,3.4vw,46px);font-weight:600;letter-spacing:-.032em;
+  transition:color .3s ease;
+}
+.row-item:hover h3{color:var(--beet)}
+.row-item p{font-size:14.5px;color:var(--stone-dim);line-height:1.5}
+
+/* ── light strata (above the soil line) ───────────────────── */
+.light-strata{background:var(--paper);color:#14170F}
+.light-strata .eyebrow{color:rgba(20,23,15,.5)}
+.light-strata .stone{color:rgba(20,23,15,.6)}
+.light-strata .beet{color:var(--beet-deep)}
+.light-strata .rows,.light-strata .row-item{border-color:rgba(20,23,15,.12)}
+.light-strata .row-item .num{color:rgba(20,23,15,.45)}
+.light-strata .row-item p{color:rgba(20,23,15,.62)}
+.light-strata .row-item:hover h3{color:var(--clay)}
+
+/* ── case ─────────────────────────────────────────────────── */
+.case{display:grid;grid-template-columns:1fr minmax(0,44%);gap:var(--gutter);align-items:start;margin-top:clamp(30px,4vw,54px)}
+.case .facts{display:flex;flex-direction:column;border-top:1px solid rgba(20,23,15,.12)}
+.case .fact{display:flex;justify-content:space-between;gap:20px;padding:13px 0;border-bottom:1px solid rgba(20,23,15,.09);font-size:14.5px}
+.case .fact span:first-child{color:rgba(20,23,15,.55);font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;padding-top:4px}
+.case .fact span:last-child{text-align:right;font-weight:500;max-width:60%}
+.note{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(20,23,15,.42);margin-top:20px;
+}
+
+/* ── seed tray ────────────────────────────────────────────── */
+.tray{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;margin-top:clamp(34px,5vw,60px)}
+.seed{
+  border:1px solid var(--rule-2);border-radius:3px;padding:16px 12px 18px;
+  display:flex;flex-direction:column;justify-content:space-between;gap:26px;min-height:132px;
+  transition:border-color .3s ease,background .3s ease;
+}
+.seed:hover{border-color:var(--rule);background:rgba(242,239,230,.03)}
+.seed .n{font-family:var(--mono);font-size:10px;color:var(--stone-dim);letter-spacing:.06em}
+.seed .lbl{font-family:var(--grot);font-size:14px;font-weight:600;letter-spacing:-.015em;line-height:1.05}
+.seed svg{width:15px;height:26px;color:var(--stone-dim)}
+.seed.up svg{color:var(--beet)}
+.seed.up .lbl{color:var(--paper)}
+
+/* ── stages ───────────────────────────────────────────────── */
+.stages{margin-top:clamp(34px,5vw,64px);border-top:1px solid var(--rule-2)}
+.stage{
+  display:grid;grid-template-columns:56px minmax(0,26%) 1fr;gap:clamp(12px,2.4vw,32px);
+  padding:clamp(18px,2.4vw,28px) 0;border-bottom:1px solid var(--rule-2);align-items:baseline;
+}
+.stage .num{font-family:var(--mono);font-size:11px;color:var(--stone-dim);font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.stage h3{font-size:clamp(22px,2.9vw,38px);font-weight:600;letter-spacing:-.03em}
+.stage h3 small{
+  display:block;font-family:var(--mono);font-size:10px;font-weight:400;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--stone-dim);margin-top:10px;
+}
+.stage p{font-size:15.5px;color:var(--stone);max-width:52ch;line-height:1.5}
+
+/* ── statement ────────────────────────────────────────────── */
+.statement{text-align:left;max-width:19ch}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,44px);margin-top:clamp(40px,5vw,72px);border-top:1px solid var(--rule-2);padding-top:clamp(24px,3vw,40px)}
+.trio h3{font-family:var(--grot);font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:10px}
+.trio p{font-size:15px;color:var(--stone);line-height:1.52}
+
+/* ── CTA ──────────────────────────────────────────────────── */
+.cta{
+  display:inline-flex;align-items:center;gap:12px;
+  font-family:var(--grot);font-weight:600;font-size:16px;letter-spacing:-.01em;
+  background:var(--clay);color:#F6F1EA;padding:15px 26px;border-radius:2px;
+  transition:background .3s ease,transform .3s cubic-bezier(.16,.84,.28,1);
+}
+.cta:hover{background:#D4573D;transform:translateX(4px)}
+.cta svg{width:15px;height:11px}
+.cta-line{
+  display:inline-flex;align-items:center;gap:11px;font-family:var(--grot);font-weight:600;
+  font-size:clamp(17px,2vw,22px);letter-spacing:-.02em;border-bottom:1px solid var(--rule);
+  padding-bottom:6px;transition:border-color .3s ease,color .3s ease;
+}
+.cta-line:hover{color:var(--beet);border-color:var(--beet)}
+
+/* ── footer ───────────────────────────────────────────────── */
+footer{padding:clamp(60px,8vw,120px) var(--pad) 40px;border-top:1px solid var(--rule-2)}
+.mailto{
+  font-family:var(--grot);font-weight:600;letter-spacing:-.04em;line-height:.95;
+  font-size:clamp(30px,6.4vw,96px);display:inline-block;
+  border-bottom:2px solid transparent;transition:border-color .35s ease,color .35s ease;
+}
+.mailto:hover{color:var(--beet);border-color:var(--beet)}
+.foot-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:clamp(46px,6vw,86px);
+  padding-top:26px;border-top:1px solid var(--rule-2);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--stone-dim);
+}
+.foot-grid a{display:block;color:var(--stone);margin-top:9px;letter-spacing:.05em}
+.foot-grid a:hover{color:var(--beet)}
+.foot-grid h4{margin:0;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.13em;color:var(--stone-dim);text-transform:uppercase}
+
+@media (max-width:1000px){
+  .tray{grid-template-columns:repeat(3,1fr)}
+  .row-item{grid-template-columns:44px 1fr}
+  .row-item p{grid-column:2}
+  .case{grid-template-columns:1fr}
+  .trio{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:repeat(2,1fr);gap:30px}
+}
+@media (max-width:680px){
+  .topbar{grid-template-columns:1fr auto}
+  .topbar .meta{display:none}
+  .hero-foot{grid-template-columns:1fr}
+  .hero-foot .side{justify-self:start;text-align:left}
+  .hero h1 .row.push,.hero h1 .row.push2{padding-left:0}
+  .stage{grid-template-columns:34px 1fr}
+  .stage p{grid-column:2}
+  .tray{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+
+<div class="topbar">
+  <a class="mark" href="#top">
+    <svg viewBox="0 0 34 44" aria-hidden="true">
+      <path d="M17 14c8 0 12.5 6 12.5 12S24 38 17 38 4.5 32 4.5 26 9 14 17 14Z" fill="currentColor"/>
+      <path d="M17 14c-1-5-3-9-8-12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+    </svg>
+    <b>Beets &amp; Co</b>
+  </a>
+  <div class="meta" id="meta">MORDIALLOC VIC · 37.9°S 145.1°E</div>
+  <a class="contact" href="#contact">han@beetsandco.com.au</a>
+</div>
+
+<div class="ticker" id="top">
+  <div class="run">
+    <span>Beets &amp; Co is a branding and marketing studio for trades and operators, in Mordialloc, Melbourne</span>
+    <span>Beets &amp; Co is a branding and marketing studio for trades and operators, in Mordialloc, Melbourne</span>
+    <span>Beets &amp; Co is a branding and marketing studio for trades and operators, in Mordialloc, Melbourne</span>
+    <span>Beets &amp; Co is a branding and marketing studio for trades and operators, in Mordialloc, Melbourne</span>
+  </div>
+</div>
+
+<header class="hero reveal">
+  <h1>
+    <span class="row"><span class="rv"><i>most</i></span> <span class="rv"><i class="light">agencies</i></span></span>
+    <span class="row push2"><span class="rv"><i class="serif-i stone">sell</i></span> <span class="rv"><i class="light">you</i></span></span>
+    <span class="row push"><span class="rv"><i class="serif beet">leaves.</i></span></span>
+  </h1>
+  <div class="hero-foot">
+    <p class="fade">The logo, the website, the ads — that's the part everyone photographs. The part that actually wins you better jobs grows underground, and it takes about eight to twelve weeks.</p>
+    <div class="side fade">
+      <span>Est. 2019 — one-person studio</span>
+      <span>Branding · Web · Local SEO · Video</span>
+      <span>Two client spots open this quarter</span>
+    </div>
+  </div>
+</header>
+
+<div class="soilline"></div>
+
+<section class="reveal">
+  <span class="eyebrow fade">01 — What you're actually buying</span>
+  <p class="big statement">
+    <span class="rv"><i>Root</i></span> <span class="rv"><i class="serif-i stone">depth,</i></span>
+    <span class="rv"><i class="light">not</i></span> <span class="rv"><i class="light">leaves.</i></span>
+  </p>
+  <div class="trio">
+    <div class="fade">
+      <h3>The soak</h3>
+      <p>Before anything gets planted, the seed sits overnight. That's the Walk-In Check — free, no pitch, and the reason the rest germinates evenly instead of patchy.</p>
+    </div>
+    <div class="fade">
+      <h3>The thinning</h3>
+      <p>Gardeners pull out healthy seedlings on purpose so the rest can swell. Most trades businesses are running six half-dead channels. I pull four.</p>
+    </div>
+    <div class="fade">
+      <h3>The root</h3>
+      <p>Listings, reviews, schema, the map pack, the replies. None of it photographs well. All of it is why a competitor can't buy past you in a fortnight.</p>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <span class="eyebrow fade">02 — Services</span>
+  <div class="rows">
+    <a class="row-item fade" href="branding-for-tradies.html">
+      <span class="num">01.</span>
+      <h3>Brand &amp; identity</h3>
+      <p>Name, mark, livery, the whole kit — built so it still works on a ute door at 60km/h.</p>
+    </a>
+    <a class="row-item fade" href="tradie-website-design.html">
+      <span class="num">02.</span>
+      <h3>Website design</h3>
+      <p>Fast, written for the job you want, and built to be read by search engines and language models both.</p>
+    </a>
+    <a class="row-item fade" href="seo-for-tradies.html">
+      <span class="num">03.</span>
+      <h3>Local SEO</h3>
+      <p>Map pack, listings, reviews, suburb pages. The unglamorous compounding layer.</p>
+    </a>
+    <a class="row-item fade" href="video-production-for-tradies-melbourne.html">
+      <span class="num">04.</span>
+      <h3>Video production</h3>
+      <p>On site, in a day, cut for the places your customers actually scroll.</p>
+    </a>
+    <a class="row-item fade" href="digital-marketing-for-tradies.html">
+      <span class="num">05.</span>
+      <h3>Digital marketing</h3>
+      <p>Paid where it earns its place, and pulled the moment it doesn't.</p>
+    </a>
+    <a class="row-item fade" href="ai-automation-for-tradies.html">
+      <span class="num">06.</span>
+      <h3>AI &amp; automation</h3>
+      <p>Quotes chased, leads routed, follow-ups sent — without hiring anyone to do it.</p>
+    </a>
+  </div>
+</section>
+
+<div class="soilline"></div>
+
+<section class="reveal">
+  <span class="eyebrow fade">03 — The free one</span>
+  <p class="big statement">
+    <span class="rv"><i>One</i></span> <span class="rv"><i class="light">seed.</i></span>
+    <span class="rv"><i class="serif-i beet">Nine</i></span> <span class="rv"><i class="serif-i beet">sprouts.</i></span>
+  </p>
+  <p class="fade" style="color:var(--stone);max-width:56ch;margin-top:clamp(22px,3vw,34px);font-size:clamp(16px,1.5vw,18px)">
+    A beetroot seed isn't one seed — it's a cluster holding several, so one planting spot sprouts a handful of plants at once. Same as your business: one name, nine places a customer can find it. The Walk-In Check tells you which ones came up.
+  </p>
+  <div class="tray">
+    <div class="seed up fade"><span class="n">01</span><svg viewBox="0 0 16 28" aria-hidden="true"><path d="M8 26V10" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M8 12c0-4 3-7 6-8 0 5-2 8-6 8Z" fill="currentColor"/></svg><span class="lbl">Search</span></div>
+    <div class="seed up fade"><span class="n">02</span><svg viewBox="0 0 16 28" aria-hidden="true"><path d="M8 26V10" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M8 12c0-4 3-7 6-8 0 5-2 8-6 8Z" fill="currentColor"/></svg><span class="lbl">Map</span></div>
+    <div class="seed up fade"><span class="n">03</span><svg viewBox="0 0 16 28" aria-hidden="true"><path d="M8 26V10" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M8 12c0-4 3-7 6-8 0 5-2 8-6 8Z" fill="currentColor"/></svg><span class="lbl">Reviews</span></div>
+    <div class="seed fade"><span class="n">04</span><svg viewBox="0 0 16 28" aria-hidden="true"><path d="M8 26v-8" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><span class="lbl">Listings</span></div>
+    <div class="seed fade"><span class="n">05</span><svg viewBox="0 0 16 28" aria-hidden="true"><path d="M8 26v-8" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><span class="lbl">Feed</span></div>
+    <div class="seed fade"><span class="n">06</span><svg viewBox="0 0 16 28" aria-hidden="true"><path d="M8 26v-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><span class="lbl">Video</span></div>
+    <div class="seed fade"><span class="n">07</span><svg viewBox="0 0 16 28" aria-hidden="true"><path d="M8 26v-6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><span class="lbl">The room</span></div>
+    <div class="seed fade"><span class="n">08</span><svg viewBox="0 0 16 28" aria-hidden="true"><circle cx="8" cy="24" r="2" fill="currentColor"/></svg><span class="lbl">Press</span></div>
+    <div class="seed fade"><span class="n">09</span><svg viewBox="0 0 16 28" aria-hidden="true"><circle cx="8" cy="24" r="2" fill="currentColor"/></svg><span class="lbl">Replies</span></div>
+  </div>
+  <div class="fade" style="margin-top:clamp(34px,4vw,52px)">
+    <a class="cta" href="walk-in-ready.html">Run the Walk-In Check <svg viewBox="0 0 15 11" fill="none" aria-hidden="true"><path d="M1 5.5h12M9 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
+<section class="light-strata reveal">
+  <span class="eyebrow fade">04 — Selected work</span>
+  <p class="big statement" style="max-width:16ch">
+    <span class="rv"><i>Crowncon.</i></span>
+    <span class="rv"><i class="serif-i" style="color:rgba(20,23,15,.55)">A full</i></span>
+    <span class="rv"><i class="light">rebuild.</i></span>
+  </p>
+  <div class="case">
+    <div class="fade">
+      <p style="font-size:clamp(16px,1.6vw,19px);color:rgba(20,23,15,.7);max-width:50ch;line-height:1.5">
+        A South East Melbourne builder with good work and no way for anyone to find it. New brand, new site, listings claimed, the lot — and now the one that turns up when someone asks an AI model to recommend a builder in the south east.
+      </p>
+      <p class="note">Outcome figures pending — replace with enquiries before/after, lead quality, jobs won.</p>
+    </div>
+    <div class="facts fade">
+      <div class="fact"><span>Client</span><span>Crowncon</span></div>
+      <div class="fact"><span>Sector</span><span>Residential building, SE Melbourne</span></div>
+      <div class="fact"><span>Scope</span><span>Brand, website, local SEO, video</span></div>
+      <div class="fact"><span>Timeline</span><span>Six weeks to live</span></div>
+      <div class="fact"><span>Verified</span><span>Named in ChatGPT &amp; Gemini builder recommendations</span></div>
+    </div>
+  </div>
+  <div class="fade" style="margin-top:clamp(44px,6vw,80px);padding-top:26px;border-top:1px solid rgba(20,23,15,.12)">
+    <p style="font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:rgba(20,23,15,.45)">Before this — a decade in-house</p>
+    <p class="mid" style="margin-top:16px;color:#14170F">Volvo <span class="serif-i" style="color:rgba(20,23,15,.45)">·</span> Australian Defence Force <span class="serif-i" style="color:rgba(20,23,15,.45)">·</span> Nando's</p>
+  </div>
+</section>
+
+<section class="reveal">
+  <span class="eyebrow fade">05 — How it grows</span>
+  <p class="big statement">
+    <span class="rv"><i>Eight</i></span> <span class="rv"><i class="light">to</i></span>
+    <span class="rv"><i class="serif-i stone">twelve</i></span> <span class="rv"><i class="light">weeks.</i></span>
+  </p>
+  <div class="stages">
+    <div class="stage fade">
+      <span class="num">01</span>
+      <h3>Soak<small>Walk-In Check · free</small></h3>
+      <p>The seed sits in water overnight. Nothing visibly happens, and skipping it is why most marketing comes up patchy.</p>
+    </div>
+    <div class="stage fade">
+      <span class="num">02</span>
+      <h3>Sow<small>Discover &amp; Shape · week 1–2</small></h3>
+      <p>Two centimetres deep in decent soil. Positioning, offer, architecture. Get the depth wrong and you don't find out for a month.</p>
+    </div>
+    <div class="stage fade">
+      <span class="num">03</span>
+      <h3>Germinate<small>Make &amp; Launch · week 2–6</small></h3>
+      <p>First green. Site live, listings claimed, tracking on, first movement in search.</p>
+    </div>
+    <div class="stage fade">
+      <span class="num">04</span>
+      <h3>Thin<small>Grow · month one</small></h3>
+      <p>Pulling out healthy-looking seedlings on purpose. The channels that aren't earning their space go, and I'll tell you which to your face.</p>
+    </div>
+    <div class="stage fade">
+      <span class="num">05</span>
+      <h3>Root<small>Grow · ongoing</small></h3>
+      <p>The taproot swells. Reviews accumulate, listings age, the models start naming you. Nothing dramatic above ground.</p>
+    </div>
+    <div class="stage fade">
+      <span class="num">06</span>
+      <h3>Harvest<small>Grow · the point</small></h3>
+      <p>Better jobs. Not more leads — better jobs, at prices you don't have to argue about.</p>
+    </div>
+  </div>
+</section>
+
+<div class="soilline"></div>
+
+<section class="reveal">
+  <span class="eyebrow fade">06 — Who you get</span>
+  <p class="big statement" style="max-width:15ch">
+    <span class="rv"><i>You</i></span> <span class="rv"><i class="light">get</i></span>
+    <span class="rv"><i class="serif-i beet">me.</i></span>
+    <span class="rv"><i class="light">Not</i></span> <span class="rv"><i class="light">a junior.</i></span>
+  </p>
+  <div class="hero-foot" style="margin-top:clamp(34px,4vw,60px)">
+    <p class="fade">Ten years in-house on brands with real money behind them, now run as a one-person studio out of Mordialloc. I take a handful of clients at a time — not because it's exclusive, but because crowded seedlings all stay small.</p>
+    <div class="side fade">
+      <span>Han Beets — founder</span>
+      <span>Mordialloc, Victoria</span>
+      <span>Two spots open this quarter</span>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" class="reveal">
+  <span class="eyebrow fade">07 — Get in touch</span>
+  <p class="fade" style="color:var(--stone);max-width:42ch;margin-bottom:clamp(26px,3vw,40px);font-size:clamp(16px,1.5vw,18px)">
+    Tell me what you're trying to grow. If it isn't a fit I'll say so in the first call, not the third.
+  </p>
+  <a class="mailto fade" href="mailto:han@beetsandco.com.au">han@beetsandco.com.au</a>
+  <div class="foot-grid">
+    <div><h4>Studio</h4><a href="#">About</a><a href="/blog/">Journal</a><a href="walk-in-ready.html">Walk-In Check</a></div>
+    <div><h4>Services</h4><a href="branding-for-tradies.html">Branding</a><a href="tradie-website-design.html">Websites</a><a href="seo-for-tradies.html">Local SEO</a></div>
+    <div><h4>Areas</h4><a href="marketing-agency-mordialloc.html">Mordialloc</a><a href="marketing-agency-frankston.html">Frankston</a><a href="marketing-agency-south-east-melbourne.html">South East Melbourne</a></div>
+    <div><h4>Legal</h4><a href="privacy.html">Privacy</a><a href="#">Terms</a><span style="display:block;margin-top:9px;color:var(--stone-dim)">©2026 Beets &amp; Co</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      e.target.classList.add('on');
+      io.unobserve(e.target);
+    });
+  },{threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+
+  document.querySelectorAll('.reveal').forEach(function(sec){
+    var i = 0;
+    sec.querySelectorAll('.rv > i, .fade').forEach(function(el){
+      el.style.transitionDelay = (i * 65) + 'ms';
+      i++;
+    });
+    io.observe(sec);
+  });
+
+  // hero fires immediately
+  var hero = document.querySelector('.hero');
+  if(hero) requestAnimationFrame(function(){ hero.classList.add('on'); });
+
+  // live UTC-style stamp in the meta bar, like the reference site
+  var meta = document.getElementById('meta');
+  if(meta){
+    setInterval(function(){
+      var d = new Date();
+      var p = function(n){ return String(n).padStart(2,'0'); };
+      meta.textContent = 'MORDIALLOC VIC · 37.9°S 145.1°E · ' +
+        p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+    }, 1000);
+  }
+})();
+</script>

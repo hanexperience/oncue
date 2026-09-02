@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crowncon — Case Study · Beets & Co</title>
+<meta name="description" content="How Beets & Co rebuilt Crowncon's brand, website, content and video presence from the ground up." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#FBFBF9;color:#1C1B17;font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+video{display:block}
+a{color:inherit;text-decoration:none}
+::selection{background:#C24B33;color:#fff}
+@keyframes scrollcue{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(8px);opacity:1}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+/* ---- Image placeholders (replaces the co-design <image-slot> tool) ----
+   Each slot below points at a filename inside ../images/ — drop a file
+   with that exact name in and it will appear. Until then, a soft
+   placeholder box with a caption shows instead. */
+.img-slot{position:relative;width:100%;height:100%;min-height:100%;overflow:hidden;background:rgba(127,127,127,.08);display:flex;align-items:center;justify-content:center}
+.img-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.img-slot img.is-broken{display:none}
+.img-slot-caption{position:relative;z-index:1;max-width:88%;text-align:center;padding:14px;font-family:'Space Mono',monospace;font-size:11px;line-height:1.6;letter-spacing:.02em;color:rgba(28,27,23,.4)}
+.img-slot-caption small{display:block;margin-top:6px;font-size:10px;opacity:.75;word-break:break-all}
+.img-slot--dark .img-slot-caption{color:rgba(244,241,232,.45)}
+.img-slot{border:1px dashed rgba(28,27,23,.18)}
+.img-slot--dark{border:1px dashed rgba(244,241,232,.18)}
+
+@media(max-width:900px){
+  .cc-two-col{grid-template-columns:1fr !important}
+  .cc-three-col{grid-template-columns:1fr !important}
+  .cc-four-col{grid-template-columns:1fr 1fr !important}
+  .cc-ai-grid{grid-template-columns:1fr !important}
+  .cc-nav-links{display:none !important}
+  .cc-mosaic{grid-template-columns:1fr 1fr !important}
+  .cc-phone{grid-column:1/3 !important}
+  .cc-video-grid{grid-template-columns:1fr !important}
+  .cc-stat-row{grid-template-columns:1fr !important}
+  .cc-fw-svg{display:none !important}
+  .cc-fw-mobile{display:flex !important}
+}
+</style>
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify register".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+try{posthog.init('phc_x9qBCQJXRmXWkGYen6VuX5Dppb2UTLF5rfYPnLAFZp65',{api_host:'https://us.i.posthog.com',defaults:'2026-05-30',person_profiles:'identified_only'})}catch(e){}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-29SKC7VN4C"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-29SKC7VN4C');
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-ga-event]');
+  if (t && typeof gtag === 'function') {
+    gtag('event', t.getAttribute('data-ga-event'), {event_category:'engagement',event_label:(t.textContent||'').trim()});
+  }
+});
+</script>
+
+<!-- Lead link click tracking -->
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var ref = params.get('ref');
+  if (!ref) return;
+
+  fetch('https://rrxveifshucpinajtkgf.supabase.co/rest/v1/link_clicks', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyeHZlaWZzaHVjcGluYWp0a2dmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMjQ2ODMsImV4cCI6MjA5NTcwMDY4M30.7ZhWD2gUO2aPZkRbmozLsyIsVX7VzoY5W9BxXb11ne8',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyeHZlaWZzaHVjcGluYWp0a2dmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMjQ2ODMsImV4cCI6MjA5NTcwMDY4M30.7ZhWD2gUO2aPZkRbmozLsyIsVX7VzoY5W9BxXb11ne8'
+    },
+    body: JSON.stringify({
+      ref_slug: ref,
+      user_agent: navigator.userAgent
+    })
+  }).catch(function () {}); // fail silently, don't block the page
+})();
+</script>
+</head>
+<body>
+
+<div id="page-root" style="background:#FBFBF9">
+
+<!-- NAV -->
+<header style="position:absolute;top:0;left:0;right:0;z-index:30;padding:26px 0">
+  <div style="max-width:1400px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between">
+    <a href="../index.html#top" aria-label="Beets & Co home">
+      <span style="font-family:'Archivo';font-weight:800;font-size:20px;letter-spacing:-.02em;color:#F4F1E8">Beets <span style="color:#E6D9C2">&amp;</span> Co</span>
+    </a>
+    <nav class="cc-nav-links" aria-label="Primary" style="display:flex;gap:32px">
+      <a href="../index.html#model" style="font-size:14px;font-weight:600;color:rgba(244,241,232,.8)">The model</a>
+      <a href="../index.html#services" style="font-size:14px;font-weight:600;color:rgba(244,241,232,.8)">What I do</a>
+      <a href="../index.html#crowncon" style="font-size:14px;font-weight:600;color:#F4F1E8">Work</a>
+      <a href="../index.html#about" style="font-size:14px;font-weight:600;color:rgba(244,241,232,.8)">About Michael</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="../index.html#apply" data-ga-event="start_conversation" style="font-family:'Archivo';font-weight:700;font-size:13.5px;background:#F4F1E8;color:#123528;border-radius:999px;padding:11px 20px">Start a conversation</a>
+      <button aria-label="Menu" style="display:none;width:36px;height:36px;background:transparent;border:none"></button>
+    </div>
+  </div>
+</header>
+
+<!-- 01 HERO -->
+<section style="position:relative;height:100vh;min-height:640px;overflow:hidden;background:#0D0D0C">
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+    <video 
+      src="../images/intro1.mp4" 
+      autoplay 
+      muted 
+      loop 
+      playsinline 
+      style="position:absolute;top:50%;left:50%;width:100vw;height:100vh;object-fit:cover;transform:translate(-50%,-50%);border:0"
+    ></video>
+  </div>
+  <!-- Darkened gradient overlay for high contrast text readability -->
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,13,12,.85) 0%,rgba(13,13,12,.75) 40%,rgba(13,13,12,.8) 70%,rgba(13,13,12,.96) 100%)"></div>
+  <div style="position:relative;height:100%;display:flex;flex-direction:column;justify-content:center;max-width:1400px;margin:0 auto;padding:0 40px">
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .7s ease-out,transform .7s ease-out">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#E6D9C2">Crowncon &middot; Bayside Melbourne &middot; 2026</span>
+      <h1 style="font-family:'Archivo';font-weight:800;font-size:clamp(38px,7vw,84px);line-height:.98;letter-spacing:-.04em;color:#F4F1E8;margin:22px 0 0;max-width:15ch">They ranked for nothing<br>but their own name.<br><span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">Two months later, they ranked #1.</span></h1>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0;border-top:1px solid rgba(244,241,232,.16)">
+    <div class="cc-stat-row" style="max-width:1400px;margin:0 auto;padding:28px 40px;display:grid;grid-template-columns:repeat(3,1fr)">
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .1s,transform .6s ease-out .1s;padding:0 24px;border-right:1px solid rgba(244,241,232,.16)">
+        <div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3vw,40px);color:#F4F1E8;letter-spacing:-.03em"><span data-countup="1" data-suffix="">0</span></div>
+        <div style="font-size:13px;color:rgba(244,241,232,.6);margin-top:6px">Knockdown rebuild cost Melbourne</div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .2s,transform .6s ease-out .2s;padding:0 24px;border-right:1px solid rgba(244,241,232,.16)">
+        <div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3vw,40px);color:#F4F1E8;letter-spacing:-.03em"><span data-countup="80" data-suffix="">0</span></div>
+        <div style="font-size:13px;color:rgba(244,241,232,.6);margin-top:6px">Keywords tracked</div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .3s,transform .6s ease-out .3s;padding:0 24px">
+        <div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3vw,40px);color:#F4F1E8;letter-spacing:-.03em"><span data-countup="3" data-suffix="&times;">0</span></div>
+        <div style="font-size:13px;color:rgba(244,241,232,.6);margin-top:6px">Organic clicks, month one to now</div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:110px;left:50%;transform:translateX(-50%);animation:scrollcue 2s ease-in-out infinite">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#E6D9C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- 02 THE FILMMAKER -->
+<section style="background:#0D0D0C;padding:130px 0;position:relative">
+  <div style="position:absolute;top:56px;right:40px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(244,241,232,.3)">02</div>
+  <div class="cc-two-col" style="max-width:1400px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;align-items:center">
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out;border-radius:18px;overflow:hidden;aspect-ratio:4/5;background:#161613;position:relative">
+      <div class="img-slot img-slot--dark">
+        <img src="../images/beets.webp" alt="Michael on set — camera or monitor" onerror="this.classList.add('is-broken')">
+      </div>
+    </div>
+    <div>
+      <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out">
+        <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.5)"><span style="color:#E6D9C2">&#9656;</span>&nbsp;The filmmaker</span>
+        <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(30px,4vw,52px);line-height:1.02;letter-spacing:-.03em;color:#F4F1E8;margin:20px 0 0">Your company deserves a director, not a content guy.</h2>
+        <p style="font-size:17px;line-height:1.75;color:rgba(244,241,232,.7);max-width:52ch;margin:26px 0 0">I've spent years making films — work nominated at the Australian Directors' Guild Awards and at the Venice International Film Festival, one of the three biggest festivals in the world. Films that have screened at some of the largest festivals on earth.</p>
+        <p style="font-size:17px;line-height:1.75;color:rgba(244,241,232,.7);max-width:52ch;margin:16px 0 0">I now point that at local businesses. Same eye, same discipline, same belief: a story only works if it connects to the person watching it.</p>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .1s,transform .6s ease-out .1s;display:flex;flex-wrap:wrap;gap:0;margin:36px 0 0;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.55)">
+        <span style="padding:10px 18px 10px 0;border-right:1px solid rgba(244,241,232,.2)">Venice International Film Festival — Nominated</span>
+        <span style="padding:10px 18px;border-right:1px solid rgba(244,241,232,.2)">Australian Directors' Guild — Nominated</span>
+        <span style="padding:10px 0 10px 18px">International festival selections</span>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .2s,transform .6s ease-out .2s;margin-top:40px;padding-top:36px;border-top:1px solid rgba(244,241,232,.14)">
+        <p style="font-family:'Archivo';font-weight:700;font-size:20px;line-height:1.5;color:#F4F1E8;max-width:44ch">But a beautiful film that nobody was looking for is just an expense.</p>
+        <p style="font-size:16px;line-height:1.7;color:rgba(244,241,232,.65);max-width:52ch;margin-top:12px">Every film we shoot for Crowncon is commissioned against a search opportunity. Craft is the entry ticket. Strategy is the reason it pays.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 MEET TIM -->
+<section style="background:#FBFBF9;padding:130px 0;position:relative">
+  <div style="position:absolute;top:56px;right:40px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(28,27,23,.25)">03</div>
+  <div class="cc-two-col" style="max-width:1180px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:.8fr 1.2fr;gap:56px;align-items:center">
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out;border-radius:18px;overflow:hidden;aspect-ratio:3/4;background:#F0E9DB;position:relative">
+      <div class="img-slot">
+        <img src="../images/tim.webp" alt="Tim, on site" onerror="this.classList.add('is-broken')">
+        
+      </div>
+    </div>
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out .1s,transform .6s ease-out .1s">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)"><span style="color:#C24B33">&#9656;</span>&nbsp;Meet Tim</span>
+      <p style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;font-size:clamp(22px,2.6vw,32px);line-height:1.4;color:#1C1B17;margin:26px 0 0;max-width:20ch">"Michael doesn't just point a camera at the site and hope something works. Every video's got a reason behind it."</p>
+      <p style="font-size:15px;line-height:1.7;color:#46443c;margin-top:24px">Tim Crown, founder of Crowncon — a boutique custom home builder working across Bayside and South East Melbourne. Comfortable on camera and willing to tell the story in his own words, which made him the ideal fit for a camera-first approach.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 THE WORK -->
+<section id="work" style="background:#123528;color:#F4F1E8;padding:130px 0;position:relative">
+  <div style="position:absolute;top:56px;right:40px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(244,241,232,.3)">04</div>
+  <div style="max-width:1400px;margin:0 auto;padding:0 40px">
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.55)"><span style="color:#E6D9C2">&#9656;</span>&nbsp;The work</span>
+      <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(30px,4vw,58px);line-height:1;letter-spacing:-.04em;color:#F4F1E8;margin:20px 0 0">Film that shows what<br><span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">words can't</span>.</h2>
+      <p style="max-width:56ch;font-size:17px;line-height:1.7;color:rgba(244,241,232,.65);margin:24px 0 48px">Two shoot days a month across active sites and finished homes. Long-form brand film, social cut-downs, and reels — all cut to move the right person to call.</p>
+    </div>
+
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out;position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;background:rgba(244,241,232,.06);margin-bottom:20px;box-shadow:0 10px 40px rgba(18,53,40,.4)">
+      <div id="mainVideoFrame" style="display:none;position:absolute;inset:0">
+        <iframe src="https://www.youtube.com/embed/F0dXI3DBvUI?autoplay=1&playsinline=1" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media" allowfullscreen title="Crowncon brand film"></iframe>
+      </div>
+      <div id="mainVideoPoster" onclick="playMainVideo()" style="display:block;position:absolute;inset:0;cursor:pointer">
+        <img src="https://img.youtube.com/vi/F0dXI3DBvUI/maxresdefault.jpg" alt="Brand film poster" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(18,53,40,.3)">
+          <div style="width:72px;height:72px;border-radius:50%;background:#F4F1E8;color:#123528;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(18,53,40,.4)">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:20px;left:20px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#123528;background:rgba(244,241,232,.9);padding:6px 12px">Excerpt from Brand film · Director/DOP/Edit — Michael</div>
+      </div>
+    </div>
+
+    <div class="cc-video-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:36px">
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out,transform .6s ease-out;border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:rgba(244,241,232,.06);position:relative">
+        <iframe src="https://www.youtube.com/embed/jiPuYBH5wqA" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen title="Mobile Sample Reel"></iframe>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .1s,transform .6s ease-out .1s;border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:rgba(244,241,232,.06);position:relative">
+        <iframe src="https://www.youtube.com/embed/lZk6ajJgNpo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen title="Mobile Interview Short"></iframe>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .2s,transform .6s ease-out .2s;border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:rgba(244,241,232,.06);position:relative">
+        <iframe src="https://www.youtube.com/embed/ILs04TTNFGs" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen title="BTS Story"></iframe>
+      </div>
+    </div>
+
+    <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;margin-bottom:48px">
+      <div class="img-slot img-slot--dark" style="height:120px;width:160px;flex:0 0 auto;border-radius:8px">
+        <img src="../images/exterior-chairs-960.webp" alt="Still 1" onerror="this.classList.add('is-broken')">
+      </div>
+      <div class="img-slot img-slot--dark" style="height:120px;width:160px;flex:0 0 auto;border-radius:8px">
+        <img src="../images/timchat.webp" alt="Still 2" onerror="this.classList.add('is-broken')">
+      </div>
+      <div class="img-slot img-slot--dark" style="height:120px;width:160px;flex:0 0 auto;border-radius:8px">
+        <img src="../images/tasman_testimonaal.webp" alt="Still 3" onerror="this.classList.add('is-broken')">
+      </div>
+      <div class="img-slot img-slot--dark" style="height:120px;width:160px;flex:0 0 auto;border-radius:8px">
+        <img src="../images/newhomes.webp" alt="Still 4" onerror="this.classList.add('is-broken')">
+      </div>
+      <div class="img-slot img-slot--dark" style="height:120px;width:160px;flex:0 0 auto;border-radius:8px">
+        <img src="../images/Moorabbin_Walls.webp" alt="Still 5" onerror="this.classList.add('is-broken')">
+      </div>
+      <div class="img-slot img-slot--dark" style="height:120px;width:160px;flex:0 0 auto;border-radius:8px">
+        <img src="../images/digdig.webp" alt="Still 6" onerror="this.classList.add('is-broken')">
+      </div>
+    </div>
+
+    <div class="cc-three-col" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:36px;background:rgba(244,241,232,.06);border:1px solid rgba(244,241,232,.10);border-radius:18px">
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;text-align:center">
+        <div style="font-family:'Archivo';font-weight:800;font-size:42px;letter-spacing:-.04em;color:#E6D9C2;line-height:1;margin-bottom:10px">2×</div>
+        <div style="font-size:14px;color:rgba(244,241,232,.6);line-height:1.5">Shoot days per month on active sites and finished homes</div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .1s,transform .6s ease-out .1s;text-align:center">
+        <div style="font-family:'Archivo';font-weight:800;font-size:42px;letter-spacing:-.04em;color:#E6D9C2;line-height:1;margin-bottom:10px">4–6</div>
+        <div style="font-size:14px;color:rgba(244,241,232,.6);line-height:1.5">Cut-downs per shoot — Reels, Shorts and Stories</div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .2s,transform .6s ease-out .2s;text-align:center">
+        <div style="font-family:'Archivo';font-weight:800;font-size:42px;letter-spacing:-.04em;color:#E6D9C2;line-height:1;margin-bottom:10px">One</div>
+        <div style="font-size:14px;color:rgba(244,241,232,.6);line-height:1.5">Monthly content calendar, aligned to Crowncon's build pipeline</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 THE STRATEGY ENGINE -->
+<section style="background:#0D0D0C;padding:130px 0;position:relative">
+  <div style="position:absolute;top:56px;right:40px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(244,241,232,.3)">05</div>
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.55)"><span style="color:#E6D9C2">&#9656;</span>&nbsp;The strategy engine</span>
+      <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(30px,4vw,52px);line-height:1.02;letter-spacing:-.04em;color:#F4F1E8;margin:20px 0 0">We don't make content.<br><span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">We build a system that makes content.</span></h2>
+      <p style="max-width:64ch;font-size:17px;line-height:1.7;color:rgba(244,241,232,.65);margin:24px 0 56px">One day on site with Tim produces a month of assets across six platforms. A brand film. Four to six cut-downs. A blog post written from what he actually said. Two Google Business posts a week. A Medium article. And an eye on Reddit for the conversations where trust is really won.</p>
+    </div>
+
+    <!-- Flywheel diagram -->
+    <svg class="cc-fw-svg" data-flywheel viewBox="0 0 1000 620" style="width:100%;height:auto;margin-bottom:20px">
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:500px 40px">
+        <rect x="350" y="10" width="300" height="56" rx="10" fill="#1A4D3C" stroke="#E6D9C2" stroke-width="1.5"/>
+        <text x="500" y="44" text-anchor="middle" font-family="Space Mono, monospace" font-size="14" fill="#F4F1E8">ONE SHOOT DAY WITH TIM</text>
+      </g>
+      <path data-fw-path d="M500 66 V 120 M500 120 H 150 M500 120 H 350 M500 120 H 500 M500 120 H 650 M500 120 H 850 M150 120 V150 M350 120 V150 M500 120 V150 M650 120 V150 M850 120 V150" stroke="rgba(230,217,194,.4)" stroke-width="2" fill="none"/>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:150px 175px"><rect x="70" y="150" width="160" height="50" rx="8" fill="rgba(244,241,232,.06)" stroke="rgba(244,241,232,.25)"/><text x="150" y="180" text-anchor="middle" font-family="Archivo, sans-serif" font-size="13" font-weight="700" fill="#F4F1E8">Brand film</text></g>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:350px 175px"><rect x="270" y="150" width="160" height="50" rx="8" fill="rgba(244,241,232,.06)" stroke="rgba(244,241,232,.25)"/><text x="350" y="180" text-anchor="middle" font-family="Archivo, sans-serif" font-size="13" font-weight="700" fill="#F4F1E8">Reels</text></g>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:500px 175px"><rect x="420" y="150" width="160" height="50" rx="8" fill="rgba(244,241,232,.06)" stroke="rgba(244,241,232,.25)"/><text x="500" y="180" text-anchor="middle" font-family="Archivo, sans-serif" font-size="13" font-weight="700" fill="#F4F1E8">Interview audio</text></g>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:650px 175px"><rect x="570" y="150" width="160" height="50" rx="8" fill="rgba(244,241,232,.06)" stroke="rgba(244,241,232,.25)"/><text x="650" y="180" text-anchor="middle" font-family="Archivo, sans-serif" font-size="13" font-weight="700" fill="#F4F1E8">Stills</text></g>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:850px 175px"><rect x="770" y="150" width="160" height="50" rx="8" fill="rgba(244,241,232,.06)" stroke="rgba(244,241,232,.25)"/><text x="850" y="180" text-anchor="middle" font-family="Archivo, sans-serif" font-size="13" font-weight="700" fill="#F4F1E8">Expertise</text></g>
+      <path data-fw-path d="M150 200 V240 M350 200 V240 M500 200 V240 M650 200 V240 M850 200 V240" stroke="rgba(230,217,194,.4)" stroke-width="2" fill="none"/>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:150px 265px"><rect x="70" y="240" width="160" height="50" rx="8" fill="#1A4D3C" stroke="#E6D9C2"/><text x="150" y="270" text-anchor="middle" font-family="Space Mono, monospace" font-size="12" fill="#E6D9C2">YouTube</text></g>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:350px 265px"><rect x="270" y="240" width="160" height="50" rx="8" fill="#1A4D3C" stroke="#E6D9C2"/><text x="350" y="270" text-anchor="middle" font-family="Space Mono, monospace" font-size="12" fill="#E6D9C2">IG / FB</text></g>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:500px 265px"><rect x="420" y="240" width="160" height="50" rx="8" fill="#1A4D3C" stroke="#E6D9C2"/><text x="500" y="270" text-anchor="middle" font-family="Space Mono, monospace" font-size="12" fill="#E6D9C2">Blog post</text></g>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:650px 265px"><rect x="570" y="240" width="160" height="50" rx="8" fill="#1A4D3C" stroke="#E6D9C2"/><text x="650" y="270" text-anchor="middle" font-family="Space Mono, monospace" font-size="12" fill="#E6D9C2">GBP posts</text></g>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:850px 265px"><rect x="770" y="240" width="160" height="50" rx="8" fill="#1A4D3C" stroke="#E6D9C2"/><text x="850" y="270" text-anchor="middle" font-family="Space Mono, monospace" font-size="12" fill="#E6D9C2">Medium</text></g>
+      <path data-fw-path d="M150 290 V330 H500 M350 290 V320 M500 290 V330 M650 290 V320 M850 290 V330 H500 M500 330 V370" stroke="rgba(230,217,194,.4)" stroke-width="2" fill="none"/>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:500px 400px"><rect x="290" y="375" width="420" height="56" rx="10" fill="#123528" stroke="#E6D9C2" stroke-width="1.5"/><text x="500" y="409" text-anchor="middle" font-family="Space Mono, monospace" font-size="14" fill="#F4F1E8" letter-spacing="1">AUTHORITY · EXPERTISE · TRUST</text></g>
+      <path data-fw-path d="M500 431 V470" stroke="rgba(230,217,194,.6)" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+      <g data-fw-node style="opacity:0;transform:scale(.9);transform-origin:500px 500px"><rect x="330" y="475" width="340" height="56" rx="10" fill="#E6D9C2"/><text x="500" y="509" text-anchor="middle" font-family="Archivo, sans-serif" font-weight="800" font-size="16" fill="#123528">RANKINGS + REFERRALS</text></g>
+      <path data-fw-path d="M330 503 C 100 503, 60 200, 90 66" stroke="rgba(230,217,194,.35)" stroke-width="2" stroke-dasharray="6 6" fill="none" marker-end="url(#arrow2)"/>
+      <text x="60" y="330" font-family="Space Mono, monospace" font-size="11" fill="rgba(244,241,232,.4)" transform="rotate(-90 60 330)">feeds the next shoot</text>
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E6D9C2"/></marker>
+        <marker id="arrow2" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="rgba(230,217,194,.5)"/></marker>
+      </defs>
+    </svg>
+    <div class="cc-fw-mobile" style="display:none;flex-direction:column;gap:10px;margin-bottom:20px">
+      <div style="padding:14px 18px;border-radius:10px;background:#1A4D3C;color:#F4F1E8;font-weight:700;text-align:center">One shoot day with Tim</div>
+      <div style="font-size:13px;color:rgba(244,241,232,.5);text-align:center">↓ fans out into</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+        <span style="padding:8px 14px;border-radius:8px;background:rgba(244,241,232,.08);color:#F4F1E8;font-size:13px">Brand film → YouTube</span>
+        <span style="padding:8px 14px;border-radius:8px;background:rgba(244,241,232,.08);color:#F4F1E8;font-size:13px">Reels → IG/FB</span>
+        <span style="padding:8px 14px;border-radius:8px;background:rgba(244,241,232,.08);color:#F4F1E8;font-size:13px">Interview → Blog</span>
+        <span style="padding:8px 14px;border-radius:8px;background:rgba(244,241,232,.08);color:#F4F1E8;font-size:13px">Stills → GBP</span>
+        <span style="padding:8px 14px;border-radius:8px;background:rgba(244,241,232,.08);color:#F4F1E8;font-size:13px">Expertise → Medium</span>
+      </div>
+      <div style="font-size:13px;color:rgba(244,241,232,.5);text-align:center">↓ builds</div>
+      <div style="padding:14px 18px;border-radius:10px;background:#123528;border:1px solid #E6D9C2;color:#F4F1E8;font-weight:700;text-align:center">Authority · Expertise · Trust</div>
+      <div style="font-size:13px;color:rgba(244,241,232,.5);text-align:center">↓ drives</div>
+      <div style="padding:14px 18px;border-radius:10px;background:#E6D9C2;color:#123528;font-weight:800;text-align:center">Rankings + referrals</div>
+    </div>
+
+    <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+      <div style="flex:1;min-width:280px;padding:24px;border-radius:12px;background:rgba(244,241,232,.06);border:1px solid rgba(244,241,232,.12)">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#E6D9C2;margin-bottom:10px">Watching, not just posting</div>
+        <p style="font-size:14.5px;line-height:1.65;color:rgba(244,241,232,.7)">We keep an eye on Reddit for the conversations that matter — where trust in a builder is really won, long before someone lands on the site.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 KNOCKDOWN REBUILD PLAY -->
+<section style="background:#FBFBF9;padding:130px 0;position:relative">
+  <div style="position:absolute;top:56px;right:40px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(28,27,23,.25)">06</div>
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)"><span style="color:#C24B33">&#9656;</span>&nbsp;A worked example</span>
+      <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(30px,3.6vw,52px);line-height:1;letter-spacing:-.04em;margin:20px 0 0">The knockdown rebuild play.</h2>
+      <p style="max-width:64ch;font-size:17px;line-height:1.7;color:#46443c;margin:24px 0 56px">This is what "content with a purpose" looks like in practice — one search opportunity, followed all the way through.</p>
+    </div>
+    <div class="cc-four-col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity .6s ease-out;padding:26px;border-radius:14px;border:1px solid rgba(28,27,23,.12);background:#fff">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#C24B33;margin-bottom:12px">STEP 1</div>
+        <h4 style="font-family:'Archivo';font-weight:700;font-size:16px;margin-bottom:12px">We found the demand.</h4>
+        <p style="font-size:13.5px;line-height:1.6;color:#46443c">"knockdown rebuild" — 720/mo. "knockdown rebuild melbourne" — 480/mo. "knockdown rebuild cost melbourne" — 50/mo, $4.54 CPC.</p>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity .6s ease-out .1s,transform .6s ease-out .1s;padding:26px;border-radius:14px;border:1px solid rgba(28,27,23,.12);background:#fff">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#C24B33;margin-bottom:12px">STEP 2</div>
+        <h4 style="font-family:'Archivo';font-weight:700;font-size:16px;margin-bottom:12px">We shot for it.</h4>
+        <p style="font-size:13.5px;line-height:1.6;color:#46443c">Filmed Tim on an active knockdown rebuild site, talking through cost, process and what surprises people.</p>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity .6s ease-out .2s,transform .6s ease-out .2s;padding:26px;border-radius:14px;border:1px solid rgba(28,27,23,.12);background:#fff">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#C24B33;margin-bottom:12px">STEP 3</div>
+        <h4 style="font-family:'Archivo';font-weight:700;font-size:16px;margin-bottom:12px">We fanned it out.</h4>
+        <p style="font-size:13.5px;line-height:1.6;color:#46443c">Long-form blog post, YouTube upload, three vertical cut-downs, Google Business posts, Medium article.</p>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(20px);transition:opacity .6s ease-out .3s,transform .6s ease-out .3s;padding:26px;border-radius:14px;background:#1A4D3C;color:#F4F1E8">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#E6D9C2;margin-bottom:12px">STEP 4</div>
+        <h4 style="font-family:'Archivo';font-weight:700;font-size:16px;margin-bottom:12px">It ranked.</h4>
+        <p style="font-size:13.5px;line-height:1.6;color:rgba(244,241,232,.8)">"knockdown rebuild cost melbourne" — 18 → <b style="color:#E6D9C2">#1</b> in 6 days. "knockdown rebuild" (720/mo) — new, entered at position 15.</p>
+      </div>
+    </div>
+    <p data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;font-family:'Newsreader',serif;font-style:italic;font-size:20px;line-height:1.5;color:#1C1B17;max-width:56ch;margin:40px 0 0">"We didn't shoot a video and hope. We found where the market was already looking, then made something worth finding."</p>
+  </div>
+</section>
+
+<!-- 07 THE NUMBERS -->
+<section style="background:#123528;color:#F4F1E8;padding:130px 0;position:relative">
+  <div style="position:absolute;top:56px;right:40px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(244,241,232,.3)">07</div>
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.55)"><span style="color:#E6D9C2">&#9656;</span>&nbsp;The numbers</span>
+      <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(30px,3.6vw,52px);line-height:1;letter-spacing:-.04em;color:#F4F1E8;margin:20px 0 0">From zero to page one,<br><span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">in eight weeks</span>.</h2>
+      <p style="max-width:64ch;font-size:17px;line-height:1.7;color:rgba(244,241,232,.65);margin:24px 0 48px">As of 3 August. These are the real numbers from Semrush, Search Console and GA4.</p>
+    </div>
+
+    <div class="cc-four-col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px">
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;text-align:center;padding:24px;border-radius:14px;background:rgba(244,241,232,.06)">
+        <div style="font-family:'Archivo';font-weight:800;font-size:38px;color:#E6D9C2;letter-spacing:-.03em"><span data-countup="80">0</span></div>
+        <div style="font-size:13px;color:rgba(244,241,232,.6);margin-top:6px">Keywords tracked</div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .1s,transform .6s ease-out .1s;text-align:center;padding:24px;border-radius:14px;background:rgba(244,241,232,.06)">
+        <div style="font-family:'Archivo';font-weight:800;font-size:38px;color:#E6D9C2;letter-spacing:-.03em"><span data-countup="21">0</span></div>
+        <div style="font-size:13px;color:rgba(244,241,232,.6);margin-top:6px">Ranking page 1–5</div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .2s,transform .6s ease-out .2s;text-align:center;padding:24px;border-radius:14px;background:rgba(244,241,232,.06)">
+        <div style="font-family:'Archivo';font-weight:800;font-size:38px;color:#E6D9C2;letter-spacing:-.03em"><span data-countup="4">0</span></div>
+        <div style="font-size:13px;color:rgba(244,241,232,.6);margin-top:6px">In position 1–3</div>
+      </div>
+      <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out .3s,transform .6s ease-out .3s;text-align:center;padding:24px;border-radius:14px;background:rgba(244,241,232,.06)">
+        <div style="font-family:'Archivo';font-weight:800;font-size:38px;color:#E6D9C2;letter-spacing:-.03em"><span data-countup="3">0</span></div>
+        <div style="font-size:13px;color:rgba(244,241,232,.6);margin-top:6px">New entries this week</div>
+      </div>
+    </div>
+
+    <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;border-radius:18px;background:rgba(244,241,232,.06);border:1px solid rgba(244,241,232,.1);padding:8px;margin-bottom:48px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;min-width:640px">
+        <thead><tr style="font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(244,241,232,.5)">
+          <td style="padding:16px 20px">Keyword</td><td style="padding:16px 20px">Vol/mo</td><td style="padding:16px 20px">Jul 28</td><td style="padding:16px 20px">Aug 3</td><td style="padding:16px 20px"></td>
+        </tr></thead>
+        <tbody style="font-family:'Archivo';font-weight:700;font-size:16px">
+          <tr style="border-top:1px solid rgba(244,241,232,.1)"><td style="padding:16px 20px">knockdown rebuild cost melbourne</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">50</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">18</td><td style="padding:16px 20px;color:#E6D9C2">1</td><td style="padding:16px 20px;color:#E6D9C2">▲ 17</td></tr>
+          <tr style="border-top:1px solid rgba(244,241,232,.1)"><td style="padding:16px 20px">knockdown rebuild</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">720</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">—</td><td style="padding:16px 20px;color:#E6D9C2">15</td><td style="padding:16px 20px;color:#E6D9C2">NEW</td></tr>
+          <tr style="border-top:1px solid rgba(244,241,232,.1)"><td style="padding:16px 20px">custom home builders rye</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">30</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">—</td><td style="padding:16px 20px;color:#E6D9C2">12</td><td style="padding:16px 20px;color:#E6D9C2">NEW</td></tr>
+          <tr style="border-top:1px solid rgba(244,241,232,.1)"><td style="padding:16px 20px">custom home builder black rock</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">10</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">—</td><td style="padding:16px 20px;color:#E6D9C2">21</td><td style="padding:16px 20px;color:#E6D9C2">NEW</td></tr>
+          <tr style="border-top:1px solid rgba(244,241,232,.1)"><td style="padding:16px 20px">custom home builder se bayside melbourne</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">—</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">13</td><td style="padding:16px 20px;color:#E6D9C2">9</td><td style="padding:16px 20px;color:#E6D9C2">▲ 4</td></tr>
+          <tr style="border-top:1px solid rgba(244,241,232,.1)"><td style="padding:16px 20px">crowncon homes</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">—</td><td style="padding:16px 20px;color:rgba(244,241,232,.5)">1</td><td style="padding:16px 20px;color:#E6D9C2">1</td><td style="padding:16px 20px;color:rgba(244,241,232,.4)">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;display:flex;align-items:center;gap:24px;margin-bottom:48px;flex-wrap:wrap">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(244,241,232,.5)">Keywords on page one of Google · two months</div>
+      <div style="flex:1;min-width:220px;display:flex;align-items:center;gap:12px">
+        <span style="font-family:'Archivo';font-weight:800;font-size:22px;color:rgba(244,241,232,.4)">0</span>
+        <div style="flex:1;height:10px;background:rgba(244,241,232,.1);border-radius:6px;overflow:hidden"><div style="width:84%;height:100%;background:#E6D9C2;border-radius:6px"></div></div>
+        <span style="font-family:'Archivo';font-weight:800;font-size:22px;color:#E6D9C2">21</span>
+      </div>
+    </div>
+
+    <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;padding:28px 32px;border-radius:14px;background:rgba(244,241,232,.06);border:1px solid rgba(244,241,232,.1);margin-bottom:48px">
+      <p style="font-size:15px;line-height:1.7;color:rgba(244,241,232,.75)">Rankings move weekly. "knockdown rebuild melbourne" sat at #2 last week and is at #17 today; it'll move again. That's normal in the first months while Google works out who you are. What matters is the direction of the whole portfolio — from zero keywords to eighty tracked and twenty-one on page one, in eight weeks.</p>
+    </div>
+
+    <!-- AI SEARCH VISIBILITY -->
+    <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;padding:36px 36px 32px;border-radius:18px;background:rgba(244,241,232,.06);border:1px solid rgba(244,241,232,.14);border-left:3px solid #E6D9C2;margin-bottom:48px">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#E6D9C2;margin-bottom:18px">The other search box</div>
+      <h3 style="font-family:'Archivo';font-weight:800;font-size:clamp(24px,2.8vw,36px);line-height:1.08;letter-spacing:-.03em;color:#F4F1E8;margin:0 0 20px">Crowncon is being recommended by the AI models.</h3>
+      <p style="font-size:15.5px;line-height:1.7;color:rgba(244,241,232,.75);max-width:68ch;margin:0 0 24px">Ask ChatGPT or Gemini to name a custom home builder in south east Melbourne and Crowncon comes back in the recommendations — the exact market Tim is targeting. That isn't a separate campaign. It's the same work: a clean technical foundation, real content that answers what buyers actually ask, and a site the models can read and trust.</p>
+      <div class="cc-ai-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:22px">
+        <div style="padding:18px 20px;border-radius:12px;background:rgba(244,241,232,.05);border:1px solid rgba(244,241,232,.1)">
+          <div style="font-family:'Archivo';font-weight:800;font-size:17px;color:#F4F1E8;letter-spacing:-.01em">ChatGPT</div>
+          <div style="font-size:13px;color:rgba(244,241,232,.6);margin-top:6px">Named in recommendations for custom home builders, south east Melbourne</div>
+        </div>
+        <div style="padding:18px 20px;border-radius:12px;background:rgba(244,241,232,.05);border:1px solid rgba(244,241,232,.1)">
+          <div style="font-family:'Archivo';font-weight:800;font-size:17px;color:#F4F1E8;letter-spacing:-.01em">Gemini</div>
+          <div style="font-size:13px;color:rgba(244,241,232,.6);margin-top:6px">Named in recommendations for custom home builders, south east Melbourne</div>
+        </div>
+      </div>
+      <p style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.45);margin:0">Checked August 2026 · AI answers vary by phrasing and move over time</p>
+    </div>
+
+    <div data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;border-radius:18px;overflow:hidden;position:relative;min-height:320px;user-select:none" data-slider-track>
+      <!-- AFTER layer (base) -->
+      <div style="position:absolute;inset:0;background:#1A4D3C;padding:40px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#E6D9C2;margin-bottom:20px">After · 3 August</div>
+        <div class="cc-four-col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+          <div><div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,44px);color:#F4F1E8;letter-spacing:-.03em">99%</div><div style="font-size:12.5px;color:rgba(244,241,232,.6);margin-top:6px">Site health</div></div>
+          <div><div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,44px);color:#F4F1E8;letter-spacing:-.03em">100%</div><div style="font-size:12.5px;color:rgba(244,241,232,.6);margin-top:6px">AI search health</div></div>
+          <div><div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,44px);color:#E6D9C2;letter-spacing:-.03em">80</div><div style="font-size:12.5px;color:rgba(244,241,232,.6);margin-top:6px">Keywords tracked</div></div>
+          <div><div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,44px);color:#F4F1E8;letter-spacing:-.03em">0</div><div style="font-size:12.5px;color:rgba(244,241,232,.6);margin-top:6px">Crawl errors</div></div>
+        </div>
+      </div>
+      <!-- BEFORE layer (clipped by drag) -->
+      <div data-slider-before style="position:absolute;inset:0;overflow:hidden;background:#EFEAE0;padding:40px;display:flex;flex-direction:column;justify-content:center;clip-path:inset(0 50% 0 0)">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(28,27,23,.5);margin-bottom:20px">Before · Project start</div>
+        <div class="cc-four-col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+          <div><div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,44px);color:#1C1B17;letter-spacing:-.03em">78%</div><div style="font-size:12.5px;color:#46443c;margin-top:6px">Site health</div></div>
+          <div><div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,44px);color:#1C1B17;letter-spacing:-.03em">88%</div><div style="font-size:12.5px;color:#46443c;margin-top:6px">AI search health</div></div>
+          <div><div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,44px);color:#C24B33;letter-spacing:-.03em">0</div><div style="font-size:12.5px;color:#46443c;margin-top:6px">Keywords tracked</div></div>
+          <div><div style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,44px);color:#1C1B17;letter-spacing:-.03em">24</div><div style="font-size:12.5px;color:#46443c;margin-top:6px">Crawl errors</div></div>
+        </div>
+      </div>
+      <div data-slider-handle style="position:absolute;top:0;bottom:0;width:3px;background:#F4F1E8;box-shadow:0 0 0 1px rgba(0,0,0,.1);left:50%">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#F4F1E8;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.3)">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#123528" stroke-width="2.4" stroke-linecap="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>
+        </div>
+      </div>
+      <div style="position:absolute;bottom:14px;left:14px;background:rgba(13,13,12,.65);color:#fff;border-radius:999px;padding:5px 12px;font-size:11px;font-weight:600;pointer-events:none">Drag to compare</div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 SITE & TOOL -->
+<section style="background:#fff;padding:130px 0;position:relative">
+  <div style="position:absolute;top:56px;right:40px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(28,27,23,.25)">08</div>
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(28,27,23,.55)"><span style="color:#C24B33">&#9656;</span>&nbsp;Range</span>
+      <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(30px,3.6vw,52px);line-height:1;letter-spacing:-.04em;margin:20px 0 0">We built the whole thing.</h2>
+      <p style="max-width:64ch;font-size:17px;line-height:1.7;color:#46443c;margin:24px 0 48px">A site rebuilt around the buyer journey, and a feasibility tool that makes Tim's first sales conversation easier — all inside the existing platform, zero migration headaches.</p>
+    </div>
+    <div class="cc-mosaic" data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;display:grid;grid-template-columns:1fr 1fr 0.58fr;grid-auto-rows:200px;gap:16px;margin-bottom:36px">
+      <div style="grid-column:1;grid-row:1;min-width:0;border-radius:16px;overflow:hidden;position:relative">
+        <div class="img-slot">
+          <img src="../images/crowncon-screen-hero.png" alt="Homepage screenshot" onerror="this.classList.add('is-broken')">
+          <div class="img-slot-caption">Homepage screenshot<small>../images/crowncon-screen-hero.png</small></div>
+        </div>
+      </div>
+      <div style="grid-column:2;grid-row:1;min-width:0;border-radius:16px;overflow:hidden;position:relative">
+        <div class="img-slot">
+          <img src="../images/crowncon-screen-services.png" alt="Services page screenshot" onerror="this.classList.add('is-broken')">
+          <div class="img-slot-caption">Services page screenshot<small>../images/crowncon-screen-services.png</small></div>
+        </div>
+      </div>
+      <div class="cc-phone" style="grid-column:3;grid-row:1/3;min-width:0;background:#111;border-radius:32px;padding:8px">
+        <div style="border-radius:24px;overflow:hidden;height:100%;position:relative">
+          <div class="img-slot img-slot--dark">
+            <img src="../images/crowncon-screen-mobile.png" alt="Mobile view" onerror="this.classList.add('is-broken')">
+            <div class="img-slot-caption">Mobile view<small>../images/crowncon-screen-mobile.png</small></div>
+          </div>
+        </div>
+      </div>
+      <div style="grid-column:1;grid-row:2;min-width:0;border-radius:16px;overflow:hidden;position:relative">
+        <div class="img-slot">
+          <img src="../images/crowncon-screen-about.png" alt="About page screenshot" onerror="this.classList.add('is-broken')">
+          <div class="img-slot-caption">About page screenshot<small>../images/crowncon-screen-about.png</small></div>
+        </div>
+      </div>
+      <div style="grid-column:2;grid-row:2;min-width:0;border-radius:16px;overflow:hidden;position:relative">
+        <div class="img-slot">
+          <img src="../images/crowncon-screen-gallery.png" alt="Gallery screenshot" onerror="this.classList.add('is-broken')">
+          <div class="img-slot-caption">Gallery screenshot<small>../images/crowncon-screen-gallery.png</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="cc-two-col" data-reveal style="opacity:0;transform:translateY(16px);transition:opacity .6s ease-out;display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div style="padding:26px;border-radius:14px;border:1px solid rgba(28,27,23,.12)"><p style="font-size:15px;line-height:1.7;color:#46443c">Redesigned within Crowncon's existing LeadConnectorHQ platform — fast, SEO-structured, and built around the decision-making journey of a custom home buyer.</p></div>
+      <div style="padding:26px;border-radius:14px;background:#123528;color:#F4F1E8"><p style="font-size:15px;line-height:1.7;color:rgba(244,241,232,.75)">We also built Crowncon a feasibility report tool — something Tim puts in front of a prospect early, so both sides know what's possible on a block before committing time to it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 THE LONG GAME -->
+<section style="background:#0D0D0C;padding:150px 0;position:relative">
+  <div style="position:absolute;top:56px;right:40px;font-family:'Space Mono',monospace;font-size:13px;color:rgba(244,241,232,.3)">09</div>
+  <div data-reveal style="opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out;max-width:800px;margin:0 auto;padding:0 40px;text-align:center">
+    <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.5)">The long game</span>
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(28px,3.4vw,44px);line-height:1.15;letter-spacing:-.03em;color:#F4F1E8;margin:22px 0 0">This is a long game, and I'd rather say so.</h2>
+    <p style="font-size:17px;line-height:1.8;color:rgba(244,241,232,.65);margin-top:24px">Consistency and presence compound. Two months in, Crowncon went from invisible to ranking #1 for a term their buyers actually search. Twelve months in, the whole system is working — the films, the blog, the channels, the reviews, all reinforcing each other.</p>
+    <p style="font-family:'Newsreader',serif;font-style:italic;font-size:20px;color:#E6D9C2;margin-top:24px">If you want a spike, buy ads. If you want to become the obvious choice in your market, this is how it's done.</p>
+  </div>
+</section>
+
+<!-- 10 CTA -->
+<section style="padding:130px 0;background:#123528;color:#F4F1E8;text-align:center">
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(244,241,232,.5);display:block;margin-bottom:28px"><span style="color:#E6D9C2">&#9656;</span>&nbsp;Work with Beets &amp; Co</span>
+    <h2 style="font-family:'Archivo';font-weight:800;font-size:clamp(32px,4vw,58px);line-height:.95;letter-spacing:-.04em;color:#F4F1E8;margin-bottom:20px">Want results like <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:#E6D9C2">these</span>?</h2>
+    <p style="font-size:18px;line-height:1.6;color:rgba(244,241,232,.65);max-width:46ch;margin:0 auto 16px">First conversation is always free.</p>
+    <p style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#E6D9C2;margin:0 0 44px">I work with a small number of clients at a time.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="https://beetsandco.com.au/#apply" data-ga-event="start_conversation" style="font-family:'Archivo';font-weight:700;font-size:15.5px;display:inline-flex;align-items:center;gap:10px;background:#F4F1E8;color:#123528;border-radius:999px;padding:14px 26px">Start a conversation <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a href="#work" onclick="playMainVideo();document.getElementById('mainVideoFrame') && document.getElementById('mainVideoFrame').scrollIntoView({behavior:'smooth',block:'center'});" style="font-family:'Archivo';font-weight:700;font-size:15.5px;display:inline-flex;align-items:center;gap:10px;background:transparent;color:#F4F1E8;border:1.5px solid rgba(244,241,232,.28);border-radius:999px;padding:14px 26px">Watch the reel again</a>
+      <a href="../index.html" style="font-family:'Archivo';font-weight:700;font-size:15.5px;display:inline-flex;align-items:center;gap:10px;background:transparent;color:#F4F1E8;border:1.5px solid rgba(244,241,232,.28);border-radius:999px;padding:14px 26px">See more work</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#123528;color:#F4F1E8;padding:70px 0 30px">
+  <div style="max-width:1180px;margin:0 auto;padding:0 40px">
+    <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;margin-bottom:48px" class="cc-three-col">
+      <div>
+        <span style="font-family:'Archivo';font-weight:800;font-size:20px;color:#F4F1E8">Beets <span style="color:#E6D9C2">&amp;</span> Co</span>
+        <p style="font-size:14px;line-height:1.7;color:rgba(244,241,232,.6);margin-top:14px;max-width:36ch">A founder-led brand, web and story studio in Bayside Melbourne — for local businesses ready to become the obvious choice.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <h5 style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);margin-bottom:6px">Studio</h5>
+        <a href="../index.html#model" style="font-size:14px;color:rgba(244,241,232,.75)">The model</a>
+        <a href="../index.html#services" style="font-size:14px;color:rgba(244,241,232,.75)">What I do</a>
+        <a href="../index.html#crowncon" style="font-size:14px;color:rgba(244,241,232,.75)">Case study</a>
+        <a href="/blog/" style="font-size:14px;color:rgba(244,241,232,.75)">Journal</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <h5 style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);margin-bottom:6px">Get in touch</h5>
+        <a href="../index.html#apply" data-ga-event="start_conversation" style="font-size:14px;color:rgba(244,241,232,.75)">Start a conversation</a>
+        <a href="mailto:michael@beetsandco.com.au" style="font-size:14px;color:rgba(244,241,232,.75)">michael@beetsandco.com.au</a>
+        <a href="../index.html#top" style="font-size:14px;color:rgba(244,241,232,.75)">Bayside and South East Melbourne · VIC</a>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:24px;border-top:1px solid rgba(244,241,232,.12);font-size:13px;color:rgba(244,241,232,.5)">
+      <span>© 2026 Beets &amp; Co · Melbourne, VIC, Australia</span>
+      <a href="../index.html#top" style="color:rgba(244,241,232,.5)">beetsandco.com.au</a>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var reducedMotion = false;
+
+  function setupReveals(){
+    var els = document.querySelectorAll('[data-reveal]');
+    function reveal(el){ el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }
+    if (reducedMotion) { els.forEach(reveal); return; }
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    els.forEach(function(el){
+      var r = el.getBoundingClientRect();
+      if (r.top < vh && r.bottom > 0) reveal(el);
+    });
+    var io;
+    try {
+      io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
+      }, { threshold: 0.1 });
+      els.forEach(function(el){ if (el.style.opacity !== '1') io.observe(el); });
+    } catch (err) {}
+    setTimeout(function(){ els.forEach(reveal); if (io) io.disconnect(); }, 2500);
+  }
+
+  function animateCount(el){
+    var target = parseFloat(el.getAttribute('data-countup'));
+    var suffix = el.getAttribute('data-suffix') || '';
+    if (reducedMotion || isNaN(target)) { el.textContent = target + suffix; return; }
+    var dur = 1200;
+    var start = performance.now();
+    function step(now){
+      var p = Math.min(1, (now - start) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if (p < 1) requestAnimationFrame(step); else el.textContent = target + suffix;
+    }
+    requestAnimationFrame(step);
+  }
+
+  function setupCounters(){
+    var els = document.querySelectorAll('[data-countup]');
+    var done = new Set();
+    function trigger(el){ if (!done.has(el)) { done.add(el); animateCount(el); } }
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    els.forEach(function(el){ var r = el.getBoundingClientRect(); if (r.top < vh && r.bottom > 0) trigger(el); });
+    var io;
+    try {
+      io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if (e.isIntersecting) { trigger(e.target); io.unobserve(e.target); } });
+      }, { threshold: 0.3 });
+      els.forEach(function(el){ if (!done.has(el)) io.observe(el); });
+    } catch (err) {}
+    setTimeout(function(){ els.forEach(trigger); if (io) io.disconnect(); }, 2500);
+  }
+
+  function setupFlywheel(){
+    var svg = document.querySelector('[data-flywheel]');
+    if (!svg) return;
+    var paths = svg.querySelectorAll('[data-fw-path]');
+    var nodes = svg.querySelectorAll('[data-fw-node]');
+    paths.forEach(function(p){ var len = p.getTotalLength ? p.getTotalLength() : 500; p.style.strokeDasharray = len; p.style.strokeDashoffset = len; });
+    if (reducedMotion) {
+      paths.forEach(function(p){ p.style.strokeDashoffset = 0; });
+      nodes.forEach(function(n){ n.style.opacity = '1'; n.style.transform = 'scale(1)'; });
+      return;
+    }
+    var fired = false;
+    function trigger(){
+      if (fired) return; fired = true;
+      paths.forEach(function(p, i){ setTimeout(function(){ p.style.transition = 'stroke-dashoffset 1s ease-out'; p.style.strokeDashoffset = '0'; }, i * 150); });
+      nodes.forEach(function(n, i){ setTimeout(function(){ n.style.transition = 'opacity .5s ease-out, transform .5s ease-out'; n.style.opacity = '1'; n.style.transform = 'scale(1)'; }, 300 + i * 100); });
+    }
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    var r = svg.getBoundingClientRect();
+    if (r.top < vh && r.bottom > 0) trigger();
+    var io;
+    try {
+      io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting) { trigger(); io.disconnect(); } }); }, { threshold: 0.1 });
+      io.observe(svg);
+    } catch (err) {}
+    setTimeout(function(){ trigger(); if (io) io.disconnect(); }, 2500);
+  }
+
+  function setupSlider(){
+    var track = document.querySelector('[data-slider-track]');
+    if (!track) return;
+    var before = track.querySelector('[data-slider-before]');
+    var handle = track.querySelector('[data-slider-handle]');
+    var dragging = false;
+    function update(clientX){
+      var rect = track.getBoundingClientRect();
+      var pct = ((clientX - rect.left) / rect.width) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+      handle.style.left = pct + '%';
+      before.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
+    }
+    function down(e){ dragging = true; update(e.touches ? e.touches[0].clientX : e.clientX); }
+    function move(e){ if (dragging) update(e.touches ? e.touches[0].clientX : e.clientX); }
+    function up(){ dragging = false; }
+    track.addEventListener('mousedown', down);
+    track.addEventListener('mousemove', move);
+    track.addEventListener('mouseup', up);
+    track.addEventListener('mouseleave', up);
+    track.addEventListener('touchstart', down, { passive: true });
+    track.addEventListener('touchmove', move, { passive: true });
+    track.addEventListener('touchend', up);
+  }
+
+  window.playMainVideo = function(){
+    var poster = document.getElementById('mainVideoPoster');
+    var frame = document.getElementById('mainVideoFrame');
+    if (poster) poster.style.display = 'none';
+    if (frame) frame.style.display = 'block';
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setupReveals();
+    setupCounters();
+    setupFlywheel();
+    setupSlider();
+  });
+})();
+</script>
+
+</body>
+</html>

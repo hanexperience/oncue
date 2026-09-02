@@ -59,7 +59,7 @@ src="https://www.facebook.com/tr?id=1787784152664522&ev=PageView&noscript=1"
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,800&family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
 <style>
 /* ════════════════════════════════════════════════════════════════
@@ -305,6 +305,84 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
 @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}.door-row,.door-row.bonus{grid-template-columns:40px 1fr;gap:14px}.door-row p{grid-column:2}section{padding:74px 0}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
+
+<style>
+/* ── v2 re-skin ───────────────────────────────────────────────
+   The tool's own stylesheet is untouched: it is fully token
+   driven, so only the tokens are re-pointed here, plus the few
+   rules that hard-coded a colour. No markup or JS changes. */
+:root{
+  --paper:#0B0D0A;      /* page ground */
+  --paper2:#12150F;
+  --ink:#F2EFE6;        /* headings */
+  --body-c:#BFB6A2;     /* body copy */
+  --muted:rgba(191,182,162,.62);
+  --line:rgba(242,239,230,.15);
+  --tick:rgba(242,239,230,.30);
+  --g950:#1C211A;       /* was the dark band; now the lifted panel */
+  --g900:#22271F;
+  --g800:#2A3026;
+  --cream:#F2EFE6;
+  --green-mut:rgba(191,182,162,.62);
+  --line-dark:rgba(242,239,230,.14);
+  --amber:#C24B33;      /* CTA now matches the rest of the site */
+  --amber-deep:#C96C8C; /* accent = beet */
+  --disp:"Bricolage Grotesque","Hanken Grotesk",system-ui,sans-serif;
+  --bodyf:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Hanken Grotesk",system-ui,sans-serif;
+}
+body{background:var(--paper);color:var(--body-c);font-size:18px}
+h1,h2,h3,h4{color:var(--ink)}
+
+/* the micro uppercase mono labels were the strongest "template" tell */
+.rule .lbl,.hero-meta span,.door-n,.prog .lbl,.q-tag,.opt .k,.q-back,
+.f-field label,.f-micro,.strip-key,.fix-h,.fix-line dt,.good .lbl,
+.ai-note .lbl,.gate-flag .lbl,.offer-flag,.offer-hero .micro,.foot-bot{
+  font-family:var(--bodyf)!important;font-size:15px!important;
+  letter-spacing:0!important;text-transform:none!important;font-weight:500!important;
+}
+.dcell .nm{font-family:var(--bodyf)!important;font-size:13px!important;
+  letter-spacing:0!important;text-transform:none!important}
+.foot-grid h4{font-family:var(--disp)!important;font-size:17px!important;font-weight:600!important;
+  letter-spacing:-.02em!important;text-transform:none!important;color:var(--ink)!important}
+
+/* rules that hard-coded dark-on-amber — clay needs light text */
+.btn-amber,.offer-hero h3,.offer-hero p b,.offer-hero .catch,.af-h,
+.offer-done,.offer-done p,.offer-done p a{color:#F7F2EB!important}
+.offer-hero .micro{color:rgba(247,242,235,.72)!important}
+.audit-form .f-field input,.audit-form .f-field input:focus{
+  color:#F7F2EB!important;background:rgba(247,242,235,.10)!important;
+  border-color:rgba(247,242,235,.30)!important;
+}
+.audit-form .f-field input::placeholder{color:rgba(247,242,235,.5)}
+
+/* form fields on the dark ground */
+.f-field input,.f-field select,.f-field textarea{
+  background:rgba(242,239,230,.05);border:1px solid var(--line);color:var(--ink);font-size:17px;
+}
+.f-field input:focus,.f-field select:focus,.f-field textarea:focus{
+  border-color:var(--amber-deep);background:rgba(242,239,230,.08);outline:none;
+}
+.f-field input::placeholder,.f-field textarea::placeholder{color:rgba(191,182,162,.45)}
+
+/* small type generally */
+.lede,.hero-sub,.q-sub,.blurb,.res-band-p{font-size:19px}
+.btn{font-family:var(--disp);font-weight:600;font-size:17px;border-radius:2px}
+.navlinks .btn{font-size:16px!important}
+
+/* nav bar + buttons that hard-coded light values */
+nav.top{background:rgba(11,13,10,.88)!important;border-bottom:1px solid var(--line)!important}
+.btn-green{background:var(--amber)!important;color:#F7F2EB!important;border-color:var(--amber)!important}
+.btn-green:hover{background:#D45A41!important}
+.btn-amber:hover{background:#D45A41!important}
+.wordmark{color:var(--ink)}
+.wordmark em{color:var(--amber-deep)}
+
+@media(max-width:620px){
+  .foot-grid{grid-template-columns:1fr!important;gap:28px!important}
+  .foot-bot{flex-direction:column;gap:10px;align-items:flex-start}
+}
+</style>
 </head>
 <body>
 
@@ -313,9 +391,12 @@ footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--
   <div class="bar">
     <a href="/" class="wordmark">Beets <em>&amp;</em> Co</a>
     <div class="navlinks">
-      <a href="/#services">Services</a>
       <a href="/#crowncon">Work</a>
-      <a href="/#about">About</a>
+      <a href="/#services">Services</a>
+      <a href="/#about">Studio</a>
+      <a href="/#process">Process</a>
+      <a href="/#faq">FAQ</a>
+      <a href="/blog/">Journal</a>
       <button class="btn btn-green" onclick="startCheck()">Take the Walk-In Check</button>
     </div>
   </div>

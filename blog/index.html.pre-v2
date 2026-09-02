@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="an ln init xn Cn Br kn In capture Fn nn calculateEventProperties On register register_once register_for_session unregister unregister_for_session Ln getFeatureFlag getFeatureFlagPayload getFeatureFlagResult getAllFeatureFlags isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Dn identify setPersonProperties unsetPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset shutdown setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty An Rn createPersonProfile setInternalOrTestUser $n yn jn opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Tn debug Ur Rt getPageViewId captureTraceFeedback captureTraceMetric pn".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_x9qBCQJXRmXWkGYen6VuX5Dppb2UTLF5rfYPnLAFZp65', {
+        api_host: 'https://us.i.posthog.com',
+        defaults: '2026-05-30',
+        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+    })
+    </script>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Journal — Insights on Brand, Web &amp; Story · Beets &amp; Co</title>
+<meta name="description" content="Practical guides to branding, web design, local SEO and marketing for Melbourne trade businesses — written by Michael Beets, Beets & Co." />
+
+<!-- ═══ PRIMARY SEO META ═══ -->
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://beetsandco.com.au/blog/" />
+
+<!-- ═══ OPEN GRAPH ═══ -->
+<meta property="og:title" content="The Journal — Insights on Brand, Web &amp; Story · Beets &amp; Co" />
+<meta property="og:description" content="Practical thinking on branding, website design, and local SEO for Bayside businesses." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://beetsandco.com.au/blog/" />
+<meta property="og:locale" content="en_AU" />
+<meta property="og:image" content="https://beetsandco.com.au/images/beets.webp" />
+<meta property="og:image:alt" content="Michael Beets — Founder & Director, Beets & Co" />
+<meta property="og:site_name" content="Beets &amp; Co" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://beetsandco.com.au/images/beets.webp" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="../images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon-16x16.png">
+<link rel="manifest" href="../images/favicon/site.webmanifest">
+<link rel="shortcut icon" href="../images/favicon/favicon.ico">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../beets-v2.css" />
+
+<style>
+/* journal index — maps the page's existing classes onto the v2 system */
+.container{max-width:1400px;margin:0 auto;padding:0 var(--pad)}
+.nav{position:sticky;top:0;z-index:80;background:rgba(11,13,10,.86);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--rule)}
+.nav .container.row{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:15px var(--pad)}
+.brand .wm{font-family:var(--grot);font-weight:600;font-size:20px;letter-spacing:-.03em;color:var(--paper)}
+.brand .amp{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--stone)}
+.nav-links{display:flex;align-items:center;gap:clamp(14px,1.8vw,30px)}
+.nav-links a{font-size:16px;font-weight:500;color:var(--stone);transition:color .25s ease}
+.nav-links a:hover{color:var(--paper)}
+.nav-cta .btn svg{width:15px;height:15px;margin-left:8px}
+.burger{display:none;background:none;border:1px solid var(--rule);color:var(--paper);
+  font-family:var(--grot);font-weight:600;font-size:15px;padding:10px 16px;border-radius:2px;cursor:pointer}
+
+.journal-hero{padding:clamp(60px,8vw,124px) 0 clamp(34px,4vw,56px)}
+.journal-hero h1{font-size:clamp(42px,7vw,110px);line-height:.92;letter-spacing:-.045em;font-weight:600;max-width:15ch;text-wrap:balance}
+.journal-hero .sub{margin-top:clamp(22px,2.6vw,34px);font-size:clamp(18px,1.7vw,22px);
+  line-height:1.45;color:var(--stone);max-width:58ch}
+.serif-em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.015em}
+
+.journal-grid-page{padding:0 0 clamp(70px,9vw,130px)}
+.grid-layout{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:clamp(20px,2.6vw,34px)}
+.post-card{display:flex;flex-direction:column;background:var(--soil-3);
+  border:1px solid rgba(242,239,230,.08);border-radius:3px;
+  transition:background .3s ease,transform .4s cubic-bezier(.16,.84,.28,1)}
+.post-card:hover{background:#22271F;transform:translateY(-3px)}
+.card-top{display:none}
+.card-body{display:flex;flex-direction:column;gap:13px;padding:clamp(24px,2.6vw,34px);height:100%}
+.post-card .cat{font-size:16px;color:var(--stone-2)}
+.post-card h3{font-family:var(--grot);font-weight:600;font-size:clamp(21px,2.2vw,27px);
+  letter-spacing:-.03em;line-height:1.1;margin:0}
+.post-card p{font-size:17px;line-height:1.45;color:var(--stone);margin:0}
+.post-card .rd{margin-top:auto;padding-top:10px;display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--grot);font-weight:600;font-size:17px;color:var(--beet)}
+.post-card .rd svg{width:17px;height:17px}
+
+footer{padding:clamp(56px,6vw,90px) 0 44px;border-top:1px solid var(--rule);margin-top:clamp(20px,3vw,40px)}
+.foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:clamp(24px,3vw,48px)}
+.foot-brand p{font-size:17px;color:var(--stone-2);margin-top:14px;max-width:42ch;line-height:1.45}
+.foot-col h4{margin:0 0 14px;font-family:var(--grot);font-weight:600;font-size:17px;
+  letter-spacing:-.02em;color:var(--paper)}
+.foot-col a{display:block;color:var(--stone-2);font-size:16px;margin-bottom:9px;transition:color .25s ease}
+.foot-col a:hover{color:var(--beet)}
+
+@media(max-width:900px){
+  .nav-links{display:none}
+  .burger{display:block}
+  .foot-top{grid-template-columns:1fr;gap:30px}
+}
+</style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-29SKC7VN4C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-29SKC7VN4C');
+    </script>
+<script>
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-ga-event]');
+  if (t && typeof gtag === 'function') {
+    gtag('event', t.getAttribute('data-ga-event'), {
+      event_category: 'engagement',
+      event_label: (t.textContent || '').trim()
+    });
+  }
+});
+</script>
+  </head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" id="nav">
+  <div class="container row">
+    <a href="../index.html#top" class="brand" aria-label="Beets & Co home">
+      <span class="wm">Beets <span class="amp">&amp;</span> Co</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="../index.html#model">The model</a>
+      <a href="../index.html#services">What I do</a>
+      <a href="../index.html#crowncon">Work</a>
+      <a href="../index.html#about">About Michael</a>
+      <a href="/blog/">Journal</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="../index.html#apply" class="btn btn-primary" data-ga-event="start_conversation">Start a conversation
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================ HERO ============================ -->
+<section class="journal-hero">
+  <div class="container">
+    <h1>The <span class="serif-em">Journal.</span></h1>
+    <p class="sub">Straight talk, no fluff. Practical thinking on brand, web, and marketing for local businesses.</p>
+  </div>
+</section>
+
+<!-- ============================ ARTICLES INDEX ============================ -->
+<section class="journal-grid-page">
+  <div class="container">
+    <p style="margin-bottom: 40px; font-size: 16px; line-height: 1.6;"><a href="../index.html#top" style="color: var(--accent); font-weight: 600;">← Back to Beets &amp; Co</a></p>
+    <div class="grid-layout">
+      
+      <!-- Post: Instagram Grid Maker (free tool) -->
+      <a href="instagram-grid-maker-free.html" class="post-card">
+        <div class="card-top t2"><span class="gl">▦</span></div>
+        <div class="card-body">
+          <div class="cat">Free Tool · 5 min</div>
+          <h3>Free Instagram grid maker — design your feed</h3>
+          <p>Split photos across a grid, build a puzzle feed, or lay out branded tiles with text. Free, no signup, no watermark — plus how to actually use a grid to grow a business.</p>
+          <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+
+      <!-- Post: Content Marketing for Local SEO -->
+      <a href="content-marketing-for-local-seo.html" class="post-card">
+        <div class="card-top t1"><span class="gl">▶</span></div>
+        <div class="card-body">
+          <div class="cat">Content &amp; SEO · 6 min</div>
+          <h3>Content marketing for local SEO — why real beats AI</h3>
+          <p>Most businesses publish content that sits there doing nothing. Here's what a connected content ecosystem actually looks like — with a real case study.</p>
+          <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+
+      <!-- Post 1 -->
+      <a href="branding-bayside-trade-businesses.html" class="post-card">
+        <div class="card-top t1"><span class="gl">Aa</span></div>
+        <div class="card-body">
+          <div class="cat">Branding · 6 min</div>
+          <h3>More than a logo: what your business actually needs</h3>
+          <p>Most local businesses have a logo. Few have a brand. The practical difference — and why the gap is costing you jobs.</p>
+          <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+
+      <!-- Post 2 -->
+      <a href="web-design-bayside-melbourne-tradies.html" class="post-card">
+        <div class="card-top t2"><span class="gl">&lt;/&gt;</span></div>
+        <div class="card-body">
+          <div class="cat">Web Design · 5 min</div>
+          <h3>Why most local websites lose the job before the call</h3>
+          <p>What a Bayside business website needs to win trust in the first seven seconds — and rank in your suburb.</p>
+          <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+
+      <!-- Post 3 -->
+      <a href="local-seo-melbourne-trade-businesses.html" class="post-card">
+        <div class="card-top t3"><span class="gl">◎</span></div>
+        <div class="card-body">
+          <div class="cat">SEO · 7 min</div>
+          <h3>Local SEO that actually works in Melbourne</h3>
+          <p>Google Business Profile, reviews, on-page signals and suburb content — what moves the needle and what doesn't.</p>
+          <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+
+            <!-- Post 5: Digital Marketing -->
+            <a href="digital-marketing-agency-frankston.html" class="post-card">
+                <div class="card-top t2"><span class="gl">◎</span></div>
+                <div class="card-body">
+                <div class="cat">Digital Marketing · 6 min</div> <!-- From meta tag read times -->
+                <h3>Digital Marketing Agency Frankston — What Frankston Trade Businesses Actually Need</h3> <!-- Verbatim title from file -->
+                <p>What Frankston trade businesses should expect from a digital marketing agency — and how to tell if you're getting value.</p> <!-- Verbatim description -->
+                <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                </div>
+            </a>
+
+            <!-- Post 6: Reviews -->
+            <a href="google-reviews-melbourne-trade-business.html" class="post-card">
+                <div class="card-top t3"><span class="gl">◎</span></div>
+                <div class="card-body">
+                <div class="cat">Reviews · 5 min</div>
+                <h3>How to Get More Google Reviews for Your Melbourne Trade Business</h3>
+                <p>A practical 5-step system for collecting consistent 5-star Google reviews — without begging, bribing or chasing customers across Melbourne.</p>
+                <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                </div>
+            </a>
+
+            <!-- Post 7: Marketing Automation -->
+            <a href="marketing-automation-melbourne-trade-businesses.html" class="post-card">
+                <div class="card-top t1"><span class="gl">⚡</span></div>
+                <div class="card-body">
+                <div class="cat">Automation · 6 min</div>
+                <h3>Marketing Automation for Melbourne Trade Businesses</h3>
+                <p>How Melbourne trades and operators are using marketing automation to capture leads, follow up faster, and win more jobs — without hiring more staff.</p>
+                <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                </div>
+            </a>
+
+            <!-- Post 8: SEO for Plumbers -->
+            <a href="seo-for-plumbers-melbourne.html" class="post-card">
+                <div class="card-top t2"><span class="gl">🔧</span></div>
+                <div class="card-body">
+                <div class="cat">SEO · 7 min</div>
+                <h3>SEO for Plumbers Melbourne — What Actually Works</h3>
+                <p>How to rank on Google in your suburbs, fill your Google Business Profile, and get more calls from local search — without paying for ads.</p>
+                <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                </div>
+            </a>
+
+            <!-- Post 9: SEO for Electricians -->
+            <a href="seo-for-electricians-melbourne.html" class="post-card">
+                <div class="card-top t3"><span class="gl">⚡</span></div>
+                <div class="card-body">
+                <div class="cat">SEO · 7 min</div>
+                <h3>SEO for Electricians Melbourne — What Actually Works</h3>
+                <p>How to rank in your service suburbs, win the Google Local Pack, and get more calls — without paying for ads every month.</p>
+                <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                </div>
+            </a>
+
+            <!-- Post 10: Marketing for Tradies -->
+            <a href="marketing-for-tradies.html" class="post-card">
+                <div class="card-top t1"><span class="gl">▲</span></div>
+                <div class="card-body">
+                <div class="cat">Digital Marketing · 8 min</div>
+                <h3>Marketing for Tradies — The Complete Guide for 2026</h3>
+                <p>What actually works when you're a plumber, electrician, builder or any other trade business trying to get more calls — and what's a waste of money.</p>
+                <span class="rd">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                </div>
+            </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FOOTER ============================ -->
+<footer>
+  <div class="container">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="../index.html#top" class="brand"><span class="wm">Beets <span class="amp" style="color:var(--sand)">&amp;</span> Co</span></a>
+        <p>A founder-led brand, web and story studio in Bayside Melbourne. Led by Michael Beets — creative director with a decade of senior work — for local businesses ready to become the obvious choice.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Studio</h5>
+        <a href="../index.html#model">The model</a>
+        <a href="../index.html#services">What I do</a>
+        <a href="../index.html#crowncon">Work</a>
+        <a href="../index.html#about">About Michael</a>
+        <a href="/blog/">Journal</a>
+      </div>
+      <div class="foot-col">
+        <h5>Get in touch</h5>
+        <a href="../index.html#apply" data-ga-event="start_conversation">Start a conversation</a>
+        <a href="mailto:michael@beetsandco.com.au">

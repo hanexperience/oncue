@@ -206,739 +206,363 @@ document.addEventListener('click', function(e){
 </script>
 
 
-<style>
-/* ════════════════════════════════════════════════════════════════
-   BEETS & CO — "Marked out, then built."
-   Green-dominant palette anchored on the studio's own #123528.
-   Signature device: the architectural dimension line (end ticks +
-   mono label) — used for section rules, stats and the process
-   timeline. Mono appears only where a measurement or annotation is
-   real. No italic-serif swaps, no decorative numbering, no marquee.
-   ════════════════════════════════════════════════════════════════ */
-:root{
-  --g950:#0C231B; --g900:#123528; --g800:#1B4634;
-  --paper:#FAF9F5; --paper2:#F0EEE5;
-  --ink:#151810; --body-c:#3C4237; --muted:#6A7160;
-  --line:#DCDACF; --tick:#B8B5A6;
-  --cream:#EFEDE2; --green-mut:#9FB3A5; --line-dark:rgba(239,237,226,.18);
-  --amber:#D99B2B; --amber-deep:#A9761B;
-  --disp:'Bricolage Grotesque',sans-serif;
-  --bodyf:'Archivo',sans-serif;
-  --mono:'IBM Plex Mono',monospace;
-  --w:1160px;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:clip}
-/* in-page anchors clear the sticky nav */
-#top,#walkin,#crowncon,#model,#services,#about,#process,#faq,#apply{scroll-margin-top:84px}
-body{overflow-x:clip}
-body{font-family:var(--bodyf);background:var(--paper);color:var(--body-c);font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
-img,video{display:block;max-width:100%}
-a{color:var(--g800);text-decoration:none}
-.wrap{max-width:var(--w);margin:0 auto;padding:0 28px}
-h1,h2,h3{font-family:var(--disp);color:var(--ink);letter-spacing:-.02em}
-::selection{background:var(--amber);color:var(--g950)}
-:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
-
-/* ── Dimension rule: |— LABEL ————————| ── */
-.rule{display:flex;align-items:center;gap:14px;color:var(--muted);margin-bottom:34px}
-.rule::before,.rule::after{content:"";width:1px;height:10px;background:var(--tick);flex:none}
-.rule .ln{flex:1;height:1px;background:var(--line)}
-.rule .lbl{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap}
-.rule a.side{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--g800);white-space:nowrap}
-.rule a.side:hover{color:var(--amber-deep)}
-.on-green .rule{color:var(--green-mut)}
-.on-green .rule::before,.on-green .rule::after{background:rgba(239,237,226,.4)}
-.on-green .rule .ln{background:var(--line-dark)}
-.on-green .rule a.side{color:var(--cream)}
-
-/* ── Buttons ── */
-.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--bodyf);font-weight:600;font-size:15px;padding:15px 28px;border:1px solid transparent;cursor:pointer;transition:background .18s,border-color .18s,color .18s}
-.btn-amber{background:var(--amber);color:#1C1405;border-color:var(--amber)}
-.btn-green {
-  background: var(--g900);
-  color: #E8AC3F; /* Updated text color */
-  border-color: var(--g900);
-}
-.btn.btn-green {
-  background: var(--g900);
-  color: #E8AC3F;
-  border-color: var(--g900);
-}
-
-.btn-green:hover {
-  background: var(--g800);
-}
-.arrow{display:inline-block;transition:transform .18s}
-.btn:hover .arrow,a:hover .arrow{transform:translate(2px,-1px)}
-
-/* ── Announcement bar ── */
-.announce{background:var(--amber);color:#1C1405;position:relative;z-index:60;transition:background .18s}
-.announce a{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
-  max-width:var(--w);margin:0 auto;padding:11px 28px;color:#1C1405;text-align:center}
-.announce .an-tag{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
-  background:#1C1405;color:var(--amber);padding:3px 9px;flex:none}
-.announce .an-txt{font-family:var(--bodyf);font-size:14.5px;font-weight:600;line-height:1.35}
-.announce .an-go{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;flex:none}
-.announce .an-short{display:none}
-.announce:hover{background:#E8AC3F}
-@media(max-width:640px){
-  .announce a{gap:9px;padding:10px 18px}
-  .announce .an-txt{font-size:13.5px}
-  .announce .an-go{display:none}
-  .announce .an-long{display:none}
-  .announce .an-short{display:inline}
-  .announce .an-tag{font-size:9.5px;padding:3px 7px}
-}
-
-/* ── Nav ── */
-nav.top{position:sticky;top:0;z-index:50;background:rgba(250,249,245,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-nav.top .bar{max-width:var(--w);margin:0 auto;padding:0 28px;height:68px;display:flex;align-items:center;justify-content:space-between}
-.wordmark{font-family:var(--disp);font-weight:700;font-size:21px;color:var(--ink);letter-spacing:-.01em}
-.wordmark em{font-style:normal;color:var(--amber-deep)}
-.navlinks{display:flex;align-items:center;gap:30px}
-.navlinks a{font-weight:500;font-size:15px;color:var(--body-c)}
-.navlinks a:hover{color:var(--ink)}
-.navlinks .btn{padding:11px 20px;font-size:14px}
-.navlinks a.nav-flag{display:inline-flex;align-items:center;gap:7px;font-weight:600;color:var(--amber-deep)}
-.navlinks a.nav-flag::before{content:"";width:7px;height:7px;background:var(--amber);border-radius:50%;flex:none}
-.navlinks a.nav-flag:hover{color:var(--ink)}
-.mobile-menu a.nav-flag{color:var(--amber-deep);font-weight:600}
-.menu-btn{display:none;background:none;border:1px solid var(--line);padding:9px 13px;font-family:var(--mono);font-size:11px;letter-spacing:.15em;cursor:pointer;color:var(--ink)}
-.mobile-menu{display:none;border-bottom:1px solid var(--line);background:var(--paper)}
-.mobile-menu.open{display:block}
-.mobile-menu a{display:block;padding:15px 28px;border-top:1px solid var(--line);font-weight:500;color:var(--ink)}
-
-/* ── Hero ── */
-.hero{background:var(--g900);color:var(--cream);padding:72px 0 0}
-.hero .rule{margin-bottom:44px}
-.hero h1{font-size:clamp(46px,7.6vw,108px);font-weight:800;line-height:.96;color:var(--cream);max-width:15ch}
-.hero h1 .acc{color:var(--amber)}
-.hero-sub{display:flex;gap:48px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin:44px 0 64px}
-.hero-sub p{max-width:56ch;font-size:17.5px;color:var(--green-mut)}
-.hero-sub p strong{color:var(--cream);font-weight:600}
-.hero-cta{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
-.hero-cta .btn-ghost-cream{background:transparent;color:var(--cream);border-color:rgba(239,237,226,.4)}
-.hero-cta .btn-ghost-cream:hover{background:rgba(239,237,226,.08);border-color:var(--cream)}
-.hero-cta .cta-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--green-mut)}
-.strip{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:var(--g900)}
-.strip figure{aspect-ratio:3/4;overflow:hidden;margin:0}
-.strip img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-.strip figure:hover img{transform:scale(1.03)}
-/* draw-in on load */
-.hero .rule .ln{transform-origin:left;animation:draw .9s cubic-bezier(.6,0,.2,1) .15s both}
-.hero .rule .lbl,.hero .rule::before,.hero .rule::after{animation:fadein .5s ease .7s both}
-@keyframes draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes fadein{from{opacity:0}to{opacity:1}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
-
-/* ── Credentials line ── */
-.creds{border-bottom:1px solid var(--line);padding:26px 0}
-.creds .in{display:flex;align-items:center;gap:14px}
-.creds .in::before,.creds .in::after{content:"";width:1px;height:10px;background:var(--tick);flex:none}
-.creds p{flex:1;text-align:center;font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);line-height:2.1}
-
-/* ── Sections ── */
-section{padding:110px 0}
-.sec-h{font-size:clamp(32px,4.4vw,54px);font-weight:700;line-height:1.05;max-width:22ch;margin-bottom:22px}
-.on-green .sec-h{color:var(--cream)}
-.lede{max-width:60ch;font-size:17.5px}
-.on-green .lede{color:var(--green-mut)}
-
-/* ── Featured work ── */
-.case{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;margin-top:56px;align-items:start}
-.case .film{border:1px solid var(--line)}
-.case-meta{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
-.quote{font-family:var(--disp);font-weight:600;font-size:24px;line-height:1.35;color:var(--ink);border-left:2px solid var(--amber);padding-left:20px;margin-bottom:22px}
-.tags{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--muted);margin:20px 0 26px}
-.tags b{color:var(--ink);font-weight:500}
-.tlink{font-weight:600;color:var(--ink);border-bottom:2px solid var(--amber);padding-bottom:2px}
-.tlink:hover{color:var(--amber-deep)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:64px}
-.stat{position:relative;border-bottom:1px solid var(--tick);padding-bottom:16px}
-.stat::before,.stat::after{content:"";position:absolute;bottom:-1px;width:1px;height:10px;background:var(--tick)}
-.stat::before{left:0}.stat::after{right:0}
-.stat b{display:block;font-family:var(--disp);font-weight:800;font-size:clamp(38px,4.6vw,58px);color:var(--ink);line-height:1;letter-spacing:-.02em}
-.stat span{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:block;margin-top:10px}
-.ai-note{margin-top:46px;padding:28px 32px;border-radius:14px;background:var(--paper2);border:1px solid var(--line);border-left:3px solid var(--amber)}
-.ai-note .ai-lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber-deep);display:block;margin-bottom:14px}
-.ai-note p{margin:0;font-size:16.5px;line-height:1.65;color:var(--body-c);max-width:70ch}
-.ai-note p b{color:var(--ink);font-weight:600}
-.ai-note .stamp{display:block;margin-top:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-@media(max-width:640px){.ai-note{padding:22px 20px;margin-top:34px}}
-
-/* ── Model (green) ── */
-.on-green{background:var(--g900);color:var(--green-mut)}
-.claims{display:grid;grid-template-columns:repeat(3,1fr);gap:0 44px;margin-top:52px;border-top:1px solid var(--line-dark)}
-.claim{position:relative;padding:22px 0 0}
-.claim::before{content:"";position:absolute;top:-1px;left:0;width:2px;height:10px;background:var(--amber)}
-.claim h3{font-size:20px;font-weight:650;color:var(--cream);line-height:1.2}
-.claim p{font-size:15.5px;margin-top:10px}
-
-/* ── Services ── */
-.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:0 44px;margin-top:56px;border-top:1px solid var(--line)}
-.svc-row{position:relative;padding:24px 0 30px}
-.svc-row::before{content:"";position:absolute;top:-1px;left:0;width:2px;height:10px;background:var(--amber)}
-.svc-row:nth-child(n+4){border-top:1px solid var(--line)}
-.svc-tag{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber-deep)}
-.svc-row h3{font-size:21px;font-weight:650;margin:10px 0 8px;line-height:1.2}
-.svc-row h3 a{color:var(--ink)}
-.svc-row h3 a:hover{color:var(--g800)}
-.svc-row p{font-size:15.5px;max-width:34ch}
-
-/* ── About ── */
-.about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;align-items:start}
-.about-ims{display:grid;gap:14px}
-.about-ims figure{margin:0}
-.about-ims img{width:100%;border:1px solid var(--line)}
-.about-ims figcaption{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:10px}
-.about-copy p{margin-bottom:20px}
-.about-copy .quote{margin:32px 0}
-.fact-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 30px;margin-top:34px}
-.fact{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--body-c)}
-.fact::before{content:"";width:6px;height:6px;background:var(--amber);flex:none}
-
-/* ── Process timeline ── */
-.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:30px;margin-top:64px;border-top:1px solid var(--tick);position:relative}
-.timeline::after{content:"";position:absolute;top:-5px;right:0;width:1px;height:10px;background:var(--tick)}
-.stage{position:relative;padding-top:26px}
-.stage::before{content:"";position:absolute;top:-5px;left:0;width:1px;height:10px;background:var(--tick)}
-.stage .n{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--amber-deep)}
-.stage h3{font-size:20px;font-weight:650;margin:8px 0 0}
-.stage .wk{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px}
-
-/* ── Contact ── */
-.contact{background:var(--g950);color:var(--green-mut)}
-.contact-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:70px;align-items:start}
-.contact .sec-h{color:var(--cream)}
-.contact .note{border-left:2px solid var(--amber);padding:4px 0 4px 18px;font-size:15px;margin:28px 0 36px}
-.contact .em{font-family:var(--disp);font-weight:650;font-size:20px;color:var(--cream)}
-.contact .em:hover{color:var(--amber)}
-.contact .loc{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-top:10px}
-.f-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px 28px}
-.f-field{display:flex;flex-direction:column}
-.f-field.full{grid-column:1/-1}
-.f-field label{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--green-mut);margin-bottom:10px}
-.f-field input,.f-field select,.f-field textarea{font-family:var(--bodyf);font-size:16px;color:var(--cream);background:transparent;border:0;border-bottom:1px solid rgba(239,237,226,.28);padding:8px 2px 10px;transition:border-color .15s;border-radius:0;appearance:none;-webkit-appearance:none}
-.f-field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239FB3A5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 4px center}
-.f-field select option{color:var(--ink);background:var(--paper)}
-.f-field input:focus,.f-field select:focus,.f-field textarea:focus{border-bottom-color:var(--amber);outline:none}
-.f-field ::placeholder{color:rgba(159,179,165,.55)}
-.f-sub{grid-column:1/-1}
-.f-sub .btn{width:100%;justify-content:center;font-size:16px;padding:17px}
-.f-micro{grid-column:1/-1;text-align:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(159,179,165,.7)}
-
-/* ── Footer ── */
-footer{background:var(--g950);color:var(--green-mut);border-top:1px solid var(--line-dark);padding:70px 0 36px}
-.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:44px}
-.foot-grid h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(159,179,165,.7);font-weight:500;margin-bottom:16px}
-.foot-grid a{display:block;color:var(--green-mut);padding:4px 0;font-size:15px}
-.foot-grid a:hover{color:var(--cream)}
-.foot-grid .wordmark{color:var(--cream);margin-bottom:14px}
-.foot-grid .blurb{font-size:15px;max-width:34ch}
-.foot-bot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line-dark);margin-top:56px;padding-top:26px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:rgba(159,179,165,.7)}
-.foot-bot .soc a{color:var(--green-mut);margin-left:22px}
-.foot-bot .soc a:hover{color:var(--cream)}
-
-/* ── Walk-In Check (second hero) ── */
-.wcheck{background:var(--g950);color:var(--green-mut);padding:96px 0}
-.wcheck h2{font-family:var(--disp);font-size:clamp(38px,5.4vw,68px);font-weight:800;line-height:1;color:var(--cream);max-width:16ch}
-.wcheck h2 .acc{color:var(--amber)}
-.wcheck .w-sub{font-size:18px;max-width:52ch;margin-top:26px}
-.wcheck .w-sub b{color:var(--cream);font-weight:600}
-.wcheck .w-top{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:end}
-.wcheck .w-act{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
-.wcheck .w-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(159,179,165,.75)}
-.doorstrip{display:grid;grid-template-columns:repeat(9,1fr);gap:0;margin-top:58px;border-top:1px solid var(--line-dark)}
-.doorstrip .d{position:relative;padding:20px 12px 0 0}
-.doorstrip .d::before{content:"";position:absolute;top:-1px;left:0;width:2px;height:9px;background:var(--amber)}
-.doorstrip .d i{display:block;font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:rgba(159,179,165,.65)}
-.doorstrip .d span{display:block;font-family:var(--disp);font-size:15px;font-weight:650;color:var(--cream);line-height:1.15;margin-top:7px}
-@media(max-width:980px){
-  .wcheck{padding:72px 0}
-  .wcheck .w-top{grid-template-columns:1fr;gap:34px;align-items:start}
-  .doorstrip{grid-template-columns:repeat(3,1fr);gap:0 18px}
-  .doorstrip .d{padding:16px 0 16px 0;border-top:1px solid var(--line-dark)}
-  .doorstrip .d:nth-child(-n+3){border-top:0}
-}
-@media(max-width:560px){
-  .doorstrip{grid-template-columns:repeat(2,1fr)}
-  .doorstrip .d:nth-child(-n+3){border-top:1px solid var(--line-dark)}
-  .doorstrip .d:nth-child(-n+2){border-top:0}
-  .wcheck .w-act{width:100%;align-items:stretch}
-  .wcheck .w-act .btn{width:100%;justify-content:center}
-}
-
-/* ── FAQ ── */
-.faq{margin-top:52px;max-width:80ch}
-.faq details{border-top:1px solid var(--line);position:relative}
-.faq details::before{content:"";position:absolute;top:-1px;left:0;width:1px;height:10px;background:var(--tick)}
-.faq details:last-of-type{border-bottom:1px solid var(--line)}
-.faq summary{list-style:none;cursor:pointer;padding:26px 44px 26px 0;font-family:var(--disp);font-size:19px;font-weight:650;color:var(--ink);position:relative}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";position:absolute;right:6px;top:23px;font-family:var(--mono);font-size:20px;color:var(--amber-deep)}
-.faq details[open] summary::after{content:"\2013"}
-.faq summary:hover{color:var(--g800)}
-.faq .ans{padding:0 44px 28px 0;font-size:16px;max-width:66ch}
-
-/* ── Reveal ── */
-.rv{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
-.rv.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}}
-
-/* ── Responsive ── */
-@media(max-width:980px){
-  .case,.about-grid,.contact-grid{grid-template-columns:1fr;gap:44px}
-  .timeline{grid-template-columns:repeat(2,1fr)}
-  .timeline::after{display:none}
-  .claims{grid-template-columns:1fr;gap:0}
-  .claim{padding:20px 0;border-top:1px solid var(--line-dark)}
-  .claim:first-child{border-top:0}
-  .svc{grid-template-columns:repeat(2,1fr)}
-  .svc-row:nth-child(n+3){border-top:1px solid var(--line)}
-}
-@media(max-width:760px){
-  .rule{flex-wrap:wrap;gap:10px 12px;margin-bottom:26px}
-  .rule .lbl{white-space:normal;font-size:10px;letter-spacing:.18em}
-  .rule .ln{min-width:20px}
-  .rule::after{display:none}
-  .hero .rule{margin-bottom:30px}
-  .hero .rule .lbl:last-of-type{display:none}
-  .hero-sub .btn{width:100%;justify-content:center}
-  .hero-cta{width:100%;align-items:stretch}
-  .navlinks{display:none}
-  .menu-btn{display:block}
-  .strip{grid-template-columns:repeat(2,1fr)}
-  .strip figure:nth-child(5){display:none}
-  .stats{grid-template-columns:1fr;gap:26px}
-  .f-grid{grid-template-columns:1fr}
-  .foot-grid{grid-template-columns:1fr 1fr}
-  section{padding:80px 0}
-  .timeline{grid-template-columns:repeat(2,1fr);gap:0 24px}
-  .stage{padding:18px 0}
-  .svc{grid-template-columns:1fr}
-  .svc-row:nth-child(n+2){border-top:1px solid var(--line)}
-  .faq summary{font-size:17.5px}
-}
-</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,800&family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="beets-v2.css" />
 </head>
 <body>
 
-<!-- ══ ANNOUNCEMENT BAR ══ -->
-<div class="announce">
-  <a href="walk-in-ready.html" data-ga-event="walk_in_ready_announce">
-    <span class="an-tag">Free · 3 minutes</span>
-    <span class="an-txt"><span class="an-long">Is your business walk-in ready? Take the Walk-In Check.</span><span class="an-short">Is your business walk-in ready?</span></span>
-    <span class="an-go">Start →</span>
-  </a>
-</div>
 
-<!-- ══ NAV ══ -->
-<nav class="top" aria-label="Main">
+<nav class="nav" id="top">
   <div class="bar">
-    <a href="#top" class="wordmark">Beets <em>&amp;</em> Co</a>
+    <a class="wordmark" href="#top">Beets <span class="si">&amp;</span> Co</a>
     <div class="navlinks">
-      <a href="#services">Services</a>
       <a href="#crowncon">Work</a>
-      <a href="#model">Studio</a>
-      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#about">Studio</a>
+      <a href="#process">Process</a>
       <a href="#faq">FAQ</a>
-      <a href="walk-in-ready.html" class="nav-flag" data-ga-event="walk_in_ready_nav">Free check</a>
-      <a href="#apply" class="btn btn-green" data-ga-event="start_conversation">Start a conversation</a>
+      <a href="/blog/">Journal</a>
+      <a class="flag" href="walk-in-ready.html" data-ga-event="walk_in_ready_nav">Free check</a>
+      <a class="btn" href="#apply" data-ga-event="start_conversation">Start a conversation</a>
     </div>
-    <button class="menu-btn" aria-expanded="false" aria-controls="mmenu" onclick="toggleMenu(this)">MENU</button>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mmenu">Menu</button>
   </div>
-  <div class="mobile-menu" id="mmenu">
-    <a href="#services">Services</a>
+  <div class="mmenu" id="mmenu">
     <a href="#crowncon">Work</a>
-    <a href="#model">Studio</a>
-    <a href="#about">About</a>
-    <a href="#faq">FAQ</a>
-    <a href="blog/">Journal</a>
-    <a href="walk-in-ready.html" class="nav-flag" data-ga-event="walk_in_ready_nav">Free check — is your business walk-in ready?</a>
+    <a href="#services">Services</a>
+    <a href="#about">Studio</a>
+    <a href="#process">Process</a>
+    <a href="/blog/">Journal</a>
+    <a class="flag" href="walk-in-ready.html" data-ga-event="walk_in_ready_nav">Free check — is your business walk-in ready?</a>
     <a href="#apply" data-ga-event="start_conversation">Start a conversation</a>
   </div>
 </nav>
 
-<!-- ══ HERO ══ -->
-<header class="hero on-green" id="top">
-  <div class="wrap">
-    <div class="rule">
-      <span class="lbl">Brand · Web · Story — Bayside and South East Melbourne</span>
-      <span class="ln"></span>
-      <span class="lbl">For trades &amp; operators</span>
-    </div>
-    <h1>Better jobs don't find you <span class="acc">by accident.</span></h1>
-    <div class="hero-sub">
-      <p>You do good work. The jobs coming through the door don't reflect it. I build the <strong>brand, website and local search presence</strong> that gets Melbourne trade businesses found by the customers worth having — and I build it myself, start to finish. Ten years leading creative production for brands like <strong>Volvo, the Australian Defence Force and Nando's</strong> before this.</p>
-      <div class="hero-cta">
-        <a href="#apply" class="btn btn-amber" data-ga-event="start_conversation">Start a conversation <span class="arrow">→</span></a>
-        <a href="walk-in-ready.html" class="btn btn-ghost-cream" data-ga-event="walk_in_ready_hero">Take the free Walk-In Check <span class="arrow">→</span></a>
-        <span class="cta-note">Nine questions · Three minutes · No cost</span>
-      </div>
-    </div>
+<header class="hero">
+  <div class="bg r-med on">
+    <video autoplay muted loop playsinline poster="images/exterior-chairs-960.webp" aria-label="Crowncon brand film">
+      <source src="images/intro1.mp4" type="video/mp4"/>
+    </video>
   </div>
-  <div class="strip">
-    <figure><img src="images/beets.webp" alt="Michael Beets directing on set" loading="eager"/></figure>
-    <figure><img src="images/crowncon-film-poster.webp" alt="Crowncon brand film — poster frame" loading="lazy"/></figure>
-    <figure><img src="images/exterior-chairs.webp" alt="Custom home exterior at golden hour — Crowncon build" loading="lazy"/></figure>
-    <figure><img src="images/bts.webp" alt="Film crew on location, behind the scenes" loading="lazy"/></figure>
-    <figure><img src="images/dig.webp" alt="Campaign still from senior creative work" loading="lazy"/></figure>
+  <div class="veil"></div>
+  <div class="inner">
+    <h1>Better jobs don't find you.</h1>
+    <p class="sub">The work that wins them happens where nobody's looking — and it takes about eight weeks.</p>
+    <div class="who">
+      <span>Branding, websites, SEO and film</span>
+      <span>Bayside &amp; South East Melbourne</span>
+      <span>Two client spots open this quarter</span>
+    </div>
   </div>
 </header>
 
-<!-- ══ CREDENTIALS ══ -->
-<div class="creds">
-  <div class="wrap in">
-    <p>Volvo — Australian Defence Force — Hugo Wines — Aptamil — Nando's — Melbourne Design Week — Venice · Cannes</p>
-  </div>
-</div>
-
-<!-- ══ WALK-IN CHECK (second hero) ══ -->
-<section class="wcheck" id="walkin">
-  <div class="wrap">
-    <div class="rule rv"><span class="lbl">The Walk-In Check</span><span class="ln"></span><span class="lbl">Free · 3 minutes</span></div>
-    <div class="w-top">
-      <div class="rv">
-        <h2>Is your business <span class="acc">walk-in ready?</span></h2>
-        <p class="w-sub">A customer about to spend real money doesn't check one place before they call you. They check <b>nine</b>. Most Melbourne trade businesses show up properly in three — and never find out which six let them down.</p>
-      </div>
-      <div class="w-act rv">
-        <a href="walk-in-ready.html" class="btn btn-amber" data-ga-event="walk_in_ready_hero2">Take the Walk-In Check <span class="arrow">→</span></a>
-        <span class="w-note">Nine questions · Three minutes · Free audit for Melbourne businesses</span>
-      </div>
-    </div>
-    <div class="doorstrip rv">
-      <div class="d"><i>01</i><span>Search</span></div>
-      <div class="d"><i>02</i><span>Map</span></div>
-      <div class="d"><i>03</i><span>Reviews</span></div>
-      <div class="d"><i>04</i><span>Listings</span></div>
-      <div class="d"><i>05</i><span>Feed</span></div>
-      <div class="d"><i>06</i><span>Video</span></div>
-      <div class="d"><i>07</i><span>The room</span></div>
-      <div class="d"><i>08</i><span>Press</span></div>
-      <div class="d"><i>09</i><span>Replies</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ FEATURED WORK ══ -->
 <section id="crowncon">
-  <div class="wrap">
-    <div class="rule rv">
-      <span class="lbl">Featured work</span>
-      <span class="ln"></span>
-      <a class="side" href="https://crowncon.com.au" rel="noopener">crowncon.com.au ↗</a>
+  <div class="r">
+    <div class="work-head">
+      <h2 class="h-big">Crowncon. <span class="thin">A full</span> <span class="si beet">rebuild</span>, delivered.</h2>
+      <p class="copy">A South East Melbourne builder with genuinely good work and no way for anyone to find it. New brand, new site, listings claimed, a film shot on their own site — and now the name that comes up when someone asks an AI model to recommend a builder down here.</p>
     </div>
-    <h2 class="sec-h rv">Crowncon — a full rebuild, delivered.</h2>
-    <div class="case">
-      <div class="film rv">
-        <video autoplay muted loop playsinline poster="images/exterior-chairs-960.webp" style="width:100%;height:100%;object-fit:cover" aria-label="Crowncon brand film excerpt">
-          <source src="images/intro1.mp4" type="video/mp4"/>
-        </video>
-      </div>
-      <div class="rv">
-        <p class="case-meta">Crowncon · Custom Home Builder · Bayside</p>
-        <p class="quote">A quality builder whose work far outran their marketing. We rebuilt the brand, website, SEO and video presence from the ground up.</p>
-        <p>From a broken technical foundation — 24 crawl errors, zero search presence — to a full content engine in the first month. Brand refresh, new website, local SEO, social and video production.</p>
-        <p class="tags"><b>Brand refresh</b> · <b>New website</b> · <b>Local SEO</b> · <b>Video</b></p>
-        <a class="tlink" href="crowncon/">Read the case study <span class="arrow">→</span></a>
-      </div>
-    </div>
-    <div class="stats rv">
-      <div class="stat"><b data-count="99" data-sfx="%">0%</b><span>Site health score</span></div>
-      <div class="stat"><b data-count="39" data-sfx="">0</b><span>Keywords tracked from day one</span></div>
-      <div class="stat"><b data-count="100" data-sfx="%">0%</b><span>AI search health</span></div>
-    </div>
-    <div class="ai-note rv">
-      <span class="ai-lbl">And in AI search</span>
-      <p>Ask <b>ChatGPT</b> or <b>Gemini</b> for a custom home builder in south east Melbourne and <b>Crowncon comes up in the recommendations</b> — the exact market they're going after. More buyers now start there instead of Google, and the work that got them found in one is what got them found in the other.</p>
-      <span class="stamp">Checked August 2026 · results move</span>
-    </div>
+  </div>
+  <div class="r r-med film">
+    <video autoplay muted loop playsinline poster="images/exterior-chairs-960.webp" aria-label="Crowncon brand film excerpt">
+      <source src="images/intro1.mp4" type="video/mp4"/>
+    </video>
+  </div>
+  <div class="tiles">
+    <figure class="r">
+      <div class="r-med shot"><img src="images/exterior-chairs.webp" alt="Custom home exterior at golden hour — Crowncon build" loading="lazy"/></div>
+      <figcaption>Shot on site at a finished Crowncon build — the stills and film came from the same day.</figcaption>
+    </figure>
+    <figure class="r">
+      <div class="r-med shot"><img src="images/crowncon-screen-hero.png" alt="Crowncon website homepage design" loading="lazy"/></div>
+      <figcaption>New homepage, written around the jobs they actually want.</figcaption>
+    </figure>
+    <figure class="r">
+      <div class="r-med shot"><img src="images/crowncon-screen-mobile.png" alt="Crowncon website on mobile" loading="lazy"/></div>
+      <figcaption>Mobile is where nearly every enquiry starts, so it was built first.</figcaption>
+    </figure>
+  </div>
+  <div class="r facts">
+    <div><span>Sector</span><b>Residential building</b></div>
+    <div><span>Scope</span><b>Brand, website, local SEO, film</b></div>
+    <div><span>Live in</span><b>Six weeks</b></div>
+    <div><span>Verified</span><b>Named in ChatGPT &amp; Gemini builder recommendations</b></div>
   </div>
 </section>
 
-<!-- ══ THE MODEL ══ -->
-<section id="model" class="on-green">
-  <div class="wrap">
-    <div class="rule rv"><span class="lbl">The model</span><span class="ln"></span></div>
-    <h2 class="sec-h rv">I work with a few businesses — not a roomful.</h2>
-    <div class="claims rv">
-      <div class="claim">
-        <h3>You get me, not a junior</h3>
-        <p>The person you meet in the first call does the strategy, the design and the words.</p>
-      </div>
-      <div class="claim">
-        <h3>I learn your business</h3>
-        <p>The jobs you want more of, and the customers worth having. Not just the brief.</p>
-      </div>
-      <div class="claim">
-        <h3>Small roster, by design</h3>
-        <p>A senior partner who picks up the phone — not a ticket number in a queue of twenty.</p>
-      </div>
-    </div>
+<section id="services" class="paper">
+  <div class="r">
+    <h2 class="h-big" style="max-width:17ch">Melbourne's branding agency for <span class="si">trades &amp; operators.</span></h2>
+    <p class="copy" style="margin-top:clamp(24px,3vw,38px)">Six things, done properly — not all at once. Branding, website design, local SEO and video for trade businesses across Bayside and South East Melbourne. The long version of how I work is here: <a class="ul" href="tradie-marketing-agency-melbourne.html">tradie marketing agency, Melbourne</a>.</p>
+  </div>
+  <div class="rows">
+    <a class="row-item r" href="branding-for-tradies.html">
+      <span class="num">01</span>
+      <h3>Brand &amp; identity</h3>
+      <p>Name, mark, livery, the whole kit. Branding built for trade businesses, so it still reads on a ute door at sixty.</p>
+    </a>
+    <a class="row-item r" href="tradie-website-design.html">
+      <span class="num">02</span>
+      <h3>Website design</h3>
+      <p>Tradie website design that loads fast, is written for the job you actually want, and is built to be read by search engines and language models both.</p>
+    </a>
+    <a class="row-item r" href="seo-for-tradies.html">
+      <span class="num">03</span>
+      <h3>Local SEO</h3>
+      <p>Local SEO across Bayside and South East Melbourne — map pack, listings, reviews and suburb pages. The unglamorous layer that compounds.</p>
+    </a>
+    <a class="row-item r" href="video-production-for-tradies-melbourne.html">
+      <span class="num">04</span>
+      <h3>Film &amp; content</h3>
+      <p>Video production in Melbourne — shot on your site in a day, cut for the places your customers actually scroll.</p>
+    </a>
+    <a class="row-item r" href="digital-marketing-for-tradies.html">
+      <span class="num">05</span>
+      <h3>Digital marketing</h3>
+      <p>Paid where it earns its place, and pulled the moment it doesn't.</p>
+    </a>
+    <a class="row-item r" href="ai-automation-for-tradies.html">
+      <span class="num">06</span>
+      <h3>AI &amp; automation</h3>
+      <p>Quotes chased, leads routed, follow-ups sent — without hiring anyone to do it.</p>
+    </a>
   </div>
 </section>
 
-<!-- ══ WHAT I DO ══ -->
-<section id="services">
-  <div class="wrap">
-    <div class="rule rv"><span class="lbl">What I do</span><span class="ln"></span></div>
-    <h2 class="sec-h rv">Melbourne's branding agency for trades &amp; operators.</h2>
-    <p class="lede rv">One connected system, built by one person — so brand, website, search and video all pull the same way.</p>
-    <div class="svc rv">
-      <div class="svc-row">
-        <span class="svc-tag">Foundation</span>
-        <h3><a href="branding-for-tradies.html">Brand &amp; Identity</a></h3>
-        <p>Logo, colour, type and voice that look right on a ute and a tender document.</p>
-      </div>
-      <div class="svc-row">
-        <span class="svc-tag">Foundation</span>
-        <h3><a href="tradie-website-design.html">Website Design</a></h3>
-        <p>Fast, clear tradie websites built to turn visitors into callers.</p>
-      </div>
-      <div class="svc-row">
-        <span class="svc-tag">Foundation</span>
-        <h3><a href="seo-for-tradies.html">Local SEO</a></h3>
-        <p>Ranking in the Melbourne suburbs where the jobs you want actually are.</p>
-      </div>
-      <div class="svc-row">
-        <span class="svc-tag">Growth</span>
-        <h3><a href="digital-marketing-for-tradies.html">Marketing &amp; Growth</a></h3>
-        <p>Search, ads, email and content — reported on calls, not likes.</p>
-      </div>
-      <div class="svc-row">
-        <span class="svc-tag">My craft</span>
-        <h3><a href="video-production-for-tradies-melbourne.html">Video &amp; Content</a></h3>
-        <p>Brand films, walk-throughs and testimonials shot with a director's eye.</p>
-      </div>
-      <div class="svc-row">
-        <span class="svc-tag">Edge</span>
-        <h3><a href="ai-automation-for-tradies.html">AI &amp; Automation</a></h3>
-        <p>An assistant trained on your pricing and services, catching leads at 9pm.</p>
-      </div>
-    </div>
+<section class="tight-b">
+  <div class="r">
+    <h2 class="h-big" style="max-width:15ch">Nine places a customer can find you. <span class="si beet">How many work?</span></h2>
+    <p class="copy" style="margin-top:clamp(26px,3vw,40px)">The Walk-In Check runs your business past all nine and tells you which are pulling their weight and which are dead. It's free, it takes a few minutes, and there's no pitch at the end of it.</p>
+    <p class="copy" style="margin-top:16px">Most trade businesses in Melbourne are visible in two or three of the nine and invisible in the rest — which is usually where the better jobs were going.</p>
+  </div>
+  <div class="r doors">
+    <span class="lit">Search</span><span class="lit">Map</span><span class="lit">Reviews</span><span>Listings</span><span>Feed</span><span>Video</span><span>The room</span><span>Press</span><span>Replies</span>
+  </div>
+  <div class="r" style="margin-top:clamp(26px,3vw,40px)">
+    <a class="btn" href="walk-in-ready.html" data-ga-event="walk_in_ready_hero">Run the free check</a>
   </div>
 </section>
 
-<!-- ══ ABOUT ══ -->
-<section id="about" style="background:var(--paper2)">
-  <div class="wrap">
-    <div class="rule rv"><span class="lbl">About Michael</span><span class="ln"></span></div>
-    <div class="about-grid">
-      <div class="about-ims rv">
-        <figure>
-          <img src="images/beets.webp" alt="Michael Beets — founder and creative director, directing on set" loading="lazy"/>
-          <figcaption>Michael Beets — Founder &amp; Creative Director</figcaption>
-        </figure>
-        <figure>
-          <img src="images/turnaroundbts.webp" alt="Film crew at work on location in Melbourne" loading="lazy"/>
-        </figure>
-      </div>
-      <div class="about-copy rv">
-        <h2 class="sec-h">What a decade on Volvo and the ADF actually taught me.</h2>
-        <p>For over a decade I've led creative across campaigns, brand systems and interactive work for <strong>Volvo, the Australian Defence Force, Nando's, Aptamil and Hugo Wines</strong> — with work shown at Melbourne Design Week, Venice and Cannes. The fundamentals that make a Volvo campaign land are the same ones that make a plumber in Dandenong get the job over the next three results on Google.</p>
-        <p>I'm not a strategist who hands off to a production team. I shape the story and then build it — the website, the brand, the video, the SEO. If you're a tradie after a <a href="tradie-marketing-agency-melbourne.html" class="tlink">marketing agency built for trades</a>, that's exactly what this is.</p>
-        <p class="quote">They build real things for real people. They deserve a brand that's as good as the work.</p>
-        <div class="fact-grid">
-          <span class="fact">Award-winning creative director</span>
-          <span class="fact">Founder, Beets &amp; Co</span>
-          <span class="fact">10+ years senior creative</span>
-          <span class="fact">Based in South East Melbourne</span>
+<section id="about" class="tight-t lift">
+  <div class="studio">
+    <div class="ims r r-med">
+      <figure>
+        <img src="images/beets.webp" alt="Michael Beets — founder and creative director, directing on set" loading="lazy"/>
+        <figcaption>Michael Beets — Founder &amp; Creative Director</figcaption>
+      </figure>
+      <figure>
+        <img src="images/bts.webp" alt="Film crew at work on location in Melbourne" loading="lazy"/>
+        <figcaption>On location in Melbourne — I direct the shoots myself.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/dig.webp" alt="Campaign still from senior creative work for a national brand" loading="lazy"/>
+        <figcaption>Campaign work from the in-house years — Volvo, ADF, Nando's.</figcaption>
+      </figure>
+    </div>
+    <div class="r">
+      <h2 class="h-mid" style="max-width:14ch">You get me. <span class="thin">Not a junior.</span></h2>
+      <p class="copy" style="margin-top:clamp(24px,3vw,38px)">Ten years in-house and on set for brands with real money behind them — <strong>Volvo, the Australian Defence Force, Nando's</strong> — now run as a one-person branding and marketing studio across Bayside and South East Melbourne.</p>
+      <p class="copy" style="margin-top:18px">I take a handful of clients at a time. Not because it's exclusive, but because everything I know about growing anything says crowded stays small.</p>
+      <p class="copy" style="margin-top:18px">Most of my clients are builders, trades and local operators in the Bayside corridor — Chelsea, Bonbeach, Mordialloc, Seaford, Edithvale, Aspendale and Frankston — plus greater Melbourne when the work is right.</p>
+      <div class="claims" id="model">
+        <div>
+          <h3>You get me, not a junior</h3>
+          <p>The person you meet in the first call is the person doing the work. There's nobody to hand it to.</p>
+        </div>
+        <div>
+          <h3>I learn your business</h3>
+          <p>Site visits, ride-alongs, actual quotes read. You can't write a brand for a trade you've never watched work.</p>
+        </div>
+        <div>
+          <h3>Small roster, by design</h3>
+          <p>A few clients, deeply. The ones I turn down are what make the ones I take worth it.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ PROCESS ══ -->
-<section id="process">
-  <div class="wrap">
-    <div class="rule rv"><span class="lbl">How it works</span><span class="ln"></span></div>
-    <h2 class="sec-h rv">First call to live in two to six weeks.</h2>
-    <p class="lede rv">Fixed scope, fixed quote, five short stages.</p>
-    <div class="timeline rv">
-      <div class="stage"><span class="n">01</span><h3>Discover</h3><span class="wk">Week 1</span></div>
-      <div class="stage"><span class="n">02</span><h3>Shape</h3><span class="wk">Week 1</span></div>
-      <div class="stage"><span class="n">03</span><h3>Make</h3><span class="wk">Week 2–4</span></div>
-      <div class="stage"><span class="n">04</span><h3>Launch</h3><span class="wk">Week 5–6</span></div>
-      <div class="stage"><span class="n">05</span><h3>Grow</h3><span class="wk">Ongoing</span></div>
+<section id="process" class="paper">
+  <div class="r">
+    <h2 class="h-big" style="max-width:14ch">First call to live in <span class="si">two to six weeks.</span></h2>
+  </div>
+  <div class="steps">
+    <div class="step r">
+      <span class="num">01</span>
+      <h3>Discover<span class="when">Week one</span></h3>
+      <p>I come to you. Site visit, a look at the books' worth of enquiries you've been getting, and an honest read on what's actually wrong.</p>
+    </div>
+    <div class="step r">
+      <span class="num">02</span>
+      <h3>Shape<span class="when">Week one to two</span></h3>
+      <p>Positioning, offer and architecture. This is the part that decides whether everything after it works, and it's the part most people skip.</p>
+    </div>
+    <div class="step r">
+      <span class="num">03</span>
+      <h3>Make<span class="when">Week two to five</span></h3>
+      <p>Brand, site, photography and film. Built, not templated.</p>
+    </div>
+    <div class="step r">
+      <span class="num">04</span>
+      <h3>Launch<span class="when">Week five to six</span></h3>
+      <p>Live, listings claimed, tracking on, and everything pointed at the same version of your name.</p>
+    </div>
+    <div class="step r">
+      <span class="num">05</span>
+      <h3>Grow<span class="when">Ongoing</span></h3>
+      <p>Reviews, content, replies, and cutting whatever isn't earning its place. Most of the value shows up here, quietly, over the following months.</p>
     </div>
   </div>
 </section>
 
-<!-- ══ FAQ ══ -->
 <section id="faq">
-  <div class="wrap">
-    <div class="rule rv"><span class="lbl">Questions</span><span class="ln"></span></div>
-    <h2 class="sec-h rv">The things people ask before they call.</h2>
-    <div class="faq rv">
-      <details>
-        <summary>How many clients do you take on each year?</summary>
-        <div class="ans">I work with a small number of clients at a time — so every client gets a senior partner, not a junior. You get direct access to me across strategy, design, copy and production, plus a strong network of specialists I bring in for the right parts of the job.</div>
-      </details>
-      <details>
-        <summary>What areas of Melbourne do you work with?</summary>
-        <div class="ans">I'm based in South East Melbourne and primarily work with local businesses across the Bayside corridor — Chelsea, Bonbeach, Mordialloc, Seaford, Edithvale, Aspendale — and broader Greater Melbourne.</div>
-      </details>
-      <details>
-        <summary>How is a branding and website project priced?</summary>
-        <div class="ans">Every project is scoped individually — branding, website and local SEO can be combined into one fixed-price package built around what you need. Fixed pricing — no timesheet surprises.</div>
-      </details>
-      <details>
-        <summary>How long does a project take?</summary>
-        <div class="ans">Most projects go from first call to a live brand and website in 2–6 weeks.</div>
-      </details>
-      <details>
-        <summary>Do you do video and content as well as branding?</summary>
-        <div class="ans">Yes — I've led creative across campaigns and content for brands including Volvo, Australian Defence Force and Nando's. Video and content is where I'm genuinely different to most branding studios. Brand films, testimonials and social cut-downs made to sell, not just to look good.</div>
-      </details>
-    </div>
+  <div class="r">
+    <h2 class="h-big" style="max-width:15ch">The things people ask <span class="si">before they call.</span></h2>
+  </div>
+  <div class="faq r">
+    <details>
+      <summary>How many clients do you take on each year?</summary>
+      <div class="ans">I work with a small number of clients at a time — so every client gets a senior partner, not a junior. You get direct access to me across strategy, design, copy and production, plus a strong network of specialists I bring in for the right parts of the job.</div>
+    </details>
+    <details>
+      <summary>What areas of Melbourne do you work with?</summary>
+      <div class="ans">I'm based in South East Melbourne and primarily work with local businesses across the Bayside corridor — Chelsea, Bonbeach, Mordialloc, Seaford, Edithvale, Aspendale — and broader Greater Melbourne.</div>
+    </details>
+    <details>
+      <summary>How is a branding and website project priced?</summary>
+      <div class="ans">Every project is scoped individually — branding, website and local SEO can be combined into one fixed-price package built around what you need. Fixed pricing — no timesheet surprises.</div>
+    </details>
+    <details>
+      <summary>How long does a project take?</summary>
+      <div class="ans">Most projects go from first call to a live brand and website in 2–6 weeks.</div>
+    </details>
+    <details>
+      <summary>Do you do video and content as well as branding?</summary>
+      <div class="ans">Yes — I've led creative across campaigns and content for brands including Volvo, Australian Defence Force and Nando's. Video and content is where I'm genuinely different to most branding studios. Brand films, testimonials and social cut-downs made to sell, not just to look good.</div>
+    </details>
   </div>
 </section>
 
-<!-- ══ CONTACT ══ -->
-<section id="apply" class="contact on-green">
-  <div class="wrap">
-    <div class="rule rv"><span class="lbl">Start a conversation</span><span class="ln"></span></div>
-    <div class="contact-grid">
-      <div class="rv">
-        <h2 class="sec-h">Tell me what you're <span style="color:var(--amber)">building.</span></h2>
-        <p class="lede">Tell me about your business and what you're trying to do. I'll come back to you personally — to set up a call, or point you somewhere useful if it's not the right fit.</p>
-        <p class="note">I read every application personally. No bots, no call centre — just me.</p>
-        <a class="em" href="mailto:michael@beetsandco.com.au">michael@beetsandco.com.au</a>
-        <p class="loc">Bayside and South East Melbourne · VIC, Australia</p>
+<section id="apply" class="contact">
+  <div class="r">
+    <h2 class="h-mid">Tell me what you're <span class="si beet">building.</span></h2>
+  </div>
+  <div class="c-grid">
+    <div class="r">
+      <p class="copy">Tell me about your business and what you're trying to do. I'll come back to you personally — to set up a call, or to point you somewhere useful if it isn't the right fit.</p>
+      <p class="copy" style="margin-top:18px">I read every application myself. No bots, no call centre.</p>
+      <a class="mailto" href="mailto:michael@beetsandco.com.au" data-ga-event="email_click">michael@beetsandco.com.au</a>
+      <p class="loc">Bayside and South East Melbourne · VIC, Australia</p>
+    </div>
+    <form class="r" id="contact-form" action="https://formspree.io/f/xwvaldzn" method="POST">
+      <input type="hidden" name="_subject" value="New Project Application — Beets &amp; Co"/>
+      <div class="f">
+        <label for="f-name">Your name</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required/>
       </div>
-      <form id="contact-form" class="f-grid rv" action="https://formspree.io/f/xwvaldzn" method="POST">
-        <input type="hidden" name="_subject" value="New Project Application — Beets &amp; Co"/>
-        <div class="f-field">
-          <label for="f-name">Your name</label>
-          <input id="f-name" name="name" type="text" autocomplete="name" required/>
-        </div>
-        <div class="f-field">
-          <label for="f-biz">Business name</label>
-          <input id="f-biz" name="business_name" type="text" autocomplete="organization" required/>
-        </div>
-        <div class="f-field">
-          <label for="f-email">Email</label>
-          <input id="f-email" name="_replyto" type="email" autocomplete="email" required/>
-        </div>
-        <div class="f-field">
-          <label for="f-phone">Phone</label>
-          <input id="f-phone" name="phone" type="tel" autocomplete="tel"/>
-        </div>
-        <div class="f-field full">
-          <label for="f-type">What does your business do?</label>
-          <input id="f-type" name="business_type" type="text" placeholder="e.g. Custom home builder in Mordialloc" required/>
-        </div>
-        <div class="f-field full">
-          <label for="f-help">What do you need help with?</label>
-          <select id="f-help" name="help_required">
-            <option>The full package — brand, web &amp; content</option>
-            <option>Brand &amp; identity</option>
-            <option>Website &amp; SEO</option>
-            <option>Video &amp; content</option>
-            <option>Marketing &amp; growth</option>
-            <option>Not sure yet — let's talk</option>
-          </select>
-        </div>
-        <div class="f-field full">
-          <label for="f-info">Anything else I should know?</label>
-          <textarea id="f-info" name="additional_info" rows="3" placeholder="Where you're at, what 'great' looks like, rough timing or budget…"></textarea>
-        </div>
-        <div class="f-sub">
-          <button type="submit" class="btn btn-amber"><span id="submit-label">Send message</span> <span class="arrow">→</span></button>
-        </div>
-        <p class="f-micro">No commitment · A small number of clients at a time</p>
-      </form>
-    </div>
+      <div class="f">
+        <label for="f-biz">Business name</label>
+        <input id="f-biz" name="business_name" type="text" autocomplete="organization" required/>
+      </div>
+      <div class="f">
+        <label for="f-email">Email</label>
+        <input id="f-email" name="_replyto" type="email" autocomplete="email" required/>
+      </div>
+      <div class="f">
+        <label for="f-phone">Phone</label>
+        <input id="f-phone" name="phone" type="tel" autocomplete="tel"/>
+      </div>
+      <div class="f full">
+        <label for="f-type">What does your business do?</label>
+        <input id="f-type" name="business_type" type="text" placeholder="e.g. Custom home builder in Mordialloc" required/>
+      </div>
+      <div class="f full">
+        <label for="f-help">What do you need help with?</label>
+        <select id="f-help" name="help_required">
+          <option>The full package — brand, web &amp; content</option>
+          <option>Brand &amp; identity</option>
+          <option>Website &amp; SEO</option>
+          <option>Video &amp; content</option>
+          <option>Marketing &amp; growth</option>
+          <option>Not sure yet — let's talk</option>
+        </select>
+      </div>
+      <div class="f full">
+        <label for="f-info">Anything else I should know?</label>
+        <textarea id="f-info" name="additional_info" rows="3" placeholder="Where you're at, what 'great' looks like, rough timing or budget…"></textarea>
+      </div>
+      <div class="submit">
+        <button type="submit"><span id="submit-label">Send message</span> →</button>
+        <span class="micro">No commitment · A small number of clients at a time</span>
+      </div>
+    </form>
   </div>
 </section>
 
-<!-- ══ FOOTER ══ -->
 <footer>
-  <div class="wrap">
-    <div class="foot-grid">
-      <div>
-        <div class="wordmark">Beets <em>&amp;</em> Co</div>
-        <p class="blurb">A founder-led brand, web and story studio in Bayside Melbourne — for local businesses ready to become the obvious choice.</p>
-      </div>
-      <div>
-        <h4>Studio</h4>
-        <a href="#model">The model</a>
-        <a href="#services">What I do</a>
-        <a href="#crowncon">Case study</a>
-        <a href="#faq">FAQ</a>
-        <a href="blog/">Journal</a>
-      </div>
-      <div>
-        <h4>Get in touch</h4>
-        <a href="#apply" data-ga-event="start_conversation">Start a conversation</a>
-        <a href="mailto:michael@beetsandco.com.au">michael@beetsandco.com.au</a>
-        <a href="#top">Bayside and South East Melbourne · VIC</a>
-      </div>
-      <div>
-        <h4>Areas we serve</h4>
-        <a href="marketing-agency-south-east-melbourne.html">South East Melbourne</a>
-        <a href="marketing-agency-frankston.html">Frankston</a>
-        <a href="marketing-agency-mordialloc.html">Mordialloc</a>
-        <a href="marketing-agency-chelsea.html">Chelsea</a>
-        <a href="marketing-agency-edithvale.html">Edithvale</a>
-        <a href="marketing-agency-aspendale.html">Aspendale</a>
-      </div>
+  <div class="f-grid">
+    <div>
+      <h4>Studio</h4>
+      <a href="#about">About</a>
+      <a href="#crowncon">Case study</a>
+      <a href="#faq">FAQ</a>
+      <a href="/blog/">Journal</a>
+      <a href="walk-in-ready.html" data-ga-event="walk_in_ready_footer">Walk-In Check</a>
     </div>
-    <div class="foot-bot">
-      <span>© 2026 Beets &amp; Co · Melbourne, VIC, Australia</span>
-
+    <div>
+      <h4>Services</h4>
+      <a href="branding-for-tradies.html">Branding</a>
+      <a href="tradie-website-design.html">Websites</a>
+      <a href="seo-for-tradies.html">Local SEO</a>
+      <a href="video-production-for-tradies-melbourne.html">Film &amp; content</a>
     </div>
+    <div>
+      <h4>Areas</h4>
+      <a href="marketing-agency-south-east-melbourne.html">South East Melbourne</a>
+      <a href="marketing-agency-frankston.html">Frankston</a>
+      <a href="marketing-agency-mordialloc.html">Mordialloc</a>
+      <a href="marketing-agency-chelsea.html">Chelsea</a>
+      <a href="marketing-agency-edithvale.html">Edithvale</a>
+      <a href="marketing-agency-aspendale.html">Aspendale</a>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <a href="mailto:michael@beetsandco.com.au">michael@beetsandco.com.au</a>
+      <a href="privacy.html">Privacy</a>
+      <p>Bayside &amp; South East Melbourne, VIC</p>
+    </div>
+  </div>
+  <div class="f-base">
+    <span>Beets &amp; Co — branding &amp; marketing for trades and operators</span>
+    <span>©2026 Beets &amp; Co</span>
   </div>
 </footer>
 
 <script>
-// ── Mobile menu ──
-function toggleMenu(btn){
-  var m = document.getElementById('mmenu');
-  var open = m.classList.toggle('open');
-  btn.setAttribute('aria-expanded', open);
-  btn.textContent = open ? 'CLOSE' : 'MENU';
-}
-document.querySelectorAll('#mmenu a').forEach(function(a){
-  a.addEventListener('click', function(){ toggleMenu(document.querySelector('.menu-btn')); });
-});
-
-// ── Scroll reveal (subtle, once) ──
 (function(){
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
-    return;
-  }
-  var io = new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, {threshold:.12});
-  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
-})();
-
-// ── Stat counters ──
-(function(){
-  var co = new IntersectionObserver(function(es){
-    es.forEach(function(en){
-      if(!en.isIntersecting) return;
-      var el = en.target, target = +el.dataset.count, sfx = el.dataset.sfx || '';
-      var start = null, dur = 1100;
-      function step(now){
-        if(!start) start = now;
-        var t = Math.min((now-start)/dur, 1);
-        var ease = 1 - Math.pow(1-t, 3);
-        el.textContent = Math.round(ease*target) + sfx;
-        if(t < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-      co.unobserve(el);
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      e.target.classList.add('on');
+      io.unobserve(e.target);
     });
-  }, {threshold:.5});
-  document.querySelectorAll('[data-count]').forEach(function(el){ co.observe(el); });
-})();
+  },{threshold:0.1,rootMargin:'0px 0px -10% 0px'});
+  document.querySelectorAll('.r').forEach(function(el){io.observe(el)});
 
+  var b=document.getElementById('menuBtn'),m=document.getElementById('mmenu');
+  if(b&&m){
+    b.addEventListener('click',function(){
+      var open=m.classList.toggle('open');
+      b.setAttribute('aria-expanded',open?'true':'false');
+      b.textContent=open?'Close':'Menu';
+    });
+    m.addEventListener('click',function(e){
+      if(e.target.tagName==='A'){m.classList.remove('open');b.textContent='Menu';b.setAttribute('aria-expanded','false');}
+    });
+  }
+})();
+</script>
+<script>
 // ── Form submission ──
 var form = document.getElementById('contact-form');
 var label = document.getElementById('submit-label');

@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="an ln init xn Cn Br kn In capture Fn nn calculateEventProperties On register register_once register_for_session unregister unregister_for_session Ln getFeatureFlag getFeatureFlagPayload getFeatureFlagResult getAllFeatureFlags isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Dn identify setPersonProperties unsetPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset shutdown setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty An Rn createPersonProfile setInternalOrTestUser $n yn jn opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Tn debug Ur Rt getPageViewId captureTraceFeedback captureTraceMetric pn".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_x9qBCQJXRmXWkGYen6VuX5Dppb2UTLF5rfYPnLAFZp65', {
+        api_host: 'https://us.i.posthog.com',
+        defaults: '2026-05-30',
+        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+    })
+    </script>
+
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Marketing Agency Chelsea Melbourne | Trade Marketing · Beets & Co</title>
+<meta name="description" content="Beets & Co is a Chelsea marketing agency for trade businesses and tradies. Local SEO, branding and websites that rank and convert. Fixed pricing."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://beetsandco.com.au/marketing-agency-chelsea.html"/>
+<meta property="og:title" content="Marketing Agency Chelsea Melbourne | Trade Marketing · Beets & Co"/>
+<meta property="og:description" content="A Chelsea marketing agency for tradies. Brand, website and local SEO — fixed price, senior-only."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://beetsandco.com.au/marketing-agency-chelsea.html"/>
+<meta property="og:locale" content="en_AU"/>
+<meta property="og:image" content="https://beetsandco.com.au/images/beets.webp"/>
+<meta property="og:image:alt" content="Michael Beets — Founder &amp; Director, Beets &amp; Co"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://beetsandco.com.au/images/beets.webp"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Marketing Agency Chelsea Melbourne",
+  "description": "Beets & Co is a Chelsea marketing agency for trade businesses and tradies. Local SEO, branding and websites that rank and convert — fixed pricing, no timesheets.",
+  "url": "https://beetsandco.com.au/marketing-agency-chelsea.html",
+  "serviceType": "Marketing Agency",
+  "areaServed": {"@type": "City", "name": "Chelsea, VIC, Australia"},
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "Beets & Co",
+    "url": "https://beetsandco.com.au",
+    "telephone": "+61-447542930",
+    "email": "michael@beetsandco.com.au",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Bayside",
+      "addressRegion": "VIC",
+      "addressCountry": "AU"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://beetsandco.com.au/"},
+    {"@type": "ListItem", "position": 2, "name": "Marketing Agency Chelsea", "item": "https://beetsandco.com.au/marketing-agency-chelsea.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How is a marketing agency in Chelsea priced?",
+      "acceptedAnswer": {"@type": "Answer", "text": "At Beets & Co, every project is scoped individually — branding, website and local SEO can be combined into one fixed-price package built around what you actually need. You'll get a clear quote before anything starts — no retainers, no timesheets, no surprises."}
+    },
+    {
+      "@type": "Question",
+      "name": "Will my Chelsea trade business rank on Google?",
+      "acceptedAnswer": {"@type": "Answer", "text": "With a properly built site and the right local SEO setup — suburb pages, structured data, and a strong Google Business Profile — yes. Chelsea has relatively low keyword competition. Most rankings start moving within 60–90 days."}
+    },
+    {
+      "@type": "Question",
+      "name": "What kind of trade businesses do you work with?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Plumbers, electricians, builders, landscapers, HVAC, tilers, concreters, painters and similar trades. If you work in Chelsea and the surrounding Kingston corridor, I understand your customer and how they search."}
+    }
+  ]
+}
+</script>
+<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+<link rel="manifest" href="images/favicon/site.webmanifest">
+<link rel="shortcut icon" href="images/favicon/favicon.ico">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-29SKC7VN4C"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-29SKC7VN4C');</script>
+<script>
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-ga-event]');
+  if (t && typeof gtag === 'function') {
+    gtag('event', t.getAttribute('data-ga-event'), {
+      event_category: 'engagement',
+      event_label: (t.textContent || '').trim()
+    });
+  }
+});
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Newsreader:ital,opsz,wght@1,6..72,300;1,6..72,400;1,6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:'Archivo',sans-serif;background:#FBFBF9;color:#1C1B17;line-height:1.6}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.bc-nav-link{opacity:.72;transition:opacity .2s}
+.bc-nav-link:hover{opacity:1}
+.bc-footer-link{opacity:.55;transition:opacity .2s}
+.bc-footer-link:hover{opacity:1}
+.bc-cta-btn{transition:background .2s,transform .15s}
+.bc-cta-btn:hover{transform:translateY(-1px)}
+.bc-svc-row{transition:background .2s}
+.bc-svc-row:hover{background:rgba(26,77,60,.06)!important}
+.bc-related-card{transition:box-shadow .2s,transform .2s}
+.bc-related-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(28,27,23,.10)}
+.bc-play-wrap{cursor:pointer}
+.bc-play-btn{transition:background .25s}
+.bc-play-wrap:hover .bc-play-btn{background:rgba(18,53,40,.45)}
+.bc-play-circle{transition:transform .2s}
+.bc-play-wrap:hover .bc-play-circle{transform:scale(1.08)}
+@keyframes bc-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:900px){
+  .bc-hero-grid{grid-template-columns:1fr!important}
+  .bc-hero-video{display:none!important}
+  .bc-nav-links{display:none!important}
+  .bc-intro-grid{grid-template-columns:1fr!important}
+  .bc-case-screens{grid-template-columns:1fr!important}
+  .bc-results-band{grid-template-columns:1fr 1fr!important}
+  .bc-video-grid{grid-template-columns:1fr!important}
+  .bc-vert-thumbs{display:none!important}
+  .bc-svc-meta{display:none!important}
+  .bc-faq-grid{grid-template-columns:1fr!important}
+  .bc-related-grid{grid-template-columns:1fr!important}
+  .bc-footer-grid{grid-template-columns:1fr!important;gap:40px!important}
+}
+@media(max-width:640px){
+  /* Reduce horizontal padding across all sections */
+  [style*="padding:0 40px"]{padding-left:20px!important;padding-right:20px!important}
+  [style*="padding:80px 40px"]{padding-left:20px!important;padding-right:20px!important}
+  [style*="padding:120px 40px"]{padding:80px 20px!important}
+  /* Collapse service rows to 2-col (number hidden) */
+  .bc-svc-row{grid-template-columns:1fr auto!important;gap:6px 12px!important;padding:18px 12px!important}
+  .bc-svc-row>div:first-child{display:none!important}
+  /* Results band stays 2-col at 640px */
+  .bc-results-band{grid-template-columns:1fr 1fr!important}
+  .bc-suburb-chips{gap:8px!important}
+  /* Reduce hero vertical padding on mobile */
+  .bc-hero-grid>div:first-child{padding-top:52px!important;padding-bottom:52px!important}
+}
+@media(max-width:440px){
+  .bc-svc-row{grid-template-columns:1fr!important}
+  .bc-results-band{grid-template-columns:1fr!important}
+  .bc-related-grid{grid-template-columns:1fr!important}
+}
+</style>
+<style>@media(max-width:900px){.bc-nav-links{display:none !important}.bc-menu-btn{display:flex !important}}</style>
+<style>@media(max-width:900px){.bc-cta-btn{display:none !important}}</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav style="position:sticky;top:0;z-index:100;background:rgba(251,251,249,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(28,27,23,.08)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between">
+    <a href="/" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.02em;color:#1C1B17">Beets <span style="color:#C24B33">&</span> Co</a>
+    <div class="bc-nav-links" style="display:flex;align-items:center;gap:32px">
+      <a href="/tradie-marketing-agency-melbourne.html" class="bc-nav-link" style="font-size:14px;font-weight:500;color:#1C1B17">Services</a>
+      <a href="/crowncon/" class="bc-nav-link" style="font-size:14px;font-weight:500;color:#1C1B17">Work</a>
+      <a href="/#about" class="bc-nav-link" style="font-size:14px;font-weight:500;color:#1C1B17">About</a>
+    </div>
+    <a href="/#apply" class="bc-cta-btn" style="display:inline-flex;align-items:center;gap:8px;background:#1A4D3C;color:#F4F1E8;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:10px 20px;border-radius:100px">
+      Get in touch
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <button id="bc-menu-btn" class="bc-menu-btn" onclick="bcToggleMenu()" aria-label="Open menu" style="display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:8px;margin:-8px;flex-shrink:0">
+      <span style="display:block;width:24px;height:2px;background:#1C1B17;transition:transform .25s,opacity .25s;transform-origin:center"></span>
+      <span style="display:block;width:24px;height:2px;background:#1C1B17;transition:opacity .25s"></span>
+      <span style="display:block;width:16px;height:2px;background:#1C1B17;transition:transform .25s,width .25s;transform-origin:center"></span>
+    </button>
+  </div>
+</nav>
+<div id="bc-mobile-menu" style="display:none;position:fixed;top:65px;left:0;right:0;bottom:0;z-index:98;background:#FBFBF9;overflow-y:auto">
+  <div style="padding:40px 32px 48px">
+    <nav style="display:flex;flex-direction:column">
+      <a href="/tradie-marketing-agency-melbourne.html" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Services</a>
+      <a href="/crowncon/" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Work</a>
+      <a href="/#about" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">About</a>
+      <a href="/blog/" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#1C1B17;display:block;padding:20px 0;border-bottom:1px solid rgba(28,27,23,.1)">Journal</a>
+      <a href="/#apply" onclick="bcCloseMenu()" style="font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1;letter-spacing:-.04em;color:#C24B33;display:inline-flex;align-items:center;gap:12px;padding:24px 0 0">Get in touch <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+    </nav>
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(28,27,23,.1)">
+      <a href="mailto:michael@beetsandco.com.au" style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(28,27,23,.45)">michael@beetsandco.com.au</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section style="background:#1A4D3C;overflow:hidden">
+  <div class="bc-hero-grid" style="max-width:1280px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;min-height:580px;align-items:center;gap:60px">
+    <div style="padding:80px 0 80px">
+      <div style="display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#E6D9C2;margin-bottom:28px">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#C24B33;animation:pulse 2s infinite"></span>
+        Chelsea · Melbourne · Trade Marketing
+      </div>
+      <h1 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(44px,5.5vw,80px);line-height:.96;letter-spacing:-.03em;color:#F4F1E8;margin-bottom:28px">
+        Chelsea trade<br>business<br><em style="font-family:'Newsreader',serif;font-style:italic;font-weight:300;color:#E6D9C2">marketing.</em>
+      </h1>
+      <p style="font-size:18px;color:rgba(244,241,232,.75);line-height:1.6;max-width:46ch;margin-bottom:36px">A Bayside marketing studio built for tradies and trade businesses in Chelsea, Aspendale, Edithvale and the Kingston corridor. Brand, web and SEO — fixed price, no fluff.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:48px">
+        <a href="/#apply" class="bc-cta-btn" style="display:inline-flex;align-items:center;gap:8px;background:#C24B33;color:#fff;font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:14px 26px;border-radius:100px" data-ga-event="start_conversation">
+          Start a conversation
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="/crowncon/" class="bc-cta-btn" style="display:inline-flex;align-items:center;gap:8px;background:rgba(244,241,232,.12);color:#F4F1E8;font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:14px 26px;border-radius:100px;border:1px solid rgba(244,241,232,.2)">
+          See our work
+        </a>
+      </div>
+      <div style="display:flex;gap:32px;padding-top:28px;border-top:1px solid rgba(244,241,232,.12)">
+        <div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:32px;letter-spacing:-.03em;color:#F4F1E8">99%</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,241,232,.5);margin-top:2px">Site health score</div>
+        </div>
+        <div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:32px;letter-spacing:-.03em;color:#F4F1E8">39</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,241,232,.5);margin-top:2px">Keywords tracked</div>
+        </div>
+        <div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:32px;letter-spacing:-.03em;color:#F4F1E8">100%</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,241,232,.5);margin-top:2px">AI search health</div>
+        </div>
+      </div>
+    </div>
+    <div class="bc-hero-video" style="height:100%;min-height:580px;overflow:hidden;position:relative">
+      <video autoplay muted loop playsinline poster="images/exterior-chairs-960.webp" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+        <source src="images/intro1.mp4" type="video/mp4">
+      </video>
+      <div style="position:absolute;inset:0;background:linear-gradient(90deg,#1A4D3C 0%,transparent 30%)"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section style="background:#16140E;padding:18px 0;overflow:hidden">
+  <div style="display:flex;white-space:nowrap">
+    <div style="display:flex;animation:bc-marquee 28s linear infinite">
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Chelsea Marketing</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Trade Branding</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Local SEO Chelsea</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Tradie Websites</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Kingston Corridor</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Aspendale · Edithvale</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Google Business Profile</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Fixed Pricing</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <!-- duplicate -->
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Chelsea Marketing</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Trade Branding</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Local SEO Chelsea</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Tradie Websites</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Kingston Corridor</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Aspendale · Edithvale</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Google Business Profile</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,241,232,.4);padding:0 28px">Fixed Pricing</span>
+      <span style="color:#C24B33;font-size:14px;padding:0 4px">·</span>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO PROSE -->
+<section style="padding:96px 0 80px;background:#FBFBF9">
+  <div class="bc-intro-grid" style="max-width:1280px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
+    <div>
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#C24B33;margin-bottom:20px">The problem</div>
+      <h2 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(32px,3.5vw,52px);line-height:1.0;letter-spacing:-.03em;color:#1C1B17;margin-bottom:28px">Chelsea trade businesses are largely invisible online.</h2>
+      <p style="font-size:17px;line-height:1.7;color:#46443c;margin-bottom:20px">Most have a website. A few have a Google Business Profile. But they're not ranking for the suburbs they work in — and they're not showing up when a homeowner in Chelsea searches for a plumber, electrician or builder on their phone.</p>
+      <p style="font-size:17px;line-height:1.7;color:#46443c;margin-bottom:20px">That's fixable. And your competitors haven't fixed it yet.</p>
+      <p style="font-size:17px;line-height:1.7;color:#46443c">I work with a small number of trade businesses at a time — no account managers, no juniors. You get Michael Beets as your senior partner on every deliverable.</p>
+    </div>
+    <div>
+      <div style="background:#F0E9DB;border-radius:16px;padding:36px 40px;margin-bottom:28px;border-left:3px solid #C24B33">
+        <p style="font-family:'Newsreader',serif;font-style:italic;font-size:22px;line-height:1.5;color:#1C1B17">"Chelsea has relatively low keyword competition for most trade categories. A properly built page and GBP setup can move rankings within 60–90 days."</p>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#46443c;margin-top:16px">— Michael Beets, Founder</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="background:#fff;border:1px solid rgba(28,27,23,.1);border-radius:12px;padding:22px 20px">
+          <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:38px;letter-spacing:-.03em;color:#C24B33;line-height:1">60–90</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#46443c;margin-top:6px">Days to rank</div>
+        </div>
+        <div style="background:#fff;border:1px solid rgba(28,27,23,.1);border-radius:12px;padding:22px 20px">
+          <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:38px;letter-spacing:-.03em;color:#C24B33;line-height:1">Fixed</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#46443c;margin-top:6px">Scoped to you</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY SHOWCASE -->
+<section style="background:#fff;padding:80px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px;flex-wrap:wrap;gap:20px">
+      <div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">Proof of work</div>
+        <h2 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(28px,3vw,44px);line-height:1.0;letter-spacing:-.03em;color:#1C1B17">Crowncon — custom home builder, Melbourne.</h2>
+      </div>
+      <a href="/crowncon/" style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#1A4D3C;border-bottom:1px solid #1A4D3C;padding-bottom:2px">View case study →</a>
+    </div>
+    <div class="bc-case-screens" style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:16px;margin-bottom:32px">
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#EAF0EC">
+        <img src="images/crowncon-screen-hero.png" alt="Crowncon website homepage — built by Beets & Co" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#EAF0EC">
+        <img src="images/crowncon-screen-services.png" alt="Crowncon services page" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#EAF0EC">
+        <img src="images/crowncon-screen-about.png" alt="Crowncon about page" style="width:100%;height:100%;object-fit:cover">
+      </div>
+    </div>
+    <div class="bc-results-band" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(28,27,23,.08);border-radius:12px;overflow:hidden">
+      <div style="background:#FBFBF9;padding:28px 24px">
+        <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:40px;letter-spacing:-.03em;color:#1A4D3C;line-height:1">99%</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#46443c;margin-top:6px">Site health score</div>
+      </div>
+      <div style="background:#FBFBF9;padding:28px 24px">
+        <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:40px;letter-spacing:-.03em;color:#1A4D3C;line-height:1">39</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#46443c;margin-top:6px">Keywords tracked</div>
+      </div>
+      <div style="background:#FBFBF9;padding:28px 24px">
+        <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:40px;letter-spacing:-.03em;color:#1A4D3C;line-height:1">100%</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#46443c;margin-top:6px">AI search health</div>
+      </div>
+      <div style="background:#FBFBF9;padding:28px 24px">
+        <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:40px;letter-spacing:-.03em;color:#1A4D3C;line-height:1">Full</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#46443c;margin-top:6px">Brand + web rebuild</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO SECTION -->
+<section style="background:#123528;padding:96px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,241,232,.45);margin-bottom:12px">Work samples</div>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(28px,3vw,44px);line-height:1.0;letter-spacing:-.03em;color:#F4F1E8;margin-bottom:48px">Film, brand and site — in action.</h2>
+    <!-- Main brand film: full width 16/9 -->
+    <div class="bc-play-wrap" id="chelseaVideoWrap" onclick="toggleChelseaVideo()" style="position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;background:rgba(244,241,232,.06);margin-bottom:20px;cursor:pointer;box-shadow:0 10px 40px rgba(18,53,40,.4)">
+      <video id="chelseaVideo" preload="metadata" poster="images/crowncon-film-poster.webp" style="width:100%;height:100%;object-fit:cover;display:block">
+        <source src="images/sample_interview.mp4" type="video/mp4">
+      </video>
+      <div id="chelseaPlayBtn" class="bc-play-btn" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(18,53,40,.3);transition:background .25s">
+        <div class="bc-play-circle" style="width:72px;height:72px;border-radius:50%;background:#F4F1E8;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(18,53,40,.4)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#123528" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div style="position:absolute;bottom:20px;left:20px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#123528;background:rgba(244,241,232,.9);padding:6px 12px;pointer-events:none">Excerpt from Brand Film · Crowncon · 2026</div>
+    </div>
+    <!-- Portrait social cut-downs: 3-col 9/16 -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div class="bc-play-wrap" onclick="playChelseaThumb(this)" style="border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:rgba(244,241,232,.06);position:relative;cursor:pointer">
+        <video preload="metadata" poster="images/mobile_sample.webp" style="width:100%;height:100%;object-fit:cover;display:block">
+          <source src="images/mobile_sample.mp4" type="video/mp4">
+        </video>
+        <div class="bc-play-btn" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(18,53,40,.28);transition:opacity .2s">
+          <div class="bc-play-circle" style="width:44px;height:44px;border-radius:50%;background:rgba(244,241,232,.9);display:flex;align-items:center;justify-content:center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#123528" style="margin-left:2px"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:14px;left:14px;right:14px;font-size:12px;font-weight:600;color:#F4F1E8;line-height:1.4;pointer-events:none">Mobile Reel<br>45s · Social</div>
+      </div>
+      <div class="bc-play-wrap" onclick="playChelseaThumb(this)" style="border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:rgba(244,241,232,.06);position:relative;cursor:pointer">
+        <video preload="metadata" poster="images/mobile_interview.webp" style="width:100%;height:100%;object-fit:cover;display:block">
+          <source src="images/mobile_interview.mp4" type="video/mp4">
+        </video>
+        <div class="bc-play-btn" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(18,53,40,.28);transition:opacity .2s">
+          <div class="bc-play-circle" style="width:44px;height:44px;border-radius:50%;background:rgba(244,241,232,.9);display:flex;align-items:center;justify-content:center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#123528" style="margin-left:2px"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:14px;left:14px;right:14px;font-size:12px;font-weight:600;color:#F4F1E8;line-height:1.4;pointer-events:none">Interview Short<br>Mobile format</div>
+      </div>
+      <div class="bc-play-wrap" onclick="playChelseaThumb(this)" style="border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:rgba(244,241,232,.06);position:relative;cursor:pointer">
+        <video preload="metadata" poster="images/sample_customer.webp" style="width:100%;height:100%;object-fit:cover;display:block">
+          <source src="images/sample_customer.mp4" type="video/mp4">
+        </video>
+        <div class="bc-play-btn" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(18,53,40,.28);transition:opacity .2s">
+          <div class="bc-play-circle" style="width:44px;height:44px;border-radius:50%;background:rgba(244,241,232,.9);display:flex;align-items:center;justify-content:center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#123528" style="margin-left:2px"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:14px;left:14px;right:14px;font-size:12px;font-weight:600;color:#F4F1E8;line-height:1.4;pointer-events:none">Active Site BTS<br>Story · 30s</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section style="background:#FBFBF9;padding:96px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">What I do</div>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(28px,3vw,44px);line-height:1.0;letter-spacing:-.03em;color:#1C1B17;margin-bottom:48px">Services for Chelsea trade businesses.</h2>
+    <div style="border-top:1px solid rgba(28,27,23,.1)">
+      <div class="bc-svc-row" style="display:grid;grid-template-columns:60px 1fr 1fr auto;gap:24px;align-items:center;padding:28px 16px;border-bottom:1px solid rgba(28,27,23,.08);border-radius:8px">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:#C24B33">01</div>
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;color:#1C1B17">Branding & Identity</div>
+        <div class="bc-svc-meta" style="font-size:14px;color:#46443c">Logo, brand system, style guide, visual assets</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#1A4D3C;white-space:nowrap">Scoped to project</div>
+      </div>
+      <div class="bc-svc-row" style="display:grid;grid-template-columns:60px 1fr 1fr auto;gap:24px;align-items:center;padding:28px 16px;border-bottom:1px solid rgba(28,27,23,.08);border-radius:8px">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:#C24B33">02</div>
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;color:#1C1B17">Web Design & Local SEO</div>
+        <div class="bc-svc-meta" style="font-size:14px;color:#46443c">Static site, suburb pages, structured data, GBP</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#1A4D3C;white-space:nowrap">Scoped to project</div>
+      </div>
+      <div class="bc-svc-row" style="display:grid;grid-template-columns:60px 1fr 1fr auto;gap:24px;align-items:center;padding:28px 16px;border-bottom:1px solid rgba(28,27,23,.08);border-radius:8px">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:#C24B33">03</div>
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;color:#1C1B17">Video & Content</div>
+        <div class="bc-svc-meta" style="font-size:14px;color:#46443c">Brand film, testimonials, social content</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#1A4D3C;white-space:nowrap">Scoped to project</div>
+      </div>
+      <div class="bc-svc-row" style="display:grid;grid-template-columns:60px 1fr 1fr auto;gap:24px;align-items:center;padding:28px 16px;border-bottom:1px solid rgba(28,27,23,.08);border-radius:8px">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:#C24B33">04</div>
+        <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;color:#1C1B17">Retainer Support</div>
+        <div class="bc-svc-meta" style="font-size:14px;color:#46443c">Monthly marketing, SEO management, content</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:#1A4D3C;white-space:nowrap">Scoped monthly</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBURB COVERAGE -->
+<section style="background:#F0E9DB;padding:80px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">Coverage</div>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(24px,2.8vw,38px);line-height:1.0;letter-spacing:-.03em;color:#1C1B17;margin-bottom:8px">Bayside-based. Melbourne-wide.</h2>
+    <p style="font-size:16px;color:#46443c;margin-bottom:32px">I specialise in trade businesses along the Bayside and Kingston corridor — and work across Greater Melbourne.</p>
+    <div class="bc-suburb-chips" style="display:flex;flex-wrap:wrap;gap:10px">
+      <span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;padding:8px 16px;border-radius:100px;background:#1A4D3C;color:#F4F1E8">Chelsea</span>
+      <span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;background:#fff;border:1px solid rgba(28,27,23,.15);color:#46443c">Aspendale</span>
+      <span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;background:#fff;border:1px solid rgba(28,27,23,.15);color:#46443c">Edithvale</span>
+      <span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;background:#fff;border:1px solid rgba(28,27,23,.15);color:#46443c">Mordialloc</span>
+      <span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;background:#fff;border:1px solid rgba(28,27,23,.15);color:#46443c">Mentone</span>
+      <span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;background:#fff;border:1px solid rgba(28,27,23,.15);color:#46443c">Parkdale</span>
+      <span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;background:#fff;border:1px solid rgba(28,27,23,.15);color:#46443c">Bonbeach</span>
+      <span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;background:#fff;border:1px solid rgba(28,27,23,.15);color:#46443c">Cheltenham</span>
+      <span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;background:#fff;border:1px solid rgba(28,27,23,.15);color:#46443c">Greater Melbourne</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:#FBFBF9;padding:96px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">FAQ</div>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(28px,3vw,44px);line-height:1.0;letter-spacing:-.03em;color:#1C1B17;margin-bottom:48px">Common questions.</h2>
+    <div class="bc-faq-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:40px 60px">
+      <div>
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;color:#1C1B17;margin-bottom:12px">How is a marketing agency in Chelsea priced?</h3>
+        <p style="font-size:16px;line-height:1.7;color:#46443c">Every project is scoped individually — branding, website and local SEO can be combined into one fixed-price package built around what you actually need. All pricing is fixed upfront — no retainers, no timesheets, no surprises.</p>
+      </div>
+      <div>
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;color:#1C1B17;margin-bottom:12px">Will my Chelsea trade business rank on Google?</h3>
+        <p style="font-size:16px;line-height:1.7;color:#46443c">With a properly built site and the right local SEO setup — suburb pages, structured data, and a strong Google Business Profile — yes. Chelsea has relatively low keyword competition. Most rankings start moving within 60–90 days.</p>
+      </div>
+      <div>
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;color:#1C1B17;margin-bottom:12px">What kind of trade businesses do you work with?</h3>
+        <p style="font-size:16px;line-height:1.7;color:#46443c">Plumbers, electricians, builders, landscapers, HVAC, tilers, concreters, painters and similar trades. If you work in Chelsea and the surrounding Kingston corridor, I understand your customer and how they search.</p>
+      </div>
+      <div>
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;color:#1C1B17;margin-bottom:12px">Do I need a new website, or just SEO?</h3>
+        <p style="font-size:16px;line-height:1.7;color:#46443c">It depends on what you've already got. If your site has solid technical foundations, an SEO-only engagement can work. If the site is holding you back, rebuilding it is the smarter investment. We'll look at what you have before recommending anything.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:#123528;padding:120px 40px;text-align:center">
+  <div style="max-width:720px;margin:0 auto">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,241,232,.4);margin-bottom:20px">Chelsea · Bayside · Melbourne</div>
+    <h2 style="font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(38px,5vw,72px);line-height:.96;letter-spacing:-.03em;color:#F4F1E8;margin-bottom:28px">Ready to be found<br>in <em style="font-family:'Newsreader',serif;font-style:italic;font-weight:300;color:#E6D9C2">Chelsea?</em></h2>
+    <p style="font-size:18px;color:rgba(244,241,232,.65);line-height:1.6;margin-bottom:40px">Send me a message. I'll take a look at where you're at and tell you what I'd do first.</p>
+    <a href="/#apply" class="bc-cta-btn" style="display:inline-flex;align-items:center;gap:10px;background:#C24B33;color:#fff;font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:16px 32px;border-radius:100px">
+      Get in touch
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- RELATED -->
+<section style="background:#FBFBF9;padding:96px 0">
+  <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#C24B33;margin-bottom:32px">More coverage</div>
+    <div class="bc-related-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+      <a href="/marketing-agency-aspendale.html" class="bc-related-card" style="display:block;background:#fff;border:1px solid rgba(28,27,23,.08);border-radius:14px;padding:32px 28px">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">Suburb</div>
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:10px">Aspendale</h3>
+        <p style="font-size:14px;line-height:1.6;color:#46443c">Trade marketing for Aspendale — brand, website and local SEO.</p>
+      </a>
+      <a href="/marketing-agency-edithvale.html" class="bc-related-card" style="display:block;background:#fff;border:1px solid rgba(28,27,23,.08);border-radius:14px;padding:32px 28px">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">Suburb</div>
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:10px">Edithvale</h3>
+        <p style="font-size:14px;line-height:1.6;color:#46443c">Trade marketing for Edithvale and the Kingston corridor.</p>
+      </a>
+      <a href="/marketing-agency-south-east-melbourne.html" class="bc-related-card" style="display:block;background:#fff;border:1px solid rgba(28,27,23,.08);border-radius:14px;padding:32px 28px">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">Region</div>
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:10px">South East Melbourne</h3>
+        <p style="font-size:14px;line-height:1.6;color:#46443c">Marketing agency for trade businesses across the south east.</p>
+      </a>
+      <a href="/branding-agency-bayside-melbourne.html" class="bc-related-card" style="display:block;background:#fff;border:1px solid rgba(28,27,23,.08);border-radius:14px;padding:32px 28px">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#C24B33;margin-bottom:12px">Branding</div>
+        <h3 style="font-family:'Archivo',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.02em;color:#1C1B17;margin-bottom:10px">Bayside Branding Agency</h3>
+        <p style="font-size:14px;line-height:1.6;color:#46443c">A dedicated brand identity studio for the Bayside corridor.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#16140E;padding:80px 40px 40px">
+  <div class="bc-footer-grid" style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:60px;margin-bottom:60px">
+    <div>
+      <div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.02em;color:#F4F1E8;margin-bottom:16px">Beets <span style="color:#C24B33">&</span> Co</div>
+      <p style="font-size:14px;line-height:1.7;color:rgba(244,241,232,.45);max-width:30ch">Brand, web and marketing for Melbourne trade businesses. Bayside-based.</p>
+    </div>
+    <div>
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,241,232,.3);margin-bottom:16px">Services</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="/tradie-marketing-agency-melbourne.html" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">Trade Marketing</a>
+        <a href="/tradie-website-design.html" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">Website Design</a>
+        <a href="/seo-for-tradies.html" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">SEO for Tradies</a>
+        <a href="/branding-for-tradies.html" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">Branding</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,241,232,.3);margin-bottom:16px">Locations</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="/marketing-agency-south-east-melbourne.html" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">South East Melbourne</a>
+        <a href="/marketing-agency-frankston.html" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">Frankston</a>
+        <a href="/marketing-agency-chelsea.html" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">Chelsea</a>
+        <a href="/marketing-agency-mordialloc.html" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">Mordialloc</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,241,232,.3);margin-bottom:16px">Contact</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="mailto:michael@beetsandco.com.au" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">michael@beetsandco.com.au</a>
+        <a href="tel:+61447542930" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">+61 447 542 930</a>
+        <a href="/#apply" class="bc-footer-link" style="font-size:14px;color:rgba(244,241,232,.6)">Send a message</a>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1280px;margin:0 auto;padding-top:32px;border-top:1px solid rgba(244,241,232,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <div style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(244,241,232,.25)">© 2026 Beets & Co · Bayside, Melbourne · ABN available on request</div>
+    <div style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(244,241,232,.25)">beetsandco.com.au</div>
+  </div>
+</footer>
+
+<script>
+function toggleChelseaVideo(){
+  var v=document.getElementById('chelseaVideo');
+  var b=document.getElementById('chelseaPlayBtn');
+  document.querySelectorAll('.bc-play-wrap video').forEach(function(el){if(el!==v){el.pause();}});
+  document.querySelectorAll('.bc-play-wrap .bc-play-btn').forEach(function(el){if(el!==b){el.style.display='flex';}});
+  if(v.paused){v.play();b.style.display='none';}
+  else{v.pause();b.style.display='flex';}
+  v.addEventListener('ended',function(){b.style.display='flex';},{once:true});
+}
+function playChelseaThumb(wrap){
+  var v=wrap.querySelector('video');
+  var b=wrap.querySelector('.bc-play-btn');
+  document.querySelectorAll('.bc-play-wrap video').forEach(function(el){if(el!==v){el.pause();}});
+  document.querySelectorAll('.bc-play-wrap .bc-play-btn').forEach(function(el){if(el!==b){el.style.display='flex';}});
+  if(v.paused){v.play();b.style.display='none';}
+  else{v.pause();b.style.display='flex';}
+  v.addEventListener('ended',function(){b.style.display='flex';},{once:true});
+}
+</script>
+<script>
+function bcToggleMenu(){
+  var m=document.getElementById('bc-mobile-menu'),b=document.getElementById('bc-menu-btn'),s=b.querySelectorAll('span'),o=m.style.display==='block';
+  m.style.display=o?'none':'block';
+  document.body.style.overflow=o?'':'hidden';
+  s[0].style.transform=o?'':'translateY(7px) rotate(45deg)';
+  s[1].style.opacity=o?'':'0';
+  s[2].style.transform=o?'':'translateY(-7px) rotate(-45deg)';
+  s[2].style.width=o?'':'24px';
+}
+function bcCloseMenu(){
+  var m=document.getElementById('bc-mobile-menu'),b=document.getElementById('bc-menu-btn'),s=b?b.querySelectorAll('span'):[];
+  m.style.display='none';document.body.style.overflow='';
+  if(s.length){s[0].style.transform='';s[1].style.opacity='';s[2].style.transform='';s[2].style.width='';}
+}
+</script>
+</body>
+</html>
