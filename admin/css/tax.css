@@ -93,6 +93,13 @@
 .tx-action .tx-action-ic { font-size: 14px; line-height: 1.3; }
 .tx-action b { color: var(--ink); }
 
+/* Super contributions */
+.tx-super-rates { display: flex; flex-wrap: wrap; gap: 16px; margin: 4px 0 12px; }
+.tx-super-rate { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+.tx-in.xs { width: 52px; text-align: right; }
+.tx-table td.num.neg-behind { color: var(--rust); }
+.tx-table td.num.pos-ahead { color: var(--green); }
+
 @media (max-width: 640px) {
   .tx-page { padding: 18px 16px 60px; }
   .tx-disclaimer { text-align: left; max-width: 100%; }

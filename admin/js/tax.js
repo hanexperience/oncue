@@ -159,6 +159,7 @@
         invoicesSection() +
         expensesSection() +
         wagesSection() +
+        superSection() +
       '</div>';
   }
 
@@ -363,6 +364,78 @@
       '</div>';
   }
 
+  // ── Super contributions ──────────────────────────────────────────────
+  function defaultSuperRate(ent) { return (ent && ent.super_rate_pct != null && ent.super_rate_pct !== '') ? num(ent.super_rate_pct) : 12; }
+  function monthLabel(ym) { const parts = ym.split('-').map(Number); return new Date(parts[0], parts[1] - 1, 1).toLocaleDateString('en-AU', { month: 'short', year: 'numeric' }); }
+
+  function superSection() {
+    const ids = entIds();
+    let totGross = 0, totPaid = 0, totReq = 0;
+    ids.forEach(id => {
+      const ent = S.entities.find(e => e.id === id);
+      const rate = defaultSuperRate(ent);
+      const rows = S.wages.filter(w => w.entity_id === id);
+      const gross = rows.reduce((s, w) => s + num(w.gross), 0);
+      const paid = rows.reduce((s, w) => s + num(w.super_amt), 0);
+      totGross += gross; totPaid += paid; totReq += round2(gross * rate / 100);
+    });
+    const variance = round2(totPaid - totReq);
+    const rateNote = ids.length > 1 ? 'at each entity\'s target rate' : defaultSuperRate(S.entities.find(e => e.id === ids[0])) + '% of gross wages logged';
+
+    const cardsHtml = '<div class="tx-cards">' +
+      card('', 'Super paid (FY)', money(totPaid), 'actual payments logged in Director pay / drawings below') +
+      card('', 'Super required (FY)', money(totReq), rateNote + ' · ' + money(totGross) + ' gross wages') +
+      card('', variance >= 0 ? 'Ahead' : 'Behind target', money(Math.abs(variance)), variance >= 0 ? 'paid more than the target so far' : 'still needed to hit the target', variance >= 0 ? 'neg' : 'pos') +
+      '</div>';
+
+    // Monthly breakdown, grouped by pay month
+    const monthly = {};
+    ids.forEach(id => {
+      S.wages.filter(w => w.entity_id === id).forEach(w => {
+        if (!w.pay_date) return;
+        const key = w.pay_date.slice(0, 7);
+        monthly[key] = monthly[key] || {};
+        monthly[key][id] = monthly[key][id] || { gross: 0, paid: 0 };
+        monthly[key][id].gross += num(w.gross);
+        monthly[key][id].paid += num(w.super_amt);
+      });
+    });
+    const months = Object.keys(monthly).sort();
+    let rowsHtml = '';
+    months.forEach(mo => {
+      ids.forEach(id => {
+        const m = monthly[mo][id]; if (!m) return;
+        const ent = S.entities.find(e => e.id === id);
+        const rate = defaultSuperRate(ent);
+        const req = round2(m.gross * rate / 100);
+        const varc = round2(m.paid - req);
+        rowsHtml += '<tr>' +
+          '<td class="muted">' + monthLabel(mo) + '</td>' +
+          (ids.length > 1 ? '<td class="muted">' + esc2(entName(id)) + '</td>' : '') +
+          '<td class="num">' + money2(m.gross) + '</td>' +
+          '<td class="num">' + money2(req) + '</td>' +
+          '<td class="num">' + money2(m.paid) + '</td>' +
+          '<td class="num ' + (varc < 0 ? 'neg-behind' : 'pos-ahead') + '">' + money2(varc) + '</td>' +
+          '</tr>';
+      });
+    });
+    if (!rowsHtml) rowsHtml = '<tr><td colspan="' + (ids.length > 1 ? 6 : 5) + '" class="tx-empty">No pay runs logged yet — add gross wages in Director pay / drawings below and super targets will show here.</td></tr>';
+
+    const table = '<div class="tx-table-wrap"><table class="tx-table"><thead><tr>' +
+      '<th>Month</th>' + (ids.length > 1 ? '<th>Entity</th>' : '') + '<th class="num">Gross wages</th><th class="num">Super required</th><th class="num">Super paid</th><th class="num">Variance</th>' +
+      '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
+
+    const body = cardsHtml + superRatesRow() + table;
+    return section('Super contributions', 'target = gross wages logged below × rate, per entity — set aside monthly to stay on track', body);
+  }
+
+  function superRatesRow() {
+    return '<div class="tx-super-rates">' + S.entities.map(e => {
+      const rate = defaultSuperRate(e);
+      return '<label class="tx-super-rate">' + esc2(e.name) + ' target rate <input class="tx-in xs" type="number" step="0.5" min="0" max="100" value="' + rate + '" onchange="Tax.setSuperRate(\'' + e.id + '\', this.value)"/>%</label>';
+    }).join('') + '</div>';
+  }
+
   // ── Small render utils ───────────────────────────────────────────────
   function section(label, note, body) {
     return '<div class="tx-section"><div class="tx-section-head"><div class="tx-section-label">' + label + '</div>' + (note ? '<div class="tx-section-note">' + note + '</div>' : '') + '</div>' + body + '</div>';
@@ -433,6 +506,11 @@
     async setBasStatus(id, status) {
       const patch = { status, lodged_date: (status === 'lodged' || status === 'paid') ? todayISO() : null };
       try { await sbApi('tax_bas_periods', '?id=eq.' + id, 'PATCH', patch); const b = S.bas.find(x => x.id === id); if (b) { b.status = status; b.lodged_date = patch.lodged_date; } render(); notify('BAS updated'); } catch (e) { notify('Failed: ' + e.message, true); }
+    },
+
+    async setSuperRate(entityId, rate) {
+      const r = num(rate);
+      try { await sbApi('tax_entities', '?id=eq.' + entityId, 'PATCH', { super_rate_pct: r }); const ent = S.entities.find(e => e.id === entityId); if (ent) ent.super_rate_pct = r; render(); notify('Target super rate updated'); } catch (e) { notify('Failed: ' + e.message, true); }
     }
   };
 
