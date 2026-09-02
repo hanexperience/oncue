@@ -422,20 +422,29 @@
 
   // ── Super contributions ──────────────────────────────────────────────
   // Income base for the super target differs by entity type:
-  //  - sole trader (Beets & Co): no compulsory SG on yourself — the meaningful base is
-  //    invoiced income you've actually been paid, since that's what a personal deductible
-  //    contribution is calculated against.
+  //  - sole trader (Beets & Co): no compulsory SG on yourself, so there's no ATO-mandated
+  //    base either. Using NET income (paid invoices ex-GST minus deductible expenses ex-GST,
+  //    matched by month) rather than gross avoids overstating the target — a chunk of gross
+  //    revenue is real business cost that was never available to put toward super.
   //  - company (Here & Now): SG is a legal obligation on wages paid to a director/employee,
   //    so the base stays gross wages from Director pay / drawings.
   function defaultSuperRate(ent) { return (ent && ent.super_rate_pct != null && ent.super_rate_pct !== '') ? num(ent.super_rate_pct) : 12; }
   function monthLabel(ym) { const parts = ym.split('-').map(Number); return new Date(parts[0], parts[1] - 1, 1).toLocaleDateString('en-AU', { month: 'short', year: 'numeric' }); }
   function isSoleTrader(ent) { return ent && ent.entity_type === 'sole_trader'; }
-  function superBaseRows(id) {
-    const ent = S.entities.find(e => e.id === id);
-    if (isSoleTrader(ent)) return S.invoices.filter(i => i.entity_id === id && i.status === 'paid').map(i => ({ date: i.paid_date, amt: num(i.amount_ex_gst) }));
-    return S.wages.filter(w => w.entity_id === id).map(w => ({ date: w.pay_date, amt: num(w.gross) }));
+  // { 'YYYY-MM': { income, expense } } — paid invoices vs. deductible expenses, each in their own month
+  function soleTraderMonthly(id) {
+    const m = {};
+    S.invoices.filter(i => i.entity_id === id && i.status === 'paid').forEach(i => {
+      if (!i.paid_date) return; const key = i.paid_date.slice(0, 7);
+      m[key] = m[key] || { income: 0, expense: 0 }; m[key].income += num(i.amount_ex_gst);
+    });
+    S.expenses.filter(e => e.entity_id === id && e.deductible).forEach(e => {
+      if (!e.expense_date) return; const key = e.expense_date.slice(0, 7);
+      m[key] = m[key] || { income: 0, expense: 0 }; m[key].expense += num(e.amount_ex_gst);
+    });
+    return m;
   }
-  function superBaseLabel(ent) { return isSoleTrader(ent) ? 'income invoiced & paid' : 'gross wages'; }
+  function superBaseLabel(ent) { return isSoleTrader(ent) ? 'net income (after expenses)' : 'gross wages'; }
 
   function superSection() {
     const ids = entIds();
@@ -443,9 +452,15 @@
     ids.forEach(id => {
       const ent = S.entities.find(e => e.id === id);
       const rate = defaultSuperRate(ent);
-      const base = superBaseRows(id).reduce((s, r) => s + r.amt, 0);
+      let base;
+      if (isSoleTrader(ent)) {
+        const mm = soleTraderMonthly(id);
+        base = Object.keys(mm).reduce((s, k) => s + mm[k].income - mm[k].expense, 0);
+      } else {
+        base = S.wages.filter(w => w.entity_id === id).reduce((s, w) => s + num(w.gross), 0);
+      }
       const paid = S.wages.filter(w => w.entity_id === id).reduce((s, w) => s + num(w.super_amt), 0);
-      totBase += base; totPaid += paid; totReq += round2(base * rate / 100);
+      totBase += base; totPaid += paid; totReq += round2(Math.max(base, 0) * rate / 100);
     });
     const variance = round2(totPaid - totReq);
     const mixedBase = ids.length > 1 && new Set(ids.map(id => superBaseLabel(S.entities.find(e => e.id === id)))).size > 1;
@@ -458,12 +473,19 @@
       card('', variance >= 0 ? 'Ahead' : 'Behind target', money(Math.abs(variance)), variance >= 0 ? 'paid more than the target so far' : 'still needed to hit the target', variance >= 0 ? 'neg' : 'pos') +
       '</div>';
 
-    // Monthly breakdown — base rows keyed by their own date (invoice paid_date for sole
-    // traders, wage pay_date for companies), super paid always keyed by wage pay_date.
+    // Monthly breakdown — sole trader base = that month's paid income minus that month's
+    // deductible expenses (can go negative in a heavy-expense month; "required" floors at $0).
+    // Company base = that month's gross wages. Super paid always keyed by wage pay_date.
     const monthly = {};
     function bucket(key, id) { monthly[key] = monthly[key] || {}; monthly[key][id] = monthly[key][id] || { base: 0, paid: 0 }; return monthly[key][id]; }
     ids.forEach(id => {
-      superBaseRows(id).forEach(r => { if (r.date) bucket(r.date.slice(0, 7), id).base += r.amt; });
+      const ent = S.entities.find(e => e.id === id);
+      if (isSoleTrader(ent)) {
+        const mm = soleTraderMonthly(id);
+        Object.keys(mm).forEach(key => { bucket(key, id).base += mm[key].income - mm[key].expense; });
+      } else {
+        S.wages.filter(w => w.entity_id === id).forEach(w => { if (w.pay_date) bucket(w.pay_date.slice(0, 7), id).base += num(w.gross); });
+      }
       S.wages.filter(w => w.entity_id === id).forEach(w => { if (w.pay_date) bucket(w.pay_date.slice(0, 7), id).paid += num(w.super_amt); });
     });
     const months = Object.keys(monthly).sort();
@@ -473,7 +495,7 @@
         const m = monthly[mo][id]; if (!m) return;
         const ent = S.entities.find(e => e.id === id);
         const rate = defaultSuperRate(ent);
-        const req = round2(m.base * rate / 100);
+        const req = round2(Math.max(m.base, 0) * rate / 100);
         const varc = round2(m.paid - req);
         rowsHtml += '<tr>' +
           '<td class="muted">' + monthLabel(mo) + '</td>' +
@@ -485,14 +507,14 @@
           '</tr>';
       });
     });
-    if (!rowsHtml) rowsHtml = '<tr><td colspan="' + (ids.length > 1 ? 6 : 5) + '" class="tx-empty">Nothing logged yet — paid invoices (sole trader) or gross wages (company) will show here once entered.</td></tr>';
+    if (!rowsHtml) rowsHtml = '<tr><td colspan="' + (ids.length > 1 ? 6 : 5) + '" class="tx-empty">Nothing logged yet — paid invoices/expenses (sole trader) or gross wages (company) will show here once entered.</td></tr>';
 
     const table = '<div class="tx-table-wrap"><table class="tx-table"><thead><tr>' +
-      '<th>Month</th>' + (ids.length > 1 ? '<th>Entity</th>' : '') + '<th class="num">' + (mixedBase ? 'Income base' : (baseLabel === 'gross wages' ? 'Gross wages' : 'Income paid')) + '</th><th class="num">Super required</th><th class="num">Super paid</th><th class="num">Variance</th>' +
+      '<th>Month</th>' + (ids.length > 1 ? '<th>Entity</th>' : '') + '<th class="num">' + (mixedBase ? 'Income base' : (baseLabel === 'gross wages' ? 'Gross wages' : 'Net income')) + '</th><th class="num">Super required</th><th class="num">Super paid</th><th class="num">Variance</th>' +
       '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
 
     const body = cardsHtml + superTaxNote(ids) + superRatesRow() + table;
-    return section('Super contributions', 'Beets & Co target = invoiced income you\'ve been paid × rate (sole trader, no compulsory SG on yourself) · Here & Now target = gross wages × rate (company SG obligation)', body);
+    return section('Super contributions', 'Beets & Co target = net income (paid invoices minus deductible expenses) × rate (sole trader, no compulsory SG on yourself) · Here & Now target = gross wages × rate (company SG obligation)', body);
   }
 
   // Personal deductible super contributions (sole trader entities only): taxed at a flat 15%
