@@ -45,12 +45,6 @@
 .nav .container.row{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:15px var(--pad)}
 .brand .wm{font-family:var(--grot);font-weight:600;font-size:20px;letter-spacing:-.03em;color:var(--paper)}
 .brand .amp{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--stone)}
-.nav-links{display:flex;align-items:center;gap:clamp(14px,1.8vw,30px)}
-.nav-links a{font-size:16px;font-weight:500;color:var(--stone);transition:color .25s ease}
-.nav-links a:hover{color:var(--paper)}
-.nav-cta .btn svg{width:15px;height:15px;margin-left:8px}
-.burger{display:none;background:none;border:1px solid var(--rule);color:var(--paper);
-  font-family:var(--grot);font-weight:600;font-size:15px;padding:10px 16px;border-radius:2px;cursor:pointer}
 
 .journal-hero{padding:clamp(60px,8vw,124px) 0 clamp(34px,4vw,56px)}
 .journal-hero h1{font-size:clamp(42px,7vw,110px);line-height:.92;letter-spacing:-.045em;font-weight:600;max-width:15ch;text-wrap:balance}
@@ -83,8 +77,6 @@ footer{padding:clamp(56px,6vw,90px) 0 44px;border-top:1px solid var(--rule);marg
 .foot-col a:hover{color:var(--beet)}
 
 @media(max-width:900px){
-  .nav-links{display:none}
-  .burger{display:block}
   .foot-top{grid-template-columns:1fr;gap:30px}
 }
 </style>
@@ -343,20 +335,32 @@ document.addEventListener('click', function(e){
 }
 </script>
 </head>
-<body>
+<body class="lp">
 <!-- ============================ NAV ============================ -->
 <header class="nav" id="nav">
 <div class="container row">
 <a aria-label="Beets &amp; Co home" class="brand" href="../index.html#top">
 <span class="wm">Beets <span class="amp">&amp;</span> Co</span>
 </a>
-<nav aria-label="Primary" class="nav-links">
+<nav aria-label="Primary" class="bc-nav-links">
 <a class="bc-nav-link" href="/crowncon/">Work</a><a class="bc-nav-link" href="/#services">Services</a><a class="bc-nav-link" href="/#about">Studio</a><a class="bc-nav-link" href="/#process">Process</a><a class="bc-nav-link" href="/#faq">FAQ</a><a class="bc-nav-link" href="/blog/">Journal</a><a class="bc-nav-link flag" data-ga-event="walk_in_ready_nav" href="/walk-in-ready.html">Free check</a></nav><a class="bc-cta-btn" data-ga-event="start_conversation" href="/#apply">Start a conversation</a>
-<div class="nav-cta">
-<button aria-label="Menu" class="burger" id="burger"><span></span><span></span><span></span></button>
-</div>
+<button aria-label="Open menu" class="bc-menu-btn" id="bc-menu-btn" onclick="toggleMobileMenu()">
+<span class="bc-ham-bar"></span>
+<span class="bc-ham-bar"></span>
+<span class="bc-ham-bar"></span>
+</button>
 </div>
 </header>
+<!-- Full-screen mobile menu -->
+<div id="bc-mobile-menu">
+<div>
+<nav>
+<a href="/crowncon/">Work</a><a href="/#services">Services</a><a href="/#about">Studio</a><a href="/#process">Process</a><a href="/#faq">FAQ</a><a href="/blog/">Journal</a><a data-ga-event="walk_in_ready_nav" href="/walk-in-ready.html">Free check</a><a data-ga-event="start_conversation" href="/#apply">Start a conversation</a></nav>
+<div>
+<a href="mailto:michael@beetsandco.com.au">michael@beetsandco.com.au</a>
+</div>
+</div>
+</div>
 <!-- ============================ HERO ============================ -->
 <section class="journal-hero">
 <div class="container">
@@ -501,4 +505,36 @@ document.addEventListener('click', function(e){
 <div class="foot-col">
 <h5>Get in touch</h5>
 <a data-ga-event="start_conversation" href="../index.html#apply">Start a conversation</a>
-<a href="mailto:michael@beetsandco.com.au"></a></div></div></div></footer></body></html>
+<a href="mailto:michael@beetsandco.com.au"></a></div></div></div></footer>
+<script>
+function toggleMobileMenu(){
+  var m=document.getElementById('bc-mobile-menu');
+  var b=document.getElementById('bc-menu-btn');
+  if(!m||!b)return;
+  var bars=b.querySelectorAll('.bc-ham-bar');
+  var open=m.style.display==='block';
+  m.style.display=open?'none':'block';
+  b.setAttribute('aria-label',open?'Open menu':'Close menu');
+  if(!open){
+    bars[0].style.transform='translateY(7px) rotate(45deg)';
+    bars[1].style.opacity='0';
+    bars[2].style.transform='translateY(-7px) rotate(-45deg)';
+    bars[2].style.width='24px';
+  }else{
+    bars[0].style.transform='';bars[1].style.opacity='1';
+    bars[2].style.transform='';bars[2].style.width='16px';
+  }
+}
+function closeMobileMenu(){
+  var m=document.getElementById('bc-mobile-menu');
+  var b=document.getElementById('bc-menu-btn');
+  if(m)m.style.display='none';
+  if(b){
+    b.querySelectorAll('.bc-ham-bar').forEach(function(s,i){
+      s.style.transform='';s.style.opacity='1';s.style.width=i===2?'16px':'24px';
+    });
+    b.setAttribute('aria-label','Open menu');
+  }
+}
+</script>
+</body></html>

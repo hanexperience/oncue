@@ -78,13 +78,25 @@ document.addEventListener('click', function(e){
 <a aria-label="Beets &amp; Co home" href="../index.html#top">
 <span>Beets <span>&amp;</span> Co</span>
 </a>
-<nav aria-label="Primary" class="cc-nav-links">
+<nav aria-label="Primary" class="bc-nav-links">
 <a class="bc-nav-link" href="/crowncon/">Work</a><a class="bc-nav-link" href="/#services">Services</a><a class="bc-nav-link" href="/#about">Studio</a><a class="bc-nav-link" href="/#process">Process</a><a class="bc-nav-link" href="/#faq">FAQ</a><a class="bc-nav-link" href="/blog/">Journal</a><a class="bc-nav-link flag" data-ga-event="walk_in_ready_nav" href="/walk-in-ready.html">Free check</a></nav><a class="bc-cta-btn" data-ga-event="start_conversation" href="/#apply">Start a conversation</a>
-<div>
-<button aria-label="Menu"></button>
-</div>
+<button aria-label="Open menu" class="bc-menu-btn" id="bc-menu-btn" onclick="toggleMobileMenu()">
+<span class="bc-ham-bar"></span>
+<span class="bc-ham-bar"></span>
+<span class="bc-ham-bar"></span>
+</button>
 </div>
 </header>
+<!-- Full-screen mobile menu -->
+<div id="bc-mobile-menu">
+<div>
+<nav>
+<a href="/crowncon/">Work</a><a href="/#services">Services</a><a href="/#about">Studio</a><a href="/#process">Process</a><a href="/#faq">FAQ</a><a href="/blog/">Journal</a><a data-ga-event="walk_in_ready_nav" href="/walk-in-ready.html">Free check</a><a data-ga-event="start_conversation" href="/#apply">Start a conversation</a></nav>
+<div>
+<a href="mailto:michael@beetsandco.com.au">michael@beetsandco.com.au</a>
+</div>
+</div>
+</div>
 <!-- 01 HERO -->
 <section class="cc-hero">
 <div class="cc-hero-bg">
@@ -651,6 +663,37 @@ document.addEventListener('click', function(e){
     setupSlider();
   });
 })();
+</script>
+<script>
+function toggleMobileMenu(){
+  var m=document.getElementById('bc-mobile-menu');
+  var b=document.getElementById('bc-menu-btn');
+  if(!m||!b)return;
+  var bars=b.querySelectorAll('.bc-ham-bar');
+  var open=m.style.display==='block';
+  m.style.display=open?'none':'block';
+  b.setAttribute('aria-label',open?'Open menu':'Close menu');
+  if(!open){
+    bars[0].style.transform='translateY(7px) rotate(45deg)';
+    bars[1].style.opacity='0';
+    bars[2].style.transform='translateY(-7px) rotate(-45deg)';
+    bars[2].style.width='24px';
+  }else{
+    bars[0].style.transform='';bars[1].style.opacity='1';
+    bars[2].style.transform='';bars[2].style.width='16px';
+  }
+}
+function closeMobileMenu(){
+  var m=document.getElementById('bc-mobile-menu');
+  var b=document.getElementById('bc-menu-btn');
+  if(m)m.style.display='none';
+  if(b){
+    b.querySelectorAll('.bc-ham-bar').forEach(function(s,i){
+      s.style.transform='';s.style.opacity='1';s.style.width=i===2?'16px':'24px';
+    });
+    b.setAttribute('aria-label','Open menu');
+  }
+}
 </script>
 </body>
 </html>
