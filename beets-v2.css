@@ -913,27 +913,27 @@ body footer span{color:var(--stone-2);font-size:16px}
    SUBURB / SERVICE TEMPLATE — this family uses <nav> as the
    bar (not <header>), and its hero blocks carry no classes.
    ══════════════════════════════════════════════════════════ */
-body > nav{
+body > nav:not([class]){
   position:sticky;top:0;z-index:80;background:rgba(11,13,10,.88);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-bottom:1px solid var(--rule);
 }
-body > nav > div{
+body > nav:not([class]) > div{
   display:flex;align-items:center;gap:clamp(16px,2vw,32px);
   padding:15px var(--pad);max-width:none;
 }
-body > nav > div > a:first-child{
+body > nav:not([class]) > div > a:first-child{
   font-family:var(--grot);font-weight:600;font-size:20px;letter-spacing:-.03em;
   color:var(--paper);margin-right:auto;
 }
-body > nav > div > a:first-child span{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--stone)}
-body > nav .bc-nav-links{display:flex;align-items:center;gap:clamp(14px,1.8vw,30px)}
-body > nav .bc-cta-btn{
+body > nav:not([class]) > div > a:first-child span{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--stone)}
+body > nav:not([class]) .bc-nav-links{display:flex;align-items:center;gap:clamp(14px,1.8vw,30px)}
+body > nav:not([class]) .bc-cta-btn{
   display:inline-flex;align-items:center;gap:9px;background:var(--clay);color:#F7F2EB;
   padding:12px 22px;border-radius:2px;font-family:var(--grot);font-weight:600;font-size:16px;
   white-space:nowrap;transition:background .25s ease;
 }
-body > nav .bc-cta-btn:hover{background:#D45A41}
+body > nav:not([class]) .bc-cta-btn:hover{background:#D45A41}
 
 /* hero: eyebrow, headline, buttons, stat strip */
 .lp .bc-hero-grid > div > div:first-child{
@@ -982,15 +982,15 @@ body > nav .bc-cta-btn:hover{background:#D45A41}
 #bc-mobile-menu > div > div:last-child a{font-size:17px;color:var(--stone)}
 
 @media(max-width:900px){
-  body > nav .bc-nav-links,body > nav > div > a.bc-cta-btn{display:none}
-  body > nav .bc-menu-btn{display:flex}
+  body > nav:not([class]) .bc-nav-links,body > nav:not([class]) > div > a.bc-cta-btn{display:none}
+  body > nav:not([class]) .bc-menu-btn{display:flex}
 }
 
 
 /* ══════════════════════════════════════════════════════════
    MOBILE POLISH — last block, so it settles the cascade
    ══════════════════════════════════════════════════════════ */
-body > nav > div > a:first-child{white-space:nowrap}
+body > nav:not([class]) > div > a:first-child{white-space:nowrap}
 .wordmark,.brand .wm{white-space:nowrap}
 
 @media(max-width:900px){
@@ -1027,13 +1027,13 @@ body > nav > div > a:first-child{white-space:nowrap}
 }
 
 /* nav CTA on the templates where it carries no button class */
-body > nav > div > a[href*="#apply"]:not(:first-child),
-body > nav > div > a[href*="/#apply"]:not(:first-child){
+body > nav:not([class]) > div > a[href*="#apply"]:not(:first-child),
+body > nav:not([class]) > div > a[href*="/#apply"]:not(:first-child){
   display:inline-flex;align-items:center;gap:9px;background:var(--clay);color:#F7F2EB;
   padding:12px 22px;border-radius:2px;font-family:var(--grot);font-weight:600;font-size:16px;
   white-space:nowrap;
 }
-body > nav > div > a[href*="#apply"]:not(:first-child):hover{background:#D45A41}
+body > nav:not([class]) > div > a[href*="#apply"]:not(:first-child):hover{background:#D45A41}
 /* a hero eyebrow that carries its own wrapper span */
 .lp .bc-hero-grid > div > span:first-child{
   display:flex;align-items:center;gap:12px;font-size:17px;color:var(--stone-2);margin-bottom:18px;
@@ -1240,3 +1240,6 @@ body header:not(.hero) > div > a[href*="#apply"]:hover{background:#D45A41}
 }
 .lp footer .bc-two-col > div > div > div:last-child{display:flex;flex-direction:column;margin-top:0}
 .lp footer a.bc-footer-link{font-weight:400}
+
+/* Dig Dig case study: looping site clips */
+.lp .cc-clips video{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:3px;background:#000;display:block}

@@ -41,6 +41,13 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://beetsandco.com.au/dig-dig-demolition/</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Service pages -->
   <url>
     <loc>https://beetsandco.com.au/tradie-marketing-agency-melbourne.html</loc>
