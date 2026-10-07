@@ -1,0 +1,994 @@
+<title>Beets &amp; Co Field Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap">
+
+<style>
+/* ============================================================
+   Beets & Co — Brand Field Guide
+   Single-theme by commitment: the brand is soil-dark, and a guide
+   that renders itself in light mode would be arguing with its own
+   first rule. Every colour is painted explicitly so the page holds
+   on either host ground.
+   Structure borrows the site's own grammar — the hairline numbered
+   row — rather than a generic card grid.
+   ============================================================ */
+
+:root{
+  color-scheme:dark;
+
+  /* --- live tokens, lifted from beets-v2.css --- */
+  --soil:#0B0D0A;
+  --soil-2:#131710;
+  --soil-3:#1C211A;
+  --paper:#F2EFE6;
+  --paper-2:#E7E1D3;
+  --ink:#14170F;
+  --stone:#BFB6A2;
+  --beet:#C96C8C;
+  --beet-deep:#6E1B36;
+  --clay:#C24B33;
+
+  /* --- derived in this document, to fix what the live set can't do --- */
+  --clay-lift:#D45A41;   /* clay as TYPE on soil */
+  --clay-deep:#B54129;   /* clay as a GROUND under near-white type, and as type on paper */
+  --stone-2:rgba(191,182,162,.72);  /* raised from .62 — see section 03 */
+
+  --rule:rgba(242,239,230,.15);
+  --rule-hi:rgba(242,239,230,.34);
+
+  --grot:"Bricolage Grotesque","Hanken Grotesk",system-ui,sans-serif;
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+
+  --pad:clamp(22px,4.6vw,72px);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--soil);color:var(--paper);
+  font-family:var(--body);font-size:17px;line-height:1.55;font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+:focus-visible{outline:2px solid var(--beet);outline-offset:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.si{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.015em}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:var(--pad)}
+
+/* ---------- section shell ---------- */
+.sec{padding-block:clamp(58px,7vw,104px);border-top:1px solid var(--rule)}
+.sec--lift{background:var(--soil-3)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 40px;align-items:end}
+.sec-no{
+  font-family:var(--grot);font-weight:500;font-size:15px;letter-spacing:.04em;
+  color:var(--stone-2);font-variant-numeric:tabular-nums;
+}
+.src{
+  font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--stone-2);
+  text-align:right;line-height:1.5;
+}
+.src b{display:block;color:var(--stone);font-weight:500}
+h2{
+  margin:14px 0 0;font-family:var(--grot);font-weight:600;
+  font-size:clamp(33px,5.2vw,74px);line-height:.94;letter-spacing:-.04em;
+  text-wrap:balance;color:var(--paper);
+}
+h3{margin:0;font-family:var(--grot);font-weight:600;font-size:clamp(19px,2vw,25px);letter-spacing:-.03em;line-height:1.1}
+h4{
+  margin:0;font-family:var(--grot);font-weight:600;font-size:16px;letter-spacing:-.01em;
+  color:var(--paper);
+}
+p{margin:0}
+.lede{margin-top:clamp(20px,2.4vw,30px);font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--stone);max-width:56ch}
+.note{font-size:16px;line-height:1.52;color:var(--stone);max-width:62ch}
+.body{margin-top:clamp(38px,4.6vw,64px)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:36px 52px}
+.stack{display:flex;flex-direction:column;gap:12px}
+
+/* ---------- masthead ---------- */
+.mast{padding-block:clamp(56px,7vw,104px) clamp(44px,5vw,72px)}
+.mast .kick{font-size:16px;color:var(--stone-2);letter-spacing:.02em}
+.mast h1{
+  margin:clamp(18px,2vw,26px) 0 0;font-family:var(--grot);font-weight:600;
+  font-size:clamp(48px,10.4vw,150px);line-height:.87;letter-spacing:-.048em;
+  max-width:13ch;color:var(--paper);
+}
+.mast .sub{margin-top:clamp(22px,2.6vw,34px);font-size:clamp(18px,1.8vw,23px);line-height:1.38;color:var(--stone);max-width:44ch}
+.mast-meta{
+  display:flex;flex-wrap:wrap;gap:9px 34px;margin-top:clamp(28px,3.4vw,46px);
+  padding-top:22px;border-top:1px solid var(--rule);font-size:16px;color:var(--stone-2);
+}
+
+/* ---------- the wordmark, set live ---------- */
+.wm{font-family:var(--grot);font-weight:600;letter-spacing:-.03em;line-height:1;
+  font-size:var(--wm,34px);color:var(--wm-color,var(--paper));display:inline-block;white-space:nowrap}
+.wm .si{font-size:.95em;color:var(--wm-amp,var(--stone))}
+
+.marks{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.mark-cell{padding:34px 26px 24px;display:flex;flex-direction:column;gap:28px;justify-content:space-between;min-height:172px}
+.mc-label{font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+.mc--soil{background:var(--soil)}
+.mc--paper{background:var(--paper)}
+.mc--clay{background:var(--clay-deep)}
+.mc--beet{background:var(--beet-deep)}
+
+.clearspace{position:relative;display:inline-block;padding:calc(var(--wm,30px) * .62);
+  outline:1px dashed var(--beet);
+  background:repeating-linear-gradient(45deg,rgba(201,108,140,.16) 0 5px,transparent 5px 11px)}
+.clearspace::after{content:"x = the height of the B";position:absolute;left:0;bottom:-26px;
+  font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--stone-2);white-space:nowrap}
+
+/* ---------- the site's own numbered row ---------- */
+.rows{border-top:1px solid var(--rule);margin-top:clamp(26px,3vw,40px)}
+.row-item{
+  display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,40%);
+  gap:14px clamp(18px,3vw,44px);
+  padding:clamp(22px,2.8vw,34px) 0;border-bottom:1px solid var(--rule);align-items:baseline;
+  transition:padding-left .5s cubic-bezier(.16,.84,.28,1);
+}
+.row-item:hover{padding-left:16px}
+.row-item .num{font-family:var(--grot);font-weight:500;font-size:16px;color:var(--stone-2);font-variant-numeric:tabular-nums}
+.row-item h3{transition:color .3s ease}
+.row-item:hover h3{color:var(--beet)}
+.row-item p{font-size:16px;color:var(--stone);line-height:1.45}
+
+/* ---------- do / don't ---------- */
+.rlist{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+.rlist li{position:relative;padding-left:26px;font-size:16px;line-height:1.5;color:var(--stone)}
+.rlist li::before{content:"";position:absolute;left:0;top:.68em;width:14px;height:1px;background:var(--beet)}
+.rlist--no li::before{background:var(--stone-2);transform:rotate(-45deg)}
+.rlist strong{color:var(--paper);font-weight:600}
+.rlist code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;color:var(--beet)}
+
+/* ---------- swatches ---------- */
+.sw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(192px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.sw{background:var(--soil-2);display:flex;flex-direction:column}
+.sw-chip{height:112px;border-bottom:1px solid var(--rule)}
+.sw-in{padding:16px 17px 19px;display:flex;flex-direction:column;gap:5px;flex:1}
+.sw-name{font-family:var(--grot);font-weight:600;font-size:17px;letter-spacing:-.02em;color:var(--paper)}
+.sw-hex{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--beet);letter-spacing:.02em}
+.sw-use{font-size:14.5px;line-height:1.48;color:var(--stone);margin-top:3px}
+.sw-share{margin-top:auto;padding-top:13px;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--stone-2)}
+
+.ratio-bar{display:flex;height:40px;margin-top:26px;border:1px solid var(--rule);
+  font-size:13px;letter-spacing:.05em;text-transform:uppercase}
+.ratio-bar div{display:grid;place-items:center;overflow:hidden;white-space:nowrap}
+
+.flag{margin-top:30px;border-left:2px solid var(--clay-lift);padding:18px 22px;background:var(--soil-2)}
+.flag h4{color:var(--clay-lift)}
+.flag p{margin-top:9px;font-size:15.5px;line-height:1.55;color:var(--stone)}
+.flag code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;color:var(--paper)}
+
+/* ---------- table ---------- */
+.tscroll{overflow-x:auto;margin-top:26px;border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:15px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--rule)}
+th{font-family:var(--grot);font-weight:600;font-size:14px;letter-spacing:-.01em;color:var(--paper);background:var(--soil-2)}
+td{color:var(--stone)}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;color:var(--paper)}
+.dot{display:inline-block;width:11px;height:11px;margin-right:9px;vertical-align:-1px;border:1px solid var(--rule-hi)}
+.pill{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 9px;border:1px solid currentColor}
+.pill--ok{color:#9CC08A}
+.pill--lg{color:#E0A96B}
+.pill--no{color:#E58A70}
+
+/* ---------- type specimens ---------- */
+.spec{border:1px solid var(--rule);padding:30px 26px;background:var(--soil-2)}
+.spec-lbl{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--beet)}
+.spec-hero{font-family:var(--grot);font-weight:600;font-size:clamp(40px,8vw,110px);line-height:.87;
+  letter-spacing:-.048em;color:var(--paper);margin-top:12px;text-wrap:balance}
+.spec-mid{font-family:var(--grot);font-weight:600;font-size:clamp(28px,4.2vw,58px);line-height:.94;
+  letter-spacing:-.04em;color:var(--paper);margin-top:12px}
+.spec-meta{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:20px;font-size:13.5px;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--stone-2)}
+
+.scale{border:1px solid var(--rule);margin-top:24px;background:var(--soil-2)}
+.scale-row{display:grid;grid-template-columns:104px minmax(0,1fr) 210px;gap:18px;align-items:baseline;
+  padding:15px 18px;border-bottom:1px solid var(--rule)}
+.scale-row:last-child{border-bottom:0}
+.scale-tag{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--beet)}
+.scale-spec{font-size:13px;color:var(--stone-2);text-align:right;font-variant-numeric:tabular-nums;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.t-hero{font-family:var(--grot);font-weight:600;font-size:30px;line-height:.9;letter-spacing:-.045em}
+.t-mid{font-family:var(--grot);font-weight:600;font-size:24px;line-height:.94;letter-spacing:-.04em}
+.t-h3{font-family:var(--grot);font-weight:600;font-size:18px;letter-spacing:-.03em}
+.t-si{font-family:var(--serif);font-style:italic;font-size:26px;letter-spacing:-.015em;color:var(--stone)}
+.t-copy{font-size:17px;color:var(--stone)}
+.t-micro{font-size:15px;color:var(--stone-2)}
+
+/* ---------- graphic language demos ---------- */
+.lang{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:26px}
+.demo{height:136px;position:relative;overflow:hidden;background:var(--soil-2);border:1px solid var(--rule)}
+.d-veil{position:absolute;inset:0;
+  background:linear-gradient(155deg,#3A3B32,#22251E 52%,#0B0D0A),
+             linear-gradient(180deg,rgba(11,13,10,.62),rgba(11,13,10,.42) 38%,rgba(11,13,10,.94))}
+.d-veil b{position:absolute;left:16px;bottom:14px;font-family:var(--grot);font-weight:600;font-size:21px;
+  letter-spacing:-.04em;color:var(--paper)}
+.d-row{position:absolute;left:0;right:0;top:34px}
+.d-row i{display:block;height:1px;background:var(--rule);margin-bottom:26px}
+.d-row b{position:absolute;left:18px;top:-26px;font-family:var(--grot);font-weight:600;font-size:19px;letter-spacing:-.035em;color:var(--paper)}
+.d-row s{position:absolute;left:18px;top:12px;text-decoration:none;font-family:var(--grot);font-weight:600;font-size:19px;
+  letter-spacing:-.035em;color:var(--beet);transform:translateX(14px)}
+.d-amp{position:absolute;inset:0;display:grid;place-items:center}
+.d-amp span{font-family:var(--serif);font-style:italic;font-size:78px;color:var(--stone);line-height:1}
+.d-btn{position:absolute;left:18px;bottom:22px;background:var(--clay-deep);color:#F7F2EB;
+  font-family:var(--grot);font-weight:600;font-size:16px;padding:12px 22px;border-radius:2px}
+.d-btn+em{position:absolute;left:18px;top:26px;font-style:normal;font-size:13px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--stone-2)}
+.lang h4{margin-top:16px}
+.lang p{margin-top:8px;font-size:14.5px;line-height:1.5;color:var(--stone)}
+.lang code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:var(--beet)}
+
+/* ---------- the doors device ---------- */
+.doors{
+  display:flex;flex-wrap:wrap;column-gap:clamp(22px,3vw,50px);row-gap:2px;margin-top:24px;
+  font-family:var(--grot);font-weight:500;letter-spacing:-.03em;
+  font-size:clamp(22px,3.4vw,48px);line-height:1.12;
+}
+.doors span{color:var(--stone-2)}
+.doors span.lit{color:var(--paper)}
+
+/* ---------- voice pairs ---------- */
+.pairs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--rule);
+  border:1px solid var(--rule);margin-top:24px}
+.pair{background:var(--soil-2);padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px}
+.pair .tag{font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.pair--no .tag{color:var(--stone-2)}
+.pair--yes .tag{color:var(--beet)}
+.pair q{quotes:none;font-family:var(--grot);font-weight:600;font-size:19px;letter-spacing:-.03em;line-height:1.2;color:var(--paper)}
+.pair--no q{color:var(--stone-2)}
+.pair small{font-size:14px;color:var(--stone);line-height:1.45}
+
+.banned{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.banned span{font-size:14.5px;color:var(--stone-2);border:1px solid var(--rule);padding:5px 11px;
+  text-decoration:line-through;text-decoration-color:var(--clay-lift)}
+
+/* ---------- social ---------- */
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:1px;background:var(--rule);
+  border:1px solid var(--rule);margin-top:8px}
+.pil{background:var(--soil-2);padding:20px 21px 22px;display:flex;flex-direction:column;gap:9px}
+.pil-n{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--beet)}
+.pil p{font-size:14.5px;line-height:1.5;color:var(--stone)}
+.pil em{display:block;margin-top:5px;font-family:var(--serif);font-style:italic;font-size:16px;color:var(--stone-2)}
+
+.grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:392px;margin-top:22px}
+.gt{aspect-ratio:4/5;display:grid;place-items:center;text-align:center;padding:10px;font-size:12px;
+  line-height:1.25;font-weight:500}
+.gt small{display:block;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;opacity:.74;margin-top:5px}
+.gt--photo{background:linear-gradient(155deg,#4A4C40,#15180F);color:var(--stone)}
+.gt--soil{background:var(--soil);border:1px solid var(--rule);color:var(--paper)}
+.gt--paper{background:var(--paper);color:var(--ink)}
+.gt--beet{background:var(--beet-deep);color:var(--paper)}
+.gt--clay{background:var(--clay-deep);color:#F7F2EB}
+
+.posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:26px;margin-top:22px}
+.post{display:flex;flex-direction:column;gap:11px}
+.frame{aspect-ratio:4/5;position:relative;overflow:hidden;background:var(--soil-2);border:1px solid var(--rule)}
+.post-cap{font-size:14px;line-height:1.5;color:var(--stone)}
+.post-cap b{display:block;font-family:var(--grot);font-weight:600;font-size:15px;letter-spacing:-.02em;
+  color:var(--paper);margin-bottom:5px}
+
+.f-work{position:absolute;inset:0;background:linear-gradient(158deg,#54564A,#1A1D15 62%,#0B0D0A)}
+.f-work .tag{position:absolute;left:0;bottom:24px;background:var(--clay-deep);color:#F7F2EB;padding:9px 16px;
+  font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+.f-work .ttl{position:absolute;left:16px;right:16px;bottom:60px;font-family:var(--grot);font-weight:600;
+  font-size:19px;letter-spacing:-.04em;line-height:1;color:var(--paper)}
+
+.f-state{position:absolute;inset:0;background:var(--soil);padding:22px 20px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px}
+.f-state h5{margin:0;font-family:var(--grot);font-weight:600;font-size:26px;letter-spacing:-.045em;line-height:.9;color:var(--paper)}
+.f-state small{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--stone-2);margin-bottom:auto}
+
+.f-num{position:absolute;inset:0;background:var(--beet-deep);padding:22px 20px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.f-num .big{font-family:var(--grot);font-weight:600;font-size:60px;line-height:.82;letter-spacing:-.05em;color:var(--paper)}
+.f-num h5{margin:0;font-family:var(--grot);font-weight:600;font-size:16px;letter-spacing:-.03em;color:var(--paper)}
+.f-num span{font-size:11.5px;line-height:1.45;color:rgba(242,239,230,.72)}
+
+.f-rev{position:absolute;inset:0;background:var(--paper);color:var(--ink);padding:22px 20px;display:flex;flex-direction:column;gap:11px}
+.f-rev .q{font-family:var(--grot);font-weight:600;font-size:16px;letter-spacing:-.03em;line-height:1.18;color:var(--ink)}
+.f-rev .who{margin-top:auto;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--beet-deep)}
+.f-rev i{display:block;width:34px;height:2px;background:var(--beet-deep);font-style:normal}
+
+.f-know{position:absolute;inset:0;background:var(--paper);color:var(--ink);padding:22px 20px;display:flex;flex-direction:column;gap:9px}
+.f-know .n{font-size:11.5px;letter-spacing:.07em;color:var(--beet-deep)}
+.f-know h5{margin:0;font-family:var(--grot);font-weight:600;font-size:18px;letter-spacing:-.035em;line-height:1.06;color:var(--ink)}
+.f-know p{font-size:11.5px;line-height:1.5;color:rgba(20,23,15,.62)}
+.f-know .foot{margin-top:auto;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:rgba(20,23,15,.6)}
+
+.f-me{position:absolute;inset:0;background:linear-gradient(200deg,#5A5C4E,#101309)}
+.f-me .plate{position:absolute;left:0;bottom:26px;background:var(--soil);padding:10px 16px;border-left:3px solid var(--beet)}
+.f-me .plate b{display:block;font-family:var(--grot);font-weight:600;font-size:14px;letter-spacing:-.03em;color:var(--paper)}
+.f-me .plate span{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--beet)}
+
+.stories{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px}
+.story{width:118px;aspect-ratio:9/16;background:linear-gradient(170deg,#4E5043,#0E110B);position:relative;overflow:hidden}
+/* offset as a % of HEIGHT so the text clears the reply rail by construction,
+   not by a padding value someone has to keep in sync */
+.story-txt{position:absolute;left:12px;right:12px;bottom:24%;display:flex;flex-direction:column;gap:5px}
+.story b{font-family:var(--grot);font-weight:600;font-size:19px;line-height:.92;letter-spacing:-.04em;color:var(--paper)}
+.story span{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--beet)}
+.safe{position:absolute;left:0;right:0;background:rgba(201,108,140,.16);border-block:1px dashed rgba(201,108,140,.5)}
+.safe.t{top:0;height:17%}
+.safe.b{bottom:0;height:21%}
+
+.capbox{border:1px solid var(--rule);border-left:2px solid var(--beet);padding:20px 22px;background:var(--soil-2);
+  font-size:15.5px;line-height:1.62;color:var(--stone);white-space:pre-line;margin-top:16px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tag-chip{font-size:14px;color:var(--stone);border:1px solid var(--rule);padding:5px 11px}
+.tag-chip--local{border-color:rgba(201,108,140,.45);color:var(--beet)}
+.tag-chip--brand{border-color:rgba(212,90,65,.5);color:var(--clay-lift)}
+
+pre{margin:24px 0 0;padding:22px;background:var(--soil-2);border:1px solid var(--rule);overflow-x:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.8;color:var(--stone)}
+pre .c{color:var(--stone-2)}
+pre .v{color:var(--beet)}
+
+footer{border-top:1px solid var(--rule);padding-block:34px 54px;font-size:15px;color:var(--stone-2);
+  display:flex;flex-wrap:wrap;gap:10px 32px;justify-content:space-between}
+
+@media (max-width:820px){
+  .sec-head{grid-template-columns:1fr}
+  .src{text-align:left}
+  .row-item{grid-template-columns:50px minmax(0,1fr)}
+  .row-item p{grid-column:2}
+  .scale-row{grid-template-columns:1fr;gap:6px}
+  .scale-spec{text-align:left}
+}
+</style>
+
+<header class="mast wrap">
+  <p class="kick">Beets <span class="si">&amp;</span> Co · Bayside &amp; South East Melbourne</p>
+  <h1>Brand field guide</h1>
+  <p class="sub">How the studio looks, reads and behaves — on the site, in a deck, on a quote, and on Instagram. Built from the identity already running at beetsandco.com.au, so everything new lands in the same voice.</p>
+  <div class="mast-meta">
+    <span>Version 1.0</span>
+    <span>11 September 2026</span>
+    <span>Supersedes nothing</span>
+    <span>Source: the live site — <code style="font-family:ui-monospace,Menlo,monospace;font-size:14px;color:var(--stone)">beets-v2.css</code></span>
+  </div>
+</header>
+
+<!-- ===================== 01 THE MARK ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-no">01</span>
+        <h2>Three words and a borrowed ampersand</h2>
+      </div>
+      <p class="src"><b>Source</b>index.html · nav</p>
+    </div>
+    <p class="lede">There is no symbol. The identity is the name set in Bricolage Grotesque with one character — the ampersand — lifted into Instrument Serif italic and dropped to stone. That single substitution is the whole mark, and it is the device the rest of the brand repeats: one warm, drawn thing inside something otherwise flat and modern.</p>
+
+    <div class="body">
+      <div class="marks">
+        <div class="mark-cell mc--soil">
+          <span class="mc-label" style="color:#BFB6A2">Primary — soil ground</span>
+          <span class="wm" style="--wm:32px;--wm-color:#F2EFE6;--wm-amp:#BFB6A2">Beets <span class="si">&amp;</span> Co</span>
+        </div>
+        <div class="mark-cell mc--paper">
+          <span class="mc-label" style="color:#6E1B36">Reversed — paper ground</span>
+          <span class="wm" style="--wm:32px;--wm-color:#14170F;--wm-amp:#6E1B36">Beets <span class="si">&amp;</span> Co</span>
+        </div>
+        <div class="mark-cell mc--clay">
+          <span class="mc-label" style="color:#F7F2EB">On clay — near-white only</span>
+          <span class="wm" style="--wm:32px;--wm-color:#F7F2EB;--wm-amp:#F2EFE6">Beets <span class="si">&amp;</span> Co</span>
+        </div>
+        <div class="mark-cell mc--beet">
+          <span class="mc-label" style="color:#DE8AA6">On beet-deep — paper only</span>
+          <span class="wm" style="--wm:32px;--wm-color:#F2EFE6;--wm-amp:#C96C8C">Beets <span class="si">&amp;</span> Co</span>
+        </div>
+      </div>
+
+      <div class="cols" style="margin-top:46px">
+        <div>
+          <h4>Clear space &amp; minimum size</h4>
+          <p class="note" style="margin-top:10px">Clear space on all four sides equals the cap height of the <em>B</em>. Nothing crosses it — no photo edge, no rule, no veil boundary. Minimum width 104&nbsp;px / 30&nbsp;mm for the three-word lockup. Below that, set the name in running type rather than shrinking the mark; there is no stacked or abbreviated version, and "B&amp;Co" is not a thing.</p>
+          <div style="margin-top:30px">
+            <span class="clearspace" style="--wm:26px">
+              <span class="wm" style="--wm:26px">Beets <span class="si">&amp;</span> Co</span>
+            </span>
+          </div>
+        </div>
+        <div>
+          <h4>Do</h4>
+          <ul class="rlist">
+            <li>Keep the ampersand in <strong>Instrument Serif italic</strong> and one step quieter than the words either side — stone on soil, beet-deep on paper.</li>
+            <li>Set the words in Bricolage Grotesque 600 at <code>letter-spacing:-.03em</code>. The tightness is what stops it reading as a default sans.</li>
+            <li>Sit the mark on flat colour, or on the darkest, calmest part of a photograph under the veil.</li>
+            <li>Sentence case. <strong>Beets &amp; Co</strong> — never all caps, never lowercase.</li>
+          </ul>
+          <h4 style="margin-top:30px">Don't</h4>
+          <ul class="rlist rlist--no">
+            <li>Set the ampersand in Bricolage. It becomes an ordinary business name the moment you do.</li>
+            <li>Swap in "and", "+" or "n". The character is the mark.</li>
+            <li>Add a container, stroke, shadow or gradient. Everything here is flat.</li>
+            <li>Use the beetroot as a logo. It is a concept for the site's imagery, not a mark — see section 05.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 02 COLOUR ===================== -->
+<section class="sec sec--lift">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-no">02</span>
+        <h2>A dark ground, and one thing that isn't</h2>
+      </div>
+      <p class="src"><b>Source</b>beets-v2.css · <code style="font-family:ui-monospace,Menlo,monospace">:root</code></p>
+    </div>
+    <p class="lede">Most agencies serving trades go high-contrast safety colours — hi-vis, steel, black and yellow. This palette deliberately doesn't: soil, paper, stone and a beetroot pink that no builder's marketing looks like. It is a studio palette shown to trade clients, which is the whole positioning in five hex values.</p>
+
+    <div class="body">
+      <h4>Core</h4>
+      <div class="sw-grid" style="margin-top:12px">
+        <div class="sw">
+          <div class="sw-chip" style="background:#0B0D0A"></div>
+          <div class="sw-in">
+            <span class="sw-name">Soil</span>
+            <span class="sw-hex">#0B0D0A</span>
+            <span class="sw-use">The default ground for the site, decks and social. Green-biased near-black, not neutral — it sits under beet without going purple, and under photography without going flat.</span>
+            <span class="sw-share">≈ 60% — ground</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sw-chip" style="background:#1C211A"></div>
+          <div class="sw-in">
+            <span class="sw-name">Soil Lift</span>
+            <span class="sw-hex">#1C211A</span>
+            <span class="sw-use">The band that separates a section without drawing a line — journal cards, CTA bands, alternating strata. One step up, never two.</span>
+            <span class="sw-share">Structural</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sw-chip" style="background:#F2EFE6"></div>
+          <div class="sw-in">
+            <span class="sw-name">Paper</span>
+            <span class="sw-hex">#F2EFE6</span>
+            <span class="sw-use">All type on soil, and the inverted ground for the Studio and Process strata. Warm off-white — never pure white, which reads cold against this green-black.</span>
+            <span class="sw-share">≈ 25% — type</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sw-chip" style="background:#BFB6A2"></div>
+          <div class="sw-in">
+            <span class="sw-name">Stone</span>
+            <span class="sw-hex">#BFB6A2</span>
+            <span class="sw-use">Body copy, secondary paragraphs, the ampersand, nav links at rest. The quiet voice — 9.69:1 on soil, so it is fully readable, not a whisper.</span>
+            <span class="sw-share">Text tint</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sw-chip" style="background:#C96C8C"></div>
+          <div class="sw-in">
+            <span class="sw-name">Beet</span>
+            <span class="sw-hex">#C96C8C</span>
+            <span class="sw-use">The signature. Hover states, accent words, focus rings, links in articles, the open accordion. On dark only — on paper it drops to Beet Deep.</span>
+            <span class="sw-share">≈ 8% — accent</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sw-chip" style="background:#C24B33"></div>
+          <div class="sw-in">
+            <span class="sw-name">Clay</span>
+            <span class="sw-hex">#C24B33</span>
+            <span class="sw-use">Action, and only action. Every button on the site is clay and nothing else is. It is a fill colour, not a type colour — see the two derived tints below.</span>
+            <span class="sw-share">≈ 4% — CTAs</span>
+          </div>
+        </div>
+      </div>
+
+      <h4 style="margin-top:46px">Derived — the three tints the core set can't supply</h4>
+      <p class="note" style="margin-top:10px">Beet and clay are both mid-tone, which means neither can legally carry small type on both grounds. Rather than add a colour, deepen or lift the two that exist. Beet&nbsp;Deep is already in the stylesheet; the two clays are the addition.</p>
+      <div class="sw-grid" style="margin-top:16px">
+        <div class="sw">
+          <div class="sw-chip" style="background:#6E1B36"></div>
+          <div class="sw-in">
+            <span class="sw-name">Beet Deep</span>
+            <span class="sw-hex">#6E1B36</span>
+            <span class="sw-use">Beet on a paper ground — 9.75:1, where flat beet manages 3.04 and fails for anything under 24px. Already wired as <code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px">.paper .beet</code>. Also the only permitted flat colour ground other than soil.</span>
+            <span class="sw-share">Type on paper · fills</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sw-chip" style="background:#D45A41"></div>
+          <div class="sw-in">
+            <span class="sw-name">Clay Lift</span>
+            <span class="sw-hex">#D45A41</span>
+            <span class="sw-use">Clay as <em>type</em> on soil. Flat clay measures 4.04:1 there and fails body size; this clears 4.96. Already the button hover value, so the accessible tint was in the file before it was named.</span>
+            <span class="sw-share">Type on soil</span>
+          </div>
+        </div>
+        <div class="sw">
+          <div class="sw-chip" style="background:#B54129"></div>
+          <div class="sw-in">
+            <span class="sw-name">Clay Deep</span>
+            <span class="sw-hex">#B54129</span>
+            <span class="sw-use">The button <em>ground</em>, and clay as type on paper. Near-white on flat clay measures 4.34:1 — under AA for a 16px button label. On this it clears 5.02, and the colour shift is imperceptible next to the old one.</span>
+            <span class="sw-share">Button grounds</span>
+          </div>
+        </div>
+      </div>
+
+      <h4 style="margin-top:46px">Proportion</h4>
+      <div class="ratio-bar">
+        <div style="flex:60;background:#0B0D0A;color:#BFB6A2">Soil 60</div>
+        <div style="flex:25;background:#F2EFE6;color:#14170F">Paper 25</div>
+        <div style="flex:8;background:#C96C8C;color:#14170F">Beet 8</div>
+        <div style="flex:4;background:#C24B33;color:#F7F2EB">4</div>
+        <div style="flex:3;background:#1C211A;color:#BFB6A2"></div>
+      </div>
+      <p class="note" style="margin-top:13px">If a layout feels off-brand, beet has almost certainly crept past 8%. Beet is a hover, a single word, a rule, a focus ring — it is never a background for a block of copy, and two beet elements should rarely be visible at once.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 03 CONTRAST ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-no">03</span>
+        <h2>Measured, including the three that currently fail</h2>
+      </div>
+      <p class="src"><b>Source</b>Computed · this document</p>
+    </div>
+    <p class="lede">Every ratio below was calculated against the grounds actually in use, to WCAG 2.1. Three live values don't clear AA. None of them are catastrophic and all three are one-line fixes — but a builder reading a quote on a phone in a ute at four in the afternoon is the real test, not the audit.</p>
+
+    <div class="body">
+      <div class="tscroll">
+        <table>
+          <thead>
+            <tr><th>Colour</th><th>On ground</th><th>Ratio</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="dot" style="background:#F2EFE6"></span>Paper</td><td>Soil</td><td class="num">16.97</td><td><span class="pill pill--ok">Any size</span></td></tr>
+            <tr><td><span class="dot" style="background:#BFB6A2"></span>Stone</td><td>Soil</td><td class="num">9.69</td><td><span class="pill pill--ok">Any size</span></td></tr>
+            <tr><td><span class="dot" style="background:#BFB6A2"></span>Stone</td><td>Soil Lift</td><td class="num">8.14</td><td><span class="pill pill--ok">Any size</span></td></tr>
+            <tr><td><span class="dot" style="background:#C96C8C"></span>Beet</td><td>Soil</td><td class="num">5.58</td><td><span class="pill pill--ok">Any size</span></td></tr>
+            <tr><td><span class="dot" style="background:#C96C8C"></span>Beet</td><td>Soil Lift</td><td class="num">4.69</td><td><span class="pill pill--ok">Any size</span></td></tr>
+            <tr><td><span class="dot" style="background:#C24B33"></span>Clay</td><td>Soil</td><td class="num">4.04</td><td><span class="pill pill--lg">Large only</span> — use Clay Lift (4.96) for type</td></tr>
+            <tr><td><span class="dot" style="background:#7B7668"></span>Stone @ .62</td><td>Soil</td><td class="num">4.31</td><td><span class="pill pill--no">Fails AA</span> — raise the alpha, see below</td></tr>
+            <tr><td><span class="dot" style="background:#14170F"></span>Ink</td><td>Paper</td><td class="num">15.76</td><td><span class="pill pill--ok">Any size</span></td></tr>
+            <tr><td><span class="dot" style="background:#6E1B36"></span>Beet Deep</td><td>Paper</td><td class="num">9.75</td><td><span class="pill pill--ok">Any size</span></td></tr>
+            <tr><td><span class="dot" style="background:#C96C8C"></span>Beet</td><td>Paper</td><td class="num">3.04</td><td><span class="pill pill--no">Never as type</span> — use Beet Deep</td></tr>
+            <tr><td><span class="dot" style="background:#C24B33"></span>Clay</td><td>Paper</td><td class="num">4.20</td><td><span class="pill pill--lg">Large only</span> — use Clay Deep (4.87)</td></tr>
+            <tr><td><span class="dot" style="background:#F7F2EB"></span>Button text</td><td>Clay</td><td class="num">4.34</td><td><span class="pill pill--no">Fails AA</span> at 16px — ground on Clay Deep (5.02)</td></tr>
+            <tr><td><span class="dot" style="background:#8E8E85"></span>Ink @ .45</td><td>Paper</td><td class="num">2.87</td><td><span class="pill pill--no">Fails AA</span> — the step numerals</td></tr>
+            <tr><td><span class="dot" style="background:#F2EFE6"></span>Paper</td><td>Beet Deep</td><td class="num">9.75</td><td><span class="pill pill--ok">Any size</span></td></tr>
+            <tr><td><span class="dot" style="background:#14170F"></span>Ink</td><td>Beet</td><td class="num">5.18</td><td><span class="pill pill--ok">Any size</span></td></tr>
+            <tr><td><span class="dot" style="background:#BFB6A2"></span>Stone</td><td>Clay</td><td class="num">2.40</td><td><span class="pill pill--no">Never</span> — nothing stone goes on clay</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flag">
+        <h4>Three one-line fixes for beets-v2.css</h4>
+        <p><b style="color:var(--paper)">1 · <code>--stone-2</code> is too faint.</b> At <code>rgba(191,182,162,.62)</code> it resolves to <code>#7B7668</code> — 4.31:1 on soil, and only 3.61 on the soil-lift band where journal cards and the CTA sit. It carries figcaptions, footer links, form microcopy and post metadata at 16px, so it needs AA. Raise it to <code>.72</code>: 5.45 on soil, 4.58 on the lift band, and visually almost identical.</p>
+        <p style="margin-top:12px"><b style="color:var(--paper)">2 · The button label is under AA.</b> <code>#F7F2EB</code> on <code>--clay</code> is 4.34:1 — fine for the 18px submit button, short for the 16px nav button. Change the button <em>ground</em> to <code>--clay-deep:#B54129</code> and keep <code>#D45A41</code> as the hover. Clay stays exactly as it is everywhere else.</p>
+        <p style="margin-top:12px"><b style="color:var(--paper)">3 · The paper-stratum numerals disappear.</b> <code>rgba(20,23,15,.45)</code> on the process steps and <code>.5</code> on the <code>.when</code> line measure 2.87 and 3.33. Take both to <code>.60</code> (4.54). They are the only failing values on the light strata — <code>.copy</code> at <code>.68</code> already clears 5.88.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 04 TYPE ===================== -->
+<section class="sec sec--lift">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-no">04</span>
+        <h2>Two grotesques and one serif, used once</h2>
+      </div>
+      <p class="src"><b>Source</b>beets-v2.css · type tokens</p>
+    </div>
+    <p class="lede">Bricolage Grotesque does the headlines — set enormous and tracked hard negative, which is where the whole visual character comes from. Hanken Grotesk does the reading. Instrument Serif italic appears once per surface, on one word, and never twice. All three are open-licence Google fonts, so a Canva post, a Word quote and the website can all use the real thing.</p>
+
+    <div class="body">
+      <div class="spec">
+        <p class="spec-lbl">Hero — Bricolage Grotesque 600</p>
+        <div class="spec-hero">Better jobs don't find you.</div>
+        <div class="spec-meta">
+          <span>Weight 600</span><span>clamp 56–168px</span><span>Tracking −.048em</span>
+          <span>Line-height .87</span><span>Max 14ch</span>
+        </div>
+      </div>
+
+      <div class="spec" style="margin-top:20px">
+        <p class="spec-lbl">Section head — with the serif, on one word</p>
+        <div class="spec-mid">A full <span class="si" style="color:var(--stone)">rebuild</span>, delivered.</div>
+        <div class="spec-meta">
+          <span>Weight 600</span><span>clamp 34–132px</span><span>Tracking −.04em</span><span>Line-height .9–.94</span>
+        </div>
+      </div>
+
+      <div class="spec" style="margin-top:20px">
+        <p class="spec-lbl">Body — Hanken Grotesk</p>
+        <p style="font-size:19px;line-height:1.55;color:var(--stone);margin-top:12px;max-width:58ch">
+          I take a handful of clients at a time. Not because it's exclusive, but because everything I know about growing anything says crowded stays small.
+        </p>
+        <div class="spec-meta">
+          <span>Weights 300 · 400 · 500 · 600</span><span>Sentence case</span><span>Line-height 1.45–1.62</span><span>Max 52–65 characters</span>
+        </div>
+      </div>
+
+      <div class="scale">
+        <div class="scale-row"><span class="scale-tag">Hero</span><span class="t-hero">Better jobs</span><span class="scale-spec">Bricolage 600 · 56–168px · −.048em · lh .87</span></div>
+        <div class="scale-row"><span class="scale-tag">H-big</span><span class="t-mid">Six things, done properly</span><span class="scale-spec">Bricolage 600 · 42–132px · −.045em · lh .90</span></div>
+        <div class="scale-row"><span class="scale-tag">H-mid</span><span class="t-mid" style="font-size:20px">You get me. Not a junior.</span><span class="scale-spec">Bricolage 600 · 34–74px · −.04em · lh .94</span></div>
+        <div class="scale-row"><span class="scale-tag">Row head</span><span class="t-h3">Local SEO</span><span class="scale-spec">Bricolage 600 · 30–62px · −.04em</span></div>
+        <div class="scale-row"><span class="scale-tag">Serif accent</span><span class="t-si">rebuild</span><span class="scale-spec">Instrument Serif italic · matches parent · −.015em</span></div>
+        <div class="scale-row"><span class="scale-tag">Copy</span><span class="t-copy">The unglamorous layer that compounds.</span><span class="scale-spec">Hanken 400 · 18–21px · lh 1.5 · 52ch</span></div>
+        <div class="scale-row"><span class="scale-tag">Micro</span><span class="t-micro">Two client spots open this quarter</span><span class="scale-spec">Hanken 400 · 16–17px · lh 1.45</span></div>
+      </div>
+
+      <div class="cols" style="margin-top:42px">
+        <div>
+          <h4>Type rules</h4>
+          <ul class="rlist">
+            <li><strong>The tracking is the brand.</strong> Bricolage at default spacing looks like any other geometric sans. Every display size sets negative tracking, and the bigger it gets, the tighter it goes.</li>
+            <li>Headlines break to <strong>three lines maximum</strong> and use <code>text-wrap:balance</code>. A four-line hero means the sentence is too long, not that the type is too big.</li>
+            <li>One serif word per surface. It goes on the <em>noun that matters</em> — rebuild, brand, room — never on a verb and never on two words at once.</li>
+            <li>No uppercase headlines anywhere. Small uppercase is allowed for eyebrows and metadata at 13–14px with <code>letter-spacing:.06em</code>.</li>
+            <li>Never letterspace body copy, never justify it, and never centre a paragraph.</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Licensing &amp; substitution</h4>
+          <ul class="rlist">
+            <li>All three faces are <strong>SIL Open Font Licence</strong> via Google Fonts — free to install on any machine, embed in any PDF, and hand to any supplier. There is no licence conversation to have.</li>
+            <li>Web stack: <code>"Bricolage Grotesque","Hanken Grotesk",system-ui,sans-serif</code> for display, <code>"Hanken Grotesk",system-ui,-apple-system,sans-serif</code> for body.</li>
+            <li>Bricolage is a variable font with an optical-size axis (<code>opsz 12–96</code>). Let it track the actual size; don't pin it.</li>
+            <li>Word, Google Docs and Keynote: install all three rather than substituting. A proposal set in Calibri undoes the point of the brand at the exact moment it's being judged.</li>
+            <li>Never Inter, Space Grotesk or General Sans as a stand-in. They are close enough to read as a mistake rather than a decision.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 05 GRAPHIC LANGUAGE ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-no">05</span>
+        <h2>Four devices already running on the site</h2>
+      </div>
+      <p class="src"><b>Source</b>beets-v2.css · components</p>
+    </div>
+    <p class="lede">None of these are invented for this document — each is already in the stylesheet. Naming them makes them repeatable, so a story cover made on a phone and a proposal cover made in InDesign come out of the same system.</p>
+
+    <div class="body">
+      <div class="lang">
+        <div>
+          <div class="demo"><div class="d-veil"><b>Better jobs</b></div></div>
+          <h4>The veil</h4>
+          <p>Three-stop gradient over every photograph: <code>.62</code> at the top, <code>.42</code> at 38%, <code>.94</code> at the foot. Type always lands on the dark end. The brand never sets text over a bare photo.</p>
+        </div>
+        <div>
+          <div class="demo"><div class="d-row"><b>Website design</b><i></i><s>Local SEO</s></div></div>
+          <h4>The hairline row</h4>
+          <p>Numbered rows separated by 1px <code>rgba(242,239,230,.15)</code>, that indent 16–18px and turn beet on hover. It is the site's main structural grammar — services, process, FAQ, related links all use it.</p>
+        </div>
+        <div>
+          <div class="demo"><div class="d-amp"><span>&amp;</span></div></div>
+          <h4>The serif note</h4>
+          <p>Instrument Serif italic, once per surface, at the same size as its neighbours. The ampersand in the mark, one word in a headline, a pull-quote. It is warmth in an otherwise cold system.</p>
+        </div>
+        <div>
+          <div class="demo"><em>Action</em><span class="d-btn">Start a conversation</span></div>
+          <h4>The clay pill — 2px</h4>
+          <p><code>border-radius:2px</code> on buttons, <code>3px</code> on images. Nothing else in the brand is rounded. It reads as square from a metre away and as considered up close, which is the point.</p>
+        </div>
+      </div>
+
+      <div class="cols" style="margin-top:48px">
+        <div>
+          <h4>Photography direction</h4>
+          <ul class="rlist">
+            <li>Shot on the client's own site, in one day, by Michael. Library imagery is not an option — the entire pitch is "I come to you", and stock contradicts it in one frame.</li>
+            <li>Warm, low-contrast grade with the blacks lifted slightly. The veil does the darkening; the file underneath should not already be crushed.</li>
+            <li>Wide enough to show context — the street, the neighbouring build, the crew. Context is what proves the job was real and local.</li>
+            <li>Shoot the person as well as the work. For a one-person studio selling access to a senior partner, a face is a credential.</li>
+            <li>Portrait 4:5 for anything heading to the feed; 16:8 for the site's film strip.</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Never</h4>
+          <ul class="rlist rlist--no">
+            <li>Rounded cards, soft shadows, glassmorphism, or a gradient used as decoration rather than as a veil over an image.</li>
+            <li>Hi-vis yellow, safety orange, or any blue. The palette's whole argument is that it doesn't look like trade marketing.</li>
+            <li>Icons in circles, three-up feature grids with a coloured icon at the top — the layout every other agency site uses.</li>
+            <li>Dollar figures on any public surface. Projects are scoped and quoted; the site says so and the social should too.</li>
+            <li>Stock photography of laptops, handshakes, or a hard hat on a set of drawings.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 style="margin-top:48px">The nine doors</h4>
+      <p class="note" style="margin-top:10px">The site's one genuinely proprietary device: nine places a customer can find a business, set as a wrapping row of display type with the live ones in paper and the dead ones in stone. It is the Walk-In Check in a single graphic, and it works on a slide, a story and a page without being redrawn.</p>
+      <div class="doors">
+        <span class="lit">Search</span><span class="lit">Map</span><span>Reviews</span><span class="lit">Listings</span>
+        <span>Feed</span><span>Video</span><span class="lit">The room</span><span>Press</span><span>Replies</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 06 VOICE ===================== -->
+<section class="sec sec--lift">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-no">06</span>
+        <h2>First person, short sentences, no adjectives doing work</h2>
+      </div>
+      <p class="src"><b>Source</b>index.html · live copy</p>
+    </div>
+    <p class="lede">The site speaks as Michael, not as a company — "I take a handful of clients", not "we deliver tailored solutions". That choice is load-bearing: the product being sold is direct access to one senior person, so a corporate "we" would contradict the offer in the first sentence.</p>
+
+    <div class="body">
+      <div class="rows">
+        <div class="row-item">
+          <span class="num">01</span>
+          <h3>Lead with the thing that's true</h3>
+          <p>"Better jobs don't find you." Not a benefit, not a promise — an observation the reader already agrees with before they've read the second line.</p>
+        </div>
+        <div class="row-item">
+          <span class="num">02</span>
+          <h3>Name the cost, not just the win</h3>
+          <p>"It takes about eight weeks." "Two client spots open this quarter." Constraints read as honesty and do more selling than superlatives.</p>
+        </div>
+        <div class="row-item">
+          <span class="num">03</span>
+          <h3>Specific over vague, always</h3>
+          <p>Volvo, ADF, Nando's. Chelsea, Bonbeach, Mordialloc. Six weeks. Named in ChatGPT and Gemini. Real nouns beat every adjective available.</p>
+        </div>
+        <div class="row-item">
+          <span class="num">04</span>
+          <h3>Short sentences. Then a shorter one.</h3>
+          <p>Most paragraphs run two or three sentences. Anything over four lines on a phone gets cut, not condensed.</p>
+        </div>
+        <div class="row-item">
+          <span class="num">05</span>
+          <h3>Never quote a price</h3>
+          <p>Public surfaces say scoped, fixed-price and individually quoted — never a figure. Numbers are for the proposal, where there's context around them.</p>
+        </div>
+      </div>
+
+      <h4 style="margin-top:46px">The same sentence, twice</h4>
+      <div class="pairs">
+        <div class="pair pair--no">
+          <span class="tag">Off-brand</span>
+          <q>We leverage holistic brand solutions to deliver world-class digital experiences for our clients.</q>
+          <small>Corporate we, four buzzwords, nothing a builder can picture.</small>
+        </div>
+        <div class="pair pair--yes">
+          <span class="tag">On-brand</span>
+          <q>I build the brand, the site and the film. Same person, start to finish.</q>
+          <small>First person, concrete nouns, the offer stated as a fact.</small>
+        </div>
+        <div class="pair pair--no">
+          <span class="tag">Off-brand</span>
+          <q>Unlock your business's full potential with our cutting-edge SEO strategies!</q>
+          <small>Exclamation mark, unfalsifiable claim, no suburb, no mechanism.</small>
+        </div>
+        <div class="pair pair--yes">
+          <span class="tag">On-brand</span>
+          <q>Local SEO across Bayside and South East Melbourne — map pack, listings, reviews and suburb pages. The unglamorous layer that compounds.</q>
+          <small>Names the work, names the places, and admits it isn't exciting.</small>
+        </div>
+      </div>
+
+      <h4 style="margin-top:44px">Words that don't appear</h4>
+      <div class="banned">
+        <span>leverage</span><span>synergy</span><span>holistic</span><span>solutions</span>
+        <span>world-class</span><span>cutting-edge</span><span>unlock</span><span>elevate</span>
+        <span>bespoke</span><span>passionate</span><span>game-changing</span><span>seamless</span>
+      </div>
+      <p class="note" style="margin-top:16px">Also out: exclamation marks, rhetorical questions as headlines, and "we" in any sentence describing who does the work. <em>We</em> is only correct when it means Michael and the client together — "what we're building".</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 07 INSTAGRAM ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-no">07</span>
+        <h2>Six pillars, three posts a week</h2>
+      </div>
+      <p class="src"><b>Source</b>Extended · with the Post Studio</p>
+    </div>
+    <p class="lede">An agency's grid has a harder job than a client's: it has to be the portfolio <em>and</em> the proof that the studio can do this for someone else. Three feed posts a week — Monday teach, Wednesday show, Friday prove. Every post belongs to one pillar, and each pillar answers a specific doubt a trade owner has about hiring a marketing person at all.</p>
+
+    <div class="body">
+      <div class="pillars">
+        <div class="pil"><span class="pil-n">Pillar 1</span><h3>The Work</h3><p>A finished brand, site or film — the client's name on it.<em>"Can you actually do this?"</em></p></div>
+        <div class="pil"><span class="pil-n">Pillar 2</span><h3>The Number</h3><p>One measured outcome. Rankings, enquiries, weeks to launch.<em>"Does any of it work?"</em></p></div>
+        <div class="pil"><span class="pil-n">Pillar 3</span><h3>The Proof</h3><p>A client in their own words, verbatim, named.<em>"Would someone like me hire him?"</em></p></div>
+        <div class="pil"><span class="pil-n">Pillar 4</span><h3>The Nine Doors</h3><p>Carousels teaching one door at a time, tied to the Walk-In Check.<em>Answers what they're already Googling.</em></p></div>
+        <div class="pil"><span class="pil-n">Pillar 5</span><h3>Michael</h3><p>On site, on set, talking. The face behind "you get me".<em>"Who am I actually dealing with?"</em></p></div>
+        <div class="pil"><span class="pil-n">Pillar 6</span><h3>The Position</h3><p>A flat statement tile. Availability, a point of view, a line from the site.<em>Makes the grid read as a studio, not a feed.</em></p></div>
+      </div>
+
+      <div class="cols" style="margin-top:46px">
+        <div>
+          <h4>Grid rhythm</h4>
+          <p class="note" style="margin-top:10px">Post in threes so the grid always resolves at 4:5. Two image tiles, then one flat brand tile — a statement, a number or a knowledge card. The flat tile is what stops the profile reading as a camera roll. Never two flat tiles in a row, and never a full row of them.</p>
+          <div class="grid9" aria-label="Example nine-tile grid">
+            <div class="gt gt--photo">Crowncon film<small>The Work</small></div>
+            <div class="gt gt--photo">Brand kit laid out<small>The Work</small></div>
+            <div class="gt gt--beet">Six weeks to live<small>The Number</small></div>
+            <div class="gt gt--photo">On site, Mordialloc<small>Michael</small></div>
+            <div class="gt gt--photo">Ute livery<small>The Work</small></div>
+            <div class="gt gt--paper">Door 3 — Reviews<small>Nine Doors</small></div>
+            <div class="gt gt--photo">Shoot day<small>Michael</small></div>
+            <div class="gt gt--paper">"No surprises"<small>The Proof</small></div>
+            <div class="gt gt--soil">Two spots this quarter<small>The Position</small></div>
+          </div>
+        </div>
+        <div>
+          <h4>Non-negotiables</h4>
+          <ul class="rlist">
+            <li>Flat tiles alternate ground: soil, then paper, then beet-deep. Three dark tiles in a row and the grid turns to mud.</li>
+            <li>Beet is a rule, a plate edge or one word — never a whole tile background behind body copy.</li>
+            <li>Client work is posted <strong>with the client named</strong>, or not at all. An unattributed mockup proves nothing.</li>
+            <li>Reviews quoted verbatim with a first name and source. Never tidied, never composited from two reviews.</li>
+            <li>No prices, no "packages from", no discount language. Ever.</li>
+            <li>Max three lines of Bricolage on any tile. If it needs four, it's a carousel.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4 style="margin-top:52px">Post templates</h4>
+      <div class="posts">
+        <div class="post">
+          <div class="frame">
+            <div class="f-work"><span class="ttl">The rebuild that<br>made them findable</span><span class="tag">Crowncon · Mordialloc</span></div>
+          </div>
+          <p class="post-cap"><b>01 · The Work</b>Photo under the veil, headline bottom-left in Bricolage, clay plate anchored hard to the left edge with client and suburb. The suburb is the SEO of social.</p>
+        </div>
+        <div class="post">
+          <div class="frame">
+            <div class="f-num"><span class="big">6</span><h5>weeks, first call to live</h5><span>Brand, website, listings and a film shot on their own site.</span></div>
+          </div>
+          <p class="post-cap"><b>02 · The Number</b>Beet-deep ground, one figure at 60px+, one line naming what it measures, one line of context. One number per tile — two is a chart.</p>
+        </div>
+        <div class="post">
+          <div class="frame">
+            <div class="f-rev"><i></i><span class="q">"He came to the site, watched us work for a day, then wrote copy that sounded like me."</span><span class="who">Tim · Crowncon</span></div>
+          </div>
+          <p class="post-cap"><b>03 · The Proof</b>Paper ground, beet-deep rule and attribution, quote set in Bricolage at 16–20px. Float it over that client's own work where the photo exists.</p>
+        </div>
+        <div class="post">
+          <div class="frame">
+            <div class="f-know"><span class="n">DOOR 03 / 09</span><h5>Reviews are a ranking factor, not a vanity metric</h5><p>Google weights recency as heavily as volume. Forty reviews from 2023 are worth less than eight from this quarter.</p><span class="foot">Swipe · run the free check</span></div>
+          </div>
+          <p class="post-cap"><b>04 · Nine Doors</b>Paper ground, door number as the eyebrow, heading in Bricolage, body in Hanken. Slide 1 names the door, 2–4 answer it, the last points at the Walk-In Check.</p>
+        </div>
+        <div class="post">
+          <div class="frame">
+            <div class="f-me"><span class="plate"><b>Why I turn work down</b><span>Michael · 60 seconds</span></span></div>
+          </div>
+          <p class="post-cap"><b>05 · Michael</b>Reel cover. Soil plate with a 3px beet edge, hard left, sitting above the reply rail. Question in his own words, not a topic label.</p>
+        </div>
+        <div class="post">
+          <div class="frame">
+            <div class="f-state"><small>Bayside &amp; South East Melbourne</small><h5>Better jobs don't <span class="si" style="color:var(--stone)">find</span> you.</h5></div>
+          </div>
+          <p class="post-cap"><b>06 · The Position</b>Flat soil, Bricolage 600 hard-left and bottom-aligned, one word in Instrument Serif. No photo, no mark — just the sentence.</p>
+        </div>
+      </div>
+
+      <div class="cols" style="margin-top:52px">
+        <div>
+          <h4>Stories &amp; reel covers</h4>
+          <p class="note" style="margin-top:10px">1080&nbsp;×&nbsp;1920 with two bands that are not design space: roughly the top <strong>250&nbsp;px</strong>, where the profile chip and audio line sit, and the bottom <strong>330&nbsp;px</strong>, which carries the caption, sound credit and reply rail. The <em>last baseline</em> of the design sits above the lower line — not the top of the text block, the baseline. Reel covers also have to survive the 3:4 crop the profile grid takes from the centre, so the title sits inside that window too.</p>
+          <div class="stories">
+            <div class="story"><span class="safe t"></span><span class="safe b"></span>
+              <span class="story-txt"><span>Door 01</span><b>Search</b></span></div>
+            <div class="story"><span class="safe t"></span><span class="safe b"></span>
+              <span class="story-txt"><span>Shoot day</span><b>One day<br>on site</b></span></div>
+            <div class="story"><span class="safe t"></span><span class="safe b"></span>
+              <span class="story-txt"><span>Free check</span><b>Nine<br>doors</b></span></div>
+          </div>
+        </div>
+        <div>
+          <h4>Caption voice</h4>
+          <p class="note" style="margin-top:10px">Write the way Michael would explain it standing in someone's yard. Lead with what happened, name the client and the suburb, give one useful detail, end with the one action. No hype, no emoji strings, no "🔥 DROP".</p>
+          <div class="capbox">Crowncon had genuinely good work and no way for anyone to find it.
+
+Six weeks: new brand, new site, listings claimed, and a film shot on one of their own builds. The stills and the film came from the same day on site — that's the only way it's affordable for a builder.
+
+They now come up when you ask ChatGPT or Gemini to recommend a custom home builder in south east Melbourne. Verified August 2026.
+
+Nine places a customer can find you. Free check in the bio.</div>
+        </div>
+      </div>
+
+      <h4 style="margin-top:46px">Hashtags — 8 per post, three groups</h4>
+      <p class="note" style="margin-top:9px">Local first. The studio competes in Bayside and the south-east, not nationally — rotate the suburb tags to match the client in the photo.</p>
+      <div class="tags">
+        <span class="tag-chip tag-chip--local">#baysidemelbourne</span>
+        <span class="tag-chip tag-chip--local">#mordialloc</span>
+        <span class="tag-chip tag-chip--local">#southeastmelbourne</span>
+        <span class="tag-chip">#tradiemarketing</span>
+        <span class="tag-chip">#brandingforbuilders</span>
+        <span class="tag-chip">#localseo</span>
+        <span class="tag-chip tag-chip--brand">#beetsandco</span>
+        <span class="tag-chip tag-chip--brand">#builtwithbeets</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 08 HAND-OFF ===================== -->
+<section class="sec sec--lift">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-no">08</span>
+        <h2>Copy-paste tokens</h2>
+      </div>
+      <p class="src"><b>Source</b>beets-v2.css · <code style="font-family:ui-monospace,Menlo,monospace">:root</code></p>
+    </div>
+    <p class="lede">The first block already ships. The second is the addition — drop it into the same <code style="font-family:ui-monospace,Menlo,monospace;font-size:15px;color:var(--beet)">:root</code> so new components inherit the accessible tints instead of inventing colours.</p>
+
+<pre><span class="c">/* --- already live in beets-v2.css --- */</span>
+--soil:<span class="v">#0B0D0A</span>;      --soil-2:<span class="v">#131710</span>;     --soil-3:<span class="v">#1C211A</span>;
+--paper:<span class="v">#F2EFE6</span>;     --paper-2:<span class="v">#E7E1D3</span>;    --ink:<span class="v">#14170F</span>;
+--stone:<span class="v">#BFB6A2</span>;     --beet:<span class="v">#C96C8C</span>;       --beet-deep:<span class="v">#6E1B36</span>;
+--clay:<span class="v">#C24B33</span>;
+
+<span class="c">/* --- add: the accessible tints (section 03) --- */</span>
+--clay-lift:<span class="v">#D45A41</span>;   <span class="c">/* clay as TYPE on soil — 4.96:1 */</span>
+--clay-deep:<span class="v">#B54129</span>;   <span class="c">/* button GROUND, and clay as type on paper — 5.02:1 */</span>
+
+<span class="c">/* --- change: three failing values --- */</span>
+--stone-2:<span class="v">rgba(191,182,162,.72)</span>;  <span class="c">/* was .62 — 4.31:1, under AA */</span>
+<span class="c">/* .step .num, .row-item .num on paper: .45 → .60 */</span>
+<span class="c">/* .step .when on paper:                  .50 → .60 */</span>
+
+<span class="c">/* type — unchanged */</span>
+--grot:<span class="v">"Bricolage Grotesque"</span>,"Hanken Grotesk",system-ui,sans-serif;
+--body:<span class="v">"Hanken Grotesk"</span>,system-ui,-apple-system,"Segoe UI",sans-serif;
+--serif:<span class="v">"Instrument Serif"</span>,Georgia,"Times New Roman",serif;
+</pre>
+
+    <div class="cols" style="margin-top:46px">
+      <div>
+        <h4>Still open</h4>
+        <ul class="rlist">
+          <li>There is <strong>no vector master of the mark</strong> — it renders from live type everywhere. Worth outlining a proper SVG before any signwriting, embroidery or vehicle quote.</li>
+          <li>The beetroot growth concept — soil line, seed cluster, thinning — is a strong idea and not on the site. It belongs either in section 05 as a named device or nowhere; a half-used metaphor is worse than none.</li>
+          <li>Proposal and invoice documents haven't adopted the system. They should take the soil ground and the Bricolage header treatment so the paperwork matches the pitch.</li>
+          <li>No dark-on-light variant of the Instagram templates has been tested at thumbnail size on a phone in daylight. Worth one real check before the paper tiles go into rotation.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Identity facts to keep consistent</h4>
+        <ul class="rlist">
+          <li>Public name is <strong>Beets &amp; Co</strong> — with the serif ampersand wherever type allows it.</li>
+          <li><span style="color:var(--clay-lift)">Two email addresses are in circulation:</span> the live site and <code>llms.txt</code> use <strong>michael@beetsandco.com.au</strong>; the project instructions say <strong>hello@</strong>. Pick one and change the other — a mismatch across public surfaces costs trust and confuses the crawlers.</li>
+          <li>One phone number everywhere: <strong>+61 447 542 930</strong>.</li>
+          <li>Service area is <strong>Bayside and South East Melbourne</strong>, with Greater Melbourne as the second line — never "Australia-wide".</li>
+          <li>Instagram handle <strong>@beetsandco</strong>. The grid and the site should always be one click apart.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span>Beets <span class="si">&amp;</span> Co — Brand Field Guide v1.0 · 11 September 2026</span>
+  <span>Bayside &amp; South East Melbourne VIC · beetsandco.com.au</span>
+</footer>

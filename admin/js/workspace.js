@@ -103,7 +103,8 @@ calendar: {
       {k:"cover_image_url",l:"Cover image",h:"Reels/YouTube only — pick a synced photo or paste an image URL; overrides the content item's",t:"cover_ref",full:true},
       {k:"follow_up_comment",l:"Follow-up comment",h:"Auto-posted right after publish — IG feed/Reel/Trial Reel + FB feed/Reel only",t:"textarea",full:true},
       {k:"caption",l:"Caption",t:"textarea",full:true},
-      {k:"notes",l:"Notes",t:"text",full:true}
+      {k:"notes",l:"Notes",t:"text",full:true},
+      {k:"yt_settings",l:"YouTube settings",t:"yt_settings",full:true}
     ]
   },
   reviews: {
@@ -629,7 +630,8 @@ let COLL_FILTERS = {};
 function filterableFields(id){
   return (COLLECTIONS[id].fields||[]).filter(f=>(f.t==='status'||f.t==='select') && f.o && f.o.length);
 }
-async function renderCollection(id){
+async function renderCollection(id){ const _ui=captureUI(); const _r=await _renderCollectionImpl(id); restoreUI(_ui); return _r; }
+async function _renderCollectionImpl(id){
   const c = COLLECTIONS[id];
   const view = document.getElementById('view');
   // Every tab is client-scoped now (2026-07-17) — nothing renders without a
@@ -672,7 +674,28 @@ function renderCollFilterBar(id){
     `<span class="count" id="collCount"></span>`;
 }
 function setCollFilter(id,key,val){ COLL_FILTERS[id][key]=val; renderCollFilterBar(id); renderCollCards(id); }
+/* ---- UI-state preservation (2026-10-07) ----
+   Any re-render that rebuilt a card list used to collapse every expanded
+   card and jump the page back to the top — so editing a schedule time or
+   changing a filtered field meant re-finding and re-opening the item.
+   openCardIds()/reopenCards() capture and restore which cards are expanded;
+   captureUI()/restoreUI() add scroll position for the full-tab renders. */
+function openCardIds(){
+  return Array.from(document.querySelectorAll('.ccard-body:not(.hidden)')).map(b=>{ const c=b.closest('.ccard'); return c?c.dataset.id:null; }).filter(Boolean);
+}
+function reopenCards(ids){
+  (ids||[]).forEach(id=>{
+    document.querySelectorAll('.ccard[data-id="'+id+'"]').forEach(card=>{
+      const b=card.querySelector('.ccard-body'); if(b) b.classList.remove('hidden');
+      const a=card.querySelector('.toggle-arrow'); if(a) a.textContent='▾';
+    });
+  });
+}
+function captureUI(){ return {open:openCardIds(), y:window.scrollY}; }
+function restoreUI(s){ if(!s) return; reopenCards(s.open); window.scrollTo(0,s.y); }
+
 function renderCollCards(id){
+  const _open = openCardIds();
   const wrap = document.getElementById('cards');
   if(!wrap) return;
   const c = COLLECTIONS[id];
@@ -685,12 +708,13 @@ function renderCollCards(id){
   const cnt = document.getElementById('collCount'); if(cnt) cnt.textContent = `${rows.length} item${rows.length===1?'':'s'}`;
   if(!rows.length){ wrap.innerHTML = `<div class="empty">${(COLL_ROWS[id]||[]).length?'No items match this filter.':`Nothing here yet — click "${esc(c.newLabel)}".`}</div>`; return; }
   wrap.innerHTML=''; rows.forEach(r=>wrap.appendChild(buildCard(id,r)));
+  reopenCards(_open);
 }
 
 function fieldHTML(id,row,f){
   const val = row[f.k];
   let html = `<div class="f ${f.full?'full':''}" data-k="${esc(f.k)}">`;
-  if(f.t!=='bool') html += `<label>${f.l}</label>`;
+  if(f.t!=='bool' && f.t!=='yt_settings') html += `<label>${f.l}</label>`;
   if(f.t==='text'||f.t==='url'||f.t==='email'||f.t==='number'||f.t==='date'||f.t==='time'){
     const it = f.t==='time'?'time':(f.t==='number'?'number':(f.t==='date'?'date':(f.t==='email'?'email':(f.t==='url'?'url':'text'))));
     html += `<input type="${it}" value="${esc(val==null?'':val)}" oninput="queueSave('${id}','${row.id}','${f.k}',this.value)">`;
@@ -720,6 +744,8 @@ function fieldHTML(id,row,f){
     html += `<div id="cref-${row.id}">${crefInner(row)}</div>`;
   } else if(f.t==='cover_ref'){
     html += `<div id="coverref-${id}-${row.id}">${coverRefInner(id,row)}</div>`;
+  } else if(f.t==='yt_settings'){
+    html += ytSettingsHTML(row);
   }
   if(f.h) html += `<div class="f-hint">${esc(f.h)}</div>`;
   html += `</div>`;
@@ -747,7 +773,60 @@ function calendarFieldsHTML(row){
     + fieldSectionHTML('calendar',row,'Content',['content_item_id'])
     + fieldSectionHTML('calendar',row,'Platforms',['platforms'])
     + fieldSectionHTML('calendar',row,'Tagging & cover',['collaborators','tagged_accounts','cover_image_url'])
-    + fieldSectionHTML('calendar',row,'Text',['follow_up_comment','caption','notes']);
+    + fieldSectionHTML('calendar',row,'Text',['follow_up_comment','caption','notes'])
+    + ytSectionHTML(row);
+}
+/* ---- YouTube settings (2026-10-07) ----
+   Stored per slot in va_calendar_slots.yt_settings (jsonb). A blank/missing
+   key means "leave it at the channel default" — so slots with no settings
+   publish exactly as before. Read by publishToYouTube() in the social-publish
+   edge function. Only shown while a YT platform is ticked.
+   NOT available through the YouTube Data API (so not offered here): age
+   restriction, automatic chapters/places/concepts, collaborators, Shorts
+   remixing, comment moderation/sorting, caption certification, playlists
+   (needs the broader youtube OAuth scope the stored refresh tokens lack). */
+const YT_CATEGORIES = [['1','Film & Animation'],['2','Autos & Vehicles'],['10','Music'],['15','Pets & Animals'],['17','Sports'],['19','Travel & Events'],['20','Gaming'],['22','People & Blogs'],['23','Comedy'],['24','Entertainment'],['25','News & Politics'],['26','Howto & Style'],['27','Education'],['28','Science & Technology'],['29','Nonprofits & Activism']];
+const YT_YESNO = [['','Channel default'],['yes','Yes'],['no','No']];
+function ytHasYT(row){ return (Array.isArray(row.platforms)?row.platforms:[]).some(p=>/^YT /.test(p)); }
+function ytSectionHTML(row){
+  return `<div class="field-section ${ytHasYT(row)?'':'hidden'}" id="ytsec-${row.id}">
+    <div class="field-section-title">YouTube settings</div>
+    <div class="grid">${ytSettingsHTML(row)}</div>
+  </div>`;
+}
+function ytSel(row,key,label,opts,hint){
+  const v = (row.yt_settings||{})[key] || '';
+  return `<div class="f"><label>${label}</label><select onchange="setYT('${row.id}','${key}',this.value)">${opts.map(o=>`<option value="${esc(o[0])}" ${v===o[0]?'selected':''}>${esc(o[1])}</option>`).join('')}</select>${hint?`<div class="f-hint">${esc(hint)}</div>`:''}</div>`;
+}
+function ytInput(row,key,label,type,ph,hint,full){
+  const v = (row.yt_settings||{})[key] || '';
+  return `<div class="f ${full?'full':''}"><label>${label}</label><input type="${type}" value="${esc(v)}" placeholder="${esc(ph||'')}" oninput="setYT('${row.id}','${key}',this.value)">${hint?`<div class="f-hint">${esc(hint)}</div>`:''}</div>`;
+}
+function ytSettingsHTML(row){
+  return ytInput(row,'title','Title','text','Defaults to the content item name','Max 100 characters',true)
+    + ytSel(row,'privacy','Visibility',[['','Public (default)'],['unlisted','Unlisted'],['private','Private']])
+    + ytSel(row,'made_for_kids','Made for kids',[['','Channel default'],['no',"No, it's not made for kids"],['yes',"Yes, it's made for kids"]])
+    + ytSel(row,'ai_content','Altered / synthetic content (AI use)',YT_YESNO,'Realistic AI-made or AI-edited sound/visuals — "Yes" adds YouTube’s label')
+    + ytSel(row,'paid_promo','Paid promotion',YT_YESNO)
+    + ytSel(row,'category','Category',[['','People & Blogs (default)']].concat(YT_CATEGORIES))
+    + ytInput(row,'tags','Tags','text','construction, demolition, roof demolition','Comma-separated, 500 characters max',true)
+    + ytSel(row,'language','Video language',[['','Not set'],['en','English'],['en-AU','English (Australia)'],['en-GB','English (UK)'],['en-US','English (US)']])
+    + ytInput(row,'recording_date','Recording date','date')
+    + ytSel(row,'license','License',[['','Standard YouTube License'],['creativeCommon','Creative Commons – Attribution']])
+    + ytSel(row,'embeddable','Allow embedding',[['','Channel default'],['yes','Yes'],['no','No']])
+    + ytSel(row,'notify_subscribers','Notify subscribers',[['','Yes (default)'],['no','No']])
+    + ytSel(row,'public_stats','Show like count',[['','Channel default'],['yes','Yes'],['no','No']])
+    + `<div class="f full"><div class="f-hint">Cover image: set it under “Tagging &amp; cover” above — it’s sent as the video’s custom thumbnail (the channel must be verified for custom thumbnails). Age restriction, automatic chapters/places, comment settings and Shorts remixing can’t be set through YouTube’s API — change those in YouTube Studio after upload.</div></div>`;
+}
+function setYT(rowId,key,val){
+  const row = CALENDAR_ROWS.find(x=>x.id===rowId); if(!row) return;
+  const cur = Object.assign({}, row.yt_settings||{});
+  if(val===''||val==null) delete cur[key]; else cur[key]=val;
+  queueSave('calendar',rowId,'yt_settings',Object.keys(cur).length?cur:null);
+}
+function refreshYTSection(rowId){
+  const row = CALENDAR_ROWS.find(x=>x.id===rowId); const el = document.getElementById('ytsec-'+rowId);
+  if(row && el) el.classList.toggle('hidden', !ytHasYT(row));
 }
 function fieldsGridHTML(id,row){
   const c = COLLECTIONS[id];
@@ -882,7 +961,8 @@ function buildBlogCard(row){
   return card;
 }
 
-async function renderBlog(){
+async function renderBlog(){ const _ui=captureUI(); const _r=await _renderBlogImpl(); restoreUI(_ui); return _r; }
+async function _renderBlogImpl(){
   setActive('blog');
   const view = document.getElementById('view');
   if(!CURRENT_CLIENT_ID){ view.innerHTML = '<div class="empty">No client selected — pick one from the dropdown in the top bar.</div>'; return; }
@@ -907,6 +987,7 @@ function renderBlogFilterBar(){
 }
 function setBlogStatus(s){ blogStatusFilter=s; renderBlogFilterBar(); renderBlogCards(); }
 function renderBlogCards(){
+  const _open = openCardIds();
   const wrap = document.getElementById('blogCards');
   if(!wrap) return;
   let rows = BLOG_ROWS;
@@ -914,6 +995,7 @@ function renderBlogCards(){
   const cc = document.getElementById('blogCount'); if(cc) cc.textContent = `${rows.length} post${rows.length===1?'':'s'}`;
   if(!rows.length){ wrap.innerHTML = `<div class="empty">No posts match this filter.</div>`; return; }
   wrap.innerHTML=''; rows.forEach(r=>wrap.appendChild(buildBlogCard(r)));
+  reopenCards(_open);
 }
 
 /* ---- Publish (Instagram / Facebook via social-publish Edge Function) ---- */
@@ -1066,7 +1148,8 @@ let BLOG_ROWS = [];
 let blogStatusFilter = 'All';
 const BLOG_STATUSES = ['All','Draft','In review','Published'];
 
-async function renderContent(){
+async function renderContent(){ const _ui=captureUI(); const _r=await _renderContentImpl(); restoreUI(_ui); return _r; }
+async function _renderContentImpl(){
   setActive('content');
   const view = document.getElementById('view');
   view.innerHTML = '<div class="empty">Loading…</div>';
@@ -1102,6 +1185,7 @@ function setContentPillar(p){ contentPillar=p; renderFilterBars(); renderContent
 function setContentStatus(s){ contentStatus=s; renderFilterBars(); renderContentCards(); }
 function setContentType(v){ contentType=v; renderFilterBars(); renderContentCards(); }
 function renderContentCards(){
+  const _open = openCardIds();
   const wrap = document.getElementById('ccards');
   let rows = CONTENT_ROWS;
   if(contentType!=='All') rows = rows.filter(r=>(r.type||'')===contentType);
@@ -1110,6 +1194,7 @@ function renderContentCards(){
   const cc = document.getElementById('ccount'); if(cc) cc.textContent = `${rows.length} item${rows.length===1?'':'s'}`;
   if(!rows.length){ wrap.innerHTML = `<div class="empty">No items match this filter. Try "All", or Sync from Drive.</div>`; return; }
   wrap.innerHTML=''; rows.forEach(r=>wrap.appendChild(buildContentCard(r)));
+  reopenCards(_open);
 }
 function pillarColor(p){ return {Dream:'#7d6b4f',Craft:'#5f5138',Proof:'#5b7a53',Process:'#3f6b7a','Meet Tim':'#8a5a6a',Knowledge:'#b8863b',Background:'#6b7686'}[p]||'#8a8377'; }
 function thumbFor(r){
@@ -1352,7 +1437,8 @@ function updateContentCard(rowId){
 /* ---- Posting Calendar: interactive monthly view + inline details ---- */
 let currentCalendarDate = new Date();
 
-async function renderCalendar(){
+async function renderCalendar(){ const _ui=captureUI(); const _r=await _renderCalendarImpl(); restoreUI(_ui); return _r; }
+async function _renderCalendarImpl(){
   setActive('calendar');
   const view = document.getElementById('view');
   view.innerHTML = '<div class="empty">Loading calendar…</div>';
@@ -1406,7 +1492,7 @@ function formatFriendlyTime(timeStr) {
   return `${hours}:${minutes} ${ampm}`;
 }
 
-function renderCalendarGrid() {
+function renderCalendarGrid(opts) {
   const grid = document.getElementById('calendarGrid');
   if(!grid) return;
   
@@ -1469,7 +1555,17 @@ function renderCalendarGrid() {
     `;
   }
   
-  showSelectedDaySlots();
+  if(!(opts && opts.keepList)) showSelectedDaySlots();
+}
+
+// Refreshes just a card's collapsed header (time, label, pillar dot, status
+// pills) in place — leaves the expanded form and whatever input has focus alone.
+function updateCalendarCardHead(rowId){
+  const row = CALENDAR_ROWS.find(x=>x.id===rowId); if(!row) return;
+  const card = document.querySelector('.ccard[data-id="'+rowId+'"]'); if(!card) return;
+  const fresh = buildCalendarCard(row).querySelector('.ccard-head');
+  const old = card.querySelector('.ccard-head');
+  if(old && fresh){ const open = !card.querySelector('.ccard-body').classList.contains('hidden'); old.replaceWith(fresh); const a=fresh.querySelector('.toggle-arrow'); if(a) a.textContent = open?'▾':'▸'; }
 }
 
 function changeMonth(dir) {
@@ -1483,6 +1579,7 @@ function selectCalendarDay(day) {
 }
 
 function showSelectedDaySlots() {
+  const _open = openCardIds();
   const year = currentCalendarDate.getFullYear();
   const month = currentCalendarDate.getMonth();
   const day = currentCalendarDate.getDate();
@@ -1504,6 +1601,7 @@ function showSelectedDaySlots() {
   }
   
   slotsOnDay.forEach(r => wrap.appendChild(buildCalendarCard(r)));
+  reopenCards(_open);
 }
 
 async function addNewSlotForSelectedDate() {
@@ -1877,7 +1975,12 @@ async function saveField(id,rowId,field,val){
     const i=CALENDAR_ROWS.findIndex(x=>x.id===rowId);
     if(i>=0) CALENDAR_ROWS[i][field]=val;
     if(field==='pillar') renderCref(rowId);
-    if(field==='slot_date' || field==='slot_time' || field==='pillar') { renderCalendarGrid(); }
+    // Time/pillar edits only need the month grid + this card's header refreshed —
+    // rebuilding the day list here is what used to collapse the open card (and
+    // drop focus mid-edit). A date change genuinely moves the card to another
+    // day, so that one rebuilds the list (other open cards stay open).
+    if(field==='slot_time' || field==='pillar') { renderCalendarGrid({keepList:true}); updateCalendarCardHead(rowId); }
+    else if(field==='slot_date') { renderCalendarGrid(); }
     if(field==='status') { refreshPublishBlock(rowId); }
   }
   if(id==='blog'){
@@ -1911,7 +2014,7 @@ async function saveMulti(id,rowId,field,opt,checked){
   // switched to another day and back, since that rebuild reads from the
   // (stale) in-memory CALENDAR_ROWS array rather than re-fetching.
   if(id==='content'){ const i=CONTENT_ROWS.findIndex(x=>x.id===rowId); if(i>=0) CONTENT_ROWS[i][field]=arr; }
-  if(id==='calendar'){ const i=CALENDAR_ROWS.findIndex(x=>x.id===rowId); if(i>=0) CALENDAR_ROWS[i][field]=arr; }
+  if(id==='calendar'){ const i=CALENDAR_ROWS.findIndex(x=>x.id===rowId); if(i>=0) CALENDAR_ROWS[i][field]=arr; if(field==='platforms') refreshYTSection(rowId); }
 }
 async function addRow(id){
   const c = COLLECTIONS[id];

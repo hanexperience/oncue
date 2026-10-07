@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Beets &amp; Co Post Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+:root{
+  --soil:#0B0D0A; --soil-2:#131710; --soil-3:#1C211A; --soil-4:#22271F;
+  --paper:#F2EFE6; --paper-2:#E7E1D3; --ink:#14170F;
+  --stone:#BFB6A2; --stone-2:rgba(191,182,162,.72);
+  --beet:#C96C8C; --beet-deep:#6E1B36;
+  --clay:#C24B33; --clay-lift:#D45A41; --clay-deep:#B54129;
+  --rule:rgba(242,239,230,.15);
+  --rule-hi:rgba(242,239,230,.3);
+  --grot:"Bricolage Grotesque","Hanken Grotesk",system-ui,sans-serif;
+  --body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--soil);color:var(--paper);font-family:var(--body);font-size:14px;
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--beet);outline-offset:2px}
+[hidden]{display:none!important}
+
+.app{display:grid;grid-template-columns:356px minmax(0,1fr);height:100vh}
+
+/* ---------- sidebar ---------- */
+.side{background:var(--soil-2);border-right:1px solid var(--rule);display:flex;flex-direction:column;min-height:0}
+.brandbar{padding:20px 22px 18px;border-bottom:1px solid var(--rule);flex:0 0 auto}
+.bb-mark{font-family:var(--grot);font-weight:600;font-size:23px;letter-spacing:-.03em;color:var(--paper);line-height:1}
+.bb-mark i{font-family:var(--serif);font-style:italic;font-weight:400;font-size:22px;color:var(--stone)}
+.brandbar p{margin:11px 0 0;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--beet)}
+
+.tabs{display:flex;border-bottom:1px solid var(--rule);flex:0 0 auto}
+.tabs button{flex:1;background:transparent;border:0;border-bottom:2px solid transparent;padding:13px 6px;cursor:pointer;
+  font-family:var(--grot);font-weight:600;font-size:14px;letter-spacing:-.01em;color:var(--stone-2)}
+.tabs button[aria-selected="true"]{color:var(--paper);border-bottom-color:var(--beet)}
+.tabs button:hover{color:var(--paper)}
+
+.scroll{overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:22px;flex:1 1 auto;min-height:0}
+.scroll::-webkit-scrollbar{width:9px}
+.scroll::-webkit-scrollbar-track{background:var(--soil-2)}
+.scroll::-webkit-scrollbar-thumb{background:var(--soil-4)}
+.scroll::-webkit-scrollbar-thumb:hover{background:var(--beet-deep)}
+
+.grp{display:flex;flex-direction:column;gap:9px}
+.glabel{font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--beet)}
+.hint{font-size:12.5px;line-height:1.5;color:var(--stone-2)}
+.hint code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--beet)}
+
+.tpl-list{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.tpl-btn{background:var(--soil-2);border:0;text-align:left;padding:11px 13px;cursor:pointer;
+  font-family:var(--grot);font-weight:600;font-size:15px;letter-spacing:-.025em;color:var(--stone);
+  display:flex;flex-direction:column;gap:2px;transition:background .2s ease,color .2s ease,padding-left .3s cubic-bezier(.16,.84,.28,1)}
+.tpl-btn small{font-family:var(--body);font-weight:400;font-size:11.5px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--stone-2)}
+.tpl-btn:hover{background:var(--soil-3);color:var(--paper);padding-left:17px}
+.tpl-btn[aria-pressed="true"]{background:var(--soil-3);color:var(--paper);box-shadow:inset 3px 0 0 var(--beet)}
+
+.seg{display:flex;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.seg button{flex:1;background:var(--soil-2);border:0;padding:9px 4px;cursor:pointer;
+  font-family:var(--grot);font-weight:600;font-size:14px;color:var(--stone);display:flex;flex-direction:column;gap:1px;align-items:center}
+.seg button small{font-family:var(--body);font-weight:400;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--stone-2)}
+.seg button[aria-pressed="true"]{background:var(--beet-deep);color:var(--paper)}
+.seg button[aria-pressed="true"] small{color:var(--beet)}
+.seg button:disabled{opacity:.3;cursor:not-allowed}
+
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12.5px;color:var(--stone)}
+.field input[type=text],.field textarea,.field select{
+  background:rgba(242,239,230,.05);border:1px solid var(--rule);border-radius:2px;
+  color:var(--paper);padding:9px 11px;width:100%;font-size:13.5px;transition:border-color .2s ease,background .2s ease}
+.field input[type=text]:focus,.field textarea:focus,.field select:focus{border-color:var(--beet);background:rgba(242,239,230,.08);outline:none}
+.field textarea{resize:vertical;min-height:78px;line-height:1.5}
+.field select{appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--stone) 50%),linear-gradient(135deg,var(--stone) 50%,transparent 50%);
+  background-position:calc(100% - 18px) calc(50% + 1px),calc(100% - 13px) calc(50% + 1px);
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+.field select option{background:var(--soil-2);color:var(--paper)}
+.check{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--stone);cursor:pointer}
+.check input{accent-color:var(--beet);width:15px;height:15px}
+
+.range{display:flex;align-items:center;gap:10px;background:rgba(242,239,230,.05);border:1px solid var(--rule);
+  border-radius:2px;padding:8px 11px}
+.range span{font-size:12px;color:var(--stone-2);flex:0 0 auto}
+.range input[type=range]{flex:1;accent-color:var(--beet);min-width:0}
+.range b{font-size:12px;color:var(--paper);font-variant-numeric:tabular-nums;flex:0 0 auto;min-width:38px;text-align:right}
+
+.slot{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.slot-drop{background:var(--soil-2);padding:13px;cursor:pointer;font-size:12.5px;color:var(--stone-2);
+  transition:background .2s ease,color .2s ease}
+.slot-drop b{display:block;font-family:var(--grot);font-weight:600;font-size:13.5px;letter-spacing:-.02em;
+  color:var(--paper);margin-bottom:3px}
+.slot-drop:hover,.slot-drop.over{background:var(--soil-3);color:var(--stone)}
+.slot-drop.filled{box-shadow:inset 3px 0 0 var(--beet)}
+.slot .range{border:0;border-radius:0}
+
+.mini{background:var(--soil-3);border:1px solid var(--rule);border-radius:2px;color:var(--stone);
+  padding:7px 11px;font-size:12px;cursor:pointer;transition:background .2s ease,color .2s ease}
+.mini:hover{background:var(--soil-4);color:var(--paper)}
+
+.btn{background:var(--clay-deep);border:0;border-radius:2px;color:#F7F2EB;padding:11px 18px;cursor:pointer;
+  font-family:var(--grot);font-weight:600;font-size:15px;letter-spacing:-.015em;transition:background .2s ease}
+.btn:hover{background:var(--clay-lift)}
+.btn--ghost{background:transparent;border:1px solid var(--rule);color:var(--stone)}
+.btn--ghost:hover{background:var(--soil-3);color:var(--paper)}
+
+.slidenav{display:flex;gap:5px;flex-wrap:wrap}
+.pipbtn{width:30px;height:30px;background:var(--soil-3);border:1px solid var(--rule);border-radius:2px;
+  color:var(--stone);cursor:pointer;font-size:12.5px;font-variant-numeric:tabular-nums}
+.pipbtn[aria-pressed="true"]{background:var(--beet-deep);border-color:var(--beet);color:var(--paper)}
+
+/* ---------- stage ---------- */
+.stage{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--soil)}
+.topbar{display:flex;align-items:center;gap:10px;padding:13px 22px;border-bottom:1px solid var(--rule);flex:0 0 auto}
+.fname{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--stone-2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.canvas-wrap{flex:1 1 auto;display:flex;align-items:center;justify-content:center;
+  padding:22px;min-height:0;overflow:hidden}
+/* A canvas is a replaced element with an intrinsic size from its width/height
+   attributes. max-width alone shrinks the box horizontally but leaves the
+   height at 1350px, so a 4:5 frame overflows the pane. width/height:auto is
+   what lets the intrinsic ratio resolve against BOTH maximums. */
+canvas#c{max-width:100%;max-height:100%;width:auto;height:auto;
+  background:var(--soil-2);cursor:grab;
+  box-shadow:0 18px 48px rgba(0,0,0,.55);border:1px solid var(--rule)}
+canvas#c.dragging{cursor:grabbing}
+canvas#c.over{outline:2px dashed var(--beet);outline-offset:6px}
+
+.strip{display:flex;gap:10px;align-items:center;padding:12px 22px;border-top:1px solid var(--rule);
+  overflow-x:auto;flex:0 0 auto;background:var(--soil-2)}
+.striplbl{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--beet);flex:0 0 auto}
+.strip canvas{height:84px;width:auto;border:1px solid var(--rule);cursor:pointer;flex:0 0 auto;opacity:.5;
+  transition:opacity .2s ease,border-color .2s ease}
+.strip canvas[data-on="1"]{opacity:1;border-color:var(--beet)}
+.strip canvas:hover{opacity:1}
+
+.statusbar{display:flex;gap:26px;padding:10px 22px;border-top:1px solid var(--rule);font-size:12px;
+  color:var(--stone-2);flex:0 0 auto;flex-wrap:wrap}
+.statusbar b{color:var(--stone);font-weight:500}
+
+/* ---------- grid planner ---------- */
+.plan-wrap{flex:1 1 auto;overflow:auto;padding:28px;display:grid;place-items:start center;min-height:0}
+.phone{width:100%;max-width:430px;background:var(--soil-2);border:1px solid var(--rule)}
+.phone-head{display:flex;gap:15px;padding:20px 18px;border-bottom:1px solid var(--rule);align-items:center}
+.ph-avatar{width:62px;height:62px;border-radius:50%;background:var(--soil);border:1px solid var(--rule);
+  display:grid;place-items:center;flex:0 0 auto;font-family:var(--grot);font-weight:600;font-size:13px;
+  letter-spacing:-.03em;color:var(--paper)}
+.ph-avatar i{font-family:var(--serif);font-style:italic;color:var(--stone)}
+.ph-name{font-family:var(--grot);font-weight:600;font-size:15.5px;letter-spacing:-.025em;color:var(--paper)}
+.ph-sub{font-size:12px;color:var(--stone-2);margin-top:2px}
+.ph-stats{display:flex;gap:18px;margin-top:9px;font-size:11.5px;color:var(--stone-2)}
+.ph-stats b{display:block;font-family:var(--grot);font-weight:600;font-size:14px;color:var(--paper)}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:2px}
+.ptile{aspect-ratio:4/5;position:relative;overflow:hidden;background:var(--soil-3);display:grid;place-items:center;
+  font-size:11px;color:var(--stone-2);cursor:pointer}
+.ptile.empty{border:1px dashed var(--rule)}
+.ptile img{width:100%;height:100%;object-fit:cover;display:block}
+.ptile .idx{position:absolute;left:5px;top:5px;background:rgba(11,13,10,.78);color:var(--paper);
+  font-size:10px;padding:2px 5px;font-variant-numeric:tabular-nums}
+.ptile .del{position:absolute;right:4px;top:4px;background:rgba(11,13,10,.78);border:0;color:var(--paper);
+  width:20px;height:20px;cursor:pointer;font-size:13px;line-height:1;opacity:0;transition:opacity .2s ease}
+.ptile:hover .del{opacity:1}
+.ptile .lbl{position:absolute;left:0;right:0;bottom:0;background:rgba(11,13,10,.8);color:var(--stone);
+  font-size:10px;padding:4px 5px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ptile.dragging{opacity:.35}
+.ptile.dragover{outline:2px solid var(--beet);outline-offset:-2px}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);
+  background:var(--paper);color:var(--ink);padding:11px 20px;border-radius:2px;font-size:13.5px;
+  font-family:var(--grot);font-weight:600;letter-spacing:-.015em;
+  opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;z-index:200}
+.toast.show{opacity:1;transform:translateX(-50%)}
+
+@media (max-width:940px){
+  body{overflow:auto}
+  .app{grid-template-columns:1fr;height:auto}
+  .side{border-right:0;border-bottom:1px solid var(--rule)}
+  .scroll{max-height:none}
+  .canvas-wrap{padding:18px}
+  canvas#c{max-height:62vh}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="side">
+    <div class="brandbar">
+      <span class="bb-mark">Beets <i>&amp;</i> Co</span>
+      <p>Post Studio · six pillars</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" id="tabStudio" role="tab" aria-selected="true">Studio</button>
+      <button type="button" id="tabPlan" role="tab" aria-selected="false">Grid planner</button>
+    </div>
+
+    <div class="scroll" id="studioPanel">
+      <div class="grp">
+        <span class="glabel">Pillar</span>
+        <div class="tpl-list" id="tplList"></div>
+      </div>
+
+      <div class="grp">
+        <span class="glabel">Size</span>
+        <div class="seg" id="fmtSeg">
+          <button type="button" data-fmt="4:5">4:5<small>feed</small></button>
+          <button type="button" data-fmt="1:1">1:1<small>square</small></button>
+          <button type="button" data-fmt="9:16">9:16<small>story</small></button>
+        </div>
+      </div>
+
+      <div class="grp" id="slideGroup" hidden>
+        <span class="glabel">Slides</span>
+        <div class="slidenav" id="slideNav"></div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <button class="mini" type="button" id="addSlide">+ Slide</button>
+          <button class="mini" type="button" id="delSlide">Remove</button>
+        </div>
+      </div>
+
+      <div class="grp" id="imgGroup">
+        <span class="glabel" id="imgLabel">Photo</span>
+        <div id="slots" style="display:flex;flex-direction:column;gap:10px"></div>
+        <div class="range" id="scrimRow" hidden>
+          <span>Veil</span>
+          <input type="range" id="scrim" min="0" max="1" step="0.01">
+          <b id="scrimVal">78%</b>
+        </div>
+        <p class="hint" id="imgHint">Drop an image here or onto the canvas. Drag the canvas to reposition, double-click to reset.</p>
+      </div>
+
+      <div class="grp" id="fieldGroup">
+        <span class="glabel">Content</span>
+        <div id="fields" style="display:flex;flex-direction:column;gap:13px"></div>
+        <p class="hint">Wrap one word in <code>*asterisks*</code> to set it in Instrument Serif italic — the brand's serif note. One word per surface, never two.</p>
+      </div>
+
+      <div class="grp">
+        <span class="glabel">View</span>
+        <label class="check"><input type="checkbox" id="guides"> Show safe zones &amp; grid crop</label>
+        <p class="hint">Guides are preview-only — never exported.</p>
+      </div>
+    </div>
+
+    <div class="scroll" id="planPanel" hidden>
+      <div class="grp">
+        <span class="glabel">Plan the grid</span>
+        <p class="hint">Tiles read like the real profile — newest top left. Drag to reorder, drop image files anywhere on the grid, or push the design you're working on straight in.</p>
+      </div>
+      <div class="grp">
+        <button class="btn" type="button" id="planFromCanvas">Add current design</button>
+        <button class="btn btn--ghost" type="button" id="planAddFiles">Add image files…</button>
+      </div>
+      <div class="grp">
+        <span class="glabel">Rhythm check</span>
+        <p class="hint">Two image tiles, then one flat brand tile. Never two flat tiles in a row. Flat grounds alternate soil → paper → beet-deep; three dark tiles together and the grid turns to mud.</p>
+      </div>
+      <div class="grp">
+        <span class="glabel">Caption note</span>
+        <p class="hint">Click a tile to edit the note that sits under it.</p>
+      </div>
+      <div class="grp">
+        <span class="glabel">Backup</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="mini" type="button" id="planExport">Export plan</button>
+          <button class="mini" type="button" id="planImport">Import plan</button>
+          <button class="mini" type="button" id="planClear">Clear all</button>
+        </div>
+        <p class="hint" id="planSize">Saved in this browser automatically.</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <div class="topbar" id="studioBar">
+      <button class="btn" id="save" type="button">Save PNG</button>
+      <button class="btn btn--ghost" id="saveAll" type="button" hidden>Save all slides</button>
+      <button class="btn btn--ghost" id="copy" type="button">Copy</button>
+      <span class="fname" id="fname">beetsandco_….png</span>
+    </div>
+    <div class="topbar" id="planBar" hidden>
+      <span class="fname" id="planCount">0 tiles</span>
+    </div>
+
+    <div class="canvas-wrap" id="studioStage">
+      <canvas id="c" width="1080" height="1350" aria-label="Post preview"></canvas>
+    </div>
+    <div class="strip" id="strip" hidden></div>
+
+    <div class="plan-wrap" id="planStage" hidden>
+      <div class="phone">
+        <div class="phone-head">
+          <div class="ph-avatar">B<i>&amp;</i>C</div>
+          <div>
+            <div class="ph-name">beetsandco</div>
+            <div class="ph-sub">Branding &amp; marketing for trades · Bayside, Melbourne</div>
+            <div class="ph-stats">
+              <span><b id="planPosts">0</b>posts</span>
+              <span><b>—</b>followers</span>
+              <span><b>3</b>per week</span>
+            </div>
+          </div>
+        </div>
+        <div class="pgrid" id="pgrid"></div>
+      </div>
+    </div>
+
+    <div class="statusbar" id="statusbar">
+      <span>Size <b id="stSize">1080 × 1350</b></span>
+      <span>Pillar <b id="stTpl">The Work</b></span>
+      <span id="stFont">Fonts loading…</span>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================================
+   Beets & Co Post Studio
+   One Canvas 2D pass drives both the on-screen preview and the exported PNG,
+   so what you see is the file. Colours, type and safe zones follow the
+   Beets & Co Brand Field Guide v1.0 — including the three derived tints,
+   so nothing this tool draws fails the contrast table in section 03.
+   ========================================================================== */
+
+const SOIL='#0B0D0A', SOIL2='#131710', SOIL3='#1C211A',
+      PAPER='#F2EFE6', PAPER2='#E7E1D3', INK='#14170F',
+      STONE='#BFB6A2', BEET='#C96C8C', BEET_DEEP='#6E1B36',
+      CLAY='#C24B33', CLAY_LIFT='#D45A41', CLAY_DEEP='#B54129',
+      BTN='#F7F2EB';
+
+const GROT  = "'Bricolage Grotesque','Hanken Grotesk',sans-serif";
+const BODY  = "'Hanken Grotesk',system-ui,sans-serif";
+const SERIF = "'Instrument Serif',Georgia,serif";
+const FORMATS = {'1:1':[1080,1080], '4:5':[1080,1350], '9:16':[1080,1920]};
+
+/* ---------------------------------------------------------------- templates */
+const TEMPLATES = {
+  'work':{
+    label:'The Work', kind:'Pillar 1 · photo', images:1, bg:false,
+    formats:['4:5','1:1','9:16'], defaultFmt:'4:5',
+    fields:[
+      {k:'wScope', t:'text', l:'Scope line (optional)', v:'Brand · website · local SEO · film'},
+      {k:'wTitle', t:'text', l:'Headline — *word* for serif', v:'The *rebuild* that made them findable'},
+      {k:'wClient',t:'text', l:'Client', v:'Crowncon'},
+      {k:'wSuburb',t:'text', l:'Suburb', v:'Mordialloc'},
+      {k:'wMark',  t:'check',l:'Show wordmark', v:false}
+    ]},
+  'number':{
+    label:'The Number', kind:'Pillar 2 · one figure', images:1, bg:true,
+    formats:['4:5','1:1','9:16'], defaultFmt:'4:5',
+    fields:[
+      {k:'nGround',t:'select',l:'Ground', v:'Beet deep', opts:['Beet deep','Soil','Paper']},
+      {k:'nFigure',t:'text', l:'The figure', v:'6'},
+      {k:'nUnit',  t:'text', l:'What it measures', v:'weeks, first call to live'},
+      {k:'nContext',t:'area',l:'One line of context', v:'Brand, website, listings and a film shot on their own site — Crowncon, Mordialloc.'},
+      {k:'nMark',  t:'check',l:'Show wordmark', v:true}
+    ]},
+  'proof':{
+    label:'The Proof', kind:'Pillar 3 · review', images:1, bg:true,
+    formats:['4:5','1:1','9:16'], defaultFmt:'4:5',
+    fields:[
+      {k:'layout',t:'select',l:'Layout', v:'Panel on photo', opts:['Panel on photo','Flat card']},
+      {k:'quote', t:'area', l:'Quote (verbatim)', v:'He came to the site, watched us work for a day, then wrote copy that sounded like me rather than like an agency.'},
+      {k:'who',   t:'text', l:'Name', v:'Tim'},
+      {k:'source',t:'text', l:'Company or source', v:'Crowncon Homes'},
+      {k:'pos',   t:'select',l:'Panel position', v:'Centred', opts:['Centred','High']},
+      {k:'panelOp',t:'range',l:'Panel opacity', v:0.82, min:0.4, max:1, step:0.01},
+      {k:'imgFade',t:'range',l:'Photo fade', v:0.2, min:0, max:0.8, step:0.01},
+      {k:'ground',t:'select',l:'Ground — flat card only', v:'Paper', opts:['Paper','Soil','Beet deep']},
+      {k:'pMarkR',t:'check', l:'Show wordmark', v:true}
+    ]},
+  'doors':{
+    label:'The Nine Doors', kind:'Pillar 4 · carousel', images:0, bg:true, slides:true,
+    formats:['4:5','1:1'], defaultFmt:'4:5',
+    fields:[
+      {k:'num',     t:'text', l:'Door marker', v:'Door 03 / 09', perSlide:true},
+      {k:'heading', t:'text', l:'Heading — *word* for serif', v:'Reviews are a ranking factor, not a *vanity* metric', perSlide:true},
+      {k:'body',    t:'area', l:'Body', v:'Google weights recency as heavily as volume. Forty reviews from 2023 are worth less than eight from this quarter — and the eight are the ones a customer reads.', perSlide:true},
+      {k:'carFoot', t:'text', l:'Footer (all slides)', v:'Run the free Walk-In Check'}
+    ]},
+  'michael':{
+    label:'Michael', kind:'Pillar 5 · reel cover', images:1, bg:false,
+    formats:['9:16','4:5','1:1'], defaultFmt:'9:16',
+    fields:[
+      {k:'question',t:'area', l:'The question, his words', v:'Why I turn\nwork down'},
+      {k:'mName',   t:'text', l:'Name', v:'Michael'},
+      {k:'runtime', t:'text', l:'Runtime', v:'60 seconds'},
+      {k:'place',   t:'select',l:'Block position', v:'Grid-safe', opts:['Grid-safe','Bottom']},
+      {k:'mMark',   t:'check',l:'Show wordmark', v:true}
+    ]},
+  'position':{
+    label:'The Position', kind:'Pillar 6 · statement', images:1, bg:true,
+    formats:['4:5','1:1','9:16'], defaultFmt:'4:5',
+    fields:[
+      {k:'pGround',t:'select',l:'Ground', v:'Soil', opts:['Soil','Beet deep','Paper']},
+      {k:'pEyebrow',t:'text',l:'Eyebrow', v:'Bayside & South East Melbourne'},
+      {k:'statement',t:'area',l:'Statement — *word* for serif', v:"Better jobs don't *find* you."},
+      {k:'pFoot',  t:'text', l:'Foot line (optional)', v:'Two client spots open this quarter'},
+      {k:'pMark',  t:'check',l:'Show wordmark', v:true}
+    ]}
+};
+
+/* -------------------------------------------------------------------- state */
+function blankImg(){ return {img:null, name:'', zoom:1, ox:0, oy:0}; }
+function blankSlide(n){ return {num:'Door '+String(n).padStart(2,'0')+' / 09', heading:'', body:'', img:blankImg()}; }
+
+const S = {
+  view:'studio', tpl:'work', fmt:'4:5',
+  v:{}, imgs:[blankImg(), blankImg(), blankImg()], active:0,
+  scrim:0.78, guides:false,
+  slides:[
+    {num:'Door 03 / 09', heading:'Reviews are a ranking factor, not a *vanity* metric',
+     body:'Google weights recency as heavily as volume. Forty reviews from 2023 are worth less than eight from this quarter — and the eight are the ones a customer reads.', img:blankImg()},
+    {num:'Door 04 / 09', heading:'Your listings are probably *arguing* with each other',
+     body:'Three versions of your address across Google, Bing and Apple, and a phone number from two vans ago. Search treats the disagreement as a reason to trust none of them.', img:blankImg()},
+    {num:'Door 09 / 09', heading:'Replies are the door nobody *bothers* with',
+     body:'Answering every review, question and DM within a day is free, takes ten minutes, and is the single clearest signal that someone is actually running the business.', img:blankImg()}
+  ],
+  slideIdx:0,
+  grid:[]
+};
+for(const t of Object.values(TEMPLATES)) for(const f of t.fields) if(!(f.k in S.v)) S.v[f.k]=f.v;
+
+/* ------------------------------------------------------------ canvas basics */
+const cv = document.getElementById('c');
+let ctx = cv.getContext('2d');
+function withCtx(c, fn){ const old = ctx; ctx = c; try{ fn(); } finally { ctx = old; } }
+
+function setType(o){
+  const {fam=BODY, w=400, s=40, ls=0, italic=false, color=PAPER, align='left', baseline='alphabetic'} = o;
+  try{ ctx.letterSpacing = ls+'px'; }catch(e){}
+  ctx.font = `${italic?'italic ':''}${w} ${s}px ${fam}`;
+  ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = baseline;
+}
+function resetType(){ try{ctx.letterSpacing='0px';}catch(e){} ctx.textAlign='left'; }
+function rgba(hex, a){
+  const h=hex.replace('#',''); const n=parseInt(h,16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+
+/* ---------------------------------------------------------- plain text wrap */
+function wrapLines(text, maxW){
+  const out=[];
+  for(const para of String(text).split('\n')){
+    const words = para.split(/\s+/).filter(Boolean);
+    if(!words.length){ out.push(''); continue; }
+    let line = words[0];
+    for(let i=1;i<words.length;i++){
+      const test = line+' '+words[i];
+      if(ctx.measureText(test).width <= maxW) line = test; else { out.push(line); line = words[i]; }
+    }
+    out.push(line);
+  }
+  return out;
+}
+function fitText(text, maxW, maxH, maxLines, cfg, hi, lo, lh){
+  let size = hi;
+  while(size > lo){
+    setType({...cfg, s:size, ls:(cfg.em||0)*size});
+    const lines = wrapLines(text, maxW);
+    const widest = Math.max(...lines.map(l=>ctx.measureText(l).width), 0);
+    if(lines.length <= maxLines && lines.length*size*lh <= maxH && widest <= maxW) return {lines, size};
+    size -= 2;
+  }
+  setType({...cfg, s:lo, ls:(cfg.em||0)*lo});
+  return {lines: wrapLines(text, maxW).slice(0, maxLines), size: lo};
+}
+function drawLines(lines, x, y, size, lh){
+  ctx.textBaseline='alphabetic';
+  lines.forEach((ln,i)=> ctx.fillText(ln, x, y + size*0.80 + i*size*lh));
+  return y + lines.length*size*lh;
+}
+
+/* ------------------------------------------------------------- the serif note
+   The brand's one warm device: a single word of a display line set in
+   Instrument Serif italic. Authors mark it as *word* in the field, so the
+   copy stays plain text everywhere else — in the file name, in the grid
+   planner label, and in anything pasted into a caption. */
+function tokenize(text){
+  return String(text).split('\n').map(para =>
+    para.split(/\s+/).filter(Boolean).map(w=>{
+      const m = /^\*([^*]+)\*(.*)$/.exec(w);
+      return m ? {w:m[1]+m[2], s:true} : {w, s:false};
+    })
+  );
+}
+function stripMarks(text){ return String(text).replace(/\*([^*]+)\*/g,'$1'); }
+
+function setTok(tok, size, cfg){
+  if(tok.s) setType({fam:SERIF, italic:true, w:400, s:size*1.04, ls:-size*0.015,
+                     color:cfg.serifColor||cfg.color, baseline:'alphabetic'});
+  else      setType({fam:GROT,  w:cfg.weight||600, s:size, ls:(cfg.em||-0.04)*size,
+                     color:cfg.color, baseline:'alphabetic'});
+}
+function spaceWidth(size, cfg){
+  setType({fam:GROT, w:cfg.weight||600, s:size, ls:(cfg.em||-0.04)*size});
+  return ctx.measureText(' ').width;
+}
+function richWrap(paras, maxW, size, cfg){
+  const sp = spaceWidth(size, cfg);
+  const lines=[];
+  for(const toks of paras){
+    if(!toks.length){ lines.push([]); continue; }
+    let line=[], w=0;
+    for(const t of toks){
+      setTok(t, size, cfg);
+      const tw = ctx.measureText(t.w).width;
+      const add = line.length ? sp+tw : tw;
+      if(line.length && w+add > maxW){ lines.push(line); line=[t]; w=tw; }
+      else { line.push(t); w += add; }
+    }
+    lines.push(line);
+  }
+  return lines;
+}
+function richLineW(line, size, cfg){
+  const sp = spaceWidth(size, cfg);
+  let w=0;
+  line.forEach((t,i)=>{ setTok(t,size,cfg); w += ctx.measureText(t.w).width + (i?sp:0); });
+  return w;
+}
+function fitRich(text, maxW, maxH, maxLines, cfg, hi, lo, lh){
+  const paras = tokenize(text);
+  let size = hi;
+  while(size > lo){
+    const lines = richWrap(paras, maxW, size, cfg);
+    const widest = Math.max(...lines.map(l=>richLineW(l,size,cfg)), 0);
+    if(lines.length <= maxLines && lines.length*size*lh <= maxH && widest <= maxW) return {lines, size};
+    size -= 2;
+  }
+  return {lines: richWrap(paras, maxW, lo, cfg).slice(0, maxLines), size: lo};
+}
+function drawRich(lines, x, y, size, lh, cfg){
+  const sp = spaceWidth(size, cfg);
+  lines.forEach((line,i)=>{
+    let cx = x;
+    const by = y + size*0.80 + i*size*lh;
+    line.forEach((t,j)=>{
+      setTok(t, size, cfg);
+      ctx.fillText(t.w, cx, by);
+      cx += ctx.measureText(t.w).width + sp;
+    });
+  });
+  return y + lines.length*size*lh;
+}
+
+/* --------------------------------------------------------------- image tools */
+function coverDraw(img, x, y, w, h, t){
+  if(!img) return;
+  const ir = img.width/img.height, br = w/h;
+  let dw,dh;
+  if(ir > br){ dh = h; dw = h*ir; } else { dw = w; dh = w/ir; }
+  dw *= t.zoom; dh *= t.zoom;
+  ctx.drawImage(img, x + (w-dw)/2 + t.ox*w, y + (h-dh)/2 + t.oy*h, dw, dh);
+}
+/* The empty state is drawn in two halves: the hatch goes down before the veil
+   so it darkens like a photograph would, and the prompt goes on afterwards so
+   it stays readable. A veiled-out instruction is how an empty studio looks
+   broken rather than empty. */
+function placeholderGround(x,y,w,h){
+  ctx.save(); ctx.beginPath(); ctx.rect(x,y,w,h); ctx.clip();
+  ctx.fillStyle=SOIL2; ctx.fillRect(x,y,w,h);
+  ctx.strokeStyle=rgba(PAPER,.07); ctx.lineWidth=10;
+  for(let i=-h; i<w+h; i+=56){ ctx.beginPath(); ctx.moveTo(x+i,y); ctx.lineTo(x+i+h,y+h); ctx.stroke(); }
+  ctx.restore();
+}
+function placeholderLabel(x,y,w,h,msg){
+  setType({fam:BODY,w:500,s:Math.min(30,w/12),ls:1.6,color:rgba(PAPER,.5),align:'center',baseline:'middle'});
+  ctx.fillText(msg, x+w/2, y+h/2);
+  resetType();
+}
+function placeholder(x,y,w,h,msg){ placeholderGround(x,y,w,h); placeholderLabel(x,y,w,h,msg); }
+function vGradient(x,y,w,h,stops){
+  const g = ctx.createLinearGradient(x,y,x,y+h);
+  stops.forEach(s=>g.addColorStop(s[0],s[1]));
+  ctx.fillStyle=g; ctx.fillRect(x,y,w,h);
+}
+
+/* ---- the veil: the brand never sets type over a bare photograph.
+   Three stops, matching the site's hero gradient exactly. ---- */
+function veil(W,H,strength){
+  const k = strength==null ? 1 : strength;
+  vGradient(0,0,W,H,[
+    [0,   rgba(SOIL,.62*k)],
+    [0.38,rgba(SOIL,.42*k)],
+    [1,   rgba(SOIL,.94*k)]
+  ]);
+}
+
+/* ---- the mark, set live: Bricolage either side of a serif-italic ampersand ---- */
+function wmParts(h){
+  setType({fam:GROT,w:600,s:h,ls:-h*0.03});
+  const wa = ctx.measureText('Beets ').width;
+  setType({fam:SERIF,italic:true,w:400,s:h*0.95,ls:-h*0.015});
+  const wb = ctx.measureText('&').width;
+  setType({fam:GROT,w:600,s:h,ls:-h*0.03});
+  const wc = ctx.measureText(' Co').width;
+  return {wa,wb,wc,total:wa+wb+wc};
+}
+function wordmarkW(h){ return wmParts(h).total; }
+function wordmarkH(h){ return h*1.08; }
+function drawWordmark(x, y, h, color, ampColor){
+  const p = wmParts(h);
+  setType({fam:GROT,w:600,s:h,ls:-h*0.03,color,baseline:'top'});
+  ctx.fillText('Beets ', x, y);
+  setType({fam:SERIF,italic:true,w:400,s:h*0.95,ls:-h*0.015,color:ampColor||color,baseline:'top'});
+  ctx.fillText('&', x+p.wa, y+h*0.04);
+  setType({fam:GROT,w:600,s:h,ls:-h*0.03,color,baseline:'top'});
+  ctx.fillText(' Co', x+p.wa+p.wb, y);
+  resetType();
+  return p.total;
+}
+/* ampersand colour is always one step quieter than the words either side */
+function ampFor(ground){
+  return ground===PAPER ? BEET_DEEP : (ground===BEET_DEEP ? BEET : STONE);
+}
+
+/* ---- ground helpers ------------------------------------------------------- */
+function groundSet(name){
+  if(name==='Paper')      return {bg:PAPER,     ink:INK,   quiet:rgba(INK,.62),  accent:BEET_DEEP, mark:INK};
+  if(name==='Beet deep')  return {bg:BEET_DEEP, ink:PAPER, quiet:rgba(PAPER,.74),accent:BEET,      mark:PAPER};
+  return                         {bg:SOIL,      ink:PAPER, quiet:STONE,          accent:BEET,      mark:PAPER};
+}
+function paintBg(W,H,base,slot){
+  const im = slot || S.imgs[0];
+  ctx.fillStyle = base; ctx.fillRect(0,0,W,H);
+  if(TEMPLATES[S.tpl].bg && im && im.img){
+    ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+    coverDraw(im.img,0,0,W,H,im); ctx.restore();
+    ctx.fillStyle = rgba(base, S.scrim); ctx.fillRect(0,0,W,H);
+  }
+}
+function curSlide(){ return S.slides[S.slideIdx]; }
+function val(k){
+  const t = TEMPLATES[S.tpl];
+  if(t.slides){
+    const f = t.fields.find(f=>f.k===k);
+    if(f && f.perSlide) return curSlide()[k] ?? '';
+  }
+  return S.v[k] ?? '';
+}
+
+/* ---------- the hairline rule: the site's one structural device ------------ */
+function hairline(x,y,w,color){ ctx.fillStyle=color; ctx.fillRect(x,y,w,2); }
+
+/* --------------------------------------------------------------- rendering */
+function render(){
+  const [W,H] = FORMATS[S.fmt];
+  if(cv.width!==W || cv.height!==H){ cv.width=W; cv.height=H; ctx = cv.getContext('2d'); }
+  paint(W,H);
+  if(S.guides) drawGuides(W,H);
+  resetType();
+  if(TEMPLATES[S.tpl].slides) renderStrip();
+}
+function paint(W,H){
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,W,H);
+  (RENDER[S.tpl]||(()=>{}))(W,H);
+}
+
+function quoteText(){
+  const q = val('quote').trim().replace(/[.\s]+$/,'');
+  return '“' + q + '.”';
+}
+
+/* Review over a photograph. The panel is sized to its content and sits over
+   the client's own work, so the review and the proof of the review are in one
+   frame — which is why this is the default layout. */
+function proofPanel(W,H){
+  const im = S.imgs[0];
+  ctx.fillStyle=SOIL; ctx.fillRect(0,0,W,H);
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+  if(im.img) coverDraw(im.img,0,0,W,H,im);
+  else placeholder(0,0,W,H,'Drop a photo of the work');
+  ctx.restore();
+
+  /* Photo fade and panel opacity are separate on purpose. The fade settles a
+     busy or bright photograph across the whole frame; the panel opacity is
+     what makes the quote readable. Tie them together and you can't calm the
+     image without burying it. */
+  const fade = Number(val('imgFade'))||0;
+  if(fade>0){ ctx.fillStyle=rgba(SOIL,fade); ctx.fillRect(0,0,W,H); }
+
+  const inset = Math.round(W*0.062);
+  const ipad  = Math.round(W*0.070);
+  const panelW= W - inset*2;
+  const maxTxt= panelW - ipad*2;
+
+  const ruleGap = Math.round(W*0.048);
+  const attrSize= Math.round(W*0.0215);
+  const gapB    = Math.round(W*0.052);
+
+  const roomForQuote = (safeFootY(W,H)-safeHeadY(W,H))*0.74 - ipad*2 - ruleGap - gapB - attrSize*2.4;
+  const qFit = fitText(quoteText(), maxTxt, roomForQuote, 8,
+                       {fam:GROT,w:600,em:-0.03,color:PAPER}, Math.round(W*0.050), 20, 1.22);
+  const quoteH = qFit.lines.length*qFit.size*1.22;
+  const panelH = ipad*2 + 2 + ruleGap + quoteH + gapB + attrSize*2.4;
+
+  const minY = safeHeadY(W,H);
+  const maxY = Math.max(minY, safeFootY(W,H) - panelH);
+  const panelY = val('pos')==='High'
+    ? Math.min(Math.max(minY, Math.round(H*0.052)), maxY)
+    : Math.min(Math.max(minY, Math.round((minY + safeFootY(W,H) - panelH)/2)), maxY);
+
+  ctx.fillStyle = rgba(SOIL, Number(val('panelOp'))||0.82);
+  ctx.fillRect(inset, panelY, panelW, panelH);
+
+  let y = panelY + ipad;
+  hairline(inset+ipad, y, Math.round(W*0.09), BEET);
+  y += ruleGap;
+
+  setType({fam:GROT,w:600,s:qFit.size,ls:-qFit.size*0.03,color:PAPER});
+  y = drawLines(qFit.lines, inset+ipad, y, qFit.size, 1.22) + gapB;
+
+  setType({fam:BODY,w:500,s:attrSize,ls:.2,color:PAPER,baseline:'top'});
+  ctx.fillText(val('who'), inset+ipad, y);
+  setType({fam:BODY,w:400,s:attrSize*0.92,ls:attrSize*0.06,color:BEET,baseline:'top'});
+  ctx.fillText(val('source').toUpperCase(), inset+ipad, y + attrSize*1.4);
+
+  if(val('pMarkR')){
+    const mh = Math.round(W*0.042);
+    vGradient(0,H-Math.round(H*0.16),W,Math.round(H*0.16),[[0,rgba(SOIL,0)],[1,rgba(SOIL,.78)]]);
+    drawWordmark(Math.round(W*0.068), safeFootY(W,H)-wordmarkH(mh)+10, mh, PAPER, STONE);
+  }
+  resetType();
+}
+
+const RENDER = {
+
+/* ---- Pillar 1 · The Work — client work under the veil ---- */
+'work'(W,H){
+  ctx.fillStyle=SOIL; ctx.fillRect(0,0,W,H);
+  const im=S.imgs[0];
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+  if(im.img) coverDraw(im.img,0,0,W,H,im);
+  else placeholderGround(0,0,W,H);
+  ctx.restore();
+  veil(W,H);
+  if(!im.img) placeholderLabel(0,0,W,H*0.9,'Drop the finished-work photo');
+
+  const pad = Math.round(W*0.068);
+  const footY = safeFootY(W,H);
+
+  /* the clay plate, hard to the left edge — the one square-ish radius in the
+     brand is 2px, which at 1080 is invisible, so it is drawn flat */
+  const plateS = Math.round(W*0.0215);
+  const plateTxt = [val('wClient'), val('wSuburb')].filter(Boolean).join('  ·  ').toUpperCase();
+  setType({fam:BODY,w:600,s:plateS,ls:plateS*0.07,baseline:'middle'});
+  const plateW = ctx.measureText(plateTxt).width + pad*1.4;
+  const plateH = plateS*2.7;
+  const plateY = footY - plateH;
+  ctx.fillStyle=CLAY_DEEP; ctx.fillRect(0, plateY, plateW, plateH);
+  setType({fam:BODY,w:600,s:plateS,ls:plateS*0.07,color:BTN,baseline:'middle'});
+  ctx.fillText(plateTxt, pad*0.7, plateY + plateH/2 + 1);
+
+  /* headline, bottom-left, sitting above the plate */
+  const cfg = {color:PAPER, serifColor:STONE, em:-0.045, weight:600};
+  const fit = fitRich(val('wTitle'), W-pad*2, H*0.30, 3, cfg, Math.round(W*0.082), 34, 1.0);
+  const blockH = fit.lines.length*fit.size*1.0;
+  const titleY = plateY - Math.round(W*0.052) - blockH;
+  drawRich(fit.lines, pad, titleY, fit.size, 1.0, cfg);
+
+  const scope = val('wScope').trim();
+  if(scope){
+    const sS = Math.round(W*0.0205);
+    setType({fam:BODY,w:400,s:sS,ls:sS*0.06,color:STONE,baseline:'alphabetic'});
+    ctx.fillText(scope.toUpperCase(), pad, titleY - Math.round(W*0.028));
+  }
+  if(val('wMark')){
+    const mh=Math.round(W*0.044);
+    drawWordmark(pad, safeHeadY(W,H), mh, PAPER, STONE);
+  }
+  resetType();
+},
+
+/* ---- Pillar 2 · The Number — one measured outcome, nothing else ---- */
+'number'(W,H){
+  const g = groundSet(val('nGround'));
+  paintBg(W,H,g.bg);
+
+  const pad = Math.round(W*0.082);
+  const headY = safeHeadY(W,H), footY = safeFootY(W,H);
+
+  hairline(pad, headY + Math.round(W*0.03), Math.round(W*0.10), g.accent);
+
+  /* the figure: as large as it can be without crowding the label under it */
+  const figSize = Math.round(W*0.30);
+  setType({fam:GROT,w:600,s:figSize,ls:-figSize*0.05,color:g.ink,baseline:'alphabetic'});
+  const fig = val('nFigure');
+  let fs = figSize;
+  while(ctx.measureText(fig).width > W-pad*2 && fs > 60){
+    fs -= 6; setType({fam:GROT,w:600,s:fs,ls:-fs*0.05,color:g.ink});
+  }
+
+  const unitFit = fitText(val('nUnit'), W-pad*2, H*0.18, 3,
+                          {fam:GROT,w:600,em:-0.04,color:g.ink}, Math.round(W*0.058), 26, 1.02);
+  const ctxFit  = fitText(val('nContext'), W-pad*2, H*0.20, 4,
+                          {fam:BODY,w:400,color:g.quiet}, Math.round(W*0.0285), 18, 1.5);
+
+  const unitH = unitFit.lines.length*unitFit.size*1.02;
+  const ctxH  = ctxFit.lines.length*ctxFit.size*1.5;
+  const total = fs*0.86 + Math.round(W*0.022) + unitH + Math.round(W*0.048) + ctxH;
+  let y = Math.max(headY + Math.round(W*0.09), (headY + footY - total)/2);
+
+  setType({fam:GROT,w:600,s:fs,ls:-fs*0.05,color:g.ink,baseline:'alphabetic'});
+  ctx.fillText(fig, pad, y + fs*0.80);
+  y += fs*0.86 + Math.round(W*0.022);
+
+  setType({fam:GROT,w:600,s:unitFit.size,ls:-unitFit.size*0.04,color:g.ink});
+  y = drawLines(unitFit.lines, pad, y, unitFit.size, 1.02) + Math.round(W*0.048);
+
+  setType({fam:BODY,w:400,s:ctxFit.size,ls:0,color:g.quiet});
+  drawLines(ctxFit.lines, pad, y, ctxFit.size, 1.5);
+
+  if(val('nMark')){
+    const mh=Math.round(W*0.042);
+    drawWordmark(pad, footY - wordmarkH(mh) + 10, mh, g.mark, ampFor(g.bg));
+  }
+  resetType();
+},
+
+/* ---- Pillar 3 · The Proof — a client in their own words ---- */
+'proof'(W,H){
+  if(val('layout')==='Panel on photo') return proofPanel(W,H);
+  const g = groundSet(val('ground'));
+  paintBg(W,H,g.bg);
+
+  const pad = Math.round(W*0.086);
+  const headY = safeHeadY(W,H), footY = safeFootY(W,H);
+
+  hairline(pad, headY + Math.round(W*0.028), Math.round(W*0.10), g.accent);
+
+  const attrH = Math.round(W*0.125);
+  const top   = headY + Math.round(W*0.088);
+  const avail = footY - top - attrH;
+
+  const qFit = fitText(quoteText(), W-pad*2, avail, 9,
+                       {fam:GROT,w:600,em:-0.035,color:g.ink}, Math.round(W*0.062), 24, 1.1);
+  setType({fam:GROT,w:600,s:qFit.size,ls:-qFit.size*0.035,color:g.ink});
+  drawLines(qFit.lines, pad, top, qFit.size, 1.1);
+
+  const aY = footY - attrH;
+  setType({fam:BODY,w:500,s:Math.round(W*0.0275),ls:.2,color:g.ink,baseline:'top'});
+  ctx.fillText(val('who'), pad, aY);
+  setType({fam:BODY,w:400,s:Math.round(W*0.0205),ls:Math.round(W*0.0205)*0.06,color:g.accent,baseline:'top'});
+  ctx.fillText(val('source').toUpperCase(), pad, aY + Math.round(W*0.044));
+
+  if(val('pMarkR')){
+    const mh=Math.round(W*0.042);
+    drawWordmark(W-pad-wordmarkW(mh), footY-wordmarkH(mh)+10, mh, g.mark, ampFor(g.bg));
+  }
+  resetType();
+},
+
+/* ---- Pillar 4 · The Nine Doors — the carousel that feeds the free check ---- */
+'doors'(W,H){
+  const sl = curSlide();
+  paintBg(W,H,PAPER,sl.img);
+  const onPhoto = !!sl.img.img;
+  const pad = Math.round(W*0.082);
+  const quiet = onPhoto ? rgba(INK,.72) : rgba(INK,.62);
+
+  setType({fam:BODY,w:600,s:Math.round(W*0.0225),ls:Math.round(W*0.0225)*0.08,color:BEET_DEEP,baseline:'top'});
+  ctx.fillText(String(sl.num).toUpperCase(), pad, pad);
+
+  /* Heading, rule and body are measured as one block and optically centred in
+     the space between the door marker and the footer. A slide with two lines of
+     body and one with five then sit on the same axis, which is what makes a
+     carousel feel like one object as you swipe rather than five loose pages. */
+  const cfg = {color:INK, serifColor:BEET_DEEP, em:-0.042, weight:600};
+  const hFit = fitRich(sl.heading, W-pad*2, H*0.34, 4, cfg, Math.round(W*0.078), 32, 1.02);
+  const hH = hFit.lines.length*hFit.size*1.02;
+
+  const bSize = Math.round(W*0.0295);
+  setType({fam:BODY,w:400,s:bSize,ls:0,color:quiet});
+  const bLines = wrapLines(sl.body, W-pad*2);
+  const bH = bLines.length*bSize*1.52;
+
+  const gapRule = Math.round(W*0.030), gapBody = Math.round(W*0.042);
+  const blockH = hH + gapRule + 2 + gapBody + bH;
+  const top    = pad + Math.round(W*0.082);
+  const bottom = safeFootY(W,H) - Math.round(W*0.060);
+  let y = top + Math.max(0, (bottom - top - blockH)/2);
+
+  y = drawRich(hFit.lines, pad, y, hFit.size, 1.02, cfg) + gapRule;
+
+  /* the hairline rule — 45% of the column, never full width */
+  hairline(pad, y, (W-pad*2)*0.45, rgba(INK,.22));
+  y += gapBody;
+
+  setType({fam:BODY,w:400,s:bSize,ls:0,color:quiet});
+  drawLines(bLines, pad, y, bSize, 1.52);
+
+  const foot=(S.v.carFoot||'').trim();
+  const total=S.slides.length;
+  if(foot){
+    const fS=Math.round(W*0.0205);
+    setType({fam:BODY,w:600,s:fS,ls:fS*0.07,color:BEET_DEEP,baseline:'alphabetic'});
+    const label = (S.slideIdx+1 < total) ? 'SWIPE  ·  '+foot.toUpperCase() : foot.toUpperCase()+'  →';
+    ctx.fillText(label, pad, safeFootY(W,H));
+  }
+  const mh=Math.round(W*0.040);
+  drawWordmark(W-pad-wordmarkW(mh), safeFootY(W,H)-wordmarkH(mh)+10, mh, INK, BEET_DEEP);
+  resetType();
+},
+
+/* ---- Pillar 5 · Michael — a reel cover that reads at thumbnail size ---- */
+'michael'(W,H){
+  ctx.fillStyle=SOIL; ctx.fillRect(0,0,W,H);
+  const im=S.imgs[0];
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+  if(im.img) coverDraw(im.img,0,0,W,H,im);
+  else placeholderGround(0,0,W,H);
+  ctx.restore();
+  veil(W,H,0.85);
+  if(!im.img) placeholderLabel(0,0,W,H*0.75,'Drop the frame of Michael');
+
+  const pad = Math.round(W*0.068);
+  const gc  = gridCrop(W,H);
+  /* Two crops are in play and the block has to clear both: the 3:4 thumbnail
+     the profile grid takes from the centre, and the reply rail at the foot of
+     the full-screen player. 'Bottom' means the foot of the SAFE frame, never
+     the foot of the pixels. */
+  const anchor = val('place')==='Bottom' ? safeFootY(W,H)
+               : Math.min(gc.y + gc.h - pad*0.4, safeFootY(W,H));
+
+  const cfg = {color:PAPER, serifColor:STONE, em:-0.045, weight:600};
+  const qFit = fitRich(val('question'), W-pad*2.8, H*0.30, 4, cfg, Math.round(W*0.086), 34, 1.0);
+  const nameH = Math.round(W*0.072);
+  const qW = Math.max(...qFit.lines.map(l=>richLineW(l,qFit.size,cfg)), 0);
+  const blockH = qFit.lines.length*qFit.size*1.0 + nameH + pad*0.95;
+  const blockW = Math.min(W, qW + pad*1.7);
+  const by = anchor - blockH;
+
+  /* the soil plate with a beet edge — the site's row-hover state, made static */
+  ctx.fillStyle=rgba(SOIL,.94); ctx.fillRect(0, by, blockW, blockH);
+  ctx.fillStyle=BEET; ctx.fillRect(0, by, Math.round(W*0.007), blockH);
+
+  const endY = drawRich(qFit.lines, pad*0.88, by + pad*0.46, qFit.size, 1.0, cfg);
+
+  const nS = Math.round(W*0.0205);
+  setType({fam:BODY,w:500,s:nS,ls:nS*0.07,color:BEET,baseline:'top'});
+  ctx.fillText((val('mName')+'  ·  '+val('runtime')).toUpperCase(), pad*0.88, endY + Math.round(W*0.018));
+
+  if(val('mMark')){
+    const mh=Math.round(W*0.044);
+    drawWordmark(pad, safeHeadY(W,H), mh, PAPER, STONE);
+  }
+  resetType();
+},
+
+/* ---- Pillar 6 · The Position — the sentence, and nothing else ---- */
+'position'(W,H){
+  const g = groundSet(val('pGround'));
+  paintBg(W,H,g.bg);
+
+  const pad = Math.round(W*0.078);
+  const headY = safeHeadY(W,H), footY = safeFootY(W,H);
+
+  const eyebrow = val('pEyebrow').trim();
+  if(eyebrow){
+    const eS = Math.round(W*0.0205);
+    setType({fam:BODY,w:400,s:eS,ls:eS*0.07,color:g.quiet,baseline:'top'});
+    ctx.fillText(eyebrow.toUpperCase(), pad, headY);
+  }
+
+  const foot = val('pFoot').trim();
+  const fS = Math.round(W*0.0225);
+  const footBlock = foot ? fS*1.9 + Math.round(W*0.03) : 0;
+  const markBlock = val('pMark') ? wordmarkH(Math.round(W*0.042)) + Math.round(W*0.032) : 0;
+
+  /* the statement sets as large as the frame allows — it is the whole tile */
+  const cfg = {color:g.ink, serifColor:g.accent, em:-0.048, weight:600};
+  const top = headY + Math.round(W*0.075);
+  const room = footY - top - footBlock - markBlock;
+  const sFit = fitRich(val('statement'), W-pad*2, room, 5, cfg, Math.round(W*0.135), 40, 0.94);
+  const blockH = sFit.lines.length*sFit.size*0.94;
+  drawRich(sFit.lines, pad, footY - footBlock - markBlock - blockH, sFit.size, 0.94, cfg);
+
+  let y = footY;
+  if(val('pMark')){
+    const mh = Math.round(W*0.042);
+    drawWordmark(pad, y - wordmarkH(mh) + 10, mh, g.mark, ampFor(g.bg));
+    y -= wordmarkH(mh) + Math.round(W*0.032);
+  }
+  if(foot){
+    setType({fam:BODY,w:400,s:fS,ls:fS*0.06,color:g.quiet,baseline:'alphabetic'});
+    ctx.fillText(foot.toUpperCase(), pad, y - Math.round(W*0.012));
+  }
+  resetType();
+}
+};
+
+/* The Stories / Reels playback chrome on a 1080×1920 frame: the profile chip
+   and audio line at the top, the caption, sound credit and reply rail at the
+   foot. Nothing readable may sit inside these bands. Declared once so the
+   guides and the templates can never disagree about where the foot of a
+   design is — that mismatch is exactly how a title ends up under the reply bar. */
+const UI_SAFE = {top:250, bottom:330};
+function safeFootY(W,H){
+  const pad = Math.round(W*0.068);
+  return S.fmt==='9:16' ? H - UI_SAFE.bottom - Math.round(W*0.035) : H - pad;
+}
+function safeHeadY(W,H){
+  const pad = Math.round(W*0.068);
+  return S.fmt==='9:16' ? UI_SAFE.top + Math.round(W*0.025) : pad;
+}
+/* the 3:4 window Instagram crops every profile-grid thumbnail to */
+function gridCrop(W,H){
+  const cw = Math.min(W, H*0.75), ch = cw/0.75;
+  return {x:(W-cw)/2, y:(H-ch)/2, w:cw, h:ch};
+}
+
+function drawGuides(W,H){
+  ctx.save();
+  ctx.strokeStyle=rgba(BEET,.8); ctx.lineWidth=3; ctx.setLineDash([14,10]);
+  ctx.strokeRect(64,64,W-128,H-128);
+
+  const g = gridCrop(W,H);
+  if(g.w < W-2 || g.h < H-2){
+    ctx.setLineDash([14,10]); ctx.strokeStyle=rgba(CLAY_LIFT,.9); ctx.lineWidth=4;
+    ctx.strokeRect(g.x, g.y, g.w, g.h);
+    setType({fam:BODY,w:600,s:22,ls:1.8,color:rgba(CLAY_LIFT,.95),baseline:'top'});
+    ctx.fillText('3:4 GRID CROP', g.x+16, g.y+14);
+  }
+  if(S.fmt==='9:16'){
+    ctx.fillStyle=rgba(BEET,.14);
+    const T=UI_SAFE.top, B=H-UI_SAFE.bottom;
+    ctx.fillRect(0,0,W,T); ctx.fillRect(0,B,W,UI_SAFE.bottom);
+    ctx.setLineDash([]); ctx.strokeStyle=rgba(BEET,.65); ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(0,T); ctx.lineTo(W,T); ctx.moveTo(0,B); ctx.lineTo(W,B); ctx.stroke();
+    setType({fam:BODY,w:600,s:22,ls:1.8,color:rgba(BEET,.95),baseline:'top'});
+    ctx.fillText('UI SAFE ZONE', 24, T-34);
+    ctx.fillText('UI SAFE ZONE', 24, B+14);
+  }
+  ctx.restore(); resetType();
+}
+
+/* ------------------------------------------------------------ carousel strip */
+const stripEl = document.getElementById('strip');
+function renderStrip(){
+  stripEl.hidden = false;
+  stripEl.innerHTML = '<span class="striplbl">Carousel</span>';
+  const [W,H] = FORMATS[S.fmt];
+  const keep = S.slideIdx;
+  S.slides.forEach((sl,i)=>{
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const octx = off.getContext('2d');
+    S.slideIdx = i;
+    withCtx(octx, ()=> paint(W,H));
+    off.dataset.on = (i===keep)?'1':'0';
+    off.title = 'Slide '+(i+1);
+    off.onclick = ()=>{ S.slideIdx=i; buildAll(); };
+    stripEl.appendChild(off);
+  });
+  S.slideIdx = keep;
+}
+
+/* ------------------------------------------------------------------ sidebar */
+const elTpl=document.getElementById('tplList'), elFields=document.getElementById('fields'),
+      elSlots=document.getElementById('slots'), elFmt=document.getElementById('fmtSeg'),
+      elImgGroup=document.getElementById('imgGroup'), elFname=document.getElementById('fname'),
+      elSlideGroup=document.getElementById('slideGroup'), elSlideNav=document.getElementById('slideNav'),
+      elScrimRow=document.getElementById('scrimRow'), elImgLabel=document.getElementById('imgLabel'),
+      elImgHint=document.getElementById('imgHint');
+
+function buildTemplates(){
+  elTpl.innerHTML='';
+  for(const [k,t] of Object.entries(TEMPLATES)){
+    const b=document.createElement('button');
+    b.type='button'; b.className='tpl-btn'; b.id='tpl-'+k;
+    b.setAttribute('aria-pressed', String(k===S.tpl));
+    b.innerHTML = `${t.label}<small>${t.kind}</small>`;
+    b.onclick = ()=>{
+      S.tpl=k;
+      if(!TEMPLATES[k].formats.includes(S.fmt)) S.fmt = TEMPLATES[k].defaultFmt;
+      buildAll();
+    };
+    elTpl.appendChild(b);
+  }
+}
+function buildFormats(){
+  const allow = TEMPLATES[S.tpl].formats;
+  elFmt.querySelectorAll('button').forEach(b=>{
+    const f=b.dataset.fmt;
+    b.disabled = !allow.includes(f);
+    b.setAttribute('aria-pressed', String(f===S.fmt));
+    b.onclick = ()=>{ S.fmt=f; buildAll(); };
+  });
+}
+function buildSlideNav(){
+  const t = TEMPLATES[S.tpl];
+  elSlideGroup.hidden = !t.slides;
+  if(!t.slides) return;
+  elSlideNav.innerHTML='';
+  S.slides.forEach((sl,i)=>{
+    const b=document.createElement('button');
+    b.type='button'; b.className='pipbtn'; b.textContent=i+1;
+    b.setAttribute('aria-pressed', String(i===S.slideIdx));
+    b.onclick=()=>{ S.slideIdx=i; buildAll(); };
+    elSlideNav.appendChild(b);
+  });
+}
+function buildFields(){
+  elFields.innerHTML='';
+  const t = TEMPLATES[S.tpl];
+  for(const f of t.fields){
+    const perSlide = t.slides && f.perSlide;
+    const get = ()=> perSlide ? curSlide()[f.k] : S.v[f.k];
+    const set = x => { if(perSlide) curSlide()[f.k]=x; else S.v[f.k]=x; };
+    const d=document.createElement('div'); d.className='field';
+    const id='f-'+f.k;
+    if(f.t==='check'){
+      d.innerHTML = `<label class="check"><input type="checkbox" id="${id}"> ${f.l}</label>`;
+      elFields.appendChild(d);
+      const i=d.querySelector('input'); i.checked=!!get();
+      i.oninput=()=>{ set(i.checked); render(); };
+      continue;
+    }
+    if(f.t==='range'){
+      d.innerHTML = `<label for="${id}">${f.l}</label>
+        <div class="range"><input type="range" id="${id}" min="${f.min}" max="${f.max}" step="${f.step}"><b></b></div>`;
+      elFields.appendChild(d);
+      const i=d.querySelector('input'), out=d.querySelector('b');
+      const show=()=>{ out.textContent = Math.round(parseFloat(i.value)*100)+'%'; };
+      i.value = get(); show();
+      i.oninput=()=>{ set(parseFloat(i.value)); show(); render(); };
+      continue;
+    }
+    const tag = perSlide ? ` <span style="color:var(--beet)">· slide ${S.slideIdx+1}</span>` : '';
+    if(f.t==='area')        d.innerHTML=`<label for="${id}">${f.l}${tag}</label><textarea id="${id}"></textarea>`;
+    else if(f.t==='select') d.innerHTML=`<label for="${id}">${f.l}</label><select id="${id}">${f.opts.map(o=>`<option>${o}</option>`).join('')}</select>`;
+    else                    d.innerHTML=`<label for="${id}">${f.l}${tag}</label><input type="text" id="${id}">`;
+    elFields.appendChild(d);
+    const i=d.querySelector('input,textarea,select');
+    i.value = get() ?? '';
+    i.oninput = ()=>{
+      set(i.value);
+      /* the veil slider belongs to some layouts and not others */
+      if(f.k==='layout'||f.k==='nGround'||f.k==='pGround'||f.k==='ground') buildSlots();
+      render(); updateName();
+      if(TEMPLATES[S.tpl].slides) buildSlideNav();
+    };
+  }
+}
+function buildSlots(){
+  const t = TEMPLATES[S.tpl];
+  const n = imageSlots();
+  elImgGroup.hidden = n===0;
+  elImgLabel.textContent = t.bg ? 'Background photo (optional)' : 'Photo';
+  elImgHint.textContent = t.slides
+    ? 'Each slide keeps its own background — most Doors slides read better with none.'
+    : 'Drop an image here or onto the canvas. Drag the canvas to reposition, double-click to reset.';
+  elSlots.innerHTML='';
+  if(n===0){ elScrimRow.hidden=true; return; }
+
+  for(let i=0;i<n;i++){
+    const im = slotAt(i);
+    const box=document.createElement('div'); box.className='slot';
+    const title = t.slides ? `Slide ${S.slideIdx+1} background` : (t.bg?'Background':'Photo');
+    box.innerHTML=`
+      <div class="slot-drop ${im.img?'filled':''}" tabindex="0" role="button">
+        <b>${title}</b>${im.img ? (im.name||'loaded') : 'Click or drop an image'}
+      </div>
+      <div class="range" style="padding:9px 11px">
+        <span>Zoom</span><input type="range" min="1" max="3" step="0.01" value="${im.zoom}">
+        <button class="mini" type="button">Reset</button>
+      </div>`;
+    const drop=box.querySelector('.slot-drop');
+    const file=document.createElement('input');
+    file.type='file'; file.accept='image/*'; file.style.display='none'; box.appendChild(file);
+    drop.onclick=()=>{ S.active=i; file.click(); };
+    drop.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); S.active=i; file.click(); } };
+    file.onchange=()=>{ if(file.files[0]) loadImage(file.files[0], i); };
+    ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+    ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+    drop.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) loadImage(f,i); });
+    const range=box.querySelector('input[type=range]');
+    range.oninput=()=>{ slotAt(i).zoom=parseFloat(range.value); render(); };
+    box.querySelector('.mini').onclick=()=>{ const s=slotAt(i); s.zoom=1;s.ox=0;s.oy=0; range.value=1; render(); };
+    elSlots.appendChild(box);
+  }
+  const anyImg = !!slotAt(0).img;
+  /* the panel layout carries its own two sliders, so the shared veil row
+     would just be a third control that does nothing */
+  const panelProof = S.tpl==='proof' && S.v.layout==='Panel on photo';
+  elScrimRow.hidden = !(t.bg && anyImg) || panelProof;
+  document.getElementById('scrim').value = S.scrim;
+  document.getElementById('scrimVal').textContent = Math.round(S.scrim*100)+'%';
+}
+function slotAt(i){ return TEMPLATES[S.tpl].slides ? curSlide().img : S.imgs[i]; }
+function imageSlots(){
+  const t = TEMPLATES[S.tpl];
+  if(t.slides) return 1;
+  return t.images;
+}
+
+function loadImage(file, slot){
+  const img=new Image();
+  img.onload=()=>{
+    const rec = {img, name:file.name, zoom:1, ox:0, oy:0};
+    if(TEMPLATES[S.tpl].slides) curSlide().img = rec; else S.imgs[slot] = rec;
+    S.active=slot; buildSlots(); render(); updateName(); toast('Photo loaded');
+  };
+  img.onerror=()=>toast('Could not read that file');
+  img.src=URL.createObjectURL(file);
+}
+function buildAll(){
+  buildTemplates(); buildFormats(); buildSlideNav(); buildFields(); buildSlots();
+  const t = TEMPLATES[S.tpl];
+  document.getElementById('stTpl').textContent = t.label;
+  const [W,H]=FORMATS[S.fmt];
+  document.getElementById('stSize').textContent = `${W} × ${H}`;
+  document.getElementById('saveAll').hidden = !t.slides;
+  if(!t.slides) stripEl.hidden = true;
+  render(); updateName();
+}
+
+/* ------------------------------------------------------------- file naming */
+function slug(s){
+  return stripMarks(String(s||'')).toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-|-$/g,'').slice(0,34);
+}
+function today(){ const d=new Date(), p=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+function fileName(idx){
+  const t=TEMPLATES[S.tpl];
+  const tag = t.slides ? slug(S.slides[S.slideIdx].heading)
+            : slug(S.v.wClient || S.v.wTitle || S.v.nUnit || S.v.who || S.v.question || S.v.statement || '');
+  const parts=['beetsandco', today(), S.tpl, tag];
+  if(idx!=null) parts.push('s'+(idx+1));
+  return parts.filter(Boolean).join('_')+'.png';
+}
+function updateName(){
+  elFname.textContent = TEMPLATES[S.tpl].slides ? fileName(S.slideIdx) : fileName();
+}
+
+/* ------------------------------------------------------------------ export */
+function exportBlob(cb){
+  const g=S.guides;
+  if(g){ S.guides=false; render(); }
+  cv.toBlob(b=>{ if(g){ S.guides=true; render(); } cb(b); }, 'image/png');
+}
+/* Two places this file runs, and they save files differently. Opened from
+   disk it is an ordinary page, so an <a download> works. Opened as a
+   published artifact the frame can't download at all — the viewer has to be
+   offered the file and accept it. Resolve which one once, and let every
+   caller just await download(). */
+const DL = (async()=>{
+  try{ return (await window.claude?.use?.('downloads')) ?? null; }
+  catch(e){ return null; }
+})();
+
+async function download(blob, name){
+  const dl = await DL;
+  if(dl){
+    try{
+      const r = await dl.save({filename:name, data:blob});
+      if(r.status==='saved') toast('Saved '+name);
+      return true;
+    }catch(err){
+      const code = err && err.code;
+      if(code==='declined') return false;
+      if(code==='rate_limited'){ toast('One save at a time — try that again'); return false; }
+      toast('Could not save '+name);
+      return false;
+    }
+  }
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+  toast('Saved '+name);
+  return true;
+}
+function canvasBlob(){ return new Promise(res=>cv.toBlob(res,'image/png')); }
+
+document.getElementById('save').onclick=()=>{
+  const n = TEMPLATES[S.tpl].slides ? fileName(S.slideIdx) : fileName();
+  exportBlob(b=>download(b,n));
+};
+/* Saved one at a time and awaited: with the artifact download capability each
+   file is a separate confirmation, and firing them together gets every save
+   after the first refused as rate-limited. */
+document.getElementById('saveAll').onclick=async()=>{
+  const keep=S.slideIdx, total=S.slides.length;
+  const g=S.guides; if(g) S.guides=false;
+  let n=0;
+  for(let i=0;i<total;i++){
+    S.slideIdx=i; render();
+    const ok = await download(await canvasBlob(), fileName(i));
+    if(ok) n++; else break;
+  }
+  S.slideIdx=keep; S.guides=g; buildAll();
+  if(n===total) toast('Saved '+total+' slides');
+  else if(n>0)  toast('Saved '+n+' of '+total);
+};
+document.getElementById('copy').onclick=()=>{
+  exportBlob(async b=>{
+    try{ await navigator.clipboard.write([new ClipboardItem({'image/png':b})]); toast('Copied to clipboard'); }
+    catch(e){ toast('Copy blocked — use Save PNG'); }
+  });
+};
+document.getElementById('addSlide').onclick=()=>{
+  S.slides.push(blankSlide(S.slides.length+1));
+  S.slideIdx=S.slides.length-1; buildAll(); };
+document.getElementById('delSlide').onclick=()=>{
+  if(S.slides.length<=1){ toast('Need at least one slide'); return; }
+  S.slides.splice(S.slideIdx,1);
+  S.slideIdx=Math.max(0,S.slideIdx-1); buildAll(); };
+document.getElementById('scrim').oninput=e=>{
+  S.scrim=parseFloat(e.target.value);
+  document.getElementById('scrimVal').textContent=Math.round(S.scrim*100)+'%';
+  render(); };
+document.getElementById('guides').oninput=e=>{ S.guides=e.target.checked; render(); };
+
+/* ---------------------------------------------------- canvas drag and drop */
+let drag=null;
+cv.addEventListener('pointerdown',e=>{
+  if(imageSlots()===0) return;
+  const im=slotAt(S.active); if(!im || !im.img) return;
+  drag={x:e.clientX,y:e.clientY,ox:im.ox,oy:im.oy,r:cv.getBoundingClientRect(),im};
+  cv.setPointerCapture(e.pointerId); cv.classList.add('dragging');
+});
+cv.addEventListener('pointermove',e=>{
+  if(!drag) return;
+  drag.im.ox = drag.ox + (e.clientX-drag.x)/drag.r.width;
+  drag.im.oy = drag.oy + (e.clientY-drag.y)/drag.r.height;
+  render();
+});
+['pointerup','pointercancel'].forEach(ev=>cv.addEventListener(ev,()=>{ drag=null; cv.classList.remove('dragging'); }));
+cv.addEventListener('dblclick',()=>{
+  const im=slotAt(S.active);
+  if(im&&im.img){ im.ox=0;im.oy=0;im.zoom=1; buildSlots(); render(); }
+});
+['dragenter','dragover'].forEach(ev=>cv.addEventListener(ev,e=>{e.preventDefault();cv.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>cv.addEventListener(ev,e=>{e.preventDefault();cv.classList.remove('over');}));
+cv.addEventListener('drop',e=>{
+  const f=e.dataTransfer.files[0];
+  if(f && imageSlots()>0) loadImage(f, Math.min(S.active, imageSlots()-1));
+});
+window.addEventListener('keydown',e=>{
+  if(S.view!=='studio') return;
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+  const im=slotAt(S.active); if(!im||!im.img) return;
+  const step=e.shiftKey?0.02:0.005;
+  const map={ArrowLeft:[-step,0],ArrowRight:[step,0],ArrowUp:[0,-step],ArrowDown:[0,step]};
+  if(map[e.key]){ e.preventDefault(); im.ox+=map[e.key][0]; im.oy+=map[e.key][1]; render(); }
+});
+
+/* ============================================================ grid planner */
+const GKEY='beetsandco.gridplan.v1';
+const pgrid=document.getElementById('pgrid');
+
+function planLoad(){
+  try{ S.grid = JSON.parse(localStorage.getItem(GKEY)||'[]'); }catch(e){ S.grid=[]; }
+  if(!Array.isArray(S.grid)) S.grid=[];
+}
+function planSave(){
+  try{
+    localStorage.setItem(GKEY, JSON.stringify(S.grid));
+    const kb = Math.round(JSON.stringify(S.grid).length/1024);
+    document.getElementById('planSize').textContent = `Saved in this browser · ${S.grid.length} tiles, ${kb} KB`;
+  }catch(e){
+    toast('Storage full — export the plan and clear some tiles');
+  }
+}
+/* 3:4 centre-crop thumbnail — exactly how Instagram renders the profile grid */
+function thumbFrom(src, cb){
+  const TW=360, TH=480;
+  const off=document.createElement('canvas'); off.width=TW; off.height=TH;
+  const c=off.getContext('2d');
+  let cw=Math.min(src.width, src.height*0.75), ch=cw/0.75;
+  if(ch>src.height){ ch=src.height; cw=ch*0.75; }
+  c.drawImage(src,(src.width-cw)/2,(src.height-ch)/2,cw,ch,0,0,TW,TH);
+  cb(off.toDataURL('image/jpeg',0.82));
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function planRender(){
+  pgrid.innerHTML='';
+  const slots = Math.max(9, Math.ceil((S.grid.length+1)/3)*3);
+  for(let i=0;i<slots;i++){
+    const item=S.grid[i];
+    const t=document.createElement('div');
+    t.className='ptile'+(item?' filled':' empty');
+    t.draggable=!!item; t.dataset.i=i;
+    if(item){
+      t.innerHTML=`<img src="${item.thumb}" alt=""><span class="idx">${i+1}</span>
+        <button class="del" type="button" title="Remove">×</button>
+        <span class="lbl">${item.label? escapeHtml(item.label) : 'Add note'}</span>`;
+      t.querySelector('.del').onclick=e=>{ e.stopPropagation(); S.grid.splice(i,1); planSave(); planRender(); };
+      t.onclick=()=>{
+        const v=prompt('Caption note for this tile:', item.label||'');
+        if(v!==null){ item.label=v; planSave(); planRender(); }
+      };
+    }else{
+      t.textContent='Empty';
+    }
+    t.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',String(i)); t.classList.add('dragging'); });
+    t.addEventListener('dragend',()=>t.classList.remove('dragging'));
+    t.addEventListener('dragover',e=>{ e.preventDefault(); t.classList.add('dragover'); });
+    t.addEventListener('dragleave',()=>t.classList.remove('dragover'));
+    t.addEventListener('drop',e=>{
+      e.preventDefault(); e.stopPropagation(); t.classList.remove('dragover');
+      if(e.dataTransfer.files && e.dataTransfer.files.length){ planAddFiles(e.dataTransfer.files, i); return; }
+      const from=parseInt(e.dataTransfer.getData('text/plain'),10);
+      if(isNaN(from)||from===i) return;
+      const moved=S.grid.splice(from,1)[0];
+      if(!moved) return;
+      S.grid.splice(Math.min(i,S.grid.length),0,moved);
+      planSave(); planRender();
+    });
+    pgrid.appendChild(t);
+  }
+  document.getElementById('planCount').textContent = `${S.grid.length} tile${S.grid.length===1?'':'s'} planned`;
+  document.getElementById('planPosts').textContent = S.grid.length;
+}
+
+function planAddFiles(files, at){
+  const list=[...files].filter(f=>/^image\//.test(f.type));
+  if(!list.length) return;
+  let pending=list.length;
+  list.forEach((f,n)=>{
+    const img=new Image();
+    img.onload=()=>{
+      thumbFrom(img, dataUrl=>{
+        const rec={thumb:dataUrl, label:f.name.replace(/\.[a-z0-9]+$/i,'')};
+        if(at==null) S.grid.push(rec); else S.grid.splice(at+n,0,rec);
+        if(--pending===0){ planSave(); planRender(); toast('Added to plan'); }
+      });
+    };
+    img.onerror=()=>{ if(--pending===0){ planSave(); planRender(); } };
+    img.src=URL.createObjectURL(f);
+  });
+}
+document.getElementById('planFromCanvas').onclick=()=>{
+  const g=S.guides; if(g){ S.guides=false; render(); }
+  thumbFrom(cv, dataUrl=>{
+    if(g){ S.guides=true; render(); }
+    const t=TEMPLATES[S.tpl];
+    const raw = t.slides ? S.slides[S.slideIdx].heading
+      : (S.v.wTitle||S.v.nUnit||S.v.who||S.v.question||S.v.statement||t.label);
+    S.grid.push({thumb:dataUrl, label: stripMarks(raw)});
+    planSave(); planRender(); toast('Added to plan');
+  });
+};
+document.getElementById('planAddFiles').onclick=()=>{
+  const f=document.createElement('input');
+  f.type='file'; f.accept='image/*'; f.multiple=true;
+  f.onchange=()=>planAddFiles(f.files,null);
+  f.click();
+};
+['dragenter','dragover'].forEach(ev=>pgrid.addEventListener(ev,e=>e.preventDefault()));
+pgrid.addEventListener('drop',e=>{
+  e.preventDefault();
+  if(e.dataTransfer.files && e.dataTransfer.files.length) planAddFiles(e.dataTransfer.files,null);
+});
+document.getElementById('planExport').onclick=()=>{
+  const blob=new Blob([JSON.stringify(S.grid)],{type:'application/json'});
+  download(blob, `beetsandco_${today()}_grid-plan.json`);
+};
+document.getElementById('planImport').onclick=()=>{
+  const f=document.createElement('input'); f.type='file'; f.accept='application/json';
+  f.onchange=()=>{
+    const r=new FileReader();
+    r.onload=()=>{ try{
+      const d=JSON.parse(r.result);
+      if(Array.isArray(d)){ S.grid=d; planSave(); planRender(); toast('Plan imported'); }
+      else toast('Not a plan file');
+    }catch(e){ toast('Could not read that file'); } };
+    r.readAsText(f.files[0]);
+  };
+  f.click();
+};
+document.getElementById('planClear').onclick=()=>{
+  if(!S.grid.length) return;
+  if(confirm('Remove all '+S.grid.length+' tiles from the plan?')){ S.grid=[]; planSave(); planRender(); }
+};
+
+/* ------------------------------------------------------------------- views */
+function setView(v){
+  S.view=v;
+  const studio = v==='studio';
+  document.getElementById('tabStudio').setAttribute('aria-selected', String(studio));
+  document.getElementById('tabPlan').setAttribute('aria-selected', String(!studio));
+  document.getElementById('studioPanel').hidden = !studio;
+  document.getElementById('planPanel').hidden   = studio;
+  document.getElementById('studioBar').hidden   = !studio;
+  document.getElementById('planBar').hidden     = studio;
+  document.getElementById('studioStage').hidden = !studio;
+  document.getElementById('planStage').hidden   = studio;
+  document.getElementById('statusbar').hidden   = !studio;
+  stripEl.hidden = !(studio && TEMPLATES[S.tpl].slides);
+  if(!studio) planRender();
+}
+document.getElementById('tabStudio').onclick=()=>setView('studio');
+document.getElementById('tabPlan').onclick=()=>setView('plan');
+
+/* ------------------------------------------------------------------- toast */
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* -------------------------------------------------------------------- boot */
+planLoad(); planSave();
+buildAll();
+(async ()=>{
+  try{
+    await Promise.all([
+      document.fonts.load('600 40px "Bricolage Grotesque"'),
+      document.fonts.load('400 40px "Hanken Grotesk"'),
+      document.fonts.load('italic 400 40px "Instrument Serif"')
+    ]);
+    await document.fonts.ready;
+  }catch(e){}
+  /* document.fonts.load resolves even when the request failed, so verify.
+     All three faces are open-licence, so there is no "substitute" story here —
+     either the brand type is drawing or the file needs the network once. */
+  const g = document.fonts.check('600 40px "Bricolage Grotesque"');
+  const b = document.fonts.check('400 40px "Hanken Grotesk"');
+  const s = document.fonts.check('italic 400 40px "Instrument Serif"');
+  const st=document.getElementById('stFont');
+  if(g && b && s) st.innerHTML='Type <b>Bricolage · Hanken · Instrument</b>';
+  else{
+    const missing=[!g&&'Bricolage Grotesque',!b&&'Hanken Grotesk',!s&&'Instrument Serif'].filter(Boolean);
+    st.innerHTML=`<b style="color:#D45A41">Missing: ${missing.join(', ')}</b> — needs internet on first open`;
+    toast('Brand fonts unavailable — reload when online');
+  }
+  render();
+})();
+</script>
+</body>
+</html>
