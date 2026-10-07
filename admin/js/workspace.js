@@ -97,6 +97,7 @@ calendar: {
       {k:"pillar",l:"Pillar",t:"select",o:PILLARS},
       {k:"status",l:"Status",t:"status",o:["Planned","Asset ready","Caption written","Tim approved","Scheduled","Posted","Cancelled"]},
       {k:"content_item_id",l:"Assigned video / content",t:"content_ref",full:true},
+      {k:"carousel_item_ids",l:"Slides, in posting order",t:"carousel_picker",full:true},
       {k:"platforms",l:"Platforms",t:"multi",o:PLATFORMS,full:true},
       {k:"collaborators",l:"IG Collaborators",h:"Usernames, comma-separated, max 3 — feed/Reel only, overrides the content item's",t:"text"},
       {k:"tagged_accounts",l:"Tag accounts",h:"Usernames, comma-separated — feed/Reel only, overrides the content item's",t:"text"},
@@ -746,6 +747,8 @@ function fieldHTML(id,row,f){
     html += `<div id="coverref-${id}-${row.id}">${coverRefInner(id,row)}</div>`;
   } else if(f.t==='yt_settings'){
     html += ytSettingsHTML(row);
+  } else if(f.t==='carousel_picker'){
+    html += `<div id="carousel-${row.id}">${carouselPickerHTML(row)}</div>`;
   }
   if(f.h) html += `<div class="f-hint">${esc(f.h)}</div>`;
   html += `</div>`;
@@ -771,11 +774,73 @@ function fieldSectionHTML(id,row,title,keys){
 function calendarFieldsHTML(row){
   return fieldSectionHTML('calendar',row,'Schedule',['slot_date','slot_time','pillar','status'])
     + fieldSectionHTML('calendar',row,'Content',['content_item_id'])
+    + fieldSectionHTML('calendar',row,'Carousel (optional)',['carousel_item_ids'])
     + fieldSectionHTML('calendar',row,'Platforms',['platforms'])
     + fieldSectionHTML('calendar',row,'Tagging & cover',['collaborators','tagged_accounts','cover_image_url'])
     + fieldSectionHTML('calendar',row,'Text',['follow_up_comment','caption','notes'])
     + ytSectionHTML(row);
 }
+/* ---- Carousel picker (2026-10-07) ----
+   va_calendar_slots.carousel_item_ids = ordered jsonb array of content item
+   ids. The ARRAY ORDER IS THE SLIDE ORDER — items are appended in the order
+   they're added and can be reordered with ▲/▼; social-publish reads the array
+   front to back. 2+ items turns the slot into a carousel: Instagram feed gets
+   a real carousel, Facebook feed gets a multi-photo post (photos only). */
+function carouselIds(row){ return Array.isArray(row.carousel_item_ids) ? row.carousel_item_ids : []; }
+function carouselPickerHTML(row){
+  const ids = carouselIds(row);
+  const items = ids.map(id=>CALENDAR_CONTENT.find(c=>c.id===id));
+  let h = '';
+  if(ids.length){
+    h += '<div class="carousel-list">';
+    items.forEach((ci,i)=>{
+      const th = ci ? thumbFor(ci) : null;
+      h += `<div class="carousel-item" style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--paper2)">
+        <span style="font-weight:700;width:20px;text-align:center;color:var(--accent-deep)">${i+1}</span>
+        ${th?`<img src="${esc(th)}" data-fb="${esc(thumbFallback(ci))}" referrerpolicy="no-referrer" onerror="if(this.dataset.fb&&!this.dataset.tried){this.dataset.tried=1;this.src=this.dataset.fb}else{this.remove()}" style="width:44px;height:44px;object-fit:cover;border-radius:4px">`:`<span class="thumb-ph" style="width:44px;height:44px">${ci&&ci.type==='video'?'🎬':'🖼️'}</span>`}
+        <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(ci?(ci.name||'(untitled)'):'(missing item)')}${ci&&ci.type==='video'?' <span class="ar">video</span>':''}</span>
+        <button class="btn-sm" ${i===0?'disabled':''} onclick="carouselMove('${row.id}',${i},-1)" title="Move earlier">▲</button>
+        <button class="btn-sm" ${i===ids.length-1?'disabled':''} onclick="carouselMove('${row.id}',${i},1)" title="Move later">▼</button>
+        <button class="btn-sm" style="border-color:var(--bad);color:var(--bad)" onclick="carouselRemove('${row.id}',${i})" title="Remove">✕</button>
+      </div>`;
+    });
+    h += '</div>';
+  }
+  const avail = CALENDAR_CONTENT.filter(c=>(c.type==='photo'||c.type==='video') && !ids.includes(c.id));
+  h += `<select onchange="carouselAdd('${row.id}',this.value);this.value=''"><option value="">＋ Add a slide (added in this order)…</option>`
+     + avail.map(c=>`<option value="${c.id}">${esc((c.folder_path?c.folder_path+' / ':'')+(c.name||'(untitled)'))}${c.type==='video'?' — video':''}</option>`).join('')
+     + `</select>`;
+  const hasVideo = items.some(ci=>ci&&ci.type==='video');
+  const plats = Array.isArray(row.platforms)?row.platforms:[];
+  let note = 'Add 2–10 items to post as a carousel. Slide 1 is the first one you added; use ▲/▼ to reorder. Instagram feed = carousel; Facebook feed = multi-photo post (photos only). Leave empty for a normal single post.';
+  if(ids.length===1) note = '⚠ A carousel needs at least 2 items — add another, or remove this one to post normally.';
+  else if(ids.length>10) note = '⚠ Instagram allows at most 10 slides.';
+  else if(hasVideo && plats.includes('FB feed')) note = '⚠ Facebook multi-photo posts can’t include videos — remove the video or untick FB feed.';
+  h += `<div class="f-hint">${esc(note)}</div>`;
+  return h;
+}
+function refreshCarousel(rowId){
+  const row = CALENDAR_ROWS.find(x=>x.id===rowId); const el = document.getElementById('carousel-'+rowId);
+  if(row && el) el.innerHTML = carouselPickerHTML(row);
+  updateCalendarCardHead(rowId);
+}
+async function carouselSet(rowId,arr){
+  const row = CALENDAR_ROWS.find(x=>x.id===rowId); if(!row) return;
+  row.carousel_item_ids = arr.length?arr:null;
+  refreshCarousel(rowId);
+  // Slot needs a lead content item for its label/thumbnail (and for cron's
+  // "has content" check) — default it to slide 1 if nothing is assigned.
+  if(arr.length && !row.content_item_id){
+    row.content_item_id = arr[0];
+    renderCref(rowId); updateCalendarCardHead(rowId);
+    await saveField('calendar',rowId,'content_item_id',arr[0]);
+  }
+  await saveField('calendar',rowId,'carousel_item_ids',row.carousel_item_ids);
+}
+function carouselAdd(rowId,id){ if(!id) return; const row=CALENDAR_ROWS.find(x=>x.id===rowId); if(!row) return; const a=carouselIds(row).slice(); if(a.length>=10){ toast('Maximum 10 slides'); return; } if(a.includes(id)) return; a.push(id); carouselSet(rowId,a); }
+function carouselMove(rowId,i,dir){ const row=CALENDAR_ROWS.find(x=>x.id===rowId); if(!row) return; const a=carouselIds(row).slice(); const j=i+dir; if(j<0||j>=a.length) return; [a[i],a[j]]=[a[j],a[i]]; carouselSet(rowId,a); }
+function carouselRemove(rowId,i){ const row=CALENDAR_ROWS.find(x=>x.id===rowId); if(!row) return; const a=carouselIds(row).slice(); a.splice(i,1); carouselSet(rowId,a); }
+
 /* ---- YouTube settings (2026-10-07) ----
    Stored per slot in va_calendar_slots.yt_settings (jsonb). A blank/missing
    key means "leave it at the channel default" — so slots with no settings
@@ -1149,6 +1214,7 @@ let CAL_FILTER = {};
 let contentPillar = 'All';
 let contentStatus = 'All';
 let contentType = 'All';
+let contentFolder = 'All';
 const CONTENT_STATUSES = ['All','New from Drive','Needs description','Description written','Tim approved','Scheduled','Posted'];
 
 let BLOG_ROWS = [];
@@ -1186,8 +1252,19 @@ function renderFilterBars(){
      <select onchange="setContentType(this.value)">${types.map(t=>`<option value="${t[1]}" ${contentType===t[1]?'selected':''}>${t[0]}</option>`).join('')}</select>
      <select onchange="setContentPillar(this.value)">${pills.map(p=>`<option value="${esc(p)}" ${contentPillar===p?'selected':''}>${esc(p)}</option>`).join('')}</select>
      <select onchange="setContentStatus(this.value)">${CONTENT_STATUSES.map(s=>`<option value="${esc(s)}" ${contentStatus===s?'selected':''}>${esc(s)}</option>`).join('')}</select>
+     ${folderSelectHTML()}
      <span class="count" id="ccount"></span>`;
 }
+// Drive subfolder filter (2026-10-07) — options come from the folder_path
+// each synced item was found under; only shown once subfolders exist.
+function folderSelectHTML(){
+  const folders = Array.from(new Set(CONTENT_ROWS.map(r=>r.folder_path).filter(Boolean))).sort();
+  if(!folders.length) return '';
+  const hasRoot = CONTENT_ROWS.some(r=>!r.folder_path);
+  const opts = [['All','All folders']].concat(hasRoot?[['__root__','(Main folder)']]:[]).concat(folders.map(f=>[f,'📁 '+f]));
+  return `<select onchange="setContentFolder(this.value)">${opts.map(o=>`<option value="${esc(o[0])}" ${contentFolder===o[0]?'selected':''}>${esc(o[1])}</option>`).join('')}</select>`;
+}
+function setContentFolder(v){ contentFolder=v; renderFilterBars(); renderContentCards(); }
 function setContentPillar(p){ contentPillar=p; renderFilterBars(); renderContentCards(); }
 function setContentStatus(s){ contentStatus=s; renderFilterBars(); renderContentCards(); }
 function setContentType(v){ contentType=v; renderFilterBars(); renderContentCards(); }
@@ -1198,6 +1275,7 @@ function renderContentCards(){
   if(contentType!=='All') rows = rows.filter(r=>(r.type||'')===contentType);
   if(contentPillar!=='All') rows = rows.filter(r=>(r.pillar||'')===contentPillar);
   if(contentStatus!=='All') rows = rows.filter(r=>(r.status||'')===contentStatus);
+  if(contentFolder!=='All') rows = rows.filter(r=> contentFolder==='__root__' ? !r.folder_path : r.folder_path===contentFolder);
   const cc = document.getElementById('ccount'); if(cc) cc.textContent = `${rows.length} item${rows.length===1?'':'s'}`;
   if(!rows.length){ wrap.innerHTML = `<div class="empty">No items match this filter. Try "All", or Sync from Drive.</div>`; return; }
   wrap.innerHTML=''; rows.forEach(r=>wrap.appendChild(buildContentCard(r)));
@@ -1209,7 +1287,12 @@ function thumbFor(r){
   if(r.thumbnail_url) return r.thumbnail_url;
   return null;
 }
-function imgFail(img,type){ const d=document.createElement('div'); d.className='thumb-ph'; d.style.width=img.style.width; d.style.height=img.style.height; d.textContent=(type==='photo'?'🖼️':'🎬'); img.replaceWith(d); }
+function thumbFallback(r){ if(r.thumbnail_url) return r.thumbnail_url; if(r.type==='photo' && r.storage_url) return r.storage_url; return ''; }
+function imgFail(img,type){
+  // Drive's thumbnail endpoint 403s unless the browser is signed into a Google account with access — try the stored thumbnail/storage URL once before giving up to the placeholder.
+  const fb = img.dataset.fb;
+  if(fb && !img.dataset.tried){ img.dataset.tried='1'; img.src=fb; return; }
+  const d=document.createElement('div'); d.className='thumb-ph'; d.style.width=img.style.width; d.style.height=img.style.height; d.textContent=(type==='photo'?'🖼️':'🎬'); img.replaceWith(d); }
 function ratioNum(r){
   if(r.dimensions){ const m=String(r.dimensions).match(/(\d+)\D+(\d+)/); if(m){ const w=+m[1], h=+m[2]; if(w&&h) return w/h; } }
   const map={'9:16':9/16,'16:9':16/9,'4:5':4/5,'1:1':1,'2:3':2/3,'3:2':3/2};
@@ -1279,7 +1362,7 @@ function tagsHTML(r){
   const pillar = r.pillar||'';
   const pb = pillar ? `<span class="pill" style="background:${pillarColor(pillar)}">${esc(pillar)}</span>`
                     : `<span class="pill" style="background:#c9c1b0">No pillar</span>`;
-  return `${pb}<span class="pill status">${esc(r.status||'')}</span>${r.aspect_ratio?`<span class="ar">${esc(r.aspect_ratio)}</span>`:''}${r.dimensions?`<span class="ar">${esc(r.dimensions)} px</span>`:''}`;
+  return `${pb}<span class="pill status">${esc(r.status||'')}</span>${r.folder_path?`<span class="ar">📁 ${esc(r.folder_path)}</span>`:''}${r.aspect_ratio?`<span class="ar">${esc(r.aspect_ratio)}</span>`:''}${r.dimensions?`<span class="ar">${esc(r.dimensions)} px</span>`:''}`;
 }
 function buildContentCard(r){
   const card = document.createElement('div');
@@ -1287,7 +1370,7 @@ function buildContentCard(r){
   const th = thumbFor(r);
   const box = thumbBox(r);
   const thumbHTML = th
-    ? `<img class="thumb" style="${box}" src="${esc(th)}" referrerpolicy="no-referrer" onerror="imgFail(this,'${esc(r.type||'')}')">`
+    ? `<img class="thumb" style="${box}" src="${esc(th)}" data-fb="${esc(thumbFallback(r))}" referrerpolicy="no-referrer" onerror="imgFail(this,'${esc(r.type||'')}')">`
     : `<div class="thumb-ph" style="${box}" title="No preview available from Drive">${r.type==='photo'?'🖼️':'🎬'}</div>`;
   const prev = r.description ? `<div class="desc-prev">${esc(r.description)}</div>` : '';
   card.innerHTML = `
@@ -1352,7 +1435,7 @@ function buildCalendarCard(row){
   const th = content ? thumbFor(content) : null;
   const box = content ? thumbBox(content) : 'width:70px;height:70px';
   const thumbHTML = th
-    ? `<img class="thumb" style="${box}" src="${esc(th)}" referrerpolicy="no-referrer" onerror="imgFail(this,'${esc((content&&content.type)||'')}')">`
+    ? `<img class="thumb" style="${box}" src="${esc(th)}" data-fb="${esc(thumbFallback(content))}" referrerpolicy="no-referrer" onerror="imgFail(this,'${esc((content&&content.type)||'')}')">`
     : `<div class="thumb-ph" style="${box}" title="${content?'No preview available from Drive':'No content assigned yet'}">${content?(content.type==='photo'?'🖼️':'🎬'):'➕'}</div>`;
 
   const pubStatus = row.publish_status || 'Not queued';
@@ -1451,7 +1534,7 @@ async function _renderCalendarImpl(){
   view.innerHTML = '<div class="empty">Loading calendar…</div>';
   if(!CURRENT_CLIENT_ID){ view.innerHTML = '<div class="empty">No client selected — pick one from the dropdown in the top bar.</div>'; return; }
 
-  const co = await sb.from('va_content_items').select('id,name,drive_file_id,type,pillar,status,dimensions,has_thumbnail').eq('client_id',CURRENT_CLIENT_ID).order('created_at',{ascending:false});
+  const co = await sb.from('va_content_items').select('id,name,drive_file_id,type,pillar,status,dimensions,has_thumbnail,thumbnail_url,storage_url,folder_path').eq('client_id',CURRENT_CLIENT_ID).order('created_at',{ascending:false});
   CALENDAR_CONTENT = co.data || [];
 
   const c = COLLECTIONS.calendar;
@@ -1549,8 +1632,11 @@ function renderCalendarGrid(opts) {
       const pubStatus = s.publish_status || 'Not queued';
       const dotColor = pubStatus==='Published' ? 'var(--good)' : pubStatus==='Failed' ? 'var(--bad)' : (pubStatus==='Processing'||pubStatus==='Partial') ? 'var(--warn)' : 'var(--muted)';
       const label = calSlotLabel(s);
+      const _ci = CALENDAR_CONTENT.find(c=>c.id===s.content_item_id);
+      const _th = _ci ? thumbFor(_ci) : null;
+      const thumbImg = _th ? `<img src="${esc(_th)}" data-fb="${esc(thumbFallback(_ci))}" referrerpolicy="no-referrer" onerror="if(this.dataset.fb&&!this.dataset.tried){this.dataset.tried=1;this.src=this.dataset.fb}else{this.remove()}" style="width:16px;height:16px;object-fit:cover;border-radius:2px;margin-right:3px;vertical-align:middle">` : '';
       return `<div style="font-size:10px; background:var(--paper); border: 1px solid var(--line); border-left: 3px solid ${pillarBorder}; border-radius:3px; margin-top:2px; padding:2px 4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left;" title="${esc(label)} — ${esc(s.status||'')} — ${esc(pubStatus)}">
-        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${dotColor};margin-right:3px;vertical-align:middle"></span>${timeLabel}${esc(label)}
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${dotColor};margin-right:3px;vertical-align:middle"></span>${thumbImg}${timeLabel}${esc(label)}
       </div>`;
     }).join('') + (extraCount>0 ? `<div style="font-size:9.5px;font-weight:700;color:var(--muted);margin-top:2px;text-align:left;">+${extraCount} more</div>` : '');
 
@@ -2021,7 +2107,7 @@ async function saveMulti(id,rowId,field,opt,checked){
   // switched to another day and back, since that rebuild reads from the
   // (stale) in-memory CALENDAR_ROWS array rather than re-fetching.
   if(id==='content'){ const i=CONTENT_ROWS.findIndex(x=>x.id===rowId); if(i>=0) CONTENT_ROWS[i][field]=arr; }
-  if(id==='calendar'){ const i=CALENDAR_ROWS.findIndex(x=>x.id===rowId); if(i>=0) CALENDAR_ROWS[i][field]=arr; if(field==='platforms') refreshYTSection(rowId); }
+  if(id==='calendar'){ const i=CALENDAR_ROWS.findIndex(x=>x.id===rowId); if(i>=0) CALENDAR_ROWS[i][field]=arr; if(field==='platforms'){ refreshYTSection(rowId); const _r=CALENDAR_ROWS.find(x=>x.id===rowId); const _el=document.getElementById('carousel-'+rowId); if(_r&&_el) _el.innerHTML=carouselPickerHTML(_r); } }
 }
 async function addRow(id){
   const c = COLLECTIONS[id];
