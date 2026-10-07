@@ -787,6 +787,12 @@ function calendarFieldsHTML(row){
    (needs the broader youtube OAuth scope the stored refresh tokens lack). */
 const YT_CATEGORIES = [['1','Film & Animation'],['2','Autos & Vehicles'],['10','Music'],['15','Pets & Animals'],['17','Sports'],['19','Travel & Events'],['20','Gaming'],['22','People & Blogs'],['23','Comedy'],['24','Entertainment'],['25','News & Politics'],['26','Howto & Style'],['27','Education'],['28','Science & Technology'],['29','Nonprofits & Activism']];
 const YT_YESNO = [['','Channel default'],['yes','Yes'],['no','No']];
+const YT_DEFAULT_HASHTAGS = '#demolition #construction #excavator #satisfying';
+const YT_DEFAULT_TAGS = 'construction, demolition';
+function ytDefaultTitle(row){
+  const ci = CALENDAR_CONTENT.find(c=>c.id===row.content_item_id);
+  return ((ci&&ci.name?ci.name.trim():'') + ' ' + YT_DEFAULT_HASHTAGS).trim();
+}
 function ytHasYT(row){ return (Array.isArray(row.platforms)?row.platforms:[]).some(p=>/^YT /.test(p)); }
 function ytSectionHTML(row){
   return `<div class="field-section ${ytHasYT(row)?'':'hidden'}" id="ytsec-${row.id}">
@@ -798,19 +804,20 @@ function ytSel(row,key,label,opts,hint){
   const v = (row.yt_settings||{})[key] || '';
   return `<div class="f"><label>${label}</label><select onchange="setYT('${row.id}','${key}',this.value)">${opts.map(o=>`<option value="${esc(o[0])}" ${v===o[0]?'selected':''}>${esc(o[1])}</option>`).join('')}</select>${hint?`<div class="f-hint">${esc(hint)}</div>`:''}</div>`;
 }
-function ytInput(row,key,label,type,ph,hint,full){
-  const v = (row.yt_settings||{})[key] || '';
+function ytInput(row,key,label,type,ph,hint,full,dflt){
+  const v = (row.yt_settings||{})[key] || dflt || '';
   return `<div class="f ${full?'full':''}"><label>${label}</label><input type="${type}" value="${esc(v)}" placeholder="${esc(ph||'')}" oninput="setYT('${row.id}','${key}',this.value)">${hint?`<div class="f-hint">${esc(hint)}</div>`:''}</div>`;
 }
 function ytSettingsHTML(row){
-  return ytInput(row,'title','Title','text','Defaults to the content item name','Max 100 characters',true)
+  const ys = row.yt_settings||{};
+  return ytInput(row,'title','Title','text','Content name + hashtags','Pre-filled with the content name and standard hashtags — edit freely (max 100 characters)',true,ys.title||ytDefaultTitle(row))
     + ytSel(row,'privacy','Visibility',[['','Public (default)'],['unlisted','Unlisted'],['private','Private']])
-    + ytSel(row,'made_for_kids','Made for kids',[['','Channel default'],['no',"No, it's not made for kids"],['yes',"Yes, it's made for kids"]])
-    + ytSel(row,'ai_content','Altered / synthetic content (AI use)',YT_YESNO,'Realistic AI-made or AI-edited sound/visuals — "Yes" adds YouTube’s label')
-    + ytSel(row,'paid_promo','Paid promotion',YT_YESNO)
+    + ytSel(row,'made_for_kids','Made for kids',[['',"No, it's not made for kids (default)"],['yes',"Yes, it's made for kids"]])
+    + ytSel(row,'ai_content','Altered / synthetic content (AI use)',[['','No (default)'],['yes','Yes']],'Realistic AI-made or AI-edited sound/visuals — "Yes" adds YouTube’s label')
+    + ytSel(row,'paid_promo','Paid promotion',[['','No (default)'],['yes','Yes']])
     + ytSel(row,'category','Category',[['','People & Blogs (default)']].concat(YT_CATEGORIES))
-    + ytInput(row,'tags','Tags','text','construction, demolition, roof demolition','Comma-separated, 500 characters max',true)
-    + ytSel(row,'language','Video language',[['','Not set'],['en','English'],['en-AU','English (Australia)'],['en-GB','English (UK)'],['en-US','English (US)']])
+    + ytInput(row,'tags','Tags','text',YT_DEFAULT_TAGS,'Comma-separated, 500 characters max — blank uses: '+YT_DEFAULT_TAGS,true)
+    + ytSel(row,'language','Video language',[['','English (Australia) (default)'],['en','English'],['en-GB','English (UK)'],['en-US','English (US)']])
     + ytInput(row,'recording_date','Recording date','date')
     + ytSel(row,'license','License',[['','Standard YouTube License'],['creativeCommon','Creative Commons – Attribution']])
     + ytSel(row,'embeddable','Allow embedding',[['','Channel default'],['yes','Yes'],['no','No']])
