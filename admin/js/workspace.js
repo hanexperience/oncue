@@ -786,6 +786,20 @@ function calendarFieldsHTML(row){
    they're added and can be reordered with ▲/▼; social-publish reads the array
    front to back. 2+ items turns the slot into a carousel: Instagram feed gets
    a real carousel, Facebook feed gets a multi-photo post (photos only). */
+// Folder narrowing for the calendar's content pickers (2026-10-07). State is per
+// slot; options come from the folder_path of every synced item.
+const CAL_FOLDER = {};
+const CAR_FOLDER = {};
+function calFolderOptions(){ return Array.from(new Set(CALENDAR_CONTENT.map(c=>c.folder_path).filter(Boolean))).sort(); }
+function folderFilterSelectHTML(current, onchangeFn){
+  const folders = calFolderOptions(); if(!folders.length) return '';
+  const hasRoot = CALENDAR_CONTENT.some(c=>!c.folder_path);
+  const opts = [['All','All folders']].concat(hasRoot?[['__root__','(Main folder)']]:[]).concat(folders.map(f=>[f,'📁 '+f]));
+  return `<select onchange="${onchangeFn}this.value)">${opts.map(o=>`<option value="${esc(o[0])}" ${current===o[0]?'selected':''}>${esc(o[1])}</option>`).join('')}</select>`;
+}
+function inFolder(ci,f){ return f==='All' || (f==='__root__' ? !ci.folder_path : ci.folder_path===f); }
+function setCalFolder(rowId,v){ CAL_FOLDER[rowId]=v; renderCref(rowId); }
+function setCarFolder(rowId,v){ CAR_FOLDER[rowId]=v; refreshCarousel(rowId); }
 function carouselIds(row){ return Array.isArray(row.carousel_item_ids) ? row.carousel_item_ids : []; }
 function carouselPickerHTML(row){
   const ids = carouselIds(row);
@@ -806,7 +820,9 @@ function carouselPickerHTML(row){
     });
     h += '</div>';
   }
-  const avail = CALENDAR_CONTENT.filter(c=>(c.type==='photo'||c.type==='video') && !ids.includes(c.id));
+  const carFolder = CAR_FOLDER[row.id] || 'All';
+  const avail = CALENDAR_CONTENT.filter(c=>(c.type==='photo'||c.type==='video') && !ids.includes(c.id) && inFolder(c,carFolder));
+  h += folderFilterSelectHTML(carFolder,"setCarFolder('"+row.id+"',");
   h += `<select onchange="carouselAdd('${row.id}',this.value);this.value=''"><option value="">＋ Add a slide (added in this order)…</option>`
      + avail.map(c=>`<option value="${c.id}">${esc((c.folder_path?c.folder_path+' / ':'')+(c.name||'(untitled)'))}${c.type==='video'?' — video':''}</option>`).join('')
      + `</select>`;
@@ -1898,12 +1914,14 @@ function crefInner(row){
   let list = CALENDAR_CONTENT.slice();
   if(pillar) list = list.filter(ci=>{ const p=ci.pillar||''; return p===pillar || p==='Background'; });
   if(status!=='All') list = list.filter(ci=>(ci.status||'')===status);
+  const folder = CAL_FOLDER[row.id] || 'All';
+  list = list.filter(ci=>inFolder(ci,folder));
   const val = row.content_item_id || '';
   const ids = new Set(list.map(ci=>ci.id));
   if(val && !ids.has(val)){ const c0=CALENDAR_CONTENT.find(ci=>ci.id===val); if(c0) list=[c0,...list]; }
   let h = `<div class="cref-filter"><span class="flabel">Show</span><select onchange="setCalStatus('${row.id}',this.value)">`;
   CONTENT_STATUSES.forEach(s=>{ h += `<option ${status===s?'selected':''}>${esc(s)}</option>`; });
-  h += `</select><span class="cref-note">${pillar?('pillar: '+esc(pillar)):'set the post pillar to filter by pillar'}</span></div>`;
+  h += `</select>${folderFilterSelectHTML(folder,"setCalFolder('"+row.id+"',")}<span class="cref-note">${pillar?('pillar: '+esc(pillar)):'set the post pillar to filter by pillar'}</span></div>`;
   h += `<select onchange="assignCref('${row.id}',this.value)"><option value="">— none —</option>`;
   list.forEach(ci=>{ h += `<option value="${ci.id}" ${val===ci.id?'selected':''}>${esc(ci.name||'(untitled)')}</option>`; });
   h += `</select>`;
@@ -1928,12 +1946,14 @@ function crefInner(row){
   let list = CALENDAR_CONTENT.slice();
   if(pillar) list = list.filter(ci=>{ const p=ci.pillar||''; return p===pillar || p==='Background'; });
   if(status!=='All') list = list.filter(ci=>(ci.status||'')===status);
+  const folder = CAL_FOLDER[row.id] || 'All';
+  list = list.filter(ci=>inFolder(ci,folder));
   const val = row.content_item_id || '';
   const ids = new Set(list.map(ci=>ci.id));
   if(val && !ids.has(val)){ const c0=CALENDAR_CONTENT.find(ci=>ci.id===val); if(c0) list=[c0,...list]; }
   let h = `<div class="cref-filter"><span class="flabel">Show</span><select onchange="setCalStatus('${row.id}',this.value)">`;
   CONTENT_STATUSES.forEach(s=>{ h += `<option ${status===s?'selected':''}>${esc(s)}</option>`; });
-  h += `</select><span class="cref-note">${pillar?('pillar: '+esc(pillar)):'set the post pillar to filter by pillar'}</span></div>`;
+  h += `</select>${folderFilterSelectHTML(folder,"setCalFolder('"+row.id+"',")}<span class="cref-note">${pillar?('pillar: '+esc(pillar)):'set the post pillar to filter by pillar'}</span></div>`;
   h += `<select onchange="assignCref('${row.id}',this.value)"><option value="">— none —</option>`;
   list.forEach(ci=>{ h += `<option value="${ci.id}" ${val===ci.id?'selected':''}>${esc(ci.name||'(untitled)')}</option>`; });
   h += `</select>`;
