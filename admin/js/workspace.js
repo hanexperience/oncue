@@ -95,7 +95,7 @@ calendar: {
       {k:"slot_date",l:"Date",t:"date"},
       {k:"slot_time",l:"Scheduled Time (AEST)",t:"time"},
       {k:"pillar",l:"Pillar",t:"select",o:PILLARS},
-      {k:"status",l:"Status",t:"status",o:["Planned","Asset ready","Caption written","Tim approved","Scheduled","Posted","Cancelled"]},
+      {k:"status",l:"Status",t:"status",o:["Planned","Asset ready","Caption written","Pending crew review","Crew approved","Needs changes","Tim approved","Scheduled","Posted","Cancelled"]},
       {k:"content_item_id",l:"Assigned video / content",t:"content_ref",full:true},
       {k:"carousel_item_ids",l:"Slides, in posting order",t:"carousel_picker",full:true},
       {k:"platforms",l:"Platforms",t:"multi",o:PLATFORMS,full:true},
@@ -105,6 +105,8 @@ calendar: {
       {k:"follow_up_comment",l:"Follow-up comment",h:"Auto-posted right after publish — IG feed/Reel/Trial Reel + FB feed/Reel only",t:"textarea",full:true},
       {k:"caption",l:"Caption",t:"textarea",full:true},
       {k:"notes",l:"Notes",t:"text",full:true},
+      {k:"crew_reviewed_by",l:"Reviewed by (crew)",h:"Set automatically when a crew member approves/rejects via their field tool \u2014 generic across clients, not just Dig Dig",t:"text"},
+      {k:"crew_review_note",l:"Reviewer's note (on reject)",h:"Set automatically on reject \u2014 why it got sent back",t:"textarea",full:true},
       {k:"yt_settings",l:"YouTube settings",t:"yt_settings",full:true}
     ]
   },
@@ -1149,7 +1151,7 @@ function publishBlockHTML(row){
   // APPROVAL GATE in the social-publish edge function: only "Tim approved"
   // or "Scheduled" slots get auto-published). Only show Cancel while that's
   // actually true and it hasn't gone out yet.
-  const armed = (row.status==='Tim approved' || row.status==='Scheduled') && status!=='Published';
+  const armed = (row.status==='Tim approved' || row.status==='Scheduled' || row.status==='Crew approved') && status!=='Published';
   const hasIGMedia = ['ig_feed','ig_reel','ig_trial_reel'].some(k=>ids[k]&&ids[k].media_id);
   return `<div class="publish-block" id="pub-${row.id}">
     <div class="publish-row">
