@@ -95,7 +95,7 @@ calendar: {
       {k:"slot_date",l:"Date",t:"date"},
       {k:"slot_time",l:"Scheduled Time (AEST)",t:"time"},
       {k:"pillar",l:"Pillar",t:"select",o:PILLARS},
-      {k:"status",l:"Status",t:"status",o:["Planned","Asset ready","Caption written","Pending crew review","Crew approved","Needs changes","Tim approved","Scheduled","Posted","Cancelled"]},
+      {k:"status",l:"Status",t:"status",o:["Pending crew review","Crew approved","Needs changes","Scheduled","Posted","Cancelled"]},
       {k:"content_item_id",l:"Assigned video / content",t:"content_ref",full:true},
       {k:"carousel_item_ids",l:"Slides, in posting order",t:"carousel_picker",full:true},
       {k:"platforms",l:"Platforms",t:"multi",o:PLATFORMS,full:true},
@@ -780,7 +780,16 @@ function calendarFieldsHTML(row){
     + fieldSectionHTML('calendar',row,'Platforms',['platforms'])
     + fieldSectionHTML('calendar',row,'Tagging & cover',['collaborators','tagged_accounts','cover_image_url'])
     + fieldSectionHTML('calendar',row,'Text',['follow_up_comment','caption','notes'])
+    + crewReviewSectionHTML(row)
     + ytSectionHTML(row);
+}
+
+// Crew review (approve/reject from Angus's field tool or any future reviewer) only ever has
+// anything to show once a decision's been made — before that, crew_reviewed_by/crew_review_note
+// are both null, so skip the section entirely rather than showing two empty fields on every card.
+function crewReviewSectionHTML(row){
+  if(!row.crew_reviewed_by && !row.crew_review_note) return '';
+  return fieldSectionHTML('calendar',row,'Crew review',['crew_reviewed_by','crew_review_note']);
 }
 /* ---- Carousel picker (2026-10-07) ----
    va_calendar_slots.carousel_item_ids = ordered jsonb array of content item
