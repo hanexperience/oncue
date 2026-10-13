@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crowncon Post Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --dark:#454441; --ink:#2b2a27;
+  --white:#ffffff; --silver:#969696; --gold:#cfc5ac; --light:#f4f0e7;
+  --gold-deep:#6f6547; --silver-deep:#5f6164;
+  --paper:#f4f0e7; --paper-2:#ebe6da; --surface:#ffffff;
+  --rule:#d6cfc0; --mute:#6c6a64; --faint:#8d8a82;
+  --font:'Mont','Poppins','Montserrat',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--dark);font-family:var(--font);font-size:14px;
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold-deep);outline-offset:2px}
+[hidden]{display:none!important}
+
+.app{display:grid;grid-template-columns:352px minmax(0,1fr);height:100vh}
+
+/* ---------- sidebar ---------- */
+.side{background:var(--paper-2);border-right:1px solid var(--rule);display:flex;flex-direction:column;min-height:0}
+.brandbar{padding:20px 22px 18px;border-bottom:1px solid var(--rule);flex:0 0 auto}
+.bb-mark{line-height:1;display:inline-flex;flex-direction:column;align-items:flex-start}
+.bb-mark b{font-weight:400;font-size:25px;letter-spacing:-.3px;color:var(--ink)}
+.bb-mark span{font-weight:400;font-size:8px;letter-spacing:.2px;color:var(--ink);align-self:flex-end;margin-top:3px}
+.brandbar p{margin:12px 0 0;font-family:var(--mono);font-size:10px;letter-spacing:1.8px;
+  text-transform:uppercase;color:var(--gold-deep)}
+
+.tabs{display:flex;border-bottom:1px solid var(--rule);flex:0 0 auto}
+.tabs button{flex:1;background:transparent;border:0;border-bottom:2px solid transparent;padding:13px 6px;cursor:pointer;
+  font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--faint)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold-deep)}
+
+.scroll{overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:22px;flex:1 1 auto;min-height:0}
+.scroll::-webkit-scrollbar{width:9px}
+.scroll::-webkit-scrollbar-track{background:var(--paper-2)}
+.scroll::-webkit-scrollbar-thumb{background:var(--rule)}
+.scroll::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+
+.grp{display:flex;flex-direction:column;gap:9px}
+.glabel{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold-deep)}
+.hint{font-size:11.5px;line-height:1.55;color:var(--mute)}
+
+.tpl-list{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.tpl-btn{background:var(--surface);border:1px solid var(--rule);padding:10px 11px;text-align:left;cursor:pointer;
+  font-size:12px;font-weight:500;line-height:1.3;color:var(--dark);transition:background .12s,color .12s}
+.tpl-btn:hover{background:var(--light);border-color:var(--gold)}
+.tpl-btn[aria-pressed="true"]{background:var(--gold);border-color:var(--gold-deep);color:var(--ink);font-weight:600}
+.tpl-btn small{display:block;font-family:var(--mono);font-weight:400;font-size:9px;letter-spacing:.9px;
+  text-transform:uppercase;opacity:.7;margin-top:4px}
+
+.seg{display:flex;border:1px solid var(--rule)}
+.seg button{flex:1;background:var(--surface);border:0;border-right:1px solid var(--rule);padding:9px 4px;cursor:pointer;
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.4px;color:var(--mute);line-height:1.25}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--ink);font-weight:600}
+.seg button:disabled{opacity:.32;cursor:not-allowed}
+.seg small{font-size:9px;opacity:.72;display:block}
+
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:var(--mute)}
+.field input[type=text],.field textarea,.field select{
+  background:var(--surface);border:1px solid var(--rule);padding:9px 11px;color:var(--dark);font-size:13.5px;width:100%}
+.field textarea{resize:vertical;min-height:66px;line-height:1.45}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold-deep);outline:none}
+.check{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--dark);cursor:pointer}
+.check input{accent-color:var(--gold-deep);width:15px;height:15px}
+.range{display:flex;align-items:center;gap:9px}
+.range input[type=range]{flex:1;accent-color:var(--gold-deep)}
+.range span{font-family:var(--mono);font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--faint);min-width:46px}
+.range b{font-family:var(--mono);font-size:11px;color:var(--mute);min-width:36px;text-align:right;font-variant-numeric:tabular-nums}
+
+.slot{border:1px solid var(--rule);background:var(--surface);display:flex;flex-direction:column}
+.slot-drop{padding:15px 12px;text-align:center;cursor:pointer;border-bottom:1px solid var(--rule);
+  font-size:11.5px;color:var(--mute);line-height:1.45}
+.slot-drop:hover,.slot-drop.over{background:var(--light)}
+.slot-drop b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--ink);margin-bottom:5px}
+.slot-drop.filled b{color:var(--gold-deep)}
+.mini{background:transparent;border:1px solid var(--rule);color:var(--mute);font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.9px;text-transform:uppercase;padding:6px 10px;cursor:pointer}
+.mini:hover{border-color:var(--gold-deep);color:var(--gold-deep)}
+
+.slidenav{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.slidenav .pipbtn{width:30px;height:30px;border:1px solid var(--rule);background:var(--surface);cursor:pointer;
+  font-family:var(--mono);font-size:11px;color:var(--mute)}
+.slidenav .pipbtn[aria-pressed="true"]{background:var(--gold);border-color:var(--gold-deep);color:var(--ink);font-weight:600}
+
+/* ---------- stage ---------- */
+.stage{display:flex;flex-direction:column;min-width:0;min-height:0;
+  background:repeating-conic-gradient(#efeadf 0% 25%,#e7e1d4 0% 50%) 50%/26px 26px}
+.topbar{display:flex;align-items:center;gap:12px;padding:13px 24px;background:var(--paper-2);
+  border-bottom:1px solid var(--rule);flex:0 0 auto;flex-wrap:wrap}
+.topbar .fname{font-family:var(--mono);font-size:11.5px;color:var(--faint);
+  flex:1;min-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn{background:var(--dark);color:var(--light);border:0;padding:11px 20px;font-weight:600;font-size:12.5px;
+  letter-spacing:.7px;cursor:pointer}
+.btn:hover{background:var(--ink)}
+.btn--ghost{background:transparent;border:1px solid var(--rule);color:var(--mute);font-weight:500}
+.btn--ghost:hover{border-color:var(--gold-deep);color:var(--gold-deep);background:transparent}
+.canvas-wrap{flex:1 1 auto;position:relative;min-height:0}
+canvas#c{position:absolute;top:22px;left:22px;right:22px;bottom:22px;margin:auto;
+  width:auto;height:auto;max-width:calc(100% - 44px);max-height:calc(100% - 44px);
+  box-shadow:0 18px 46px rgba(69,68,65,.22);cursor:grab;display:block}
+canvas#c.dragging{cursor:grabbing}
+canvas#c.over{outline:3px solid var(--gold-deep);outline-offset:4px}
+.strip{display:flex;gap:10px;padding:12px 24px;background:var(--paper-2);border-top:1px solid var(--rule);
+  overflow-x:auto;flex:0 0 auto;align-items:center}
+.strip canvas{height:92px;width:auto;border:2px solid transparent;cursor:pointer;display:block;background:#fff}
+.strip canvas[data-on="1"]{border-color:var(--gold-deep)}
+.strip .striplbl{font-family:var(--mono);font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--faint);
+  writing-mode:vertical-rl;transform:rotate(180deg);flex:0 0 auto}
+.statusbar{padding:10px 24px;background:var(--paper-2);border-top:1px solid var(--rule);font-family:var(--mono);
+  font-size:10.5px;letter-spacing:.6px;color:var(--faint);display:flex;gap:22px;flex-wrap:wrap;flex:0 0 auto}
+.statusbar b{color:var(--mute);font-weight:600}
+
+/* ---------- grid planner ---------- */
+.plan-wrap{flex:1 1 auto;overflow-y:auto;padding:30px;min-height:0;display:flex;justify-content:center}
+.phone{width:100%;max-width:520px}
+.phone-head{display:flex;align-items:center;gap:22px;padding:0 4px 22px}
+.ph-avatar{width:74px;height:74px;flex:0 0 auto;background:var(--gold);display:grid;place-items:center;
+  font-weight:400;font-size:15px;color:var(--ink);letter-spacing:-.3px}
+.phone-head .ph-name{font-weight:500;font-size:17px;letter-spacing:-.2px;color:var(--ink)}
+.phone-head .ph-sub{font-size:12px;color:var(--mute);margin-top:4px}
+.phone-head .ph-stats{display:flex;gap:24px;margin-top:11px;font-size:11.5px;color:var(--mute)}
+.phone-head .ph-stats b{display:block;color:var(--ink);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.ptile{position:relative;aspect-ratio:3/4;background:var(--paper-2);border:1px dashed var(--rule);
+  display:grid;place-items:center;overflow:hidden;cursor:grab}
+.ptile.filled{border-style:solid;border-color:transparent}
+.ptile img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.ptile .idx,.ptile .lbl,.ptile .del{opacity:0;transition:opacity .12s}
+.ptile:hover .idx,.ptile:hover .lbl,.ptile:hover .del,
+.ptile:focus-within .idx,.ptile:focus-within .lbl,.ptile:focus-within .del{opacity:1}
+.ptile .idx{position:absolute;top:5px;left:5px;background:rgba(43,42,39,.82);color:var(--light);
+  font-family:var(--mono);font-size:9.5px;padding:2px 6px;letter-spacing:.5px}
+.ptile .lbl{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(0deg,rgba(43,42,39,.92),transparent);
+  color:var(--light);font-size:10.5px;padding:16px 7px 6px;line-height:1.3;pointer-events:none}
+.ptile .del{position:absolute;top:5px;right:5px;background:rgba(43,42,39,.82);border:0;color:var(--light);
+  width:22px;height:22px;cursor:pointer;font-size:13px;line-height:1}
+.ptile .del:hover{background:var(--dark)}
+.ptile.empty{color:var(--faint);font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase}
+.ptile.dragover{outline:3px solid var(--gold-deep);outline-offset:-3px}
+.ptile.dragging{opacity:.35}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);
+  color:var(--light);padding:13px 26px;font-weight:500;font-size:12.5px;letter-spacing:.4px;
+  opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:50}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:900px){
+  body{overflow:auto}
+  .app{grid-template-columns:1fr;height:auto}
+  .side{border-right:0;border-bottom:1px solid var(--rule)}
+  .scroll{overflow:visible}
+  .canvas-wrap{height:70vh}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="side">
+    <div class="brandbar">
+      <span class="bb-mark"><b>crowncon</b><span>built with you.</span></span>
+      <p>Post Studio · six pillars</p>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" id="tabStudio" role="tab" aria-selected="true">Studio</button>
+      <button type="button" id="tabPlan" role="tab" aria-selected="false">Grid planner</button>
+    </div>
+
+    <div class="scroll" id="studioPanel">
+      <div class="grp">
+        <span class="glabel">Pillar</span>
+        <div class="tpl-list" id="tplList"></div>
+      </div>
+
+      <div class="grp">
+        <span class="glabel">Size</span>
+        <div class="seg" id="fmtSeg">
+          <button type="button" data-fmt="4:5">4:5<small>feed</small></button>
+          <button type="button" data-fmt="1:1">1:1<small>square</small></button>
+          <button type="button" data-fmt="9:16">9:16<small>story</small></button>
+        </div>
+      </div>
+
+      <div class="grp" id="slideGroup" hidden>
+        <span class="glabel">Slides</span>
+        <div class="slidenav" id="slideNav"></div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <button class="mini" type="button" id="addSlide">+ Slide</button>
+          <button class="mini" type="button" id="delSlide">Remove</button>
+        </div>
+      </div>
+
+      <div class="grp" id="imgGroup">
+        <span class="glabel" id="imgLabel">Photo</span>
+        <div id="slots" style="display:flex;flex-direction:column;gap:10px"></div>
+        <div class="range" id="scrimRow" hidden>
+          <span>Scrim</span>
+          <input type="range" id="scrim" min="0" max="1" step="0.01">
+          <b id="scrimVal">70%</b>
+        </div>
+        <p class="hint" id="imgHint">Drop an image here or onto the canvas. Drag the canvas to reposition, double-click to reset.</p>
+      </div>
+
+      <div class="grp" id="fieldGroup">
+        <span class="glabel">Content</span>
+        <div id="fields" style="display:flex;flex-direction:column;gap:13px"></div>
+      </div>
+
+      <div class="grp">
+        <span class="glabel">View</span>
+        <label class="check"><input type="checkbox" id="guides"> Show safe zones &amp; grid crop</label>
+        <p class="hint">Guides are preview-only — never exported.</p>
+      </div>
+    </div>
+
+    <div class="scroll" id="planPanel" hidden>
+      <div class="grp">
+        <span class="glabel">Plan the grid</span>
+        <p class="hint">Tiles read like the real profile — newest top left. Drag to reorder, drop image files anywhere on the grid, or push the design you're working on straight in.</p>
+      </div>
+      <div class="grp">
+        <button class="btn" type="button" id="planFromCanvas">Add current design</button>
+        <button class="btn btn--ghost" type="button" id="planAddFiles">Add image files…</button>
+      </div>
+      <div class="grp">
+        <span class="glabel">Rhythm check</span>
+        <p class="hint">Two image tiles, then one flat brand tile. Never two flat tiles in a row, never three golds together.</p>
+      </div>
+      <div class="grp">
+        <span class="glabel">Caption note</span>
+        <p class="hint">Click a tile to edit the note that sits under it.</p>
+      </div>
+      <div class="grp">
+        <span class="glabel">Backup</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="mini" type="button" id="planExport">Export plan</button>
+          <button class="mini" type="button" id="planImport">Import plan</button>
+          <button class="mini" type="button" id="planClear">Clear all</button>
+        </div>
+        <p class="hint" id="planSize">Saved in this browser automatically.</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <div class="topbar" id="studioBar">
+      <button class="btn" id="save" type="button">Save PNG</button>
+      <button class="btn btn--ghost" id="saveAll" type="button" hidden>Save all slides</button>
+      <button class="btn btn--ghost" id="copy" type="button">Copy</button>
+      <span class="fname" id="fname">crowncon_….png</span>
+    </div>
+    <div class="topbar" id="planBar" hidden>
+      <span class="fname" id="planCount">0 tiles</span>
+    </div>
+
+    <div class="canvas-wrap" id="studioStage">
+      <canvas id="c" width="1080" height="1350" aria-label="Post preview"></canvas>
+    </div>
+    <div class="strip" id="strip" hidden></div>
+
+    <div class="plan-wrap" id="planStage" hidden>
+      <div class="phone">
+        <div class="phone-head">
+          <div class="ph-avatar">crowncon</div>
+          <div>
+            <div class="ph-name">crowncon</div>
+            <div class="ph-sub">Custom homes &amp; knockdown rebuilds · Melbourne</div>
+            <div class="ph-stats">
+              <span><b id="planPosts">0</b>posts</span>
+              <span><b>—</b>followers</span>
+              <span><b>3</b>per week</span>
+            </div>
+          </div>
+        </div>
+        <div class="pgrid" id="pgrid"></div>
+      </div>
+    </div>
+
+    <div class="statusbar" id="statusbar">
+      <span>Size <b id="stSize">1080 × 1350</b></span>
+      <span>Pillar <b id="stTpl">The Dream</b></span>
+      <span id="stFont">Fonts loading…</span>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================================
+   Crowncon Post Studio
+   One Canvas 2D pass drives both the on-screen preview and the exported PNG,
+   so what you see is the file. Colours and type follow the Crowncon Brand
+   Field Guide v1.0 (Tim's guidelines, Jan 2026, plus the two derived tints).
+   ========================================================================== */
+
+const DARK='#454441', INK='#2b2a27', WHITE='#ffffff',
+      SILVER='#969696', GOLD='#cfc5ac', LIGHT='#f4f0e7',
+      GOLD_DEEP='#6f6547', SILVER_DEEP='#5f6164',
+      STAR_GOLD='#8f7f57';   /* solid gold that still clears 3:1 on the light grounds */
+
+/* one family does everything — hierarchy comes from case and weight */
+const DISPLAY = "'Mont','Poppins','Montserrat',sans-serif";
+const BODY    = "'Mont','Poppins','Montserrat',sans-serif";
+const FORMATS = {'1:1':[1080,1080], '4:5':[1080,1350], '9:16':[1080,1920]};
+
+/* ---------------------------------------------------------------- templates */
+const TEMPLATES = {
+  'dream':{
+    label:'The Dream', kind:'Pillar 1 · photo', images:1, bg:false,
+    formats:['4:5','1:1','9:16'], defaultFmt:'4:5',
+    fields:[
+      {k:'dTitle', t:'text', l:'What this is', v:'The kitchen that faces the right way'},
+      {k:'dSub',   t:'text', l:'Suburb · completed', v:'Beaumaris · completed 2026'},
+      {k:'dRender',t:'check',l:'Label as a render', v:false},
+      {k:'dMark',  t:'check',l:'Show wordmark', v:false}
+    ]},
+  'craft':{
+    label:'The Craft', kind:'Pillar 2 · detail', images:1, bg:false,
+    formats:['4:5','1:1','9:16'], defaultFmt:'4:5',
+    fields:[
+      {k:'detail', t:'text', l:'The detail', v:'Shadowline reveal'},
+      {k:'measure',t:'text', l:'The measurement', v:'10mm'},
+      {k:'note',   t:'text', l:'One line (optional)', v:'Set out by hand, every run in the house.'},
+      {k:'cMark',  t:'check',l:'Show wordmark', v:false}
+    ]},
+  'proof':{
+    label:'The Proof', kind:'Pillar 3 · review', images:1, bg:true,
+    formats:['4:5','1:1','9:16'], defaultFmt:'4:5',
+    fields:[
+      {k:'layout',t:'select',l:'Layout', v:'Panel on photo', opts:['Panel on photo','Flat card']},
+      {k:'quote', t:'area', l:'Quote (verbatim)', v:'Tim genuinely takes pride in every aspect of his work. Throughout the entire process, he was reliable, transparent, and easy to work with.'},
+      {k:'who',   t:'text', l:'Name', v:'Mark La Porta'},
+      {k:'source',t:'text', l:'Source', v:'Google review'},
+      {k:'case',  t:'select',l:'Quote case', v:'Uppercase', opts:['Uppercase','Sentence']},
+      {k:'pos',   t:'select',l:'Panel position', v:'Centred', opts:['Centred','High']},
+      {k:'panelOp',t:'range', l:'Panel opacity', v:0.66, min:0.35, max:1, step:0.01},
+      {k:'imgFade',t:'range', l:'Photo fade', v:0.18, min:0, max:0.8, step:0.01},
+      {k:'ground',t:'select',l:'Ground — flat card only', v:'Light gold', opts:['Light gold','White','Dark']},
+      {k:'pMarkR',t:'check', l:'Show wordmark', v:false}
+    ]},
+  'process':{
+    label:'The Process', kind:'Pillar 4 · on site', images:1, bg:false,
+    formats:['4:5','1:1','9:16'], defaultFmt:'4:5',
+    fields:[
+      {k:'stage',  t:'text', l:'Stage marker', v:'Stage 04 · Lock-up'},
+      {k:'pTitle', t:'text', l:'What happened', v:'Roof on, windows in'},
+      {k:'pSub',   t:'text', l:'Suburb · week', v:'Beaumaris · week 14'},
+      {k:'pMark',  t:'check',l:'Show wordmark', v:false}
+    ]},
+  'tim':{
+    label:'Meet Tim', kind:'Pillar 5 · reel cover', images:1, bg:false,
+    formats:['9:16','4:5','1:1'], defaultFmt:'9:16',
+    fields:[
+      {k:'question',t:'area', l:'The question (his words)', v:'What does fixed price\nactually mean?'},
+      {k:'name',    t:'text', l:'Name', v:'Tim'},
+      {k:'runtime', t:'text', l:'Runtime', v:'60 seconds'},
+      {k:'place',   t:'select',l:'Block position', v:'Grid-safe', opts:['Grid-safe','Bottom']},
+      {k:'tMark',   t:'check',l:'Show wordmark', v:true}
+    ]},
+  'knowledge':{
+    label:'The Knowledge', kind:'Pillar 6 · carousel', images:0, bg:false, slides:true,
+    formats:['4:5','1:1'], defaultFmt:'4:5',
+    fields:[
+      {k:'num',     t:'text', l:'Slide number', v:'01', perSlide:true},
+      {k:'heading', t:'text', l:'Heading', v:'A fixed price isn’t fixed until the plans are', perSlide:true},
+      {k:'body',    t:'area', l:'Body', v:'Most blowouts come from signing before the drawings are finished. Ask what stage the price was set at — that one question tells you how firm it is.', perSlide:true},
+      {k:'carFoot', t:'text', l:'Footer (all slides)', v:'Full guide on the blog'},
+      {k:'kGround', t:'select',l:'Card ground', v:'Light gold', opts:['Light gold','White']},
+      {k:'kSplit',  t:'range', l:'Photo depth (over 55% = heading-only slides)', v:0.36, min:0.22, max:0.74, step:0.01}
+    ]}
+};
+
+/* -------------------------------------------------------------------- state */
+function blankImg(){ return {img:null, name:'', zoom:1, ox:0, oy:0}; }
+function blankSlide(n){ return {num:String(n).padStart(2,'0'), heading:'', body:'', img:blankImg()}; }
+
+const S = {
+  view:'studio', tpl:'dream', fmt:'4:5',
+  v:{}, imgs:[blankImg(), blankImg(), blankImg()], active:0,
+  scrim:0.70, guides:false, fontsReady:false,
+  slides:[
+    {num:'01', heading:'A fixed price isn’t fixed until the plans are',
+     body:'Most blowouts come from signing before the drawings are finished. Ask what stage the price was set at — that one question tells you how firm it is.', img:blankImg()},
+    {num:'02', heading:'Ask what the allowances actually cover',
+     body:'A tiling allowance of $45/m² is a number, not a finish. Get the allowance list and price the things you have already chosen against it.', img:blankImg()},
+    {num:'03', heading:'Site costs are where the surprises live',
+     body:'Slope, soil classification, tree protection zones and service relocations. On a knockdown rebuild these are knowable before you sign — insist they are priced, not estimated.', img:blankImg()}
+  ],
+  slideIdx:0,
+  grid:[]
+};
+for(const t of Object.values(TEMPLATES)) for(const f of t.fields) if(!(f.k in S.v)) S.v[f.k]=f.v;
+
+/* ------------------------------------------------------------ canvas basics */
+const cv = document.getElementById('c');
+let ctx = cv.getContext('2d');
+function withCtx(c, fn){ const old = ctx; ctx = c; try{ fn(); } finally { ctx = old; } }
+
+function setType(o){
+  const {d=false,w=400,s=40,ls=0,color=DARK,align='left',baseline='alphabetic'} = o;
+  try{ ctx.letterSpacing = ls+'px'; }catch(e){}
+  ctx.font = `${w} ${s}px ${d?DISPLAY:BODY}`;
+  ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = baseline;
+}
+function resetType(){ try{ctx.letterSpacing='0px';}catch(e){} }
+function rgba(hex, a){
+  const h=hex.replace('#',''); const n=parseInt(h,16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+function wrapLines(text, maxW){
+  const out=[];
+  for(const para of String(text).split('\n')){
+    const words = para.split(/\s+/).filter(Boolean);
+    if(!words.length){ out.push(''); continue; }
+    let line = words[0];
+    for(let i=1;i<words.length;i++){
+      const test = line+' '+words[i];
+      if(ctx.measureText(test).width <= maxW) line = test; else { out.push(line); line = words[i]; }
+    }
+    out.push(line);
+  }
+  return out;
+}
+function fitText(text, maxW, maxH, maxLines, cfg, hi, lo, lh){
+  let size = hi;
+  while(size > lo){
+    setType({...cfg, s:size});
+    const lines = wrapLines(text, maxW);
+    const widest = Math.max(...lines.map(l=>ctx.measureText(l).width), 0);
+    if(lines.length <= maxLines && lines.length*size*lh <= maxH && widest <= maxW) return {lines, size};
+    size -= 2;
+  }
+  setType({...cfg, s:lo});
+  return {lines: wrapLines(text, maxW).slice(0, maxLines), size: lo};
+}
+function drawLines(lines, x, y, size, lh){
+  ctx.textBaseline='alphabetic';
+  lines.forEach((ln,i)=> ctx.fillText(ln, x, y + size*0.80 + i*size*lh));
+  return y + lines.length*size*lh;
+}
+function coverDraw(img, x, y, w, h, t){
+  if(!img) return;
+  const ir = img.width/img.height, br = w/h;
+  let dw,dh;
+  if(ir > br){ dh = h; dw = h*ir; } else { dw = w; dh = w/ir; }
+  dw *= t.zoom; dh *= t.zoom;
+  ctx.drawImage(img, x + (w-dw)/2 + t.ox*w, y + (h-dh)/2 + t.oy*h, dw, dh);
+}
+function placeholder(x,y,w,h,msg){
+  ctx.save(); ctx.beginPath(); ctx.rect(x,y,w,h); ctx.clip();
+  ctx.fillStyle=LIGHT; ctx.fillRect(x,y,w,h);
+  ctx.strokeStyle=rgba(SILVER,.22); ctx.lineWidth=10;
+  for(let i=-h; i<w+h; i+=54){ ctx.beginPath(); ctx.moveTo(x+i,y); ctx.lineTo(x+i+h,y+h); ctx.stroke(); }
+  setType({w:500,s:Math.min(30,w/11),ls:2.4,color:rgba(DARK,.55),align:'center',baseline:'middle'});
+  ctx.fillText(msg, x+w/2, y+h/2);
+  resetType(); ctx.restore();
+}
+function vGradient(x,y,w,h,stops){
+  const g = ctx.createLinearGradient(x,y,x,y+h);
+  stops.forEach(s=>g.addColorStop(s[0],s[1]));
+  ctx.fillStyle=g; ctx.fillRect(x,y,w,h);
+}
+
+/* ---- the mark, set live: there is no symbol, only the word and the line ---- */
+function wordmarkW(h){
+  setType({w:400,s:h,ls:-h*0.012});
+  return ctx.measureText('crowncon').width;
+}
+function wordmarkH(h){ return h*1.06 + h*0.218; }
+function drawWordmark(x, y, h, color){
+  setType({w:400,s:h,ls:-h*0.012,color,baseline:'top'});
+  ctx.fillText('crowncon', x, y);
+  const w = ctx.measureText('crowncon').width;
+  const ss = h*0.218;
+  setType({w:400,s:ss,ls:ss*0.012,color,align:'right',baseline:'top'});
+  ctx.fillText('built with you.', x+w, y + h*1.02);
+  ctx.textAlign='left'; resetType();
+  return w;
+}
+
+/* ---- five gold stars. Crowncon only ever shows five-star reviews, so the
+   count is fixed — there is no 3-star version of this template to design for.
+   Solid fill, never outlined: Cool Gold on the dark ground (5.67:1), Star Gold
+   on the light ones, because flat Cool Gold on light gold measures 1.5:1 and
+   the stars would all but vanish at thumbnail size. ---- */
+function starPath(cx, cy, r){
+  const inner = r*0.3820;
+  ctx.beginPath();
+  for(let i=0;i<10;i++){
+    const rad = (i%2===0) ? r : inner;
+    const a = -Math.PI/2 + i*Math.PI/5;
+    const px = cx + Math.cos(a)*rad, py = cy + Math.sin(a)*rad;
+    i? ctx.lineTo(px,py) : ctx.moveTo(px,py);
+  }
+  ctx.closePath();
+}
+function drawStars(x, y, size, onDark){
+  const r = size/2, gap = size*0.30;
+  for(let i=0;i<5;i++){
+    const cx = x + r + i*(size+gap);
+    starPath(cx, y+r, r);
+    ctx.fillStyle = onDark ? GOLD : STAR_GOLD; ctx.fill();
+  }
+  return 5*size + 4*gap;
+}
+
+/* solid ground, optionally a photo washed back behind it */
+function paintBg(W,H,base,slot){
+  const im = slot || S.imgs[0];
+  ctx.fillStyle = base; ctx.fillRect(0,0,W,H);
+  if(TEMPLATES[S.tpl].bg && im && im.img){
+    ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+    coverDraw(im.img,0,0,W,H,im); ctx.restore();
+    ctx.fillStyle = rgba(base, S.scrim); ctx.fillRect(0,0,W,H);
+  }
+}
+function curSlide(){ return S.slides[S.slideIdx]; }
+function val(k){
+  const t = TEMPLATES[S.tpl];
+  if(t.slides){
+    const f = t.fields.find(f=>f.k===k);
+    if(f && f.perSlide) return curSlide()[k] ?? '';
+  }
+  return S.v[k] ?? '';
+}
+
+/* --------------------------------------------------------------- rendering */
+function render(){
+  const [W,H] = FORMATS[S.fmt];
+  if(cv.width!==W || cv.height!==H){ cv.width=W; cv.height=H; ctx = cv.getContext('2d'); }
+  paint(W,H);
+  if(S.guides) drawGuides(W,H);
+  resetType();
+  if(TEMPLATES[S.tpl].slides) renderStrip();
+}
+function paint(W,H){
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,W,H);
+  (RENDER[S.tpl]||(()=>{}))(W,H);
+}
+
+/* the quote as it will be set: always in typographic quotes, uppercase by
+   default because that is how the review cards read best at feed size */
+function quoteText(){
+  const q = val('quote').trim().replace(/[.\s]+$/,'');
+  return '“' + (val('case')==='Sentence' ? q : q.toUpperCase()) + '”';
+}
+/* stars measured so they can be centred */
+function starsWidth(size){ return size*6.2; }
+
+/* Review over a photograph: the panel is sized to its content, inset from the
+   frame, and sits high so the work stays visible underneath it. */
+function proofPanel(W,H){
+  const im = S.imgs[0];
+  ctx.fillStyle=INK; ctx.fillRect(0,0,W,H);
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+  if(im.img) coverDraw(im.img,0,0,W,H,im);
+  else placeholder(0,0,W,H,'Drop a photo of the work');
+  ctx.restore();
+
+  /* Photo fade and panel opacity are deliberately separate controls. The fade
+     settles a busy or bright photograph across the whole frame; the panel
+     opacity is what makes the quote readable. Tying them together means you
+     can't calm the image without burying it behind the panel. */
+  const fade = Number(val('imgFade'))||0;
+  if(fade>0){ ctx.fillStyle=rgba(INK,fade); ctx.fillRect(0,0,W,H); }
+
+  const inset  = Math.round(W*0.062);
+  const ipad   = Math.round(W*0.072);
+  const panelW = W - inset*2;
+  const maxTxt = panelW - ipad*2;
+  const cx     = W/2;
+
+  const starSize = Math.round(W*0.042);
+  const gapA     = Math.round(W*0.052);
+  const gapB     = Math.round(W*0.058);
+  const attrSize = Math.round(W*0.021);
+
+  /* size the quote to the room actually left once the panel's furniture is in */
+  const roomForQuote = (safeFootY(W,H)-safeHeadY(W,H))*0.72 - ipad*2 - starSize - gapA - gapB - attrSize;
+  const qFit = fitText(quoteText(), maxTxt, roomForQuote, 8,
+                       {w:500,ls:.2,color:LIGHT,align:'center'},
+                       Math.round(W*0.049), 20, 1.46);
+  const quoteH = qFit.lines.length*qFit.size*1.46;
+  const panelH = ipad*2 + starSize + gapA + quoteH + gapB + attrSize;
+
+  /* Centred means optically centred in the space that is actually usable —
+     between the two UI bands — not centred in the raw 1920px, which on a story
+     would sit the panel low. Clamped so a tall panel can never cross a band. */
+  const minY = safeHeadY(W,H);
+  const maxY = Math.max(minY, safeFootY(W,H) - panelH);
+  const panelY = val('pos')==='High'
+    ? Math.min(Math.max(minY, Math.round(H*0.052)), maxY)
+    : Math.min(Math.max(minY, Math.round((minY + safeFootY(W,H) - panelH)/2)), maxY);
+
+  /* the panel reads as a scrim over the work, not a card sitting on top of it */
+  ctx.fillStyle = rgba(INK, Number(val('panelOp'))||0.66);
+  ctx.fillRect(inset, panelY, panelW, panelH);
+
+  let y = panelY + ipad;
+  drawStars(cx - starsWidth(starSize)/2, y, starSize, true);
+  y += starSize + gapA;
+
+  setType({w:500,s:qFit.size,ls:.2,color:LIGHT,align:'center'});
+  y = drawLines(qFit.lines, cx, y, qFit.size, 1.46) + gapB;
+
+  setType({w:600,s:attrSize,ls:2.6,color:GOLD,align:'center',baseline:'top'});
+  ctx.fillText('— '+val('who').toUpperCase(), cx, y);
+
+  if(val('pMarkR')){
+    const mh = Math.round(W*0.046);
+    vGradient(0,H-Math.round(H*0.16),W,Math.round(H*0.16),
+              [[0,rgba(INK,0)],[1,rgba(INK,.72)]]);
+    drawWordmark(cx - wordmarkW(mh)/2, safeFootY(W,H)-wordmarkH(mh)+10, mh, LIGHT);
+  }
+  ctx.textAlign='left'; resetType();
+}
+
+const RENDER = {
+
+/* ---- Pillar 1 · The Dream — the finished space, room to breathe ---- */
+'dream'(W,H){
+  ctx.fillStyle=INK; ctx.fillRect(0,0,W,H);
+  const im=S.imgs[0];
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+  if(im.img) coverDraw(im.img,0,0,W,H,im);
+  else placeholder(0,0,W,H,'Drop the finished-space photo');
+  ctx.restore();
+
+  /* scrim only at the foot — the brand never types over a bare photo, and
+     never darkens the whole frame either */
+  vGradient(0,H*0.50,W,H*0.50,[[0,rgba(INK,0)],[.58,rgba(INK,.62)],[1,rgba(INK,.93)]]);
+
+  const pad=Math.round(W*0.068);
+  if(val('dRender')){
+    const lbl='RENDER', ls=Math.round(W*0.018);
+    setType({w:600,s:ls,ls:3,baseline:'top'});
+    const lw=ctx.measureText(lbl).width;
+    ctx.fillStyle=GOLD; ctx.fillRect(0, pad, lw+pad*1.4, ls*2.4);
+    setType({w:600,s:ls,ls:3,color:INK,baseline:'middle'});
+    ctx.fillText(lbl, pad*0.7, pad+ls*1.2);
+  }
+  if(val('dMark')) drawWordmark(W-pad-wordmarkW(Math.round(W*0.052)), safeHeadY(W,H), Math.round(W*0.052), LIGHT);
+
+  const subSize=Math.round(W*0.0215);
+  const footY = safeFootY(W,H);
+  setType({w:500,s:subSize,ls:2.6,color:GOLD,baseline:'alphabetic'});
+  ctx.fillText(val('dSub').toUpperCase(), pad, footY);
+
+  const fit = fitText(val('dTitle'), W-pad*2, H*0.26, 3,
+                      {w:400,ls:-1,color:LIGHT}, Math.round(W*0.072), 34, 1.14);
+  setType({w:400,s:fit.size,ls:-1,color:LIGHT});
+  const blockH = fit.lines.length*fit.size*1.14;
+  drawLines(fit.lines, pad, footY - subSize - 34 - blockH, fit.size, 1.14);
+
+  /* the heading rule, short — 45% of the column, never full width */
+  ctx.fillStyle=rgba(LIGHT,.5);
+  ctx.fillRect(pad, footY - subSize - 24, (W-pad*2)*0.45, 2);
+  resetType();
+},
+
+/* ---- Pillar 2 · The Craft — the detail, and the number that proves it ---- */
+'craft'(W,H){
+  ctx.fillStyle=INK; ctx.fillRect(0,0,W,H);
+  const im=S.imgs[0];
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+  if(im.img) coverDraw(im.img,0,0,W,H,im);
+  else placeholder(0,0,W,H,'Drop the detail shot');
+  ctx.restore();
+
+  const pad=Math.round(W*0.068);
+  const note=val('note').trim();
+  const dSize=Math.round(W*0.036), mSize=Math.round(W*0.082), nSize=Math.round(W*0.0225);
+
+  setType({w:500,s:dSize,ls:.2});
+  const dW=ctx.measureText(val('detail')).width;
+  setType({w:600,s:mSize,ls:-2});
+  const mW=ctx.measureText(val('measure')).width;
+  setType({w:400,s:nSize,ls:0});
+  const nW=note? ctx.measureText(note).width : 0;
+
+  const tagW = Math.min(W-pad, Math.max(dW, mW, nW) + pad*1.9);
+  const tagH = mSize*1.14 + dSize*1.5 + (note? nSize*2.0 : 0) + pad*0.5;
+  const y0 = safeFootY(W,H) - tagH + Math.round(W*0.02);
+
+  /* flat light-gold tag, square, anchored to the left edge — no radius */
+  ctx.fillStyle=LIGHT; ctx.fillRect(0, y0, tagW, tagH);
+  ctx.fillStyle=GOLD;  ctx.fillRect(0, y0, tagW, 5);
+
+  let y = y0 + pad*0.42;
+  setType({w:500,s:dSize,ls:.2,color:DARK,baseline:'top'});
+  ctx.fillText(val('detail'), pad*0.72, y);
+  y += dSize*1.32;
+  setType({w:600,s:mSize,ls:-2,color:GOLD_DEEP,baseline:'top'});
+  ctx.fillText(val('measure'), pad*0.72, y);
+  y += mSize*1.06;
+  if(note){
+    setType({w:400,s:nSize,ls:0,color:SILVER_DEEP,baseline:'top'});
+    ctx.fillText(note, pad*0.72, y+6);
+  }
+  if(val('cMark')) drawWordmark(pad, safeHeadY(W,H), Math.round(W*0.05), LIGHT);
+  resetType();
+},
+
+/* ---- Pillar 3 · The Proof — the review, verbatim ----
+   Two layouts. 'Panel on photo' floats a translucent Dark panel over a real
+   photograph of the work: the review and the proof of the review sit in one
+   frame, which is why it is the default. 'Flat card' is the typographic
+   version for when there is no photo worth showing. ---- */
+'proof'(W,H){
+  if(val('layout')==='Panel on photo') return proofPanel(W,H);
+  const g = val('ground');
+  const base = g==='White' ? WHITE : (g==='Dark' ? DARK : LIGHT);
+  const onDark = g==='Dark';
+  const ink   = onDark ? LIGHT : DARK;
+  const quiet = onDark ? GOLD  : GOLD_DEEP;
+  paintBg(W,H,base);
+
+  ctx.fillStyle=GOLD; ctx.fillRect(0,0,W,10);
+
+  const pad=Math.round(W*0.088);
+
+  /* five stars, top left — always five, because that is all we publish */
+  const starSize = Math.round(W*0.052);
+  const starsY   = pad*0.78;
+  drawStars(pad, starsY, starSize, onDark);
+
+  const attrH = Math.round(W*0.115);
+  const top   = starsY + starSize + Math.round(W*0.055);
+  const avail = safeFootY(W,H) - top - attrH;
+
+  const qFit = fitText(quoteText(), W-pad*2, avail, 9,
+                       {w:400,ls:-.2,color:ink}, Math.round(W*0.060), 24, 1.44);
+  setType({w:400,s:qFit.size,ls:-.2,color:ink});
+  drawLines(qFit.lines, pad, top, qFit.size, 1.44);
+
+  const aY = safeFootY(W,H) - attrH;
+  ctx.fillStyle=quiet; ctx.fillRect(pad, aY, Math.round(W*0.075), 2);
+  setType({w:600,s:Math.round(W*0.028),ls:.2,color:ink,baseline:'top'});
+  ctx.fillText(val('who'), pad, aY+22);
+  setType({w:500,s:Math.round(W*0.0205),ls:2.4,color:quiet,baseline:'top'});
+  ctx.fillText(val('source').toUpperCase(), pad, aY+22+Math.round(W*0.042));
+
+  drawWordmark(W-pad-wordmarkW(Math.round(W*0.046)), safeFootY(W,H)-wordmarkH(Math.round(W*0.046))+8,
+               Math.round(W*0.046), onDark? LIGHT : DARK);
+  resetType();
+},
+
+/* ---- Pillar 4 · The Process — where the build is this week ---- */
+'process'(W,H){
+  ctx.fillStyle=INK; ctx.fillRect(0,0,W,H);
+  const im=S.imgs[0];
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+  if(im.img) coverDraw(im.img,0,0,W,H,im);
+  else placeholder(0,0,W,H,'Drop the site photo');
+  ctx.restore();
+
+  vGradient(0,0,W,H*0.26,[[0,rgba(INK,.55)],[1,rgba(INK,0)]]);
+  vGradient(0,H*0.56,W,H*0.44,[[0,rgba(INK,0)],[.6,rgba(INK,.66)],[1,rgba(INK,.94)]]);
+
+  const pad=Math.round(W*0.068);
+  /* outlined stage marker — the brand's outline-numeral device, boxed */
+  const sS=Math.round(W*0.0215);
+  setType({w:500,s:sS,ls:2.6,baseline:'middle'});
+  const sW=ctx.measureText(val('stage').toUpperCase()).width;
+  const bW=sW+pad*0.9, bH=sS*2.7;
+  const headY = safeHeadY(W,H);
+  ctx.strokeStyle=rgba(LIGHT,.62); ctx.lineWidth=2;
+  ctx.strokeRect(pad+1, headY+1, bW, bH);
+  setType({w:500,s:sS,ls:2.6,color:LIGHT,baseline:'middle'});
+  ctx.fillText(val('stage').toUpperCase(), pad+pad*0.45, headY+bH/2+1);
+
+  if(val('pMark')) drawWordmark(W-pad-wordmarkW(Math.round(W*0.05)), headY, Math.round(W*0.05), LIGHT);
+
+  const subSize=Math.round(W*0.0215), footY=safeFootY(W,H);
+  setType({w:500,s:subSize,ls:2.6,color:GOLD});
+  ctx.fillText(val('pSub').toUpperCase(), pad, footY);
+
+  const fit = fitText(val('pTitle'), W-pad*2, H*0.22, 2,
+                      {w:400,ls:-1,color:LIGHT}, Math.round(W*0.066), 32, 1.14);
+  setType({w:400,s:fit.size,ls:-1,color:LIGHT});
+  const blockH=fit.lines.length*fit.size*1.14;
+  drawLines(fit.lines, pad, footY - subSize - 34 - blockH, fit.size, 1.14);
+  resetType();
+},
+
+/* ---- Pillar 5 · Meet Tim — a reel cover that reads at thumbnail size ---- */
+'tim'(W,H){
+  ctx.fillStyle=INK; ctx.fillRect(0,0,W,H);
+  const im=S.imgs[0];
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,H); ctx.clip();
+  if(im.img) coverDraw(im.img,0,0,W,H,im);
+  else placeholder(0,0,W,H,'Drop the frame of Tim');
+  ctx.restore();
+
+  vGradient(0,0,W,H*0.22,[[0,rgba(INK,.45)],[1,rgba(INK,0)]]);
+  vGradient(0,H*0.40,W,H*0.60,[[0,rgba(INK,0)],[.55,rgba(INK,.52)],[1,rgba(INK,.88)]]);
+
+  const pad=Math.round(W*0.068);
+  const gc = gridCrop(W,H);
+  const nameH = Math.round(W*0.082);
+  /* Two different crops are in play and the block has to clear both: the 3:4
+     thumbnail the profile grid takes from the centre, and the reply rail at the
+     foot of the full-screen player. 'Bottom' still means the foot of the frame —
+     but the foot of the *safe* frame, never the foot of the pixels. */
+  const anchor = val('place')==='Bottom' ? safeFootY(W,H)
+               : Math.min(gc.y + gc.h - pad*0.4, safeFootY(W,H));
+
+  /* the dark block: flat, square, hard to the left edge */
+  const qCfg={w:400,ls:-1.2,color:LIGHT};
+  const qFit = fitText(val('question'), W-pad*2.6, H*0.30, 4, qCfg, Math.round(W*0.078), 36, 1.12);
+  setType({...qCfg, s:qFit.size});
+  const qW = Math.max(...qFit.lines.map(l=>ctx.measureText(l).width), 0);
+  const blockH = qFit.lines.length*qFit.size*1.12 + nameH + pad*1.0;
+  const blockW = Math.min(W, qW + pad*1.7);
+  const by = anchor - blockH;
+
+  ctx.fillStyle=rgba(DARK,.95); ctx.fillRect(0, by, blockW, blockH);
+  ctx.fillStyle=GOLD; ctx.fillRect(0, by, 8, blockH);
+
+  setType({...qCfg, s:qFit.size});
+  const endY = drawLines(qFit.lines, pad*0.85, by + pad*0.46, qFit.size, 1.12);
+
+  setType({w:500,s:Math.round(W*0.0205),ls:2.6,color:GOLD,baseline:'top'});
+  ctx.fillText((val('name')+' · '+val('runtime')).toUpperCase(), pad*0.85, endY + 16);
+
+  if(val('tMark')){
+    const mh=Math.round(W*0.05);
+    drawWordmark(pad, safeHeadY(W,H), mh, LIGHT);
+  }
+  resetType();
+},
+
+/* ---- Pillar 6 · The Knowledge — the carousel that feeds the blog ----
+   The photo runs at full strength in a band across the top and the text sits
+   on solid ground beneath it. A washed-back photo behind type gives you neither
+   a readable card nor a photograph worth looking at; splitting them lets the
+   picture be a picture. The split is a fixed fraction of the frame, not sized
+   to the text, so every slide in a carousel lines up as you swipe. ---- */
+'knowledge'(W,H){
+  const sl    = curSlide();
+  const ground = val('kGround')==='White' ? WHITE : LIGHT;
+  const photo  = sl.img.img;
+  /* The band is reserved for the whole carousel, not per slide: if ANY slide
+     carries a photo, every slide keeps the same split so the headings stay on
+     one line as you swipe. A slide with no photo fills its band with flat Cool
+     Gold rather than collapsing it, which would make the card jump. */
+  const anyPhoto = S.slides.some(x => x.img && x.img.img);
+  /* Beyond ~55% the card has no room for body copy, so a slide that carries a
+     body is held at 0.55; only heading-only slides may run to the full depth. */
+  const hasBody = (sl.body||'').trim().length>0;
+  const depth = Math.min(Number(val('kSplit'))||0.36, hasBody ? 0.55 : 0.74);
+  const split = anyPhoto ? Math.round(H * depth) : 0;
+
+  ctx.fillStyle=ground; ctx.fillRect(0,0,W,H);
+  if(split){
+    if(photo){
+      ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,split); ctx.clip();
+      coverDraw(photo,0,0,W,split,sl.img); ctx.restore();
+    }else{
+      ctx.fillStyle=GOLD; ctx.fillRect(0,0,W,split);
+    }
+  }
+  /* Cool Gold seam: on a split slide it marks where photo meets card, on a
+     text-only slide it is the top rule. Same element, same 10px, either way. */
+  ctx.fillStyle=GOLD; ctx.fillRect(0, split, W, 10);
+
+  const pad = Math.round(W*0.082);
+  const foot = (S.v.carFoot||'').trim();
+  const footSize = Math.round(W*0.0195);
+  const footY = safeFootY(W,H);
+  const limit = footY - (foot ? footSize*2.4 : 0);
+
+  const total = S.slides.length;
+  let y = split + 10 + Math.round(W*0.062);
+  setType({w:500,s:Math.round(W*0.026),ls:3.2,color:GOLD_DEEP,baseline:'top'});
+  ctx.fillText(`${sl.num} / ${String(total).padStart(2,'0')}`, pad, y);
+  y += Math.round(W*0.062);
+
+  /* heading-only slide: with no body the heading may take all the room left */
+  const hFit = fitText(sl.heading, W-pad*2, (limit-y)*(hasBody?0.46:0.8), 4,
+                       {w:400,ls:-1.4,color:DARK}, Math.round(W*0.072), 30, 1.12);
+  setType({w:400,s:hFit.size,ls:-1.4,color:DARK});
+  y = drawLines(hFit.lines, pad, y, hFit.size, 1.12) + 22;
+
+  /* the heading rule — 45% of the column, always Dark, never gold */
+  ctx.fillStyle=DARK; ctx.fillRect(pad, y, (W-pad*2)*0.45, 2);
+  y += 38;
+
+  const bFit = !hasBody ? {size:20,lines:[]} : fitText(sl.body, W-pad*2, limit-y, 9,
+                       {w:400,ls:0,color:SILVER_DEEP}, Math.round(W*0.0285), 19, 1.56);
+  setType({w:400,s:bFit.size,ls:0,color:SILVER_DEEP});
+  drawLines(bFit.lines, pad, y, bFit.size, 1.56);
+
+  if(foot){
+    setType({w:500,s:footSize,ls:2.4,color:GOLD_DEEP});
+    const label = (S.slideIdx+1 < total) ? 'SWIPE · '+foot.toUpperCase() : foot.toUpperCase()+' ↘';
+    ctx.fillText(label, pad, footY);
+  }
+  drawWordmark(W-pad-wordmarkW(Math.round(W*0.046)), footY-wordmarkH(Math.round(W*0.046))+10,
+               Math.round(W*0.046), DARK);
+  resetType();
+}
+};
+
+/* The Stories / Reels playback chrome on a 1080×1920 frame: the profile chip
+   and audio line at the top, the caption, sound credit and reply/action rail at
+   the foot. Nothing readable may sit inside these bands. Declared once so the
+   guides and the templates can never disagree about where the foot of a design
+   is — that mismatch is exactly how a title ends up under the reply bar. */
+const UI_SAFE = {top:250, bottom:330};
+/* baseline for the bottom-most element, and top for the top-most */
+function safeFootY(W,H){
+  const pad = Math.round(W*0.068);
+  return S.fmt==='9:16' ? H - UI_SAFE.bottom - Math.round(W*0.035) : H - pad;
+}
+function safeHeadY(W,H){
+  const pad = Math.round(W*0.068);
+  return S.fmt==='9:16' ? UI_SAFE.top + Math.round(W*0.025) : pad;
+}
+
+/* the 3:4 window Instagram crops every profile-grid thumbnail to */
+function gridCrop(W,H){
+  const cw = Math.min(W, H*0.75), ch = cw/0.75;
+  return {x:(W-cw)/2, y:(H-ch)/2, w:cw, h:ch};
+}
+
+/* guides — preview only, never exported */
+function drawGuides(W,H){
+  ctx.save();
+  ctx.strokeStyle=rgba(GOLD_DEEP,.75); ctx.lineWidth=3; ctx.setLineDash([14,10]);
+  ctx.strokeRect(64,64,W-128,H-128);
+
+  const g = gridCrop(W,H);
+  if(g.w < W-2 || g.h < H-2){
+    ctx.setLineDash([14,10]); ctx.strokeStyle=rgba(SILVER_DEEP,.9); ctx.lineWidth=4;
+    ctx.strokeRect(g.x, g.y, g.w, g.h);
+    setType({w:600,s:22,ls:2.4,color:rgba(SILVER_DEEP,.95),baseline:'top'});
+    ctx.fillText('3:4 GRID CROP', g.x+16, g.y+14);
+  }
+  if(S.fmt==='9:16'){
+    ctx.fillStyle=rgba(GOLD_DEEP,.14);
+    const T=UI_SAFE.top, B=H-UI_SAFE.bottom;
+    ctx.fillRect(0,0,W,T); ctx.fillRect(0,B,W,UI_SAFE.bottom);
+    ctx.setLineDash([]); ctx.strokeStyle=rgba(GOLD_DEEP,.6); ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(0,T); ctx.lineTo(W,T); ctx.moveTo(0,B); ctx.lineTo(W,B); ctx.stroke();
+    setType({w:600,s:22,ls:2.4,color:rgba(GOLD_DEEP,.95),baseline:'top'});
+    ctx.fillText('UI SAFE ZONE', 24, T-34);
+    ctx.fillText('UI SAFE ZONE', 24, B+14);
+  }
+  ctx.restore(); resetType();
+}
+
+/* ------------------------------------------------------------ carousel strip */
+const stripEl = document.getElementById('strip');
+function renderStrip(){
+  stripEl.hidden = false;
+  stripEl.innerHTML = '<span class="striplbl">Carousel</span>';
+  const [W,H] = FORMATS[S.fmt];
+  const keep = S.slideIdx;
+  S.slides.forEach((sl,i)=>{
+    const off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    const octx = off.getContext('2d');
+    S.slideIdx = i;
+    withCtx(octx, ()=> paint(W,H));
+    off.dataset.on = (i===keep)?'1':'0';
+    off.title = 'Slide '+(i+1);
+    off.onclick = ()=>{ S.slideIdx=i; buildAll(); };
+    stripEl.appendChild(off);
+  });
+  S.slideIdx = keep;
+}
+
+/* ------------------------------------------------------------------ sidebar */
+const elTpl=document.getElementById('tplList'), elFields=document.getElementById('fields'),
+      elSlots=document.getElementById('slots'), elFmt=document.getElementById('fmtSeg'),
+      elImgGroup=document.getElementById('imgGroup'), elFname=document.getElementById('fname'),
+      elSlideGroup=document.getElementById('slideGroup'), elSlideNav=document.getElementById('slideNav'),
+      elScrimRow=document.getElementById('scrimRow'), elImgLabel=document.getElementById('imgLabel'),
+      elImgHint=document.getElementById('imgHint');
+
+function buildTemplates(){
+  elTpl.innerHTML='';
+  for(const [k,t] of Object.entries(TEMPLATES)){
+    const b=document.createElement('button');
+    b.type='button'; b.className='tpl-btn'; b.id='tpl-'+k;
+    b.setAttribute('aria-pressed', String(k===S.tpl));
+    b.innerHTML = `${t.label}<small>${t.kind}</small>`;
+    b.onclick = ()=>{
+      S.tpl=k;
+      if(!TEMPLATES[k].formats.includes(S.fmt)) S.fmt = TEMPLATES[k].defaultFmt;
+      buildAll();
+    };
+    elTpl.appendChild(b);
+  }
+}
+function buildFormats(){
+  const allow = TEMPLATES[S.tpl].formats;
+  elFmt.querySelectorAll('button').forEach(b=>{
+    const f=b.dataset.fmt;
+    b.disabled = !allow.includes(f);
+    b.setAttribute('aria-pressed', String(f===S.fmt));
+    b.onclick = ()=>{ S.fmt=f; buildAll(); };
+  });
+}
+function buildSlideNav(){
+  const t = TEMPLATES[S.tpl];
+  elSlideGroup.hidden = !t.slides;
+  if(!t.slides) return;
+  elSlideNav.innerHTML='';
+  S.slides.forEach((sl,i)=>{
+    const b=document.createElement('button');
+    b.type='button'; b.className='pipbtn'; b.textContent=i+1;
+    b.setAttribute('aria-pressed', String(i===S.slideIdx));
+    b.onclick=()=>{ S.slideIdx=i; buildAll(); };
+    elSlideNav.appendChild(b);
+  });
+}
+function buildFields(){
+  elFields.innerHTML='';
+  const t = TEMPLATES[S.tpl];
+  for(const f of t.fields){
+    const perSlide = t.slides && f.perSlide;
+    const get = ()=> perSlide ? curSlide()[f.k] : S.v[f.k];
+    const set = x => { if(perSlide) curSlide()[f.k]=x; else S.v[f.k]=x; };
+    const d=document.createElement('div'); d.className='field';
+    const id='f-'+f.k;
+    if(f.t==='check'){
+      d.innerHTML = `<label class="check"><input type="checkbox" id="${id}"> ${f.l}</label>`;
+      elFields.appendChild(d);
+      const i=d.querySelector('input'); i.checked=!!get();
+      i.oninput=()=>{ set(i.checked); render(); };
+      continue;
+    }
+    if(f.t==='range'){
+      d.innerHTML = `<label for="${id}">${f.l}</label>
+        <div class="range"><input type="range" id="${id}" min="${f.min}" max="${f.max}" step="${f.step}"><b></b></div>`;
+      elFields.appendChild(d);
+      const i=d.querySelector('input'), out=d.querySelector('b');
+      const show=()=>{ out.textContent = Math.round(parseFloat(i.value)*100)+'%'; };
+      i.value = get(); show();
+      i.oninput=()=>{ set(parseFloat(i.value)); show(); render(); };
+      continue;
+    }
+    const tag = perSlide ? ` <span style="color:var(--gold-deep)">· slide ${S.slideIdx+1}</span>` : '';
+    if(f.t==='area')        d.innerHTML=`<label for="${id}">${f.l}${tag}</label><textarea id="${id}"></textarea>`;
+    else if(f.t==='select') d.innerHTML=`<label for="${id}">${f.l}</label><select id="${id}">${f.opts.map(o=>`<option>${o}</option>`).join('')}</select>`;
+    else                    d.innerHTML=`<label for="${id}">${f.l}${tag}</label><input type="text" id="${id}">`;
+    elFields.appendChild(d);
+    const i=d.querySelector('input,textarea,select');
+    i.value = get() ?? '';
+    i.oninput = ()=>{
+      set(i.value);
+      if(f.k==='layout') buildSlots();   /* the scrim slider belongs to one layout only */
+      render(); updateName();
+      if(TEMPLATES[S.tpl].slides) buildSlideNav();
+    };
+  }
+}
+function buildSlots(){
+  const t = TEMPLATES[S.tpl];
+  const n = imageSlots();
+  elImgGroup.hidden = n===0;
+  elImgLabel.textContent = t.bg ? 'Background photo (optional)' : 'Photo';
+  elImgHint.textContent = t.slides
+    ? 'Each slide keeps its own background — most Knowledge slides are better with none.'
+    : 'Drop an image here or onto the canvas. Drag the canvas to reposition, double-click to reset.';
+  elSlots.innerHTML='';
+  if(n===0){ elScrimRow.hidden=true; return; }
+
+  for(let i=0;i<n;i++){
+    const im = slotAt(i);
+    const box=document.createElement('div'); box.className='slot';
+    const title = t.slides ? `Slide ${S.slideIdx+1} background` : (t.bg?'Background':'Photo');
+    box.innerHTML=`
+      <div class="slot-drop ${im.img?'filled':''}" tabindex="0" role="button">
+        <b>${title}</b>${im.img ? (im.name||'loaded') : 'Click or drop an image'}
+      </div>
+      <div class="range" style="padding:9px 11px">
+        <span>Zoom</span><input type="range" min="1" max="3" step="0.01" value="${im.zoom}">
+        <button class="mini" type="button">Reset</button>
+      </div>`;
+    const drop=box.querySelector('.slot-drop');
+    const file=document.createElement('input');
+    file.type='file'; file.accept='image/*'; file.style.display='none'; box.appendChild(file);
+    drop.onclick=()=>{ S.active=i; file.click(); };
+    drop.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); S.active=i; file.click(); } };
+    file.onchange=()=>{ if(file.files[0]) loadImage(file.files[0], i); };
+    ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+    ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+    drop.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) loadImage(f,i); });
+    const range=box.querySelector('input[type=range]');
+    range.oninput=()=>{ slotAt(i).zoom=parseFloat(range.value); render(); };
+    box.querySelector('.mini').onclick=()=>{ const s=slotAt(i); s.zoom=1;s.ox=0;s.oy=0; range.value=1; render(); };
+    elSlots.appendChild(box);
+  }
+  const anyImg = !!slotAt(0).img;
+  /* panel layout carries its own two sliders, so the shared Scrim row would
+     only be a third control that does nothing */
+  const panelProof = S.tpl==='proof' && S.v.layout==='Panel on photo';
+  elScrimRow.hidden = !(t.bg && anyImg) || panelProof;
+  document.getElementById('scrim').value = S.scrim;
+  document.getElementById('scrimVal').textContent = Math.round(S.scrim*100)+'%';
+}
+function slotAt(i){ return TEMPLATES[S.tpl].slides ? curSlide().img : S.imgs[i]; }
+function imageSlots(){
+  const t = TEMPLATES[S.tpl];
+  if(t.slides) return 1;
+  return t.images;
+}
+
+function loadImage(file, slot){
+  const img=new Image();
+  img.onload=()=>{
+    const rec = {img, name:file.name, zoom:1, ox:0, oy:0};
+    if(TEMPLATES[S.tpl].slides) curSlide().img = rec; else S.imgs[slot] = rec;
+    S.active=slot; buildSlots(); render(); updateName(); toast('Photo loaded');
+  };
+  img.onerror=()=>toast('Could not read that file');
+  img.src=URL.createObjectURL(file);
+}
+function buildAll(){
+  buildTemplates(); buildFormats(); buildSlideNav(); buildFields(); buildSlots();
+  const t = TEMPLATES[S.tpl];
+  document.getElementById('stTpl').textContent = t.label;
+  const [W,H]=FORMATS[S.fmt];
+  document.getElementById('stSize').textContent = `${W} × ${H}`;
+  document.getElementById('saveAll').hidden = !t.slides;
+  if(!t.slides) stripEl.hidden = true;
+  render(); updateName();
+}
+
+/* ------------------------------------------------------------- file naming */
+function slug(s){
+  return String(s||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-|-$/g,'').slice(0,34);
+}
+function today(){ const d=new Date(), p=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+function fileName(idx){
+  const t=TEMPLATES[S.tpl];
+  const tag = t.slides ? slug(S.slides[0].heading)
+            : slug(S.v.dSub || S.v.dTitle || S.v.detail || S.v.who || S.v.pTitle || S.v.name || '');
+  const parts=['crowncon', today(), S.tpl, tag];
+  if(idx!=null) parts.push('s'+(idx+1));
+  return parts.filter(Boolean).join('_')+'.png';
+}
+function updateName(){
+  elFname.textContent = TEMPLATES[S.tpl].slides ? fileName(S.slideIdx) : fileName();
+}
+
+/* ------------------------------------------------------------------ export */
+function exportBlob(cb){
+  const g=S.guides;
+  if(g){ S.guides=false; render(); }
+  cv.toBlob(b=>{ if(g){ S.guides=true; render(); } cb(b); }, 'image/png');
+}
+function download(blob, name){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+}
+document.getElementById('save').onclick=()=>{
+  const n = TEMPLATES[S.tpl].slides ? fileName(S.slideIdx) : fileName();
+  exportBlob(b=>{ download(b,n); toast('Saved '+n); });
+};
+document.getElementById('saveAll').onclick=()=>{
+  const keep=S.slideIdx, total=S.slides.length;
+  let i=0;
+  (function step(){
+    if(i>=total){ S.slideIdx=keep; buildAll(); toast('Saved '+total+' slides'); return; }
+    S.slideIdx=i; render();
+    const n=fileName(i);
+    cv.toBlob(b=>{ download(b,n); i++; setTimeout(step, 420); }, 'image/png');
+  })();
+};
+document.getElementById('copy').onclick=()=>{
+  exportBlob(async b=>{
+    try{ await navigator.clipboard.write([new ClipboardItem({'image/png':b})]); toast('Copied to clipboard'); }
+    catch(e){ toast('Copy blocked — use Save PNG'); }
+  });
+};
+document.getElementById('addSlide').onclick=()=>{
+  S.slides.push(blankSlide(S.slides.length+1));
+  S.slideIdx=S.slides.length-1; buildAll(); };
+document.getElementById('delSlide').onclick=()=>{
+  if(S.slides.length<=1){ toast('Need at least one slide'); return; }
+  S.slides.splice(S.slideIdx,1);
+  S.slideIdx=Math.max(0,S.slideIdx-1); buildAll(); };
+document.getElementById('scrim').oninput=e=>{
+  S.scrim=parseFloat(e.target.value);
+  document.getElementById('scrimVal').textContent=Math.round(S.scrim*100)+'%';
+  render(); };
+document.getElementById('guides').oninput=e=>{ S.guides=e.target.checked; render(); };
+
+/* ---------------------------------------------------- canvas drag and drop */
+let drag=null;
+cv.addEventListener('pointerdown',e=>{
+  if(imageSlots()===0) return;
+  const im=slotAt(S.active); if(!im || !im.img) return;
+  drag={x:e.clientX,y:e.clientY,ox:im.ox,oy:im.oy,r:cv.getBoundingClientRect(),im};
+  cv.setPointerCapture(e.pointerId); cv.classList.add('dragging');
+});
+cv.addEventListener('pointermove',e=>{
+  if(!drag) return;
+  drag.im.ox = drag.ox + (e.clientX-drag.x)/drag.r.width;
+  drag.im.oy = drag.oy + (e.clientY-drag.y)/drag.r.height;
+  render();
+});
+['pointerup','pointercancel'].forEach(ev=>cv.addEventListener(ev,()=>{ drag=null; cv.classList.remove('dragging'); }));
+cv.addEventListener('dblclick',()=>{
+  const im=slotAt(S.active);
+  if(im&&im.img){ im.ox=0;im.oy=0;im.zoom=1; buildSlots(); render(); }
+});
+['dragenter','dragover'].forEach(ev=>cv.addEventListener(ev,e=>{e.preventDefault();cv.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>cv.addEventListener(ev,e=>{e.preventDefault();cv.classList.remove('over');}));
+cv.addEventListener('drop',e=>{
+  const f=e.dataTransfer.files[0];
+  if(f && imageSlots()>0) loadImage(f, Math.min(S.active, imageSlots()-1));
+});
+window.addEventListener('keydown',e=>{
+  if(S.view!=='studio') return;
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+  const im=slotAt(S.active); if(!im||!im.img) return;
+  const step=e.shiftKey?0.02:0.005;
+  const map={ArrowLeft:[-step,0],ArrowRight:[step,0],ArrowUp:[0,-step],ArrowDown:[0,step]};
+  if(map[e.key]){ e.preventDefault(); im.ox+=map[e.key][0]; im.oy+=map[e.key][1]; render(); }
+});
+
+/* ============================================================ grid planner */
+const GKEY='crowncon.gridplan.v1';
+const pgrid=document.getElementById('pgrid');
+
+function planLoad(){
+  try{ S.grid = JSON.parse(localStorage.getItem(GKEY)||'[]'); }catch(e){ S.grid=[]; }
+  if(!Array.isArray(S.grid)) S.grid=[];
+}
+function planSave(){
+  try{
+    localStorage.setItem(GKEY, JSON.stringify(S.grid));
+    const kb = Math.round(JSON.stringify(S.grid).length/1024);
+    document.getElementById('planSize').textContent = `Saved in this browser · ${S.grid.length} tiles, ${kb} KB`;
+  }catch(e){
+    toast('Storage full — export the plan and clear some tiles');
+  }
+}
+/* 3:4 centre-crop thumbnail — exactly how Instagram renders the profile grid */
+function thumbFrom(src, cb){
+  const TW=360, TH=480;
+  const off=document.createElement('canvas'); off.width=TW; off.height=TH;
+  const c=off.getContext('2d');
+  let cw=Math.min(src.width, src.height*0.75), ch=cw/0.75;
+  if(ch>src.height){ ch=src.height; cw=ch*0.75; }
+  c.drawImage(src,(src.width-cw)/2,(src.height-ch)/2,cw,ch,0,0,TW,TH);
+  cb(off.toDataURL('image/jpeg',0.82));
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function planRender(){
+  pgrid.innerHTML='';
+  const slots = Math.max(9, Math.ceil((S.grid.length+1)/3)*3);
+  for(let i=0;i<slots;i++){
+    const item=S.grid[i];
+    const t=document.createElement('div');
+    t.className='ptile'+(item?' filled':' empty');
+    t.draggable=!!item; t.dataset.i=i;
+    if(item){
+      t.innerHTML=`<img src="${item.thumb}" alt=""><span class="idx">${i+1}</span>
+        <button class="del" type="button" title="Remove">×</button>
+        <span class="lbl">${item.label? escapeHtml(item.label) : 'Add note'}</span>`;
+      t.querySelector('.del').onclick=e=>{ e.stopPropagation(); S.grid.splice(i,1); planSave(); planRender(); };
+      t.onclick=()=>{
+        const v=prompt('Caption note for this tile:', item.label||'');
+        if(v!==null){ item.label=v; planSave(); planRender(); }
+      };
+    }else{
+      t.textContent='Empty';
+    }
+    t.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',String(i)); t.classList.add('dragging'); });
+    t.addEventListener('dragend',()=>t.classList.remove('dragging'));
+    t.addEventListener('dragover',e=>{ e.preventDefault(); t.classList.add('dragover'); });
+    t.addEventListener('dragleave',()=>t.classList.remove('dragover'));
+    t.addEventListener('drop',e=>{
+      e.preventDefault(); e.stopPropagation(); t.classList.remove('dragover');
+      if(e.dataTransfer.files && e.dataTransfer.files.length){ planAddFiles(e.dataTransfer.files, i); return; }
+      const from=parseInt(e.dataTransfer.getData('text/plain'),10);
+      if(isNaN(from)||from===i) return;
+      const moved=S.grid.splice(from,1)[0];
+      if(!moved) return;
+      S.grid.splice(Math.min(i,S.grid.length),0,moved);
+      planSave(); planRender();
+    });
+    pgrid.appendChild(t);
+  }
+  document.getElementById('planCount').textContent = `${S.grid.length} tile${S.grid.length===1?'':'s'} planned`;
+  document.getElementById('planPosts').textContent = S.grid.length;
+}
+
+function planAddFiles(files, at){
+  const list=[...files].filter(f=>/^image\//.test(f.type));
+  if(!list.length) return;
+  let pending=list.length;
+  list.forEach((f,n)=>{
+    const img=new Image();
+    img.onload=()=>{
+      thumbFrom(img, dataUrl=>{
+        const rec={thumb:dataUrl, label:f.name.replace(/\.[a-z0-9]+$/i,'')};
+        if(at==null) S.grid.push(rec); else S.grid.splice(at+n,0,rec);
+        if(--pending===0){ planSave(); planRender(); toast('Added to plan'); }
+      });
+    };
+    img.onerror=()=>{ if(--pending===0){ planSave(); planRender(); } };
+    img.src=URL.createObjectURL(f);
+  });
+}
+document.getElementById('planFromCanvas').onclick=()=>{
+  const g=S.guides; if(g){ S.guides=false; render(); }
+  thumbFrom(cv, dataUrl=>{
+    if(g){ S.guides=true; render(); }
+    const t=TEMPLATES[S.tpl];
+    S.grid.push({thumb:dataUrl, label: t.slides ? S.slides[0].heading
+      : (S.v.dTitle||S.v.detail||S.v.who||S.v.pTitle||S.v.question||t.label)});
+    planSave(); planRender(); toast('Added to plan');
+  });
+};
+document.getElementById('planAddFiles').onclick=()=>{
+  const f=document.createElement('input');
+  f.type='file'; f.accept='image/*'; f.multiple=true;
+  f.onchange=()=>planAddFiles(f.files,null);
+  f.click();
+};
+['dragenter','dragover'].forEach(ev=>pgrid.addEventListener(ev,e=>e.preventDefault()));
+pgrid.addEventListener('drop',e=>{
+  e.preventDefault();
+  if(e.dataTransfer.files && e.dataTransfer.files.length) planAddFiles(e.dataTransfer.files,null);
+});
+document.getElementById('planExport').onclick=()=>{
+  const blob=new Blob([JSON.stringify(S.grid)],{type:'application/json'});
+  download(blob, `crowncon_${today()}_grid-plan.json`);
+  toast('Plan exported');
+};
+document.getElementById('planImport').onclick=()=>{
+  const f=document.createElement('input'); f.type='file'; f.accept='application/json';
+  f.onchange=()=>{
+    const r=new FileReader();
+    r.onload=()=>{ try{
+      const d=JSON.parse(r.result);
+      if(Array.isArray(d)){ S.grid=d; planSave(); planRender(); toast('Plan imported'); }
+      else toast('Not a plan file');
+    }catch(e){ toast('Could not read that file'); } };
+    r.readAsText(f.files[0]);
+  };
+  f.click();
+};
+document.getElementById('planClear').onclick=()=>{
+  if(!S.grid.length) return;
+  if(confirm('Remove all '+S.grid.length+' tiles from the plan?')){ S.grid=[]; planSave(); planRender(); }
+};
+
+/* ------------------------------------------------------------------- views */
+function setView(v){
+  S.view=v;
+  const studio = v==='studio';
+  document.getElementById('tabStudio').setAttribute('aria-selected', String(studio));
+  document.getElementById('tabPlan').setAttribute('aria-selected', String(!studio));
+  document.getElementById('studioPanel').hidden = !studio;
+  document.getElementById('planPanel').hidden   = studio;
+  document.getElementById('studioBar').hidden   = !studio;
+  document.getElementById('planBar').hidden     = studio;
+  document.getElementById('studioStage').hidden = !studio;
+  document.getElementById('planStage').hidden   = studio;
+  document.getElementById('statusbar').hidden   = !studio;
+  stripEl.hidden = !(studio && TEMPLATES[S.tpl].slides);
+  if(!studio) planRender();
+}
+document.getElementById('tabStudio').onclick=()=>setView('studio');
+document.getElementById('tabPlan').onclick=()=>setView('plan');
+
+/* ------------------------------------------------------------------- toast */
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* -------------------------------------------------------------------- boot */
+planLoad(); planSave();
+buildAll();
+(async ()=>{
+  try{
+    await Promise.all([
+      document.fonts.load('400 40px Mont').catch(()=>{}),
+      document.fonts.load('600 40px Mont').catch(()=>{}),
+      document.fonts.load('400 40px Poppins'),
+      document.fonts.load('600 40px Poppins')
+    ]);
+    await document.fonts.ready;
+  }catch(e){}
+  /* document.fonts.load resolves even when the request failed, so verify —
+     and say which of the two is actually drawing, because it changes the artwork */
+  const hasMont = document.fonts.check('400 40px Mont');
+  const hasPop  = document.fonts.check('400 40px Poppins');
+  S.fontsReady = hasMont || hasPop;
+  const st=document.getElementById('stFont');
+  if(hasMont)      st.innerHTML='Type <b>Mont</b> — licensed';
+  else if(hasPop){ st.innerHTML='Type <b>Poppins</b> — documented substitute for Mont';
+                   toast('Mont not installed — drawing in Poppins'); }
+  else{
+    st.innerHTML='<b style="color:#8a4b3f">No brand font loaded</b> — needs internet on first open';
+    toast('Brand fonts unavailable — reload when online');
+  }
+  render();
+})();
+</script>
+</body>
+</html>
