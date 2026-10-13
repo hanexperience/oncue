@@ -725,7 +725,15 @@ function fieldHTML(id,row,f){
     html += `<textarea oninput="queueSave('${id}','${row.id}','${f.k}',this.value)">${esc(val==null?'':val)}</textarea>`;
   } else if(f.t==='select'||f.t==='status'){
     html += `<select class="${f.t==='status'?'status':''}" onchange="saveField('${id}','${row.id}','${f.k}',this.value)">`;
-    f.o.forEach(o=>{ html += `<option ${String(val||'')===o?'selected':''}>${esc(o)}</option>`; });
+    // A stored value that isn't one of this field's current options (e.g. a status removed from
+    // the list after the row was created) must never just fall through to the browser's own
+    // default of "select the first <option>" — that silently shows a DIFFERENT real status as
+    // if it were selected, with no visual difference from actually having that status. Instead
+    // show the stale value itself, disabled, so the mismatch is visible and nothing gets
+    // mis-saved until someone deliberately picks a real option.
+    const matches = String(val||'')!=='' && f.o.includes(String(val));
+    if(val && !matches){ html += `<option selected disabled>${esc(val)} (old value)</option>`; }
+    f.o.forEach(o=>{ html += `<option ${matches && String(val)===o?'selected':''}>${esc(o)}</option>`; });
     html += `</select>`;
   } else if(f.t==='bool'){
     html += `<div class="chk"><input type="checkbox" ${val?'checked':''} onchange="saveField('${id}','${row.id}','${f.k}',this.checked)"> <span>${f.l}</span></div>`;
