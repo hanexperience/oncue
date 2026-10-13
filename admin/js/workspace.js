@@ -1673,16 +1673,24 @@ function renderCalendarGrid(opts) {
       // card, publishBlockHTML): Tim approved / Scheduled / Crew approved, and not yet actually
       // published (at that point the dot alone already says so clearly enough).
       const isArmed = (s.status==='Tim approved' || s.status==='Scheduled' || s.status==='Crew approved') && pubStatus!=='Published';
+      // Bumped well past a subtle tint, plus the whole border (not just the pillar-coded left
+      // edge) now carries the same colour — the first pass was too easy to miss at a glance.
       const cardBg = pubStatus==='Published' ? 'var(--paper)'
-        : isArmed ? 'color-mix(in srgb, var(--good) 16%, var(--paper))'
-        : s.status==='Needs changes' ? 'color-mix(in srgb, var(--bad) 14%, var(--paper))'
-        : s.status==='Pending crew review' ? 'color-mix(in srgb, var(--warn) 14%, var(--paper))'
+        : isArmed ? 'color-mix(in srgb, var(--good) 38%, var(--paper))'
+        : s.status==='Needs changes' ? 'color-mix(in srgb, var(--bad) 32%, var(--paper))'
+        : s.status==='Pending crew review' ? 'color-mix(in srgb, var(--warn) 32%, var(--paper))'
         : 'var(--paper)';
+      const cardBorderColor = pubStatus==='Published' ? 'var(--line)'
+        : isArmed ? 'var(--good)'
+        : s.status==='Needs changes' ? 'var(--bad)'
+        : s.status==='Pending crew review' ? 'var(--warn)'
+        : 'var(--line)';
+      const cardBorderWidth = (isArmed || s.status==='Needs changes' || s.status==='Pending crew review') && pubStatus!=='Published' ? '2px' : '1px';
       const label = calSlotLabel(s);
       const _ci = CALENDAR_CONTENT.find(c=>c.id===s.content_item_id);
       const _th = _ci ? thumbFor(_ci) : null;
       const thumbImg = _th ? `<img src="${esc(_th)}" data-fb="${esc(thumbFallback(_ci))}" referrerpolicy="no-referrer" onerror="if(this.dataset.fb&&!this.dataset.tried){this.dataset.tried=1;this.src=this.dataset.fb}else{this.remove()}" style="width:16px;height:16px;object-fit:cover;border-radius:2px;margin-right:3px;vertical-align:middle">` : '';
-      return `<div style="font-size:10px; background:${cardBg}; border: 1px solid var(--line); border-left: 3px solid ${pillarBorder}; border-radius:3px; margin-top:2px; padding:2px 4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left;" title="${esc(label)} — ${esc(s.status||'')} — ${esc(pubStatus)}">
+      return `<div style="font-size:10px; font-weight:${isArmed?'700':'400'}; background:${cardBg}; border: ${cardBorderWidth} solid ${cardBorderColor}; border-left: 3px solid ${pillarBorder}; border-radius:3px; margin-top:2px; padding:2px 4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left;" title="${esc(label)} — ${esc(s.status||'')} — ${esc(pubStatus)}">
         <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${dotColor};margin-right:3px;vertical-align:middle"></span>${thumbImg}${timeLabel}${esc(label)}
       </div>`;
     }).join('') + (extraCount>0 ? `<div style="font-size:9.5px;font-weight:700;color:var(--muted);margin-top:2px;text-align:left;">+${extraCount} more</div>` : '');
