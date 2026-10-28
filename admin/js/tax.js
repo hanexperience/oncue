@@ -32,6 +32,25 @@
   const CONCESSIONAL_CAP = { '2023-24': 27500, '2024-25': 30000, '2025-26': 30000, '2026-27': 32500 };
   function concessionalCap() { return CONCESSIONAL_CAP[FY] || 30000; }
 
+  // ── Resident income-tax brackets by FY (Stage 3: 16% -> 15% from 1 Jul 2026). Source: ato.gov.au/tax-rates-and-codes/tax-rates-australian-residents
+  // Medicare levy modelled flat at 2% (ignores the low-income shade-in, so slightly conservative at low incomes).
+  const TAX_BRACKETS = {
+    '2025-26': [[18200, 0], [45000, 0.16], [135000, 0.30], [190000, 0.37], [Infinity, 0.45]],
+    '2026-27': [[18200, 0], [45000, 0.15], [135000, 0.30], [190000, 0.37], [Infinity, 0.45]]
+  };
+  const MEDICARE_RATE = 0.02;
+  function calcResidentTax(taxable) {
+    const br = TAX_BRACKETS[FY] || TAX_BRACKETS['2026-27'];
+    taxable = Math.max(num(taxable), 0);
+    let prev = 0, inc = 0;
+    for (let i = 0; i < br.length; i++) { const top = br[i][0]; if (taxable > prev) inc += (Math.min(taxable, top) - prev) * br[i][1]; prev = top; }
+    const med = taxable * MEDICARE_RATE;
+    return { income: inc, medicare: med, total: inc + med };
+  }
+  function fyDays() { const y = Number(FY.slice(0, 4)); return { elapsed: Math.max(1, Math.min(365, Math.round((new Date() - new Date(y, 6, 1)) / 86400000) + 1)), total: Math.round((new Date(y + 1, 6, 1) - new Date(y, 6, 1)) / 86400000) }; }
+  function projKey(id) { return 'tax_proj_' + FY + '_' + id; }
+  function getProjOverride(id) { try { const v = parseFloat(localStorage.getItem(projKey(id))); return isNaN(v) || v <= 0 ? null : v; } catch (e) { return null; } }
+
   function todayISO() { const d = new Date(); d.setHours(0, 0, 0, 0); return d.toISOString().slice(0, 10); }
   function daysTo(iso) { if (!iso) return null; const n = new Date(); n.setHours(0, 0, 0, 0); const d = new Date(iso); d.setHours(0, 0, 0, 0); return Math.round((d - n) / 86400000); }
   function money(n) { return (Number(n) || 0).toLocaleString('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }); }
@@ -131,7 +150,8 @@
     // Sole-trader entities also get personal deductible super contributions (capped at the
     // concessional cap) subtracted first — that's a real reduction in taxable income under
     // s290-170 ATO rules, once a notice of intent has been lodged and acknowledged.
-    let reserve = 0, superDeduction = 0;
+    let reserve = 0, superDeduction = 0, taxToDateAto = 0, projTax = 0, projTaxable = 0, taxableToDate = 0;
+    const days = fyDays();
     entIds().forEach(id => {
       const ent = S.entities.find(e => e.id === id); if (!ent) return;
       const ip = S.invoices.filter(i => i.entity_id === id && i.status === 'paid').reduce((s, i) => s + num(i.amount_ex_gst), 0);
@@ -144,8 +164,17 @@
         superDeduction += ded;
       }
       reserve += taxable * (num(ent.reserve_pct) / 100);
+      // ATO-rate estimate: progressive brackets + Medicare for sole traders; company stays at its flat rate.
+      const pt = getProjOverride(id) || (taxable * days.total / days.elapsed);
+      taxableToDate += taxable; projTaxable += pt;
+      if (ent.entity_type === 'sole_trader') {
+        const eff = pt > 0 ? calcResidentTax(pt).total / pt : 0;
+        projTax += calcResidentTax(pt).total; taxToDateAto += taxable * eff;
+      } else {
+        const r = num(ent.reserve_pct) / 100; projTax += pt * r; taxToDateAto += taxable * r;
+      }
     });
-    return { incomeEx, gstCollected, outstanding, overdueCount, expEx, gstCredits, netIncome, reserve, superDeduction };
+    return { incomeEx, gstCollected, outstanding, overdueCount, expEx, gstCredits, netIncome, reserve, superDeduction, taxToDateAto, projTax, projTaxable, taxableToDate, daysElapsed: days.elapsed };
   }
 
   // GST for one BAS period (cash basis): collected on paid invoices, credits on expenses in range
@@ -168,6 +197,7 @@
         head() +
         entitySwitcher() +
         cards(sum) +
+        projectionRow() +
         basSection() +
         actionsSection(sum) +
         invoicesSection() +
@@ -200,11 +230,21 @@
     const reserveSub = 'Recommended income-tax reserve on ' + money(s.netIncome) + ' net (paid) income this FY' +
       (s.superDeduction > 0 ? ' · ' + money(s.superDeduction) + ' already deducted for personal super contributions' : '');
     return '<div class="tx-cards">' +
-      card('hero', 'Set aside for tax', money(s.reserve), reserveSub) +
+      card('hero', 'Tax to set aside (to date)', money(s.taxToDateAto), 'ATO 2026-27 rates + Medicare on ' + money(s.taxableToDate) + ' taxable, at the projected full-year effective rate (' + (s.projTaxable > 0 ? (s.projTax / s.projTaxable * 100).toFixed(1) : '0.0') + '%)') +
+      card('', 'Projected full-year tax', money(s.projTax), 'on ' + money(s.projTaxable) + ' projected taxable income · run-rate of ' + s.daysElapsed + ' days unless overridden below') +
+      card('', 'Flat reserve (old method)', money(s.reserve), reserveSub) +
       card('', 'Income (paid)', money(s.incomeEx), 'ex-GST · ' + money(s.outstanding) + ' still outstanding') +
       card('', 'GST position (FY)', money(gstOwing), (gstOwing >= 0 ? 'owed to ATO' : 'refund') + ' · ' + money(s.gstCollected) + ' collected − ' + money(s.gstCredits) + ' credits', gstOwing >= 0 ? 'pos' : 'neg') +
       card('', 'Deductible expenses', money(s.expEx), 'ex-GST this FY' + (s.overdueCount ? ' · ' + s.overdueCount + ' invoice(s) overdue' : '')) +
       '</div>';
+  }
+  function projectionRow() {
+    const ids = entIds().filter(id => { const e = S.entities.find(x => x.id === id); return e && e.entity_type === 'sole_trader'; });
+    if (!ids.length) return '';
+    return '<div class="tx-actions" style="margin:-14px 0 22px;">' + ids.map(id => {
+      const ent = S.entities.find(e => e.id === id), o = getProjOverride(id);
+      return '<label class="tx-super-rate">' + esc2(ent.name) + ' projected full-year taxable income $ <input class="tx-in md" type="number" step="1000" min="0" placeholder="auto (run-rate)" value="' + (o || '') + '" onchange="Tax.setProjection(\'' + id + '\', this.value)"/> <span style="opacity:.6">blank = annualise income to date · after expenses and super · estimate only</span></label>';
+    }).join('') + '</div>';
   }
   function card(cls, label, value, sub, valCls) {
     return '<div class="tx-card ' + cls + '"><div class="tx-card-label">' + label + '</div>' +
@@ -566,6 +606,7 @@
   async function reloadAndRender() { await load(); render(); }
 
   const Tax = {
+    setProjection(id, v) { try { const n = parseFloat(v); if (isNaN(n) || n <= 0) localStorage.removeItem(projKey(id)); else localStorage.setItem(projKey(id), String(n)); } catch (e) {} render(); },
     async init() { if (!document.getElementById('tax-page')) return; if (!S.loaded) { render(); try { await load(); } catch (e) { document.getElementById('tax-page').innerHTML = '<div class="tx-page"><p style="color:var(--rust)">Could not load tax data: ' + esc2(e.message) + '</p></div>'; return; } } render(); },
     setEntity(id) { S.current = id; render(); },
 
